@@ -9,7 +9,7 @@ If not, [go to this page](http://java.sun.com/javase/downloads/index.jsp) and do
 
 
 How to build qTip
------------------------------
+-----------------
 
 In the main directory of the distribution (the one that this file is in), type
 the following to make all versions of qTip:
@@ -46,9 +46,13 @@ With this, the output files would be contained in `/home/john/test/dist/`
 *`[command]` is optional.*
 
 
-Questions?
-----------
+Questions or problems?
+----------------------
 
-If you have any questions, please feel free to ask them on the jQuery
-mailing list, which can be found here:  
-[http://docs.jquery.com/Discussion](http://docs.jquery.com/Discussion)
+If you have any questions, please feel free to post on the support forums
+[http://craigsworks.com/projects/forums](http://craigsworks.com/projects/forums)
+
+
+Special thanks
+--------------
+Big shout-out to the jQuery team for providing the directory structure and base files for the git repo!
