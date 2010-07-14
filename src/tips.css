@@ -1,0 +1,23 @@
+div.ui-tooltip-tip{
+	position: absolute;
+	margin: 0 auto;
+	overflow: hidden;
+
+	line-height: 0.1px;
+	font-size: 1px;
+
+	background: transparent !important;
+	border: 0px !important;
+	z-index: 10;
+}
+
+	div.ui-tooltip-tip *{
+		line-height: 0.1px;
+		font-size: 0.1px;
+	}
+
+	div.ui-tooltip-tip div{
+		background: transparent !important;
+		border: 0px dashed transparent;
+	}
+

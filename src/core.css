@@ -1,0 +1,211 @@
+.ui-tooltip-accessible{
+	left: -10000em !important;
+	top: -10000em !important;
+	display: block !important;
+	visibility: hidden !important;
+}
+
+	/* IE6 ONLY - Width detection fix */
+	* html .ui-tooltip-accessible{
+		position: static !important;
+		float: left !important;
+	}
+
+div.ui-tooltip, div.qtip{
+	position: absolute;
+	display: none;
+
+	max-width: 280px;
+	min-width: 50px;
+}
+
+	div.ui-tooltip .ui-tooltip-wrapper{
+		position: relative;
+		overflow: hidden;
+
+		border-width: 3px;
+		border-style: solid;
+
+		-moz-border-radius: 0px;
+		-webkit-border-radius: 0px;
+		border-radius: 0;
+	}
+
+	div.ui-tooltip .ui-tooltip-content{
+		position: relative;
+		padding: 5px 9px;
+
+		text-align: left;
+		word-wrap: break-word;
+		overflow: hidden;
+	}
+
+	div.ui-tooltip .ui-tooltip-titlebar{
+		position: relative;
+		padding: 6px 35px 6px 10px;
+
+		font-weight: bold;
+	}
+
+		/*! Default close button class */
+		div.ui-tooltip .ui-tooltip-close{
+			position: absolute;
+			height: 16px;
+			width: 16px;
+			padding: 1px;
+			right: 5px;
+			top: 5px;
+
+			cursor: pointer;
+			line-height: 0px;
+			font-size: 0px;
+		}
+
+			div.ui-tooltip .ui-tooltip-close .ui-icon{
+				height: 16px;
+				width: 16px;
+				display: block;
+
+				opacity: 0.8;
+				-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+				filter: alpha(opacity=80);
+			}
+			div.ui-tooltip .ui-tooltip-close:hover .ui-icon{
+				opacity: 1;
+				-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+				filter: alpha(opacity=100);
+			}
+
+		/*! Custom button class */
+		div.ui-tooltip .ui-tooltip-button{
+			float: right;
+		}
+
+	/* Applied to 'focused' tooltips e.g. most recently displayed/interacted with */
+	div.ui-tooltip-focus{
+
+	}
+
+
+/*! Default tooltip style */
+div.ui-tooltip-wrapper{
+	border-color: #F9E98E;
+	background-color: #FBF7AA;
+	color: #A27D35;
+}
+
+	div.ui-tooltip .ui-tooltip-titlebar{
+		background-color: #F0DE7D;
+	}
+
+	div.ui-tooltip .ui-tooltip-close .ui-icon{
+		background: #A27D35 url('images/close.png') no-repeat 50% 50%;
+	}
+
+/*! Plain tooltip style */
+div.ui-tooltip-plain .ui-tooltip-wrapper{
+	border-color: black;
+	border-width: 1px;
+
+	background-color: white;
+	color: black;
+}
+
+	div.ui-tooltip-plain .ui-tooltip-titlebar{
+		background-color: white;
+	}
+
+	div.ui-tooltip-plain .ui-tooltip-close .ui-icon{
+		background: black;
+	}
+
+/*! Light tooltip style */
+div.ui-tooltip-light .ui-tooltip-wrapper{
+	border-color: #E2E2E2;
+	background-color: white;
+	color: #454545;
+}
+
+	div.ui-tooltip-light .ui-tooltip-titlebar{
+		background-color: #f1f1f1;
+	}
+
+	div.ui-tooltip-light .ui-tooltip-close .ui-icon{
+		background: #454545 url('images/close-light.png') no-repeat 50% 50%;
+	}
+
+
+/*! Dark tooltip style */
+div.ui-tooltip-dark .ui-tooltip-wrapper{
+	border-color: #303030;
+	background-color: #505050;
+	color: #f3f3f3;
+}
+
+	div.ui-tooltip-dark .ui-tooltip-titlebar{
+		background-color: #404040;
+	}
+
+	div.ui-tooltip-dark .ui-tooltip-close .ui-icon{
+		background: #f3f3f3 url('images/close-dark.png') no-repeat 50% 50%;
+	}
+
+
+/*! Red tooltip style */
+div.ui-tooltip-red .ui-tooltip-wrapper{
+	border-color: #D95252;
+	background-color: #F78B83;
+	color: #912323;
+}
+
+	div.ui-tooltip-red .ui-tooltip-titlebar{
+		background-color: #F06D65;
+	}
+
+	div.ui-tooltip-red .ui-tooltip-close .ui-icon{
+		background: #9C2F2F url('images/close-red.png') no-repeat 50% 50%;
+	}
+
+
+/*! Green tooltip style */
+div.ui-tooltip-green .ui-tooltip-wrapper{
+	border-color: #90D93F;
+	background-color: #CAED9E;
+	color: #3F6219;
+}
+
+	div.ui-tooltip-green .ui-tooltip-titlebar{
+		background-color: #B0DE78;
+	}
+
+	div.ui-tooltip-green .ui-tooltip-close .ui-icon{
+		background: #58792E url('images/close-green.png') no-repeat 50% 50%;
+	}
+
+
+/*! Blue tooltip style */
+div.ui-tooltip-blue .ui-tooltip-wrapper{
+	border-color: #ADD9ED;
+	background-color: #E5F6FE;
+	color: #5E99BD;
+}
+
+	div.ui-tooltip-blue .ui-tooltip-titlebar{
+		background-color: #D0E9F5;
+	}
+
+	div.ui-tooltip-blue .ui-tooltip-close .ui-icon{
+		background: #4D9FBF url('images/close-blue.png') no-repeat 50% 50%;
+	}
+
+
+/*! Add shadows to your tooltips in all supported browsers */
+div.ui-tooltip-shadow{
+  -webkit-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3);
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3);
+
+  filter:progid:DXImageTransform.Microsoft.dropshadow(OffX=5, OffY=5, Color='gray');
+  -ms-filter:"progid:DXImageTransform.Microsoft.dropshadow(OffX=5, OffY=5, Color='gray')";
+}
+
