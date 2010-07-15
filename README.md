@@ -1,7 +1,7 @@
 [qTip](http://craigsworks.com/projects/qtip/) - The jQuery tooltip plugin
 ================================
 
-What you need to build your own jQuery
+What you need to build qTip
 ---------------------------------------
 * Make sure that you have PHP installed (if you want to build a minified version of qTip).
 * Make sure that you have Java installed (if you want to use the JSLint checker).
@@ -12,22 +12,20 @@ How to build qTip
 -----------------
 
 In the main directory of the distribution (the one that this file is in), type
-the following to make all versions of qTip:
+the following to make qTip and its accompanying CSS and images:
 
 	make
 
-The standard, uncompressed, jQuery code.
-Makes: `./dist/jquery.qtip.js`
+You can also create each individually using these commands:
 
-	make min
+	make qtip		# Build non-minified qTip source
+	make min			# Build minified qTip source
+	make css			# Build CSS files
+	make images		# Build images
 
-A compressed version of qTip (made using Dean Edwards [Packer](http://dean.edwards.name/packer/)).
-Makes: `./dist/jquery.qtip.min.js`
+To build and test the source code against JSLint type this:
 
 	make lint
-
-Tests a build of qTip against JSLint, looking for potential errors and non-conformant code.
-
 
 Finally, you can remove all the built files using the command:
 
@@ -37,11 +35,11 @@ Finally, you can remove all the built files using the command:
 Building to a different directory
 ----------------------------------
 
-If you want to build jQuery to a directory that is different from the default location, you can...
+If you want to build qTip to a directory that is different from the default location, you can...
 
-	make PREFIX=/home/john/test/ [command]
+	make PREFIX=/home/craig/qtip/ [command]
 	
-With this, the output files would be contained in `/home/john/test/dist/`
+With this, the output files would be contained in `/home/craig/qtip/dist/`
 
 *`[command]` is optional.*
 
@@ -49,7 +47,7 @@ With this, the output files would be contained in `/home/john/test/dist/`
 Questions or problems?
 ----------------------
 
-If you have any questions, please feel free to post on the support forums
+If you have any questions, please feel free to post on the support forums:
 [http://craigsworks.com/projects/forums](http://craigsworks.com/projects/forums)
 
 
