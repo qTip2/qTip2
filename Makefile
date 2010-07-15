@@ -37,7 +37,7 @@ RHINO = java -jar ${BUILD_DIR}/js.jar
 COMPILER = java -jar ${BUILD_DIR}/google-compiler-20091218.jar
 MINIFY = php ${BUILD_DIR}/minify.php
 
-DATE=`bzr log -r-1 | grep timestamp: | sed 's/[^:]*: *//'`
+DATE=`git log -1 | grep Date: | sed 's/[^:]*: *//'`
 
 all: qtip css images min lint
 	@@echo "qTip build complete."
