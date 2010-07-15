@@ -320,29 +320,35 @@ function Tip(qTip, command)
 			switch(self.method)
 			{
 				case 'canvas':
-					// Determine tip coordinates based on dimensions
-					coords = calculateTip(mimic.string(), width * 2, height * 2);
-					
-					// Setup canvas properties
+					// Grab canvas context
 					context = inner.get(0).getContext('2d');
-					context.fillStyle = color.fill;
-					context.miterLimit = 0;
-					context.clearRect(0,0,3000,3000);
-					context.translate(
-						mimic.x === 'left' ? 0 : mimic.x === 'right' ? -width : -width / 2,
-						mimic.y === 'top' ? 0 : mimic.y === 'bottom' ? -height : -height / 2
-					);
-					
+
+					// Determine tip coordinates based on dimensions
 					if(self.border) {
+						coords = calculateTip(mimic.string(), width * 2, height * 2);
+						
+						// Setup additional border properties
 						context.strokeStyle = color.border;
 						context.lineWidth = self.border + 1;
 						context.lineJoin = 'miter';
 						context.miterLimit = 100;
+						context.translate(
+							mimic.x === 'left' ? 0 : mimic.x === 'right' ? -width : -width / 2,
+							mimic.y === 'top' ? 0 : mimic.y === 'bottom' ? -height : -height / 2
+						);
+					}
+					else {
+						coords = calculateTip(mimic.string(), width, height);
 					}
 					
+					// Setup canvas properties
+					context.fillStyle = color.fill;
+					context.miterLimit = 0;
+					context.clearRect(0,0,3000,3000);
+
 					// Draw the canvas tip (Delayed til after DOM creation)
 					for(i; i < 2; i++) {
-						context.globalCompositeOperation = i ? 'destination-in' : 'source-over';
+						context.globalCompositeOperation = i && self.border ? 'destination-in' : 'source-over';
 						context.beginPath();
 						context.moveTo(coords[0][0], coords[0][1]);
 						context.lineTo(coords[1][0], coords[1][1]);
@@ -479,9 +485,9 @@ $.fn.qtip.plugins.tip.sanitize = function(opts)
 		if(typeof opts.style.tip !== 'object'){ opts.style.tip = { corner: opts.style.tip }; }
 		if(typeof opts.style.tip.method !== 'string'){ opts.style.tip.method = TRUE; }
 		if(!(/canvas|polygon/i).test(opts.style.tip.method)){ opts.style.tip.method = TRUE; }
-		if(typeof opts.style.tip.width !== 'number'){ opts.style.tip.width = 30; }
-		if(typeof opts.style.tip.height !== 'number'){ opts.style.tip.height = 30; }
-		if(typeof opts.style.tip.border !== 'number'){ opts.style.tip.border = 8; }
+		if(typeof opts.style.tip.width !== 'number'){ opts.style.tip.width = 14; }
+		if(typeof opts.style.tip.height !== 'number'){ opts.style.tip.height = 14; }
+		if(typeof opts.style.tip.border !== 'number'){ opts.style.tip.border = 0; }
 	}
 };
 
