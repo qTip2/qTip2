@@ -108,8 +108,7 @@ function Tip(qTip, command)
 				right: 0
 			};
 		}
-		
-		
+
 		// Adjust primary corners
 		switch(corner[ corner.precedance === 'y' ? 'x' : 'y' ])
 		{
@@ -256,7 +255,7 @@ function Tip(qTip, command)
 					self.mimic.adjust = TRUE;
 				}
 			}
-			
+
 			return self.corner.string() !== 'centercenter';
 		},
 

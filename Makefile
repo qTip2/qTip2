@@ -23,8 +23,7 @@ CSS_FILES = ${SRC_DIR}/core.css\
 	${SRC_DIR}/extra.css
 
 CSS_MODULES = ${SRC_DIR}/header.txt\
-	${SRC_DIR}/core.css\
-	${SRC_DIR}/extra.css
+	${CSS_FILES}
 
 QTIP = ${DIST_DIR}/jquery.qtip.js
 QTIP_MIN = ${DIST_DIR}/jquery.qtip.min.js
