@@ -25,10 +25,6 @@ div.ui-tooltip, div.qtip{
 
 		border-width: 3px;
 		border-style: solid;
-
-		-moz-border-radius: 0px;
-		-webkit-border-radius: 0px;
-		border-radius: 0;
 	}
 
 	div.ui-tooltip .ui-tooltip-content{

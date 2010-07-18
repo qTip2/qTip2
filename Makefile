@@ -5,25 +5,21 @@ PREFIX = .
 DIST_DIR = ${PREFIX}/dist
 IMG_DIR = ${PREFIX}/images
 
-JS_FILES = ${SRC_DIR}/core.js\
+JS_MODULES = ${SRC_DIR}/header.txt\
+	${SRC_DIR}/intro.js\
+	${SRC_DIR}/core.js\
 	${SRC_DIR}/ajax.js\
 	${SRC_DIR}/tips.js\
 	${SRC_DIR}/imagemap.js\
 	${SRC_DIR}/modal.js\
-	${SRC_DIR}/ie6.js
-
-JS_MODULES = ${SRC_DIR}/header.txt\
-	${SRC_DIR}/intro.js\
-	${JS_FILES}\
+	${SRC_DIR}/ie6.js\
 	${SRC_DIR}/outro.js
 
-CSS_FILES = ${SRC_DIR}/core.css\
+CSS_MODULES = ${SRC_DIR}/header.txt\
+	${SRC_DIR}/core.css\
 	${SRC_DIR}/tips.css\
 	${SRC_DIR}/modal.css\
 	${SRC_DIR}/extra.css
-
-CSS_MODULES = ${SRC_DIR}/header.txt\
-	${CSS_FILES}
 
 QTIP = ${DIST_DIR}/jquery.qtip.js
 QTIP_MIN = ${DIST_DIR}/jquery.qtip.min.js
@@ -39,13 +35,8 @@ MINIFY = php ${BUILD_DIR}/minify.php
 
 DATE=`git log -1 | grep Date: | sed 's/[^:]*: *//'`
 
-all: qtip css images min lint
-	@@echo "qTip build complete."
-
 ${DIST_DIR}:
 	@@mkdir -p ${DIST_DIR}
-
-qtip: ${DIST_DIR} ${QTIP}
 
 ${QTIP}: ${JS_MODULES}
 	@@mkdir -p ${DIST_DIR}
@@ -55,6 +46,17 @@ ${QTIP}: ${JS_MODULES}
 		sed 's/Date:./&'"${DATE}"'/' | \
 		${VER} > ${QTIP};
 
+all: qtip css images min lint
+	@@echo "qTip build complete."
+
+qtip: ${DIST_DIR} ${QTIP}
+
+min: ${QTIP}
+	@@echo "Building" ${QTIP_MIN}
+
+	@@head -17 ${QTIP} > ${QTIP_MIN}
+	@@${MINIFY} ${QTIP} ${QTIP_MIN}
+
 css: ${DIST_DIR} ${CSS_MODULES}
 	@@echo "Building" ${QTIP_CSS}
 	@@cat ${CSS_MODULES} | \
@@ -63,7 +65,7 @@ css: ${DIST_DIR} ${CSS_MODULES}
 
 
 images: ${DIST_DIR}
-	@@echo "Building " ${QTIP_IMG}
+	@@echo "Building" ${QTIP_IMG}
 	@@mkdir ${QTIP_IMG}
 	@@cp -R ${IMG_DIR}/*.png ${QTIP_IMG}
 
@@ -71,13 +73,6 @@ images: ${DIST_DIR}
 lint: ${QTIP}
 	@@echo "Checking qTip against JSLint..."
 	@@${RHINO} build/jslint-check.js
-
-
-min: ${QTIP}
-	@@echo "Building" ${QTIP_MIN}
-
-	@@head -17 ${QTIP} > ${QTIP_MIN}
-	@@${MINIFY} ${QTIP} ${QTIP_MIN}
 
 
 clean:

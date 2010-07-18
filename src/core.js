@@ -529,7 +529,6 @@ function QTip(target, options, id)
 	* Public API methods
 	*/
 	$.extend(self, {
-
 		render: function(show)
 		{
 			var elements = self.elements;
@@ -764,7 +763,6 @@ function QTip(target, options, id)
 
 			// Use basic fade function
 			else {
-
 				tooltip['fade'+(state?'In':'Out')](90, after);
 			}
 
@@ -1154,7 +1152,7 @@ $.fn.qtip.bind = function(opts)
 		if($(this).attr('title')) {
 			$(this).data('oldtitle', $(this).attr('title')).removeAttr('title');
 		}
-			
+
 		// Initialize plugins
 		$.each($.fn.qtip.plugins, function() {
 			if(this.initialize === 'initialize') { this(self); }
@@ -1212,23 +1210,21 @@ $.each({
 		var api = $(this).data('qtip');
 		return (arguments.length === 1 && attr === 'title' && api && api.rendered === TRUE) ? $(this).data('oldtitle') : NULL;
 	},
-	
+
 	/* Taken directly from jQuery 1.8.2 widget source code */
 	/* Trigger 'remove' event on all elements on removal if jQuery UI isn't present */
-	remove: function( selector, keepData ) {
-		if(!$.ui) {
-			this.each(function() {
-				if (!keepData) {
-					if (!selector || $.filter( selector, [ this ] ).length) {
-						$('*', this).add(this).each(function() {
-							$(this).triggerHandler('remove');
-						});
-					}
+	remove: $.ui ? NULL : function( selector, keepData ) {
+		this.each(function() {
+			if (!keepData) {
+				if (!selector || $.filter( selector, [ this ] ).length) {
+					$('*', this).add(this).each(function() {
+						$(this).triggerHandler('remove');
+					});
 				}
-			});
-		}
+			}
+		});
 	}
-}, 
+},
 function(name, func) {
 	var old = $.fn[name];
 	$.fn[name] = function() {
@@ -1261,12 +1257,9 @@ $.fn.qtip.defaults = {
 	prerender: FALSE,
 	id: FALSE,
 	overwrite: TRUE,
-
-	// Metadata
 	metadata: {
 		type: 'class'
 	},
-	// Content
 	content: {
 		text: TRUE,
 		attr: 'title',
@@ -1276,7 +1269,6 @@ $.fn.qtip.defaults = {
 			button: FALSE
 		}
 	},
-	// Position
 	position: {
 		my: 'top left',
 		at: 'bottom right',
@@ -1291,7 +1283,6 @@ $.fn.qtip.defaults = {
 			offset: FALSE
 		}
 	},
-	// Effects
 	show: {
 		target: FALSE,
 		event: 'mouseenter',
@@ -1312,7 +1303,6 @@ $.fn.qtip.defaults = {
 		classes: '',
 		widget: TRUE
 	},
-	// Callbacks
 	events: {
 		render: noop,
 		move: noop,
