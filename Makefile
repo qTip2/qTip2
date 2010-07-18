@@ -35,8 +35,13 @@ MINIFY = php ${BUILD_DIR}/minify.php
 
 DATE=`git log -1 | grep Date: | sed 's/[^:]*: *//'`
 
+all: qtip css images min lint
+	@@echo "qTip build complete."
+
 ${DIST_DIR}:
 	@@mkdir -p ${DIST_DIR}
+
+qtip: ${DIST_DIR} ${QTIP}
 
 ${QTIP}: ${JS_MODULES}
 	@@mkdir -p ${DIST_DIR}
@@ -45,11 +50,6 @@ ${QTIP}: ${JS_MODULES}
 	@@cat ${JS_MODULES} | \
 		sed 's/Date:./&'"${DATE}"'/' | \
 		${VER} > ${QTIP};
-
-all: qtip css images min lint
-	@@echo "qTip build complete."
-
-qtip: ${DIST_DIR} ${QTIP}
 
 min: ${QTIP}
 	@@echo "Building" ${QTIP_MIN}
@@ -63,17 +63,14 @@ css: ${DIST_DIR} ${CSS_MODULES}
 		sed 's/Date:./&'"${DATE}"'/' | \
 		${VER} > ${QTIP_CSS};
 
-
 images: ${DIST_DIR}
 	@@echo "Building" ${QTIP_IMG}
 	@@mkdir ${QTIP_IMG}
 	@@cp -R ${IMG_DIR}/*.png ${QTIP_IMG}
 
-
 lint: ${QTIP}
 	@@echo "Checking qTip against JSLint..."
 	@@${RHINO} build/jslint-check.js
-
 
 clean:
 	@@echo "Removing distribution directory:" ${DIST_DIR}
