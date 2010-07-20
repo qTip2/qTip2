@@ -25,6 +25,7 @@ CSS_MODULES = ${SRC_DIR}/header.txt\
 
 QTIP = ${DIST_DIR}/jquery.qtip.js
 QTIP_MIN = ${DIST_DIR}/jquery.qtip.min.js
+QTIP_PACK = ${DIST_DIR}/jquery.qtip.pack.js
 QTIP_CSS = ${DIST_DIR}/jquery.qtip.css
 QTIP_IMG = ${DIST_DIR}/images
 
@@ -33,11 +34,11 @@ VER = sed s/@VERSION/${QTIP_VER}/
 
 RHINO = java -jar ${BUILD_DIR}/js.jar
 COMPILER = java -jar ${BUILD_DIR}/compiler.jar --warning_level=QUIET
-MINIFY = php ${BUILD_DIR}/minify.php
+PACKER = java -jar ${BUILD_DIR}/js.jar ${BUILD_DIR}/packer.js
 
 DATE=`git log -1 | grep Date: | sed 's/[^:]*: *//'`
 
-all: clean qtip css images min lint
+all: clean qtip css images min pack lint
 	@@echo "qTip build complete."
 
 ${DIST_DIR}:
@@ -53,17 +54,20 @@ ${QTIP}: ${JS_MODULES}
 		sed 's/Date:./&'"${DATE}"'/' | \
 		${VER} > ${QTIP};
 
-min: ${QTIP}
+min: ${QTIP_MIN}
+
+${QTIP_MIN}: ${QTIP}
 	@@echo "Building" ${QTIP_MIN}
 
-	@@head -17 ${QTIP} > ${QTIP_MIN}
-	@@${MINIFY} ${QTIP} ${QTIP_MIN}
-
-compile: ${QTIP}
-	@@echo "Building" ${QTIP_MIN}
-
-	@@head -17 ${QTIP} > ${QTIP_MIN}
+	@@head -18 ${QTIP} > ${QTIP_MIN}
 	@@${COMPILER} --js=${QTIP} >> ${QTIP_MIN}
+
+pack: ${QTIP_MIN}
+	@@echo "Building" ${QTIP_PACK}
+
+	@@head -18 ${QTIP} > ${QTIP_PACK}
+	@@${PACKER} ${QTIP_MIN} ${QTIP_PACK}.tmp
+	@@cat ${QTIP_PACK}.tmp >> ${QTIP_PACK} && rm ${QTIP_PACK}.tmp
 
 css: ${DIST_DIR} ${CSS_MODULES}
 	@@echo "Building" ${QTIP_CSS}
