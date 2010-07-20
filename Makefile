@@ -5,14 +5,16 @@ PREFIX = .
 DIST_DIR = ${PREFIX}/dist
 IMG_DIR = ${PREFIX}/images
 
-JS_MODULES = ${SRC_DIR}/header.txt\
-	${SRC_DIR}/intro.js\
-	${SRC_DIR}/core.js\
-	${SRC_DIR}/ajax.js\
+PLUGINS = ${SRC_DIR}/ajax.js\
 	${SRC_DIR}/tips.js\
 	${SRC_DIR}/imagemap.js\
 	${SRC_DIR}/modal.js\
-	${SRC_DIR}/ie6.js\
+	${SRC_DIR}/ie6.js
+
+JS_MODULES = ${SRC_DIR}/header.txt\
+	${SRC_DIR}/intro.js\
+	${SRC_DIR}/core.js\
+	${PLUGINS}\
 	${SRC_DIR}/outro.js
 
 CSS_MODULES = ${SRC_DIR}/header.txt\
@@ -30,12 +32,12 @@ QTIP_VER = `cat version.txt`
 VER = sed s/@VERSION/${QTIP_VER}/
 
 RHINO = java -jar ${BUILD_DIR}/js.jar
-COMPILER = java -jar ${BUILD_DIR}/google-compiler-20091218.jar
+COMPILER = java -jar ${BUILD_DIR}/compiler.jar --warning_level=QUIET
 MINIFY = php ${BUILD_DIR}/minify.php
 
 DATE=`git log -1 | grep Date: | sed 's/[^:]*: *//'`
 
-all: qtip css images min lint
+all: clean qtip css images min lint
 	@@echo "qTip build complete."
 
 ${DIST_DIR}:
@@ -56,6 +58,12 @@ min: ${QTIP}
 
 	@@head -17 ${QTIP} > ${QTIP_MIN}
 	@@${MINIFY} ${QTIP} ${QTIP_MIN}
+
+compile: ${QTIP}
+	@@echo "Building" ${QTIP_MIN}
+
+	@@head -17 ${QTIP} > ${QTIP_MIN}
+	@@${COMPILER} --js=${QTIP} >> ${QTIP_MIN}
 
 css: ${DIST_DIR} ${CSS_MODULES}
 	@@echo "Building" ${QTIP_CSS}
