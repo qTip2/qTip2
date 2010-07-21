@@ -36,7 +36,7 @@ RHINO = java -jar ${BUILD_DIR}/js.jar
 COMPILER = java -jar ${BUILD_DIR}/compiler.jar --warning_level=QUIET
 PACKER = java -jar ${BUILD_DIR}/js.jar ${BUILD_DIR}/packer.js
 
-DATE=`git log -1 | grep Date: | sed 's/[^:]*: *//'`
+DATE=`git log --pretty=format:'%ad' -1`
 
 all: clean qtip css images min pack lint
 	@@echo "qTip build complete."

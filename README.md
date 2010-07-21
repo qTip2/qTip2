@@ -3,24 +3,24 @@
 
 What you need to build qTip
 ---------------------------------------
-* Make sure that you have PHP installed (if you want to build a minified version of qTip).
-* Make sure that you have Java installed (if you want to use the JSLint checker).
-If not, [go to this page](http://java.sun.com/javase/downloads/index.jsp) and download "Java Runtime Environment (JRE) 5.0"
+* *nix make or [Apache Ant](http://ant.apache.org/bindownload.cgi)
+* [Java Runtime Environment](http://java.sun.com/javase/downloads/index.jsp) (If you wish to build minified sources or use JSLint check)
 
 
-How to build qTip
------------------
+How to build qTip (using MAKE)
+------------------------
 
 In the main directory of the distribution (the one that this file is in), type
-the following to make qTip and its accompanying CSS and images:
+the following to build qTip and its accompanying CSS and images:
 
 	make
 
 You can also create each individually using these commands:
 
 	make qtip		# Build non-minified qTip source
-	make min			# Build minified qTip source
-	make css			# Build CSS files
+	make min 		# Build minified qTip source
+	make pack		# Build minified and packed qTip source (Smallest filesize!)
+	make css 		# Build CSS files
 	make images		# Build images
 
 To build and test the source code against JSLint type this:
@@ -32,7 +32,18 @@ Finally, you can remove all the built files using the command:
 	make clean
 
 
-Building to a different directory
+How to build qTip (Using ANT)
+------------------------
+
+For those of you without access to *nix make, an ANT build file is also included in the repository. Build instructions are identical to
+those above, but replace _make_ with _ant_ e.g.
+
+	ant [command]
+	
+[command] is optional and can be any of the above i.e. qtip, min, pack etc.
+
+
+Building to a different directory (MAKE only)
 ----------------------------------
 
 If you want to build qTip to a directory that is different from the default location, you can...
