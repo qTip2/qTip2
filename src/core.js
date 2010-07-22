@@ -309,7 +309,8 @@ function QTip(target, options, id)
 				hide: options.hide.target,
 				tooltip: self.elements.tooltip
 			},
-			events = { show: String(options.show.event).split(' '), hide: String(options.hide.event).split(' ') };
+			events = { show: String(options.show.event).split(' '), hide: String(options.hide.event).split(' ') },
+			IE6 = $.browser.msie && (/^6\.[0-9]/).test($.browser.version);
 
 		// Define show event method
 		function showMethod(event)
@@ -436,9 +437,19 @@ function QTip(target, options, id)
 			}
 			
 			// Adjust tooltip position on scroll if screen adjustment is enabled
-			if(options.position.adjust.screen) {
+			if(options.position.adjust.screen || (IE6 && targets.tooltip.css('position') === 'fixed')) {
 				$(document).bind('scroll'+namespace, repositionMethod);
 			}
+			
+			// Apply automatic position: fixed override
+			if() {
+				// Set positioning to absolute
+				tooltip.css({ position: 'absolute' });
+				
+				// Reposition tooltip when window is scrolled
+				$(window).bind('scroll'+self.ns, self.scroll);
+			}
+			
 
 			// Hide tooltip on document mousedown if unfocus events are enabled
 			if((/unfocus/i).test(options.hide.event)) {
