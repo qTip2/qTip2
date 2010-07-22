@@ -25,7 +25,8 @@ function BGIFrame(qTip)
 		adjust: function()
 		{
 			var dimensions = qTip.calculate('dimensions'), // Determine current tooltip dimensions
-				tip = qTip.plugins.tip,
+				plugin = qTip.plugins.tip,
+				tip = qTip.elements.tip,
 				tipAdjust, offset;
 
 			// Adjust border offset
@@ -33,9 +34,9 @@ function BGIFrame(qTip)
 			offset = { left: -offset, top: -offset };
 
 			// Adjust for tips plugin
-			if(tip && tip.tip) {
-				tipAdjust = (tip.corner.precedance === 'x') ? ['width', 'left'] : ['height', 'top'];
-				offset[ tipAdjust[1] ] -= tip.tip[ tipAdjust[0] ]();
+			if(plugin && tip) {
+				tipAdjust = (plugin.corner.precedance === 'x') ? ['width', 'left'] : ['height', 'top'];
+				offset[ tipAdjust[1] ] -= tip[ tipAdjust[0] ]();
 			}
 
 			// Update bgiframe

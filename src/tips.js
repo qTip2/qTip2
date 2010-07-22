@@ -86,8 +86,7 @@ function Tip(qTip, command)
 		// Inherit corner if not provided
 		corner = corner || self.corner;
 		
-		var tip = tip,
-			corners  = ['left', 'right'],
+		var corners  = ['left', 'right'],
 			ieAdjust = { left: 0, right: 0, top: 0, bottom: 0 },
 			offset = 0;
 
