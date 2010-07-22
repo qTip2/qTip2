@@ -185,40 +185,40 @@ function QTip(target, options, id)
 	function createTitle()
 	{
 		var elems = self.elements,
-		button = options.content.title.button;
+			button = options.content.title.button;
 
 		// Destroy previous title element, if present
-		if(elems.title) { elems.title.remove(); }
+		if(elems.titlebar) { removeTitle(); }
 
-		// Create title bar element
-		elems.titlebar = $('<div />')
-			.addClass('ui-tooltip-titlebar')
-			.toggleClass('ui-widget-header', options.style.widget)
-			.prependTo(elems.wrapper);
-
-		// Create title elemt
-		elems.title = $('<div />')
-			.attr('id', 'ui-tooltip-'+id+'-title')
-			.addClass('ui-tooltip-title')
-			.html(options.content.title.text)
-			.appendTo(elems.titlebar);
+		// Create title bar and title elements
+		elem.titlebar = $('<div />', {
+			classes: 'ui-tooltip-wrapper' + (options.style.widget ? 'ui-widget-header' : ''),
+		})
+		.append(
+			elems.title = $('<div />', {
+				id: 'ui-tooltip-'+id+'-title',
+				classes: 'ui-tooltip-title',
+				html: options.content.title.text
+			})
+		)
+		.prependTo(elems.wrapper);
 
 		// Create title close buttons if enabled
-		if(button)
-		{
+		if(button) {
 			// Use custom button if one was supplied by user, else use default
 			if(button.jquery) {
 				elems.button = button;
 			}
 			else if('string' === typeof button) {
-				elems.button = $('<a />').html(button);
+				elems.button = $('<a />', { html: button });
 			}
 			else {
-				elems.button = $('<a />')
-					.addClass('ui-state-default')
-					.append(
-						$('<span />').addClass('ui-icon ui-icon-close')
-					);
+				elems.button = $('<a />', {
+					classes: 'ui-state-default'
+				})
+				.append(
+					$('<span />', { classes: 'ui-icon ui-icon-close' })
+				);
 			}
 
 			// Setup event handlers
@@ -226,23 +226,14 @@ function QTip(target, options, id)
 				.prependTo(elems.titlebar)
 				.attr('role', 'button')
 				.addClass('ui-tooltip-' + (button === TRUE ? 'close' : 'button'))
-				.hover(
-					function(event){ $(this).toggleClass('ui-state-hover', event.type === 'mouseenter'); }
-				)
-				.click(function()
-				{
-					if(!elems.tooltip.hasClass('ui-state-disabled')) {
-						self.hide();
-					}
-
+				.hover(function(event){ $(this).toggleClass('ui-state-hover', event.type === 'mouseenter'); })
+				.click(function() {
+					!elems.tooltip.hasClass('ui-state-disabled') && self.hide();
 					return FALSE;
 				})
 				.bind('mousedown keydown mouseup keyup mouseout', function(event) {
 					$(this).toggleClass('ui-state-active ui-state-focus', (/down$/i).test(event.type));
 				});
-		}
-		else if(elems.button) {
-			elems.button.remove();
 		}
 	}
 
