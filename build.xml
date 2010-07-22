@@ -16,7 +16,7 @@
 	<property name="QTIP_CSS" value="${DIST_DIR}/jquery.qtip.css" />
 	<property name="QTIP_IMG" value="${DIST_DIR}/images" />
 
-	<target name="all" depends="clean,qtip,css,images,min,pack,lint" description="Builds qTip including minified, packed JS files, as well as images and CSS" />
+	<target name="all" depends="clean,qtip,lint,css,images,min,pack" description="Builds qTip including minified, packed JS files, as well as images and CSS" />
 
 	<target name="dir" description="Builds distribution directory">
 		<mkdir dir="${DIST_DIR}" />

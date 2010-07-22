@@ -38,7 +38,7 @@ PACKER = java -jar ${BUILD_DIR}/js.jar ${BUILD_DIR}/packer.js
 
 DATE=`git log --pretty=format:'%ad' -1`
 
-all: clean qtip css images min pack lint
+all: clean qtip lint css images min pack
 	@@echo "qTip build complete."
 
 ${DIST_DIR}:
