@@ -5,8 +5,7 @@
 // Munge the primitives - Paul Irish tip
 var TRUE = true,
 	FALSE = false,
-	NULL = null,
-	noop = function () {};
+	NULL = null;
 
 (function($, window, undefined) {
 

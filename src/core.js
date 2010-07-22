@@ -1296,12 +1296,12 @@ $.fn.qtip.defaults = {
 		widget: TRUE
 	},
 	events: {
-		render: noop,
-		move: noop,
-		show: noop,
-		hide: noop,
-		focus: noop,
-		blur: noop
+		render: $.noop,
+		move: $.noop,
+		show: $.noop,
+		hide: $.noop,
+		focus: $.noop,
+		blur: $.noop
 	}
 };
 
