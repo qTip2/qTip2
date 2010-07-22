@@ -1,64 +1,60 @@
 function Modal(qTip, options)
 {
-	var self = this;
+	var self = this,
+		elems = qTip.elements,
+		tooltip = elems.tooltip,
+		namespace = '.qtipmodal',
+		events = 'tooltipshow'+namespace+' tooltiphide'+namespace;
 
-	self.blanket = $('#qtip-blanket');
-	self.options = options;
-	self.ns = '.qtipmodal';
+	// See if blanket is already present
+	elems.blanket = $('#qtip-blanket');
 
 	$.extend(self, {
-
 		init: function()
 		{
 			// Merge defaults with options
 			options = $.extend(TRUE, $.fn.qtip.plugins.modal.defaults, options);
 
 			// Check if the tooltip is modal
-			qTip.elements.tooltip
-				.bind('tooltipshow'+self.ns, function(event, api, duration) {
-					if($.isFunction(options.show)) {
-						options.show.call(self.blanket, duration, api);
-					}
-					else {
-						self.show(duration);
-					}
-				})
-				.bind('tooltiphide'+self.ns, function(event, api, duration) {
-					if($.isFunction(options.hide)) {
-						options.hide.call(self.blanket, duration, api);
-					}
-					else {
-						self.hide(duration);
-					}
-				});
+			tooltip.bind(events, function(event, api, duration) {
+				var type = event.type.replace('tooltip', '');
+
+				if($.isFunction(options[type])) {
+					options[type].call(elems.blanket, duration, api);
+				}
+				else {
+					self[type](duration);
+				}
+			});
 
 			// Create the blanket if needed
-			if(!self.blanket.length) {
+			if(!elems.blanket.length) {
 				self.create();
 			}
 
 			// Hide tooltip on blanket click if enabled
 			if(options.blur === TRUE) {
-				self.blanket.bind('click'+self.ns+qTip.id, function(){ qTip.hide.call(qTip); });
+				elems.blanket.bind('click'+namespace+qTip.id, function(){ qTip.hide.call(qTip); });
 			}
 		},
 
 		create: function()
 		{
 			// Create document blanket
-			self.blanket = $('<div />')
-				.attr('id', 'qtip-blanket')
-				.css({
+			elems.blanket = $('<div />', {
+				id: 'qtip-blanket',
+				css: {
 					position: 'absolute',
 					top: 0,
 					left: 0,
 					display: 'none'
-				})
-				.appendTo(document.body);
+				}
+			})
+			.appendTo(document.body);
 
 			// Update position on window resize or scroll
-			$(window).bind('resize'+self.ns, function() {
-				self.blanket.css({
+			$(window).bind('resize'+namespace, function() {
+				elems.blanket.css({
 					height: Math.max( $(window).height(), $(document).height() ),
 					width: Math.max( $(window).width(), $(document).width() )
 				});
@@ -68,12 +64,12 @@ function Modal(qTip, options)
 
 		show: function(duration)
 		{
-			self.blanket.fadeIn(duration);
+			elems.blanket.fadeIn(duration);
 		},
 
 		hide: function(duration)
 		{
-			self.blanket.fadeOut(duration);
+			elems.blanket.fadeOut(duration);
 		},
 
 		destroy: function()
@@ -92,15 +88,15 @@ function Modal(qTip, options)
 
 			// Remove blanket if needed
 			if(delBlanket) {
-				self.blanket.remove();
-				$(window).unbind('scroll'+self.ns+' resize'+self.ns);
+				elems.blanket.remove();
+				$(window).unbind('scroll'+namespace+' resize'+namespace);
 			}
 			else {
-				self.blanket.unbind('click'+self.ns+qTip.id);
+				elems.blanket.unbind('click'+namespace+qTip.id);
 			}
 
 			// Remove bound events
-			qTip.elements.tooltip.unbind('tooltipshow'+self.ns+' tooltiphide'+self.ns);
+			tooltip.unbind(events);
 		}
 	});
 
