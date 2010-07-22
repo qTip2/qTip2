@@ -182,6 +182,17 @@ function QTip(target, options, id)
 		tooltip.width(newWidth);
 	}
 
+	function removeTitle()
+	{
+		var elems = self.elements;
+
+		if(elems.title) {
+			elems.titlebar.remove();
+			elems.titlebar = elems.title = elems.button = NULL;
+			elems.tooltip.removeAttr('aria-labelledby');
+		}
+	}
+
 	function createTitle()
 	{
 		var elems = self.elements,
@@ -191,14 +202,14 @@ function QTip(target, options, id)
 		if(elems.titlebar) { removeTitle(); }
 
 		// Create title bar and title elements
-		elem.titlebar = $('<div />', {
-			classes: 'ui-tooltip-wrapper' + (options.style.widget ? 'ui-widget-header' : ''),
+		elems.titlebar = $('<div />', {
+			'class': 'ui-tooltip-titlebar ' + (options.style.widget ? 'ui-widget-header' : '')
 		})
 		.append(
 			elems.title = $('<div />', {
-				id: 'ui-tooltip-'+id+'-title',
-				classes: 'ui-tooltip-title',
-				html: options.content.title.text
+				'id': 'ui-tooltip-'+id+'-title',
+				'class': 'ui-tooltip-title',
+				'html': options.content.title.text
 			})
 		)
 		.prependTo(elems.wrapper);
@@ -210,14 +221,14 @@ function QTip(target, options, id)
 				elems.button = button;
 			}
 			else if('string' === typeof button) {
-				elems.button = $('<a />', { html: button });
+				elems.button = $('<a />', { 'html': button });
 			}
 			else {
 				elems.button = $('<a />', {
-					classes: 'ui-state-default'
+					'class': 'ui-state-default'
 				})
 				.append(
-					$('<span />', { classes: 'ui-icon ui-icon-close' })
+					$('<span />', { 'class': 'ui-icon ui-icon-close' })
 				);
 			}
 
@@ -228,23 +239,12 @@ function QTip(target, options, id)
 				.addClass('ui-tooltip-' + (button === TRUE ? 'close' : 'button'))
 				.hover(function(event){ $(this).toggleClass('ui-state-hover', event.type === 'mouseenter'); })
 				.click(function() {
-					!elems.tooltip.hasClass('ui-state-disabled') && self.hide();
+					if(!elems.tooltip.hasClass('ui-state-disabled')) { self.hide(); }
 					return FALSE;
 				})
 				.bind('mousedown keydown mouseup keyup mouseout', function(event) {
 					$(this).toggleClass('ui-state-active ui-state-focus', (/down$/i).test(event.type));
 				});
-		}
-	}
-
-	function removeTitle()
-	{
-		var elems = self.elements;
-
-		if(elems.title) {
-			elems.titlebar.remove();
-			elems.titlebar = elems.title = elems.button = NULL;
-			elems.tooltip.removeAttr('aria-labelledby');
 		}
 	}
 
@@ -440,16 +440,6 @@ function QTip(target, options, id)
 			if(options.position.adjust.screen || (IE6 && targets.tooltip.css('position') === 'fixed')) {
 				$(document).bind('scroll'+namespace, repositionMethod);
 			}
-			
-			// Apply automatic position: fixed override
-			if() {
-				// Set positioning to absolute
-				tooltip.css({ position: 'absolute' });
-				
-				// Reposition tooltip when window is scrolled
-				$(window).bind('scroll'+self.ns, self.scroll);
-			}
-			
 
 			// Hide tooltip on document mousedown if unfocus events are enabled
 			if((/unfocus/i).test(options.hide.event)) {

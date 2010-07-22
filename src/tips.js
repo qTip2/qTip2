@@ -23,8 +23,11 @@ function calculateTip(corner, width, height)
 }
 
 function Tip(qTip, command)
-
+{
 	var self = this,
+		opts = qTip.options.style.tip,
+		tooltip = qTip.elements.tooltip,
+		wrapper = qTip.elements.wrapper,
 		tip = qTip.elements.tip = $(),
 		cache = { 
 			top: 0, 
@@ -32,13 +35,13 @@ function Tip(qTip, command)
 			corner: { string: function(){} }
 		},
 		size = {
-			width: qTip.options.style.tip.width,
-			height: qTip.options.style.tip.height
+			width: opts.width,
+			height: opts.height
 		},
 		color = { },
-		border = qTip.options.style.tip.border || 0,
-		adjust = qTip.options.style.tip.adjust || 0,
-		method = qTip.options.style.tip.method || FALSE;
+		border = opts.border || 0,
+		adjust = opts.adjust || 0,
+		method = opts.method || FALSE;
 
 	self.corner = NULL;
 	self.mimic = NULL;
@@ -51,7 +54,7 @@ function Tip(qTip, command)
 		},
 		'^style.tip.(corner|mimic|method|border)': function() {
 			// Re-determine tip type and update
-			border = qTip.options.style.tip.border;
+			border = opts.border;
 			self.detectCorner();
 			self.update();
 			
@@ -63,8 +66,8 @@ function Tip(qTip, command)
 		'^style.tip.(height|width)': function() {
 			// Re-set dimensions and redraw the tip
 			size = {
-				width: qTip.options.style.tip.width,
-				height: qTip.options.style.tip.height
+				width: opts.width,
+				height: opts.height
 			};
 			self.create();
 			self.update();
@@ -81,7 +84,7 @@ function Tip(qTip, command)
 	function position(corner)
 	{
 		// Return if tips are disabled or tip is not yet rendered
-		if(qTip.options.style.tip.corner === FALSE || !tip) { return FALSE; }
+		if(opts.corner === FALSE || !tip) { return FALSE; }
 		
 		// Inherit corner if not provided
 		corner = corner || self.corner;
@@ -123,8 +126,8 @@ function Tip(qTip, command)
 
 		// Determine adjustments
 		offset = size[ (corner.precedance === 'x') ? 'width' : 'height' ];
-		if(qTip.options.style.tip.border) {
-			offset -= parseInt(qTip.elements.wrapper.css('border-' + corner[ corner.precedance ] + '-width'), 10);
+		if(border) {
+			offset -= parseInt(wrapper.css('border-' + corner[ corner.precedance ] + '-width'), 10);
 		}
 		
 		// Adjust secondary corners
@@ -136,7 +139,7 @@ function Tip(qTip, command)
 		}
 	}
 
-	function adjust(event, api, position) {
+	function reposition(event, api, position) {
 		// Only continue if tip adjustments are enabled
 		if(!self.corner.adjust) {
 			return FALSE;
@@ -146,7 +149,7 @@ function Tip(qTip, command)
 			newType = self.mimic.adjust ? $.extend({}, self.mimic) : null,
 			precedance = newCorner.precedance === 'y' ? ['y', 'top', 'left', 'height'] : ['x', 'left', 'top', 'width'],
 			adjusted = position.adjusted,
-			offset = parseInt(qTip.elements.wrapper.css('border-' + newCorner[ precedance[0] ] + '-width'), 10),
+			offset = parseInt(wrapper.css('border-' + newCorner[ precedance[0] ] + '-width'), 10),
 			walk = [newCorner, newType];
 
 		// Adjust tip corners
@@ -183,8 +186,8 @@ function Tip(qTip, command)
 		color.border = tip.get(0).style ? tip.get(0).style['border' + precedance.charAt(0) + precedance.substr(1) + 'Color'] : tip.css(borderSide) || 'transparent';
 
 		// Make sure colours are valid and reset background and border properties
-		if((/rgba?\(0, 0, 0(, 0)?\)|transparent/i).test(color.fill)) { color.fill = qTip.elements.wrapper.css(border ? 'background-color' : borderSide); }
-		if(!color.border || (/rgba?\(0, 0, 0(, 0)?\)|transparent/i).test(color.border)) { color.border = qTip.elements.wrapper.css(borderSide) || color.fill; }
+		if((/rgba?\(0, 0, 0(, 0)?\)|transparent/i).test(color.fill)) { color.fill = wrapper.css(border ? 'background-color' : borderSide); }
+		if(!color.border || (/rgba?\(0, 0, 0(, 0)?\)|transparent/i).test(color.border)) { color.border = wrapper.css(borderSide) || color.fill; }
 
 		$('*', tip).add(tip).css('background-color', 'transparent').css('border', 0);
 	}
@@ -197,7 +200,7 @@ function Tip(qTip, command)
 			if(properties === FALSE){ return FALSE; }
 
 			// Bind update events
-			qTip.elements.tooltip.bind('tooltipmove.tip', adjust);
+			tooltip.bind('tooltipmove.tip', reposition);
 
 			// Check if rendering method is possible and if not fall back
 			if(method === TRUE) {
@@ -222,8 +225,8 @@ function Tip(qTip, command)
 
 		detectCorner: function()
 		{
-			var corner = qTip.options.style.tip.corner,
-				mimic = qTip.options.style.tip.mimic || corner,
+			var corner = opts.corner,
+				mimic = opts.mimic || corner,
 				at = qTip.options.position.at,
 				my = qTip.options.position.my;
 				if(my.string) { my = my.string(); }
@@ -261,7 +264,7 @@ function Tip(qTip, command)
 
 			// Create tip element and prepend to the tooltip if needed
 			if(tip){ tip.remove(); }
-			tip = $('<div class="ui-tooltip-tip ui-widget-content"></div>').css(size).prependTo(qTip.elements.tooltip);
+			tip = $('<div class="ui-tooltip-tip ui-widget-content"></div>').css(size).prependTo(tooltip);
 			
 			// Create tip element
 			switch(method)
@@ -291,7 +294,9 @@ function Tip(qTip, command)
 
 		update: function(corner, mimic)
 		{
-			var regular = 'px solid ',
+			var width = size.width,
+				height = size.height,
+				regular = 'px solid ',
 				transparent = 'px dashed transparent', // Dashed IE6 border-transparency hack. Awesome!
 				i = border > 0 ? 0 : 1,
 				translate = Math.ceil(border / 2 + 0.5),
@@ -435,7 +440,7 @@ function Tip(qTip, command)
 			}
 
 			// Remove bound events
-			qTip.elements.tooltip.unbind('tooltipmove.tip');
+			tooltip.unbind('tooltipmove.tip');
 		}
 	});
 }

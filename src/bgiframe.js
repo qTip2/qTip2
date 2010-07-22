@@ -3,7 +3,7 @@ function BGIFrame(qTip)
 {
 	var self = this,
 		tooltip = qTip.elements.tooltip,
-		ns = '.bgiframe-' + qTip.id,
+		namespace = '.bgiframe-' + qTip.id,
 		events = 'tooltipmove'+namespace+' tooltipshow'+namespace;
 
 	self.frame = NULL;
