@@ -33,7 +33,7 @@
 			<fileset file="${SRC_DIR}/tips.js" />
 			<fileset file="${SRC_DIR}/imagemap.js" />
 			<fileset file="${SRC_DIR}/modal.js" />
-			<fileset file="${SRC_DIR}/ie6.js" />
+			<fileset file="${SRC_DIR}/bgiframe.js" />
 			<fileset file="${SRC_DIR}/outro.js" />
 		</concat>
 

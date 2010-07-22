@@ -9,7 +9,7 @@ PLUGINS = ${SRC_DIR}/ajax.js\
 	${SRC_DIR}/tips.js\
 	${SRC_DIR}/imagemap.js\
 	${SRC_DIR}/modal.js\
-	${SRC_DIR}/ie6.js
+	${SRC_DIR}/bgiframe.js
 
 JS_MODULES = ${SRC_DIR}/header.txt\
 	${SRC_DIR}/intro.js\
