@@ -40,7 +40,7 @@ those above, but replace _make_ with _ant_ e.g.
 
 	ant [command]
 	
-[command] is optional and can be any of the above i.e. qtip, min, pack etc.
+*`[command]` is optional and can be any of the above i.e. qtip, min, pack etc.*
 
 
 Building to a different directory (MAKE only)

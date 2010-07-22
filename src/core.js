@@ -282,14 +282,8 @@ function QTip(target, options, id)
 		if(!self.rendered || !content) { return FALSE; }
 
 		// Append new content if its a DOM array and show it if hidden
-		if(content.jquery && content.length > 0)
-		{
-			if(options.content.clone) {
-				self.elements.content.html( content.clone(TRUE).removeAttr('id').css({ display: 'block' }) );
-			}
-			else {
+		if(content.jquery && content.length > 0) {
 				self.elements.content.append(content.css({ display: 'block' }));
-			}
 		}
 
 		// Content is a regular string, insert the new content
@@ -302,8 +296,7 @@ function QTip(target, options, id)
 		self.reposition(self.cache.event);
 
 		// Show the tooltip if rendering is taking place
-		if(self.rendered < 0)
-		{
+		if(self.rendered < 0) {
 			// Show tooltip on ready
 			if(options.show.ready || self.rendered === -2) {
 				self.show(self.cache.event);
@@ -788,7 +781,7 @@ function QTip(target, options, id)
 			// Only update the z-index if it has changed and tooltip is not already focused
 			if(!tooltip.hasClass('ui-tooltip-focus') && curIndex !== newIndex)
 			{
-				$(':not(.qtip.ui-tooltip)').each(function()
+				$('.qtip.ui-tooltip').each(function()
 				{
 					var api = $(this).qtip(), tooltip, elemIndex;
 					if(!api || !api.rendered) { return TRUE; }
@@ -1263,7 +1256,6 @@ $.fn.qtip.defaults = {
 	content: {
 		text: TRUE,
 		attr: 'title',
-		clone: TRUE,
 		title: {
 			text: FALSE,
 			button: FALSE
