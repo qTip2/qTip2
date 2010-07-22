@@ -26,9 +26,9 @@ function Tip(qTip, command)
 {
 	var self = this,
 		opts = qTip.options.style.tip,
-		tooltip = qTip.elements.tooltip,
-		wrapper = qTip.elements.wrapper,
-		tip = qTip.elements.tip = $(),
+		elems = qTip.elements,
+		tooltip = elems.tooltip,
+		wrapper = elems.wrapper,
 		cache = { 
 			top: 0, 
 			left: 0, 
@@ -83,15 +83,16 @@ function Tip(qTip, command)
 	// Tip position method
 	function position(corner)
 	{
-		// Return if tips are disabled or tip is not yet rendered
-		if(opts.corner === FALSE || !tip) { return FALSE; }
-		
-		// Inherit corner if not provided
-		corner = corner || self.corner;
-		
-		var corners  = ['left', 'right'],
+		var tip = elems.tip,
+			corners  = ['left', 'right'],
 			ieAdjust = { left: 0, right: 0, top: 0, bottom: 0 },
 			offset = 0;
+
+		// Return if tips are disabled or tip is not yet rendered
+		if(opts.corner === FALSE || !tip) { return FALSE; }
+
+		// Inherit corner if not provided
+		corner = corner || self.corner;
 
 		// Reet initial position
 		tip.css({ top: '', bottom: '', left: '', right: '', margin: '' });
@@ -178,7 +179,8 @@ function Tip(qTip, command)
 	}
 
 	function detectColours() {
-		var precedance = self.mimic[ self.mimic.precedance ],
+		var tip = elems.tip,
+			precedance = self.mimic[ self.mimic.precedance ],
 			borderSide = 'border-' + precedance + '-color';
 
 		// Detect tip colours
@@ -263,18 +265,18 @@ function Tip(qTip, command)
 				height = size.height;
 
 			// Create tip element and prepend to the tooltip if needed
-			if(tip){ tip.remove(); }
-			tip = $('<div class="ui-tooltip-tip ui-widget-content"></div>').css(size).prependTo(tooltip);
+			if(elems.tip){ elems.tip.remove(); }
+			elems.tip = $('<div class="ui-tooltip-tip ui-widget-content"></div>').css(size).prependTo(tooltip);
 			
 			// Create tip element
 			switch(method)
 			{
 				case 'canvas':
-					tip.append('<canvas height="'+height+'" width="'+width+'" />');
+					elems.tip.append('<canvas height="'+height+'" width="'+width+'" />');
 				break;
 					
 				case 'vml':
-					tip.html('<vml:shape coordorigin="0 0" coordsize="'+width+' '+height+'" stroked="' + !!border + '" ' +
+					elems.tip.html('<vml:shape coordorigin="0 0" coordsize="'+width+' '+height+'" stroked="' + !!border + '" ' +
 						' style="behavior:url(#default#VML); display:inline-block; antialias:TRUE; position: absolute; ' +
 						' top:0; left:0; width:'+width+'px; height:'+height+'px; vertical-align:'+self.corner.y+';">' +
 						
@@ -285,7 +287,7 @@ function Tip(qTip, command)
 				break;
 
 				case 'polygon':
-					tip.append('<div class="ui-tooltip-tip-inner" />').append(border ? '<div class="ui-tooltip-tip-border" />' : '');
+					elems.tip.append('<div class="ui-tooltip-tip-inner" />').append(border ? '<div class="ui-tooltip-tip-border" />' : '');
 				break;
 			}
 
@@ -294,7 +296,8 @@ function Tip(qTip, command)
 
 		update: function(corner, mimic)
 		{
-			var width = size.width,
+			var tip = elems.tip,
+				width = size.width,
 				height = size.height,
 				regular = 'px solid ',
 				transparent = 'px dashed transparent', // Dashed IE6 border-transparency hack. Awesome!
@@ -435,8 +438,8 @@ function Tip(qTip, command)
 		destroy: function()
 		{
 			// Remove previous tip if present
-			if(tip) {
-				tip.remove();
+			if(elems.tip) {
+				elems.tip.remove();
 			}
 
 			// Remove bound events
