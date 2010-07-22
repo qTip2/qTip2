@@ -2,21 +2,20 @@
 function BGIFrame(qTip)
 {
 	var self = this,
-		tooltip = qTip.elements.tooltip,
+		elems = qTip.elements,
+		tooltip = elems.tooltip,
 		namespace = '.bgiframe-' + qTip.id,
 		events = 'tooltipmove'+namespace+' tooltipshow'+namespace;
-
-	self.frame = NULL;
 
 	$.extend(self, {
 		init: function()
 		{
 			// Create the BGIFrame element
-			self.frame = $('<iframe class="ui-tooltip-bgiframe" frameborder="0" tabindex="-1" src="javascript:\'\';" ' +
+			elems.bgiframe = $('<iframe class="ui-tooltip-bgiframe" frameborder="0" tabindex="-1" src="javascript:\'\';" ' +
 				' style="display:block; position:absolute; z-index:-1; filter:alpha(opacity=0);"></iframe>');
 
 			// Append the new element to the tooltip
-			self.frame.appendTo(tooltip);
+			elems.bgiframe.appendTo(tooltip);
 
 			// Update BGIFrame on tooltip move
 			tooltip.bind(events, self.adjust);
@@ -40,7 +39,7 @@ function BGIFrame(qTip)
 			}
 
 			// Update bgiframe
-			self.frame.css(offset).css(dimensions);
+			elems.bgiframe.css(offset).css(dimensions);
 		},
 
 		destroy: function()
