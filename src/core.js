@@ -684,10 +684,15 @@ function QTip(target, options, id)
 				target[attr]('aria-describedby', 'ui-tooltip-'+id+'-content');
 
 				// Prevent antialias from disappearing in IE7 by removing filter and opacity attribute
-				if(state && $.browser.msie && $(this).get(0).style) { 
-					ieStyle = $(this).get(0).style;
-					ieStyle.removeAttribute('filter');
-					ieStyle.removeAttribute('opacity');
+				if(state) {
+					if($.browser.msie && $(this).get(0).style) { 
+						ieStyle = $(this).get(0).style;
+						ieStyle.removeAttribute('filter');
+						ieStyle.removeAttribute('opacity');
+					}
+				}
+				else {
+					$(this).hide();
 				}
 			}
 
