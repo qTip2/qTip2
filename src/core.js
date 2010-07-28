@@ -129,33 +129,35 @@ function QTip(target, options, id)
 
 	function calculate(detail)
 	{
-		var show = (!self.elements.tooltip.is(':visible')) ? TRUE : FALSE,
+		var tooltip = self.elements.tooltip,
+			accessible = 'ui-tooltip-accessible',
+			show = (!tooltip.is(':visible')) ? TRUE : FALSE,
 			returned = FALSE;
 
 		// Make sure tooltip is rendered and if not, return
 		if(!self.rendered) { return FALSE; }
 
 		// Show and hide tooltip to make sure properties are returned correctly
-		if(show) { self.elements.tooltip.addClass('ui-tooltip-accessible'); }
+		if(show) { tooltip.addClass(accessible); }
 		switch(detail)
 		{
 			case 'dimensions':
 				// Find initial dimensions
 				returned = {
-					height: self.elements.tooltip.outerHeight(),
-					width: self.elements.tooltip.outerWidth()
+					height: tooltip.outerHeight(),
+					width: tooltip.outerWidth()
 				};
 			break;
 			
 			case 'offsetParent':
-				returned = self.elements.tooltip.offsetParent();
+				returned = tooltip.offsetParent();
 			break;
 
 			case 'position':
-				returned = self.elements.tooltip.offset();
+				returned = tooltip.offset();
 			break;
 		}
-		if(show) { self.elements.tooltip.removeClass('ui-tooltip-accessible'); }
+		if(show) { tooltip.removeClass(accessible); }
 
 		return returned;
 	}
@@ -163,10 +165,10 @@ function QTip(target, options, id)
 	// IE max-width/min-width simulator function
 	function updateWidth(newWidth)
 	{
+		var tooltip = self.elements.tooltip, max, min;
+
 		// Make sure tooltip is rendered and the browser is IE. If not, return
 		if(!self.rendered || !$.browser.msie) { return FALSE; }
-
-		var tooltip = self.elements.tooltip, max, min;
 
 		// Determine actual width
 		tooltip.css({ width: 'auto', maxWidth: 'none' });
@@ -274,7 +276,7 @@ function QTip(target, options, id)
 
 		// Append new content if its a DOM array and show it if hidden
 		if(content.jquery && content.length > 0) {
-				self.elements.content.append(content.css({ display: 'block' }));
+			self.elements.content.append(content.css({ display: 'block' }));
 		}
 
 		// Content is a regular string, insert the new content
@@ -454,10 +456,8 @@ function QTip(target, options, id)
 			}
 
 			// If mouse is the target, update tooltip position on document mousemove
-			if(options.position.target === 'mouse')
-			{
-				$(document).bind('mousemove'+namespace, function(event)
-				{
+			if(options.position.target === 'mouse') {
+				$(document).bind('mousemove'+namespace, function(event) {
 					// Update the tooltip position only if the tooltip is visible and adjustment is enabled
 					if(options.position.adjust.mouse && !targets.tooltip.hasClass('ui-state-disabled') && targets.tooltip.is(':visible')) {
 						self.reposition(event);
@@ -773,10 +773,11 @@ function QTip(target, options, id)
 			var tooltip = self.elements.tooltip,
 				curIndex = parseInt(tooltip.css('z-index'), 10),
 				newIndex = $.fn.qtip.zindex + $('.qtip.ui-tooltip').length,
+				focusClass = 'ui-tooltip-focus',
 				callback;
 
 			// Only update the z-index if it has changed and tooltip is not already focused
-			if(!tooltip.hasClass('ui-tooltip-focus') && curIndex !== newIndex)
+			if(!tooltip.hasClass(focusClass) && curIndex !== newIndex)
 			{
 				$('.qtip.ui-tooltip').each(function()
 				{
@@ -789,7 +790,7 @@ function QTip(target, options, id)
 					if(!isNaN(elemIndex)) { tooltip.css({ zIndex: elemIndex - 1 }); }
 
 					// Set focused status to FALSE
-					tooltip.removeClass('ui-tooltip-focus');
+					tooltip.removeClass(focusClass);
 
 					// Trigger blur event
 					tooltip.trigger('tooltipblur', [api, newIndex]);
@@ -801,7 +802,7 @@ function QTip(target, options, id)
 
 				// Set the new z-index and set focus status to TRUE if callback wasn't FALSE
 				if(!callback.isDefaultPrevented()) {
-					tooltip.css({ zIndex: newIndex }).addClass('ui-tooltip-focus');
+					tooltip.css({ zIndex: newIndex }).addClass(focusClass);
 				}
 			}
 
@@ -1010,6 +1011,7 @@ function init(id, opts)
 
 	// Create unique configuration object using metadata
 	config = $.extend(TRUE, {}, opts, metadata),
+	posOptions = config.position,
 
 	// Use document body instead of document element if needed
 	newTarget = $(this)[0] === document ? $(document.body) : $(this);
@@ -1029,14 +1031,14 @@ function init(id, opts)
 	}
 
 	// Setup target options
-	if(config.position.container === FALSE) { config.position.container = $(document.body); }
-	if(config.position.target === FALSE) { config.position.target = newTarget; }
+	if(posOptions.container === FALSE) { posOptions.container = $(document.body); }
+	if(posOptions.target === FALSE) { posOptions.target = newTarget; }
 	if(config.show.target === FALSE) { config.show.target = newTarget; }
 	if(config.hide.target === FALSE) { config.hide.target = newTarget; }
 
 	// Convert position corner values into x and y strings
-	config.position.at = new $.fn.qtip.plugins.Corner(config.position.at);
-	config.position.my = new $.fn.qtip.plugins.Corner(config.position.my);
+	posOptions.at = new $.fn.qtip.plugins.Corner(posOptions.at);
+	posOptions.my = new $.fn.qtip.plugins.Corner(posOptions.my);
 
 	// Destroy previous tooltip if overwrite is enabled, or skip element if not
 	if($(this).data('qtip')) {
