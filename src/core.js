@@ -100,7 +100,7 @@ function QTip(target, options, id)
 	self.id = id;
 	self.rendered = FALSE;
 	self.elements = { target: target };
-	self.cache = { event: {}, disabled: FALSE, posClass: FALSE };
+	self.cache = { event: {}, target: NULL, disabled: FALSE, posClass: FALSE };
 	self.timers = {};
 	self.options = options;
 	self.plugins = {};
@@ -813,7 +813,7 @@ function QTip(target, options, id)
 		{
 			if(self.rendered === FALSE) { return FALSE; }
 
-			var target = options.position.target === 'event' && event ? $(event.target) : options.position.target,
+			var target = options.position.target,
 				tooltip = self.elements.tooltip,
 				posOptions = options.position,
 				my = posOptions.my, 
@@ -869,6 +869,17 @@ function QTip(target, options, id)
 				position = { top: event.pageY, left: event.pageX };
 			}
 			else {
+				// Check if event targetting is being used
+				if(target === 'event') {
+					if(event && event.target) {
+						target = self.cache.target = $(event.target)
+					}
+					else {
+						target = self.cache.target;
+					}
+				}
+
+				// Check if window or document is the target
 				if(target[0] === document || target[0] === window) {
 					targetWidth = target.width();
 					targetHeight = target.height();
@@ -877,12 +888,15 @@ function QTip(target, options, id)
 						left: target.scrollLeft()
 					};
 				}
+				
+				// Use Imagemap plugin if target is an AREA element
 				else if(target.is('area') && $.fn.qtip.plugins.imagemap) {
 					position = $.fn.qtip.plugins.imagemap(target, at);
 					targetWidth = position.width;
 					targetHeight = position.height;
 					position = position.offset;
 				}
+
 				else {
 					targetWidth = target.outerWidth();
 					targetHeight = target.outerHeight();
