@@ -872,7 +872,7 @@ function QTip(target, options, id)
 				// Check if event targetting is being used
 				if(target === 'event') {
 					if(event && event.target) {
-						target = self.cache.target = $(event.target)
+						target = self.cache.target = $(event.target);
 					}
 					else {
 						target = self.cache.target;

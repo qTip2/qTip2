@@ -141,11 +141,6 @@ function Tip(qTip, command)
 	}
 
 	function reposition(event, api, position) {
-		// Only continue if tip adjustments are enabled
-		if(!self.corner.adjust) {
-			return FALSE;
-		}
-
 		var newCorner = $.extend({}, self.corner),
 			newType = self.mimic.adjust ? $.extend({}, self.mimic) : null,
 			precedance = newCorner.precedance === 'y' ? ['y', 'top', 'left', 'height'] : ['x', 'left', 'top', 'width'],
@@ -240,7 +235,6 @@ function Tip(qTip, command)
 			else {
 				if(corner === TRUE) {
 					self.corner = new $.fn.qtip.plugins.Corner(my);
-					self.corner.adjust = TRUE;
 				}
 				else if(!corner.string) {
 					self.corner = new $.fn.qtip.plugins.Corner(corner);
@@ -252,7 +246,6 @@ function Tip(qTip, command)
 				else if(!mimic.string) {
 					self.mimic = new $.fn.qtip.plugins.Corner(mimic);
 					self.mimic.precedance = self.corner.precedance;
-					self.mimic.adjust = TRUE;
 				}
 			}
 
