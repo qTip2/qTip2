@@ -871,7 +871,7 @@ function QTip(target, options, id)
 			else {
 				// Check if event targetting is being used
 				if(target === 'event') {
-					if(event && event.target) {
+					if(event && event.target && event.type !== 'scroll' && event.type !== 'resize') {
 						target = self.cache.target = $(event.target);
 					}
 					else {
