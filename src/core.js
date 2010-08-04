@@ -1105,6 +1105,7 @@ $.fn.qtip = function(options, notation, newValue)
 			else {
 				// Render tooltip if not already rendered when tooltip is to be shown
 				if(command === 'show' || (command === 'toggle' && !api.rendered && !api.elements.tooltip.is(':visible'))) {
+					if(notation.timeStamp) { api.cache.event = notation; }
 					api.render();
 				}
 
