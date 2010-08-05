@@ -1077,6 +1077,7 @@ $.fn.qtip = function(options, notation, newValue)
 	var command =  String(options).toLowerCase(), // Parse command
 		returned = FALSE,
 		args = command === 'disable' ? [TRUE] : $.makeArray(arguments).splice(1),
+		event = args[args.length - 1],
 		opts;
 
 	// Check for API request
@@ -1104,8 +1105,8 @@ $.fn.qtip = function(options, notation, newValue)
 			}
 			else {
 				// Render tooltip if not already rendered when tooltip is to be shown
-				if(command === 'show' || (command === 'toggle' && !api.rendered && !api.elements.tooltip.is(':visible'))) {
-					if(notation.timeStamp) { api.cache.event = notation; }
+				if(!api.rendered && (command === 'show' || command === 'toggle')) {
+					if(event.timeStamp) { api.cache.event = event; }
 					api.render();
 				}
 
@@ -1233,6 +1234,7 @@ $.each({
 	}
 },
 function(name, func) {
+	if(!func) { return true; }
 	var old = $.fn[name];
 	$.fn[name] = function() {
 		return func.apply(this, arguments) || old.apply(this, arguments);
