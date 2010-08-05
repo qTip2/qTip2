@@ -930,12 +930,10 @@ function QTip(target, options, id)
 			}
 
 			// Set tooltip position class
-			if(tooltip.hasClass('ui-tooltip-pos-' + my.abbreviation())) {
-				tooltip.attr('class', function(i, val) {
-					return $(this).attr('class').replace(/ui-tooltip-pos-\w+/i, '');
-				})
-				.addClass('ui-tooltip-pos-' + my.abbreviation());
-			}
+			tooltip.attr('class', function(i, val) {
+				return $(this).attr('class').replace(/ui-tooltip-pos-\w+/i, '');
+			})
+			.addClass('ui-tooltip-pos-' + my.abbreviation());
 
 			// Call API method
 			tooltip.trigger(callback, [self.hash(), position]);
