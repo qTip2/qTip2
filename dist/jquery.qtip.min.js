@@ -2,14 +2,14 @@
 * qTip - The jQuery tooltip plugin
 * http://craigsworks.com/projects/qtip/
 *
-* Version: 1.0.0pre
+* Version: 2.0.0pre
 * Copyright 2009 Craig Michael Thompson - http://craigsworks.com
 *
 * Dual licensed under MIT or GPL Version 2 licenses
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Aug 10 19:35:48 2010 +0100
+* Date: Tue Aug 10 19:44:01 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
