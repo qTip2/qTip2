@@ -100,7 +100,7 @@ function QTip(target, options, id)
 	self.id = id;
 	self.rendered = FALSE;
 	self.elements = { target: target };
-	self.cache = { event: {}, target: NULL, disabled: FALSE, posClass: FALSE };
+	self.cache = { event: {}, target: NULL, disabled: FALSE };
 	self.timers = {};
 	self.options = options;
 	self.plugins = {};
@@ -826,17 +826,21 @@ function QTip(target, options, id)
 				callback = $.Event('tooltipmove'),
 				adjust = {
 					left: function(posLeft) {
-						var winScroll = $(window).scrollLeft(),
+						var targetLeft = target.offset().left,
+							winScroll = $(window).scrollLeft(),
 							winWidth = $(window).width(),
 							myOffset = my.x === 'left' ? -elemWidth : my.x === 'right' ? elemWidth : elemWidth / 2,
-							atOffset = at.x === 'left' ? targetWidth : at.x === 'right' ? -targetWidth : 0,
+							atOffset = at.x === 'left' ? targetWidth : at.x === 'right' ? -targetWidth : targetWidth / 2,
 							adjustX = -2 * posOptions.adjust.x,
-							newOffset = posLeft < 0 ? myOffset + targetWidth + adjustX : myOffset + atOffset + adjustX,
+							newOffset = atOffset + myOffset + adjustX,
 							overflowLeft = winScroll - posLeft,
 							overflowRight = posLeft + elemWidth - winWidth - winScroll;
 
-						if(overflowLeft > 0 || overflowRight > 0) { 
-							position.left += (target !== 'mouse' && my.precedance === 'y' && overflowRight > 0 ? -1 : 1) * newOffset; 
+						if(overflowLeft > 0 && posLeft !== targetLeft) {
+							position.left += newOffset;
+						}
+						else if(overflowRight > 0 && posLeft + elemWidth !== targetLeft + targetWidth) {
+							position.left += (my.x === 'center' ? -1 : 1) * newOffset;
 						}
 
 						return position.left - posLeft;
