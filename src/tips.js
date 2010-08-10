@@ -50,7 +50,7 @@ function Tip(qTip, command)
 			// Re-determine tip type and update
 			border = opts.border;
 
-			// Initialise tip
+			// Make sure a tip can be drawn
 			self.init();
 
 			// Only update the position if mouse isn't the target
