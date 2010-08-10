@@ -609,15 +609,15 @@ function QTip(target, options, id)
 
 						// Position checks
 						'^position.container$': function(){ if(self.rendered) { self.elements.tooltip.appendTo(value); } },
-						'^position.(corner|adjust|target)': function(){ if(self.rendered) { self.reposition(); } },
 						'^position.(my|at)$': function(){
 							// Parse new corner value into Corner objecct
-							var corner = (notation.search(/my$/i) > -1) ? 'my' : 'at';
+							var corner = (/my$/i).test(notation) ? 'my' : 'at';
 
 							if('string' === typeof value) {
 								options.position[corner] = new $.fn.qtip.plugins.Corner(value);
 							}
 						},
+						'^position.(my|at|adjust|target)': function(){ if(self.rendered) { self.reposition(); } },
 
 						// Show & hide checks
 						'^(show|hide).(event|target|fixed)': function(obj, opt, val, prev) {

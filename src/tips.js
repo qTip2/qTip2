@@ -46,18 +46,13 @@ function Tip(qTip, command)
 	self.corner = NULL;
 	self.mimic = NULL;
 	self.checks = {
-		'^position.my$': function() {
-			// Check if tip corner is automatic and update if so
-			if(this.get('style.tip.corner') === TRUE) {
-				self.checks['^style.tip.(corner|mimic|method)'].call(this);
-			}
-		},
-		'^style.tip.(corner|mimic|method|border)': function() {
+		'^position.my|style.tip.(corner|mimic|method|border)': function() {
 			// Re-determine tip type and update
 			border = opts.border;
-			self.detectCorner();
-			self.update();
-			
+
+			// Initialise tip
+			self.init();
+
 			// Only update the position if mouse isn't the target
 			if(this.get('position.target') !== 'mouse') {
 				this.reposition();
@@ -74,9 +69,6 @@ function Tip(qTip, command)
 
 			// Reposition the tooltip
 			qTip.reposition();
-		},
-		'^style.tip.fnCss': function() {
-			self.update();
 		}
 	};
 
@@ -141,6 +133,8 @@ function Tip(qTip, command)
 	}
 
 	function reposition(event, api, position) {
+		if(!elems.tip) { return; }
+
 		var newCorner = $.extend({}, self.corner),
 			newType = self.mimic.adjust ? $.extend({}, self.mimic) : null,
 			precedance = newCorner.precedance === 'y' ? ['y', 'top', 'left', 'height'] : ['x', 'left', 'top', 'width'],
@@ -192,13 +186,6 @@ function Tip(qTip, command)
 	$.extend(self, {
 		init: function()
 		{
-			// Determine tip corner and type
-			var properties = self.detectCorner();
-			if(properties === FALSE){ return FALSE; }
-
-			// Bind update events
-			tooltip.bind('tooltipmove.tip', reposition);
-
 			// Check if rendering method is possible and if not fall back
 			if(method === TRUE) {
 				method = $('<canvas />')[0].getContext ? 'canvas' : $.browser.msie && ((/center/i).test(self.mimic.string()) || size.height !== size.width) ? 'vml' : 'polygon';
@@ -212,10 +199,19 @@ function Tip(qTip, command)
 				}
 			}
 
-			// Create a new tip
-			self.create();
-			detectColours();
-			self.update();
+			// Determine tip corner and type
+			if(self.detectCorner()) {
+				// Create a new tip
+				self.create();
+				detectColours();
+				self.update();
+
+				// Bind update events
+				tooltip.bind('tooltipmove.tip', reposition);
+			}
+			else {
+				self.destroy();
+			}
 
 			return self;
 		},
@@ -299,8 +295,8 @@ function Tip(qTip, command)
 				factor, context, path, coords, inner;
 
 			// Re-determine tip if not already set
-			if(!mimic){ mimic = corner ? corner : self.mimic; }
-			if(!corner){ corner = self.corner; }
+			if(!mimic) { mimic = corner ? corner : self.mimic; }
+			if(!corner) { corner = self.corner; }
 			
 			// Inherit tip corners from corner object if not present
 			if(mimic.x === 'false') { mimic.x = corner.x; }
@@ -432,7 +428,7 @@ function Tip(qTip, command)
 			return self;
 		},
 
-		destroy: function()
+		destroy: function(unbind)
 		{
 			// Remove previous tip if present
 			if(elems.tip) {
@@ -459,13 +455,7 @@ $.fn.qtip.plugins.tip = function(qTip)
 		// No API was found, create new instance
 		else {
 			qTip.plugins.tip = new Tip(qTip);
-
-			if(qTip.plugins.tip.detectCorner()) {
-				qTip.plugins.tip.init();
-			}
-			else {
-				delete qTip.plugins.tip;
-			}
+			qTip.plugins.tip.init();
 
 			return qTip.plugins.tip;
 		}
