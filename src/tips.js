@@ -46,12 +46,20 @@ function Tip(qTip, command)
 	self.corner = NULL;
 	self.mimic = NULL;
 	self.checks = {
-		'^position.my|style.tip.(corner|mimic|method|border)': function() {
+		'^position\.my|style.tip.(corner|mimic|method|border)': function() {
 			// Re-determine tip type and update
 			border = opts.border;
 
 			// Make sure a tip can be drawn
-			self.init();
+			if(self.detectCorner()) {
+				// Create a new tip
+				self.create();
+				detectColours();
+				self.update();
+			}
+			else {
+				self.tip.remove();
+			}
 
 			// Only update the position if mouse isn't the target
 			if(this.get('position.target') !== 'mouse') {
@@ -208,9 +216,6 @@ function Tip(qTip, command)
 
 				// Bind update events
 				tooltip.bind('tooltipmove.tip', reposition);
-			}
-			else {
-				self.destroy();
 			}
 
 			return self;

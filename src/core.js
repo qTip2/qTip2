@@ -839,7 +839,7 @@ function QTip(target, options, id)
 						if(overflowLeft > 0 && !(posLeft >= targetLeft && posLeft < targetLeft + targetWidth)) {
 							position.left += newOffset - atOffset;
 						}
-						else if(overflowRight > 0 && !(posLeft < targetLeft + targetWidth && posLeft <= targetLeft)) {
+						else if(overflowRight > 0 && posLeft + elemWidth > targetLeft) {
 							position.left += my.x === 'center' ? -newOffset + atOffset : newOffset - atOffset;
 						}
 
