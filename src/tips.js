@@ -313,8 +313,10 @@ function Tip(qTip, command)
 			switch(method)
 			{
 				case 'canvas':
-					// Grab canvas context
+					// Grab canvas context and clear it
 					context = inner.get(0).getContext('2d');
+					context.clearRect(0,0,3000,3000);
+					context.restore();
 
 					// Determine tip coordinates based on dimensions
 					if(border) {
@@ -325,6 +327,9 @@ function Tip(qTip, command)
 						context.lineWidth = border + 1;
 						context.lineJoin = 'miter';
 						context.miterLimit = 100;
+						
+						// Save and translate canvas origin
+						context.save();
 						context.translate(
 							mimic.x === 'left' ? 0 : mimic.x === 'right' ? -width : -width / 2,
 							mimic.y === 'top' ? 0 : mimic.y === 'bottom' ? -height : -height / 2
@@ -337,7 +342,6 @@ function Tip(qTip, command)
 					// Setup canvas properties
 					context.fillStyle = color.fill;
 					context.miterLimit = 0;
-					context.clearRect(0,0,3000,3000);
 
 					// Draw the canvas tip (Delayed til after DOM creation)
 					for(i; i < 2; i++) {
