@@ -46,7 +46,7 @@ function Tip(qTip, command)
 	self.corner = NULL;
 	self.mimic = NULL;
 	self.checks = {
-		'^position\.my|style.tip.(corner|mimic|method|border)': function() {
+		'^position.my|style.tip.(corner|mimic|method|border)': function() {
 			// Re-determine tip type and update
 			border = opts.border;
 
@@ -54,7 +54,7 @@ function Tip(qTip, command)
 			if(self.detectCorner()) {
 				// Create a new tip
 				self.create();
-				detectColours();
+				self.detectColours();
 				self.update();
 			}
 			else {
@@ -175,22 +175,6 @@ function Tip(qTip, command)
 		cache.corner = newCorner;
 	}
 
-	function detectColours() {
-		var tip = elems.tip,
-			precedance = self.mimic[ self.mimic.precedance ],
-			borderSide = 'border-' + precedance + '-color';
-
-		// Detect tip colours
-		color.fill = tip.css('background-color', '').css('border', '').css('background-color') || 'transparent';
-		color.border = tip.get(0).style ? tip.get(0).style['border' + precedance.charAt(0) + precedance.substr(1) + 'Color'] : tip.css(borderSide) || 'transparent';
-
-		// Make sure colours are valid and reset background and border properties
-		if((/rgba?\(0, 0, 0(, 0)?\)|transparent/i).test(color.fill)) { color.fill = wrapper.css(border ? 'background-color' : borderSide); }
-		if(!color.border || (/rgba?\(0, 0, 0(, 0)?\)|transparent/i).test(color.border)) { color.border = wrapper.css(borderSide) || color.fill; }
-
-		$('*', tip).add(tip).css('background-color', 'transparent').css('border', 0);
-	}
-
 	$.extend(self, {
 		init: function()
 		{
@@ -211,7 +195,7 @@ function Tip(qTip, command)
 			if(self.detectCorner()) {
 				// Create a new tip
 				self.create();
-				detectColours();
+				self.detectColours();
 				self.update();
 
 				// Bind update events
@@ -251,6 +235,22 @@ function Tip(qTip, command)
 			}
 
 			return self.corner.string() !== 'centercenter';
+		},
+
+		detectColours: function() {
+			var tip = elems.tip,
+				precedance = self.mimic[ self.mimic.precedance ],
+				borderSide = 'border-' + precedance + '-color';
+
+			// Detect tip colours
+			color.fill = tip.css('background-color', '').css('border', '').css('background-color') || 'transparent';
+			color.border = tip.get(0).style ? tip.get(0).style['border' + precedance.charAt(0) + precedance.substr(1) + 'Color'] : tip.css(borderSide) || 'transparent';
+
+			// Make sure colours are valid and reset background and border properties
+			if((/rgba?\(0, 0, 0(, 0)?\)|transparent/i).test(color.fill)) { color.fill = wrapper.css(border ? 'background-color' : borderSide); }
+			if(!color.border || (/rgba?\(0, 0, 0(, 0)?\)|transparent/i).test(color.border)) { color.border = wrapper.css(borderSide) || color.fill; }
+
+			$('*', tip).add(tip).css('background-color', 'transparent').css('border', 0);
 		},
 
 		create: function()
