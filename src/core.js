@@ -148,10 +148,6 @@ function QTip(target, options, id)
 					width: tooltip.outerWidth()
 				};
 			break;
-			
-			case 'offsetParent':
-				returned = tooltip.offsetParent();
-			break;
 
 			case 'position':
 				returned = tooltip.offset();
@@ -820,6 +816,7 @@ function QTip(target, options, id)
 				at = posOptions.at,
 				elemWidth = self.elements.tooltip.width(),
 				elemHeight = self.elements.tooltip.height(),
+				offsetParent = posOptions.container,
 				targetWidth = 0,
 				targetHeight = 0,
 				position = { left: 0, top: 0 },
@@ -908,14 +905,14 @@ function QTip(target, options, id)
 					targetWidth = target.outerWidth();
 					targetHeight = target.outerHeight();
 
-					if(!posOptions.adjust.offset || calculate('offsetParent')[0] === document.body) {
+					if(!posOptions.adjust.offset || offsetParent[0] === document.body) {
 						position = target.offset();
 					}
 					else {
 						// Account for offset parent and it's scroll positions
 						position = target.position();
-						position.top += target.offsetParent().scrollTop();
-						position.left += target.offsetParent().scrollLeft();
+						position.top += offsetParent.scrollTop() - offsetParent.offset().top;
+						position.left += offsetParent.scrollLeft() - offsetParent.offset().left;
 					}
 				}
 
