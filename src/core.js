@@ -708,7 +708,8 @@ function QTip(target, options, id)
 			}
 
 			// Call API methods
-			callback = $.Event('tooltip'+type);
+			callback = $.Event('tooltip'+type); 
+			callback.originalEvent = self.cache.event;
 			tooltip.trigger(callback, [self.hash(), 90]);
 			if(callback.isDefaultPrevented()){ return self; }
 
@@ -770,14 +771,15 @@ function QTip(target, options, id)
 				curIndex = parseInt(tooltip.css('z-index'), 10),
 				newIndex = $.fn.qtip.zindex + $('.qtip.ui-tooltip').length,
 				focusClass = 'ui-tooltip-focus',
-				callback;
+				callback,
+				cachedEvent = $.extend({}, event);
 
 			// Only update the z-index if it has changed and tooltip is not already focused
 			if(!tooltip.hasClass(focusClass) && curIndex !== newIndex)
 			{
 				$('.qtip.ui-tooltip').each(function()
 				{
-					var api = $(this).qtip(), tooltip, elemIndex;
+					var api = $(this).qtip(), blur = $.Event('tooltipblur'), tooltip, elemIndex;
 					if(!api || !api.rendered) { return TRUE; }
 					tooltip = api.elements.tooltip;
 
@@ -789,11 +791,13 @@ function QTip(target, options, id)
 					tooltip.removeClass(focusClass);
 
 					// Trigger blur event
-					tooltip.trigger('tooltipblur', [api, newIndex]);
+					blur.originalEvent = cachedEvent;
+					tooltip.trigger(blur, [api, newIndex]);
 				});
 
 				// Call API method
-				callback = $.Event('tooltipfocus');
+				callback = $.Event('tooltipfocus'); 
+				callback.originalEvent = cachedEvent;
 				tooltip.trigger(callback, [self.hash(), newIndex]);
 
 				// Set the new z-index and set focus status to TRUE if callback wasn't FALSE
@@ -944,6 +948,7 @@ function QTip(target, options, id)
 			.addClass('ui-tooltip-pos-' + my.abbreviation());
 
 			// Call API method
+			callback.originalEvent = $.extend({}, event);
 			tooltip.trigger(callback, [self.hash(), position]);
 			if(callback.isDefaultPrevented()){ return self; }
 			delete position.adjust;
