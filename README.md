@@ -4,7 +4,7 @@
 Pre-compiled scripts
 ---------------------------------------
 If you're not interested in compiling your own version of qTip, you can grab the pre-compiled scripts from the 
-[dist][http://github.com/Craga89/qTip/tree/master/dist/] directory and get started quickly. If you want more options
+[dist](http://github.com/Craga89/qTip/tree/master/dist/) directory and get started quickly. If you want more options
 over what plugins are included in your build, take a look below.
 
 
@@ -64,7 +64,7 @@ With this, the output files would be contained in `/home/craig/qtip/dist/`
 
 Choosing which features are included in your build (MAKE only)
 ----------------------------------
-By default qTip is built with all plugins built into the file. You can see an example of this in the [dist][http://github.com/Craga89/qTip/tree/master/dist/]
+By default qTip is built with all plugins built into the file. You can see an example of this in the [dist](http://github.com/Craga89/qTip/tree/master/dist/)
 directory files. If you want more control over what plugins are included, you can do so by adding some extra parameters to your build commands.
 
 For example, if you plan on using only the tips plugin, you'd specify the plugins variable as so:
