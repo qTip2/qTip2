@@ -16,9 +16,9 @@ function sanitizeOptions(opts)
 					text: opts.content
 				};
 			}
-
+			
 			var noContent = opts.content.text || FALSE;
-			if(noContent.length < 1 || (!noContent && !noContent.attr) || (noContent.jquery && noContent.is(':empty'))) {
+			if(noContent.length < 1 || (!noContent && !noContent.attr) || !noContent.jquery) {
 				opts.content.text = FALSE;
 			}
 
