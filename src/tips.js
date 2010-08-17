@@ -180,7 +180,8 @@ function Tip(qTip, command)
 		{
 			// Check if rendering method is possible and if not fall back
 			if(method === TRUE) {
-				method = $('<canvas />')[0].getContext ? 'canvas' : $.browser.msie && ((/center/i).test(self.mimic.string()) || size.height !== size.width) ? 'vml' : 'polygon';
+				method = $('<canvas />')[0].getContext ? 'canvas' :
+					$.browser.msie && (self.mimic && ((/center/i).test(self.mimic.string())) || size.height !== size.width) ? 'vml' : 'polygon';
 			}
 			else {
 				if(method === 'canvas') {
