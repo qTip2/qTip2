@@ -739,7 +739,7 @@ function QTip(target, options, id)
 			// Use custom function if provided
 			if($.isFunction(opts.effect)) {
 				opts.effect.call(tooltip);
-				tooltip.queue(function(){ after(); $(this).dequeue(); });
+				tooltip.queue(function(){ after.call(this);$ (this).dequeue(); });
 			}
 
 			// If no effect type is supplied, use a simple toggle

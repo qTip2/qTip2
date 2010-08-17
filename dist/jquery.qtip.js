@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Aug 17 19:18:53 2010 +0100
+* Date: Tue Aug 17 19:20:52 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -764,7 +764,7 @@ function QTip(target, options, id)
 			// Use custom function if provided
 			if($.isFunction(opts.effect)) {
 				opts.effect.call(tooltip);
-				tooltip.queue(function(){ after(); $(this).dequeue(); });
+				tooltip.queue(function(){ after.call(this);$ (this).dequeue(); });
 			}
 
 			// If no effect type is supplied, use a simple toggle
