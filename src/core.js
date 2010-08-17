@@ -400,7 +400,7 @@ function QTip(target, options, id)
 				var showIndex = $.inArray(type, events.show);
 
 				// Both events and targets are identical, apply events using a toggle
-				if((showIndex > -1 && $(targets.hide).add(targets.show).length === $(targets.hide).length))
+				if((showIndex > -1 && $(targets.hide).add(targets.show).length === $(targets.hide).length) || type === 'unfocus')
 				{
 					targets.show.bind(type+namespace, function(event)
 					{
