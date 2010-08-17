@@ -933,6 +933,10 @@ function QTip(target, options, id)
 				position.adjusted = { left: 0, top: 0 };
 			}
 
+			// Make sure the tooltip doesn't extend the top/left window boundaries
+			if(position.top < 1) { position.top = 0; }
+			if(position.left < 1) { position.left = 0; }
+
 			// Set tooltip position class
 			tooltip.attr('class', function(i, val) {
 				return $(this).attr('class').replace(/ui-tooltip-pos-\w+/i, '');

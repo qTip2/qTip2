@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Aug 16 21:31:56 2010 +0100
+* Date: Tue Aug 17 01:03:37 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -957,6 +957,10 @@ function QTip(target, options, id)
 			else {
 				position.adjusted = { left: 0, top: 0 };
 			}
+
+			// Make sure the tooltip doesn't extend the top/left window boundaries
+			if(position.top < 1) { position.top = 0; }
+			if(position.left < 1) { position.left = 0; }
 
 			// Set tooltip position class
 			tooltip.attr('class', function(i, val) {
