@@ -18,7 +18,7 @@ function sanitizeOptions(opts)
 			}
 			
 			var noContent = opts.content.text || FALSE;
-			if(noContent.length < 1 || (!noContent && !noContent.attr) || !noContent.jquery) {
+			if(noContent.length < 1 || (!noContent && !noContent.attr) || ('object' === typeof noContent && !noContent.jquery)) {
 				opts.content.text = FALSE;
 			}
 
