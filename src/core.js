@@ -709,7 +709,7 @@ function QTip(target, options, id)
 
 			// Call API methods
 			callback = $.Event('tooltip'+type); 
-			callback.originalEvent = self.cache.event;
+			callback.originalEvent = $.extend({}, event);
 			tooltip.trigger(callback, [self.hash(), 90]);
 			if(callback.isDefaultPrevented()){ return self; }
 
