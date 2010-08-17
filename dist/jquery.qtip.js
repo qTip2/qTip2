@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Aug 17 14:31:26 2010 +0100
+* Date: Tue Aug 17 18:32:10 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -425,7 +425,7 @@ function QTip(target, options, id)
 				var showIndex = $.inArray(type, events.show);
 
 				// Both events and targets are identical, apply events using a toggle
-				if((showIndex > -1 && $(targets.hide).add(targets.show).length === $(targets.hide).length) || type === 'unfocus')
+				if((showIndex > -1 && $(targets.hide).add(targets.show).length === $(targets.hide).length))
 				{
 					targets.show.bind(type+namespace, function(event)
 					{
@@ -1201,7 +1201,7 @@ $.fn.qtip.bind = function(opts)
 		targets = { show: options.show.target, hide: options.hide.target };
 		events = {
 			show: String(options.show.event).replace(' ', namespace+' ') + namespace,
-			hide: (String(options.hide.event) + ' mouseleave').replace(' ', namespace+' ') + namespace
+			hide: String(options.hide.event).replace(' ', namespace+' ') + namespace
 		};
 
 		// Define hoverIntent function

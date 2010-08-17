@@ -400,7 +400,7 @@ function QTip(target, options, id)
 				var showIndex = $.inArray(type, events.show);
 
 				// Both events and targets are identical, apply events using a toggle
-				if((showIndex > -1 && $(targets.hide).add(targets.show).length === $(targets.hide).length) || type === 'unfocus')
+				if((showIndex > -1 && $(targets.hide).add(targets.show).length === $(targets.hide).length))
 				{
 					targets.show.bind(type+namespace, function(event)
 					{
@@ -1176,7 +1176,7 @@ $.fn.qtip.bind = function(opts)
 		targets = { show: options.show.target, hide: options.hide.target };
 		events = {
 			show: String(options.show.event).replace(' ', namespace+' ') + namespace,
-			hide: (String(options.hide.event) + ' mouseleave').replace(' ', namespace+' ') + namespace
+			hide: String(options.hide.event).replace(' ', namespace+' ') + namespace
 		};
 
 		// Define hoverIntent function
