@@ -742,7 +742,7 @@ function QTip(target, options, id)
 			// If no effect type is supplied, use a simple toggle
 			else if(opts.effect === FALSE) {
 				tooltip[ type ]();
-				after();
+				after.call(tooltip);
 			}
 
 			// Use basic fade function

@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Aug 17 19:40:39 2010 +0100
+* Date: Thu Aug 19 19:28:14 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -767,7 +767,7 @@ function QTip(target, options, id)
 			// If no effect type is supplied, use a simple toggle
 			else if(opts.effect === FALSE) {
 				tooltip[ type ]();
-				after();
+				after.call(tooltip);
 			}
 
 			// Use basic fade function
