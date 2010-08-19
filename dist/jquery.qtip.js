@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Aug 17 19:25:35 2010 +0100
+* Date: Tue Aug 17 19:40:39 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -695,10 +695,8 @@ function QTip(target, options, id)
 			// Define after callback
 			function after()
 			{
-				var attr = state ? 'attr' : 'removeAttr';
-
-				// Reset opacity to avoid bugs
-				$(this).css({ opacity: '', height: '' });
+				var attr = state ? 'attr' : 'removeAttr',
+					opacity = (/^1|0$/).test($(this).css('opacity'));
 
 				// Apply ARIA attributes when tooltip is shown
 				if(self.elements.title){ target[attr]('aria-labelledby', 'ui-tooltip-'+id+'-title'); }
@@ -706,19 +704,19 @@ function QTip(target, options, id)
 
 				// Prevent antialias from disappearing in IE7 by removing filter and opacity attribute
 				if(state) {
-					if($.browser.msie && $(this).get(0).style) { 
+					if($.browser.msie && $(this).get(0).style && opacity) { 
 						ieStyle = $(this).get(0).style;
 						ieStyle.removeAttribute('filter');
 						ieStyle.removeAttribute('opacity');
 					}
 				}
-				else {
+				else if(opacity) {
 					$(this).hide();
 				}
 			}
 
 			// Return if element is already in correct state
-			if((visible && state) || (!visible && !state) || tooltip.is(':animated')) { return self; }
+			if((!visible && !state) || tooltip.is(':animated')) { return self; }
 
 			// Attempt to prevent 'blinking' effect when tooltip and show target overlap
 			if(event) {
@@ -750,9 +748,8 @@ function QTip(target, options, id)
 				if(opts.solo) { $(':not(.qtip.ui-tooltip)').qtip('hide'); }
 			}
 			else {
-				// Clear timeout and reset opacity
-				clearTimeout(self.timers.show);  // Clear show timer
-				tooltip.css({ opacity: '' }); // Reset opacity
+				// Clear show timer
+				clearTimeout(self.timers.show);  
 			}
 
 			// Set ARIA hidden status attribute
@@ -764,7 +761,7 @@ function QTip(target, options, id)
 			// Use custom function if provided
 			if($.isFunction(opts.effect)) {
 				opts.effect.call(tooltip);
-				tooltip.queue(function(){ after.call(this);$ (this).dequeue(); });
+				tooltip.queue(function(){ after.call(this); $(this).dequeue(); });
 			}
 
 			// If no effect type is supplied, use a simple toggle
