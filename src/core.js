@@ -604,7 +604,12 @@ function QTip(target, options, id)
 						'^content.title.text': function(){ updateTitle(value); },
 
 						// Position checks
-						'^position.container$': function(){ if(self.rendered) { self.elements.tooltip.appendTo(value); } },
+						'^position.container$': function(){
+							if(self.rendered === true) { 
+								self.elements.tooltip.appendTo(value); 
+								self.reposition();
+							}
+						},
 						'^position.(my|at)$': function(){
 							// Parse new corner value into Corner objecct
 							var corner = (/my$/i).test(notation) ? 'my' : 'at';
@@ -817,7 +822,7 @@ function QTip(target, options, id)
 				at = posOptions.at,
 				elemWidth = self.elements.tooltip.width(),
 				elemHeight = self.elements.tooltip.height(),
-				offsetParent = posOptions.container,
+				offsetParent = $(posOptions.container)[0],
 				targetWidth = 0,
 				targetHeight = 0,
 				position = { left: 0, top: 0 },
@@ -905,15 +910,14 @@ function QTip(target, options, id)
 				else {
 					targetWidth = target.outerWidth();
 					targetHeight = target.outerHeight();
-
-					if(!posOptions.adjust.offset || offsetParent[0] === document.body) {
-						position = target.offset();
-					}
-					else {
-						// Account for offset parent and it's scroll positions
-						position = target.position();
-						position.top += offsetParent.scrollTop() - offsetParent.offset().top;
-						position.left += offsetParent.scrollLeft() - offsetParent.offset().left;
+					
+					position = target.offset();
+					if(posOptions.adjust.offset) {
+						do {
+							position.left -= offsetParent.offsetLeft - offsetParent.scrollLeft;
+							position.top -= offsetParent.offsetTop - offsetParent.scrollTop;
+						}
+						while (offsetParent = offsetParent.offsetParent);
 					}
 				}
 
@@ -935,8 +939,10 @@ function QTip(target, options, id)
 			}
 
 			// Make sure the tooltip doesn't extend the top/left window boundaries
-			if(position.top < 1) { position.top = 0; }
-			if(position.left < 1) { position.left = 0; }
+			if(posOptions.container[0] == document.body) {
+				if(position.top < 1) { position.top = 0; }
+				if(position.left < 1) { position.left = 0; }
+			}
 
 			// Set tooltip position class
 			tooltip.attr('class', function(i, val) {

@@ -8,7 +8,8 @@ JSLINT(src, { browser: true, onevar: true, undef: true, nomen: true, bitwise: tr
 // (in contradiction with JSLint) more information here:
 // http://docs.jquery.com/JQuery_Core_Style_Guidelines
 var ok = {
-	"Expected an identifier and instead saw 'undefined' (a reserved word).": true
+	"Expected an identifier and instead saw 'undefined' (a reserved word).": true,
+	"Expected a conditional expression and instead saw an assignment.": true
 };
 
 var e = JSLINT.errors, found = 0, w;
