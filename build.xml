@@ -15,6 +15,8 @@
 	<property name="QTIP_PACK" value="${DIST_DIR}/jquery.qtip.pack.js" />
 	<property name="QTIP_CSS" value="${DIST_DIR}/jquery.qtip.css" />
 	<property name="QTIP_IMG" value="${DIST_DIR}/images" />
+	
+	<property name="PLUGINS" value="${SRC_DIR}/ajax.js ${SRC_DIR}/tips.js ${SRC_DIR}/imagemap.js ${SRC_DIR}/modal.js ${SRC_DIR}/bgiframe.js" />
 
 	<target name="all" depends="clean,qtip,lint,css,images,min,pack" description="Builds qTip including minified, packed JS files, as well as images and CSS" />
 
@@ -29,11 +31,7 @@
 			<fileset file="${SRC_DIR}/header.txt" />
 			<fileset file="${SRC_DIR}/intro.js" />
 			<fileset file="${SRC_DIR}/core.js" />
-			<fileset file="${SRC_DIR}/ajax.js" />
-			<fileset file="${SRC_DIR}/tips.js" />
-			<fileset file="${SRC_DIR}/imagemap.js" />
-			<fileset file="${SRC_DIR}/modal.js" />
-			<fileset file="${SRC_DIR}/bgiframe.js" />
+			<filelist files="${PLUGINS}"/>
 			<fileset file="${SRC_DIR}/outro.js" />
 		</concat>
 
