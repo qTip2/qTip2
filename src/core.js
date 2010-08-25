@@ -16,9 +16,9 @@ function sanitizeOptions(opts)
 					text: opts.content
 				};
 			}
-			
+
 			var noContent = opts.content.text || FALSE;
-			if(noContent.length < 1 || (!noContent && !noContent.attr) || ('object' === typeof noContent && !noContent.jquery)) {
+			if((noContent.length < 1 || (!noContent && !noContent.attr) || ('object' === typeof noContent && !noContent.jquery)) && !$.isFunction(noContent)) {
 				opts.content.text = FALSE;
 			}
 
@@ -269,6 +269,11 @@ function QTip(target, options, id)
 	{
 		// Make sure tooltip is rendered and content is defined. If not return
 		if(!self.rendered || !content) { return FALSE; }
+
+		// Use function to parse content
+		if($.isFunction(content)) {
+			content = content();
+		}
 
 		// Append new content if its a DOM array and show it if hidden
 		if(content.jquery && content.length > 0) {

@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Aug 24 16:57:07 2010 +0100
+* Date: Tue Aug 24 19:05:23 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -41,9 +41,9 @@ function sanitizeOptions(opts)
 					text: opts.content
 				};
 			}
-			
+
 			var noContent = opts.content.text || FALSE;
-			if(noContent.length < 1 || (!noContent && !noContent.attr) || ('object' === typeof noContent && !noContent.jquery)) {
+			if((noContent.length < 1 || (!noContent && !noContent.attr) || ('object' === typeof noContent && !noContent.jquery)) && !$.isFunction(noContent)) {
 				opts.content.text = FALSE;
 			}
 
@@ -294,6 +294,11 @@ function QTip(target, options, id)
 	{
 		// Make sure tooltip is rendered and content is defined. If not return
 		if(!self.rendered || !content) { return FALSE; }
+
+		// Use function to parse content
+		if($.isFunction(content)) {
+			content = content();
+		}
 
 		// Append new content if its a DOM array and show it if hidden
 		if(content.jquery && content.length > 0) {
