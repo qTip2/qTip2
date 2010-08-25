@@ -17,8 +17,8 @@ function sanitizeOptions(opts)
 				};
 			}
 
-			var noContent = opts.content.text || FALSE;
-			if((noContent.length < 1 || (!noContent && !noContent.attr) || ('object' === typeof noContent && !noContent.jquery)) && !$.isFunction(noContent)) {
+			var noContent = $.isFunction(opts.content.text) ? opts.content.text() : opts.content.text || FALSE;
+			if((!noContent && !noContent.attr) || noContent.length < 1 || ('object' === typeof noContent && !noContent.jquery)) {
 				opts.content.text = FALSE;
 			}
 
