@@ -840,15 +840,16 @@ function QTip(target, options, id)
 							myOffset = my.x === 'left' ? -elemWidth : my.x === 'right' ? elemWidth : elemWidth / 2,
 							atOffset = at.x === 'left' ? targetWidth : at.x === 'right' ? -targetWidth : targetWidth / 2,
 							adjustX = -2 * posOptions.adjust.x,
+							adjustWidth = my.x !== at.x && at.x !== 'center' ? targetWidth : 0,
 							newOffset = atOffset + myOffset + adjustX,
 							overflowLeft = winScroll - posLeft,
 							overflowRight = posLeft + elemWidth - winWidth - winScroll;
 
 						if(overflowLeft > 0 && !(posLeft >= targetLeft && posLeft < targetLeft + targetWidth)) {
-							position.left += newOffset - atOffset;
+							position.left += newOffset - atOffset + adjustWidth;
 						}
 						else if(overflowRight > 0 && posLeft + elemWidth > targetLeft) {
-							position.left += my.x === 'center' ? -newOffset + atOffset : newOffset - atOffset;
+							position.left += (my.x === 'center' ? -1 : 1) * (newOffset - atOffset - adjustWidth);
 						}
 
 						return position.left - posLeft;
@@ -859,6 +860,7 @@ function QTip(target, options, id)
 							myOffset = my.y === 'top' ? -elemHeight : my.y === 'bottom' ? elemHeight : -elemHeight / 2,
 							atOffset = at.y === 'top' ? targetHeight : at.y === 'bottom' ? -targetHeight : 0,
 							adjustY = -2 * posOptions.adjust.y,
+							adjustHeight = my.y !== at.y && at.y !== 'center' ? targetHeight : 0,
 							newOffset = atOffset + myOffset + adjustY,
 							overflowTop = winScroll - posTop,
 							overflowBottom = posTop + elemHeight - winHeight - winScroll;
@@ -867,7 +869,7 @@ function QTip(target, options, id)
 							position.top += my.y === 'center' ? -newOffset + atOffset : newOffset;
 						}
 						else if(overflowBottom > 0) {
-							position.top += newOffset - atOffset;
+							position.top += newOffset - atOffset - adjustHeight;
 						}
 
 						return position.top - posTop;
