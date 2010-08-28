@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sat Aug 28 22:35:21 2010 +0100
+* Date: Sat Aug 28 22:37:18 2010 +0100
 */
 
 .ui-tooltip-accessible{
@@ -242,7 +242,7 @@ div.ui-tooltip-tip{
 		border: 0px dashed transparent;
 	}
 
-#qtip-blanket{
+#qtip-overlay{
 	position: absolute;
 	left: -10000em;
 	top: -10000em;
@@ -253,7 +253,6 @@ div.ui-tooltip-tip{
 	opacity: 0.7;
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";
 	filter: alpha(opacity=70);
-
 
 	/* Set this to any below 15000 (default starting z-index for qTips) */
 	z-index: 14999;

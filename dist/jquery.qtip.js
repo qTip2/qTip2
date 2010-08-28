@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sat Aug 28 22:35:21 2010 +0100
+* Date: Sat Aug 28 22:37:18 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -2106,8 +2106,8 @@ function Modal(qTip, options)
 		namespace = '.qtipmodal',
 		events = 'tooltipshow'+namespace+' tooltiphide'+namespace;
 
-	// See if blanket is already present
-	elems.blanket = $('#qtip-blanket');
+	// See if overlay is already present
+	elems.overlay = $('#qtip-overlay');
 
 	$.extend(self, {
 		init: function()
@@ -2120,29 +2120,29 @@ function Modal(qTip, options)
 				var type = event.type.replace('tooltip', '');
 
 				if($.isFunction(options[type])) {
-					options[type].call(elems.blanket, duration, api);
+					options[type].call(elems.overlay, duration, api);
 				}
 				else {
 					self[type](duration);
 				}
 			});
 
-			// Create the blanket if needed
-			if(!elems.blanket.length) {
+			// Create the overlay if needed
+			if(!elems.overlay.length) {
 				self.create();
 			}
 
-			// Hide tooltip on blanket click if enabled
+			// Hide tooltip on overlay click if enabled
 			if(options.blur === TRUE) {
-				elems.blanket.bind('click'+namespace+qTip.id, function(){ qTip.hide.call(qTip); });
+				elems.overlay.bind('click'+namespace+qTip.id, function(){ qTip.hide.call(qTip); });
 			}
 		},
 
 		create: function()
 		{
-			// Create document blanket
-			elems.blanket = $('<div />', {
-				id: 'qtip-blanket',
+			// Create document overlay
+			elems.overlay = $('<div />', {
+				id: 'qtip-overlay',
 				css: {
 					position: 'absolute',
 					top: 0,
@@ -2154,7 +2154,7 @@ function Modal(qTip, options)
 
 			// Update position on window resize or scroll
 			$(window).bind('resize'+namespace, function() {
-				elems.blanket.css({
+				elems.overlay.css({
 					height: Math.max( $(window).height(), $(document).height() ),
 					width: Math.max( $(window).width(), $(document).width() )
 				});
@@ -2164,23 +2164,23 @@ function Modal(qTip, options)
 
 		toggle: function(state)
 		{
-			var blanket = elems.blanket,
+			var overlay = elems.overlay,
 				effect = qTip.options.show.modal.effect,
 				type = state ? 'show': 'hide';
 
 			// Use custom function if provided
 			if($.isFunction(effect)) {
-				effect.call(elems.blanket);
+				effect.call(elems.overlay);
 			}
 			
 			// If no effect type is supplied, use a simple toggle
 			else if(effect === FALSE) {
-				blanket[ type ]();
+				overlay[ type ]();
 			}
 			
 			// Use basic fade function
 			else {
-				blanket.fadeTo(90, state ? 100 : 0);
+				overlay.fadeTo(90, state ? 100 : 0);
 			}
 		},
 
@@ -2195,19 +2195,19 @@ function Modal(qTip, options)
 			$('*').each(function() {
 				var api = $(this).data('qtip');
 				if(api && api.id !== qTip.id && api.options.show.modal) {
-					// Another modal tooltip was present, leave blanket
+					// Another modal tooltip was present, leave overlay
 					delBlanket = FALSE;
 					return FALSE;
 				}
 			});
 
-			// Remove blanket if needed
+			// Remove overlay if needed
 			if(delBlanket) {
-				elems.blanket.remove();
+				elems.overlay.remove();
 				$(window).unbind('scroll'+namespace+' resize'+namespace);
 			}
 			else {
-				elems.blanket.unbind('click'+namespace+qTip.id);
+				elems.overlay.unbind('click'+namespace+qTip.id);
 			}
 
 			// Remove bound events
