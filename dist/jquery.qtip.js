@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Aug 25 22:13:40 2010 +0100
+* Date: Thu Aug 26 22:39:31 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -635,7 +635,7 @@ function QTip(target, options, id)
 
 						// Position checks
 						'^position.container$': function(){
-							if(self.rendered === true) { 
+							if(self.rendered === TRUE) { 
 								self.elements.tooltip.appendTo(value); 
 								self.reposition();
 							}
@@ -1280,7 +1280,7 @@ $.each({
 	}
 },
 function(name, func) {
-	if(!func) { return true; }
+	if(!func) { return TRUE; }
 	var old = $.fn[name];
 	$.fn[name] = function() {
 		return func.apply(this, arguments) || old.apply(this, arguments);
@@ -1355,7 +1355,7 @@ $.fn.qtip.defaults = {
 	},
 	style: {
 		classes: '',
-		widget: TRUE
+		widget: FALSE
 	},
 	events: {
 		render: $.noop,

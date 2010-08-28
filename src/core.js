@@ -610,7 +610,7 @@ function QTip(target, options, id)
 
 						// Position checks
 						'^position.container$': function(){
-							if(self.rendered === true) { 
+							if(self.rendered === TRUE) { 
 								self.elements.tooltip.appendTo(value); 
 								self.reposition();
 							}
@@ -1255,7 +1255,7 @@ $.each({
 	}
 },
 function(name, func) {
-	if(!func) { return true; }
+	if(!func) { return TRUE; }
 	var old = $.fn[name];
 	$.fn[name] = function() {
 		return func.apply(this, arguments) || old.apply(this, arguments);
@@ -1330,7 +1330,7 @@ $.fn.qtip.defaults = {
 	},
 	style: {
 		classes: '',
-		widget: TRUE
+		widget: FALSE
 	},
 	events: {
 		render: $.noop,
