@@ -80,7 +80,9 @@ function Modal(qTip, options)
 			
 			// Use basic fade function
 			else {
-				overlay.fadeTo(90, state ? 100 : 0);
+				overlay.fadeTo(90, state ? 0.7 : 0, function() {
+					if(!state) { $(this).hide(); }
+				});
 			}
 		},
 
