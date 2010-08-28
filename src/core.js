@@ -834,7 +834,7 @@ function QTip(target, options, id)
 				callback = $.Event('tooltipmove'),
 				adjust = {
 					left: function(posLeft) {
-						var targetLeft = target === 'mouse' ? event.pageX : target[0] === window ? 0 : target.offset().left,
+						var targetLeft = target === 'mouse' ? event.pageX : target.offset().left,
 							winScroll = $(window).scrollLeft(),
 							winWidth = $(window).width(),
 							myOffset = my.x === 'left' ? -elemWidth : my.x === 'right' ? elemWidth : elemWidth / 2,
@@ -938,7 +938,7 @@ function QTip(target, options, id)
 			position.top += posOptions.adjust.y + (my.y === 'bottom' ? -elemHeight : my.y === 'center' ? -elemHeight / 2 : 0);
 
 			// Calculate collision offset values
-			if(posOptions.adjust.screen) {
+			if(posOptions.adjust.screen && target[0] !== window && target[0] !== document.body) {
 				position.adjusted = { left: adjust.left(position.left), top: adjust.top(position.top) };
 			}
 			else {
