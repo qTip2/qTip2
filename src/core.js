@@ -757,7 +757,7 @@ function QTip(target, options, id)
 
 			// Use basic fade function
 			else {
-				tooltip.fadeTo(90, state ? 100 : 0, after);
+				tooltip.fadeTo(90, state ? 1 : 0, after);
 			}
 
 			// If inactive hide method is set, active it
