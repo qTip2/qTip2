@@ -62,15 +62,30 @@ function Modal(qTip, options)
 			.trigger('resize');
 		},
 
-		show: function(duration)
+		toggle: function(state)
 		{
-			elems.blanket.fadeIn(duration);
+			var blanket = elems.blanket,
+				effect = qTip.options.show.modal.effect,
+				type = state ? 'show': 'hide';
+
+			// Use custom function if provided
+			if($.isFunction(effect)) {
+				effect.call(elems.blanket);
+			}
+			
+			// If no effect type is supplied, use a simple toggle
+			else if(effect === FALSE) {
+				blanket[ type ]();
+			}
+			
+			// Use basic fade function
+			else {
+				blanket.fadeTo(90, state ? 100 : 0);
+			}
 		},
 
-		hide: function(duration)
-		{
-			elems.blanket.fadeOut(duration);
-		},
+		show: function() { self.toggle(true); },
+		hide: function() { self.toggle(false); },
 
 		destroy: function()
 		{
@@ -130,10 +145,7 @@ $.fn.qtip.plugins.modal.sanitize = function(opts)
 
 // Setup plugin defaults
 $.fn.qtip.plugins.modal.defaults = {
-	effects: {
-		show: TRUE,
-		hide: TRUE
-	},
+	effect: TRUE,
 	blur: TRUE
 };
 
