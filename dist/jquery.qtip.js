@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sat Aug 28 22:54:05 2010 +0100
+* Date: Sat Aug 28 23:10:06 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -2168,9 +2168,12 @@ function Modal(qTip, options)
 				effect = qTip.options.show.modal.effect,
 				type = state ? 'show': 'hide';
 
+			// Setop all animations
+			overlay.stop(TRUE, FALSE);
+
 			// Use custom function if provided
 			if($.isFunction(effect)) {
-				effect.call(elems.overlay);
+				effect.call(overlay, state);
 			}
 			
 			// If no effect type is supplied, use a simple toggle
@@ -2186,8 +2189,8 @@ function Modal(qTip, options)
 			}
 		},
 
-		show: function() { self.toggle(true); },
-		hide: function() { self.toggle(false); },
+		show: function() { self.toggle(TRUE); },
+		hide: function() { self.toggle(FALSE); },
 
 		destroy: function()
 		{

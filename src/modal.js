@@ -68,9 +68,12 @@ function Modal(qTip, options)
 				effect = qTip.options.show.modal.effect,
 				type = state ? 'show': 'hide';
 
+			// Setop all animations
+			overlay.stop(TRUE, FALSE);
+
 			// Use custom function if provided
 			if($.isFunction(effect)) {
-				effect.call(elems.overlay);
+				effect.call(overlay, state);
 			}
 			
 			// If no effect type is supplied, use a simple toggle
@@ -86,8 +89,8 @@ function Modal(qTip, options)
 			}
 		},
 
-		show: function() { self.toggle(true); },
-		hide: function() { self.toggle(false); },
+		show: function() { self.toggle(TRUE); },
+		hide: function() { self.toggle(FALSE); },
 
 		destroy: function()
 		{
