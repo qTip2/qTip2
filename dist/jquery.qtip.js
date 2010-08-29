@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sat Aug 28 23:10:06 2010 +0100
+* Date: Sat Aug 28 23:20:50 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1966,14 +1966,15 @@ $.fn.qtip.plugins.tip.initialize = 'render';
 // Setup plugin sanitization options
 $.fn.qtip.plugins.tip.sanitize = function(opts)
 {
-	if(opts.style !== undefined && opts.style.tip !== undefined) {
-		if(typeof opts.style.tip !== 'object'){ opts.style.tip = { corner: opts.style.tip }; }
-		if(typeof opts.style.tip.method !== 'string'){ opts.style.tip.method = TRUE; }
-		if(!(/canvas|polygon/i).test(opts.style.tip.method)){ opts.style.tip.method = TRUE; }
-		if(typeof opts.style.tip.width !== 'number'){ opts.style.tip.width = 12; }
-		if(typeof opts.style.tip.height !== 'number'){ opts.style.tip.height = 12; }
-		if(typeof opts.style.tip.border !== 'number'){ opts.style.tip.border = 4; }
-	}
+	if(opts.style === undefined) { opts.style = {}; }
+	if(opts.style.tip === undefined) { opts.style.tip = { corner: TRUE }; }
+
+	if(typeof opts.style.tip !== 'object'){ opts.style.tip = { corner: opts.style.tip || TRUE }; }
+	if(typeof opts.style.tip.method !== 'string'){ opts.style.tip.method = TRUE; }
+	if(!(/canvas|polygon/i).test(opts.style.tip.method)){ opts.style.tip.method = TRUE; }
+	if(typeof opts.style.tip.width !== 'number'){ opts.style.tip.width = 12; }
+	if(typeof opts.style.tip.height !== 'number'){ opts.style.tip.height = 12; }
+	if(typeof opts.style.tip.border !== 'number'){ opts.style.tip.border = 4; }
 };
 
 $.fn.qtip.plugins.imagemap = function(area, corner)
