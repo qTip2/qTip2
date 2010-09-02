@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sat Aug 28 23:20:50 2010 +0100
+* Date: Sun Aug 29 01:09:38 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1974,7 +1974,7 @@ $.fn.qtip.plugins.tip.sanitize = function(opts)
 	if(!(/canvas|polygon/i).test(opts.style.tip.method)){ opts.style.tip.method = TRUE; }
 	if(typeof opts.style.tip.width !== 'number'){ opts.style.tip.width = 12; }
 	if(typeof opts.style.tip.height !== 'number'){ opts.style.tip.height = 12; }
-	if(typeof opts.style.tip.border !== 'number'){ opts.style.tip.border = 4; }
+	if(typeof opts.style.tip.border !== 'number'){ opts.style.tip.border = 0; }
 };
 
 $.fn.qtip.plugins.imagemap = function(area, corner)

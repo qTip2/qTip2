@@ -482,6 +482,6 @@ $.fn.qtip.plugins.tip.sanitize = function(opts)
 	if(!(/canvas|polygon/i).test(opts.style.tip.method)){ opts.style.tip.method = TRUE; }
 	if(typeof opts.style.tip.width !== 'number'){ opts.style.tip.width = 12; }
 	if(typeof opts.style.tip.height !== 'number'){ opts.style.tip.height = 12; }
-	if(typeof opts.style.tip.border !== 'number'){ opts.style.tip.border = 4; }
+	if(typeof opts.style.tip.border !== 'number'){ opts.style.tip.border = 0; }
 };
 
