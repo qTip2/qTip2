@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Sep 6 13:29:36 2010 +0100
+* Date: Mon Sep 6 13:58:33 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1284,6 +1284,7 @@ $.fn.qtip.bind = function(opts)
 	});
 };
 
+// Override some of the core jQuery methods for library-specific purposes
 $.each({
 	/* Allow other plugins to successfully retrieve the title of an element with a qTip applied */
 	attr: function(attr) {
@@ -1291,8 +1292,10 @@ $.each({
 		return (arguments.length === 1 && attr === 'title' && api && api.rendered === TRUE) ? $(this).data('oldtitle') : NULL;
 	},
 
-	/* Taken directly from jQuery 1.8.2 widget source code */
-	/* Trigger 'remove' event on all elements on removal if jQuery UI isn't present */
+	/* 
+	 * Taken directly from jQuery 1.8.2 widget source code
+	 * Trigger 'remove' event on all elements on removal if jQuery UI isn't present 
+	 */
 	remove: $.ui ? NULL : function( selector, keepData ) {
 		this.each(function() {
 			if (!keepData) {
@@ -1312,6 +1315,12 @@ function(name, func) {
 		return func.apply(this, arguments) || old.apply(this, arguments);
 	};
 });
+
+/* 
+ * Add ARIA role attribute to document body if not already present
+ * http://wiki.jqueryui.com/Tooltip - 4.3 Accessibility recommendation
+ */
+$(document.body).attr('role', function(i, val) { return !val ? 'application' : val; });
 
 // Set global qTip properties
 $.fn.qtip.nextid = 0;
