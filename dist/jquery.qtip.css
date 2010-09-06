@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Sep 6 13:58:33 2010 +0100
+* Date: Mon Sep 6 14:13:03 2010 +0100
 */
 
 .ui-tooltip-accessible{
@@ -25,7 +25,7 @@
 		float: left !important;
 	}
 
-div.ui-tooltip, div.qtip{
+.ui-tooltip, .qtip{
 	position: absolute;
 	display: none;
 
@@ -33,7 +33,7 @@ div.ui-tooltip, div.qtip{
 	min-width: 50px;
 }
 
-	div.ui-tooltip .ui-tooltip-wrapper{
+	.ui-tooltip .ui-tooltip-wrapper{
 		position: relative;
 		overflow: hidden;
 
@@ -41,7 +41,7 @@ div.ui-tooltip, div.qtip{
 		border-style: solid;
 	}
 
-	div.ui-tooltip .ui-tooltip-content{
+	.ui-tooltip .ui-tooltip-content{
 		position: relative;
 		padding: 5px 9px;
 
@@ -50,7 +50,7 @@ div.ui-tooltip, div.qtip{
 		overflow: hidden;
 	}
 
-	div.ui-tooltip .ui-tooltip-titlebar{
+	.ui-tooltip .ui-tooltip-titlebar{
 		position: relative;
 		padding: 6px 35px 6px 10px;
 
@@ -58,7 +58,7 @@ div.ui-tooltip, div.qtip{
 	}
 
 		/*! Default close button class */
-		div.ui-tooltip .ui-tooltip-close{
+		.ui-tooltip .ui-tooltip-close{
 			position: absolute;
 			height: 16px;
 			width: 16px;
@@ -71,7 +71,7 @@ div.ui-tooltip, div.qtip{
 			font-size: 0px;
 		}
 
-			div.ui-tooltip .ui-tooltip-close .ui-icon{
+			.ui-tooltip .ui-tooltip-close .ui-icon{
 				height: 16px;
 				width: 16px;
 				display: block;
@@ -80,40 +80,40 @@ div.ui-tooltip, div.qtip{
 				-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
 				filter: alpha(opacity=80);
 			}
-			div.ui-tooltip .ui-tooltip-close:hover .ui-icon{
+			.ui-tooltip .ui-tooltip-close:hover .ui-icon{
 				opacity: 1;
 				-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
 				filter: alpha(opacity=100);
 			}
 
 		/*! Custom button class */
-		div.ui-tooltip .ui-tooltip-button{
+		.ui-tooltip .ui-tooltip-button{
 			float: right;
 		}
 
 	/* Applied to 'focused' tooltips e.g. most recently displayed/interacted with */
-	div.ui-tooltip-focus{
+	.ui-tooltip-focus{
 
 	}
 
 
 /*! Default tooltip style */
-div.ui-tooltip-wrapper{
+.ui-tooltip-wrapper{
 	border-color: #F9E98E;
 	background-color: #FBF7AA;
 	color: #A27D35;
 }
 
-	div.ui-tooltip .ui-tooltip-titlebar{
+	.ui-tooltip .ui-tooltip-titlebar{
 		background-color: #F0DE7D;
 	}
 
-	div.ui-tooltip .ui-tooltip-close .ui-icon{
+	.ui-tooltip .ui-tooltip-close .ui-icon{
 		background: #A27D35 url('images/close.png') no-repeat 50% 50%;
 	}
 
 /*! Plain tooltip style */
-div.ui-tooltip-plain .ui-tooltip-wrapper{
+.ui-tooltip-plain .ui-tooltip-wrapper{
 	border-color: black;
 	border-width: 1px;
 
@@ -121,96 +121,96 @@ div.ui-tooltip-plain .ui-tooltip-wrapper{
 	color: black;
 }
 
-	div.ui-tooltip-plain .ui-tooltip-titlebar{
+	.ui-tooltip-plain .ui-tooltip-titlebar{
 		background-color: white;
 	}
 
-	div.ui-tooltip-plain .ui-tooltip-close .ui-icon{
+	.ui-tooltip-plain .ui-tooltip-close .ui-icon{
 		background: black;
 	}
 
 /*! Light tooltip style */
-div.ui-tooltip-light .ui-tooltip-wrapper{
+.ui-tooltip-light .ui-tooltip-wrapper{
 	border-color: #E2E2E2;
 	background-color: white;
 	color: #454545;
 }
 
-	div.ui-tooltip-light .ui-tooltip-titlebar{
+	.ui-tooltip-light .ui-tooltip-titlebar{
 		background-color: #f1f1f1;
 	}
 
-	div.ui-tooltip-light .ui-tooltip-close .ui-icon{
+	.ui-tooltip-light .ui-tooltip-close .ui-icon{
 		background: #454545 url('images/close-light.png') no-repeat 50% 50%;
 	}
 
 
 /*! Dark tooltip style */
-div.ui-tooltip-dark .ui-tooltip-wrapper{
+.ui-tooltip-dark .ui-tooltip-wrapper{
 	border-color: #303030;
 	background-color: #505050;
 	color: #f3f3f3;
 }
 
-	div.ui-tooltip-dark .ui-tooltip-titlebar{
+	.ui-tooltip-dark .ui-tooltip-titlebar{
 		background-color: #404040;
 	}
 
-	div.ui-tooltip-dark .ui-tooltip-close .ui-icon{
+	.ui-tooltip-dark .ui-tooltip-close .ui-icon{
 		background: #f3f3f3 url('images/close-dark.png') no-repeat 50% 50%;
 	}
 
 
 /*! Red tooltip style */
-div.ui-tooltip-red .ui-tooltip-wrapper{
+.ui-tooltip-red .ui-tooltip-wrapper{
 	border-color: #D95252;
 	background-color: #F78B83;
 	color: #912323;
 }
 
-	div.ui-tooltip-red .ui-tooltip-titlebar{
+	.ui-tooltip-red .ui-tooltip-titlebar{
 		background-color: #F06D65;
 	}
 
-	div.ui-tooltip-red .ui-tooltip-close .ui-icon{
+	.ui-tooltip-red .ui-tooltip-close .ui-icon{
 		background: #9C2F2F url('images/close-red.png') no-repeat 50% 50%;
 	}
 
 
 /*! Green tooltip style */
-div.ui-tooltip-green .ui-tooltip-wrapper{
+.ui-tooltip-green .ui-tooltip-wrapper{
 	border-color: #90D93F;
 	background-color: #CAED9E;
 	color: #3F6219;
 }
 
-	div.ui-tooltip-green .ui-tooltip-titlebar{
+	.ui-tooltip-green .ui-tooltip-titlebar{
 		background-color: #B0DE78;
 	}
 
-	div.ui-tooltip-green .ui-tooltip-close .ui-icon{
+	.ui-tooltip-green .ui-tooltip-close .ui-icon{
 		background: #58792E url('images/close-green.png') no-repeat 50% 50%;
 	}
 
 
 /*! Blue tooltip style */
-div.ui-tooltip-blue .ui-tooltip-wrapper{
+.ui-tooltip-blue .ui-tooltip-wrapper{
 	border-color: #ADD9ED;
 	background-color: #E5F6FE;
 	color: #5E99BD;
 }
 
-	div.ui-tooltip-blue .ui-tooltip-titlebar{
+	.ui-tooltip-blue .ui-tooltip-titlebar{
 		background-color: #D0E9F5;
 	}
 
-	div.ui-tooltip-blue .ui-tooltip-close .ui-icon{
+	.ui-tooltip-blue .ui-tooltip-close .ui-icon{
 		background: #4D9FBF url('images/close-blue.png') no-repeat 50% 50%;
 	}
 
 
 /*! Add shadows to your tooltips in all supported browsers */
-div.ui-tooltip-shadow{
+.ui-tooltip-shadow{
   -webkit-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3);
   box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3);
