@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Sep 2 12:28:22 2010 +0100
+* Date: Mon Sep 6 13:29:36 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -24,8 +24,10 @@ var TRUE = true,
 (function($, window, undefined) {
 
 // Option object sanitizer
-function sanitizeOptions(opts)
+function sanitizeOptions(opts, targets)
 {
+	var content, validTargets = $();
+
 	if(!opts) { return FALSE; }
 
 	try {
@@ -42,9 +44,9 @@ function sanitizeOptions(opts)
 				};
 			}
 
-			var noContent = $.isFunction(opts.content.text) ? opts.content.text() : opts.content.text || FALSE;
-			if((!noContent && !noContent.attr) || noContent.length < 1 || ('object' === typeof noContent && !noContent.jquery)) {
-				opts.content.text = FALSE;
+			content = opts.content.text || FALSE;
+			if(!$.isFunction(content) && ((!content && !content.attr) || content.length < 1 || ('object' === typeof content && !content.jquery))) {
+				content = opts.content.text = FALSE;
 			}
 
 			if('title' in opts.content && 'object' !== typeof opts.content.title) {
@@ -107,10 +109,24 @@ function sanitizeOptions(opts)
 	}
 	catch (e) {}
 
+	// Make sure content functions return something
+	if($.isFunction(content)) {
+		opts.content.text = [];
+		targets.each(function() {
+			var result = content.call(this);
+			if(!result) { return; }
+			
+			opts.content.text.push(result);
+			validTargets = validTargets.add($(this));
+		});
+	}
+
 	// Sanitize plugin options
 	$.each($.fn.qtip.plugins, function() {
 		if(this.sanitize) { this.sanitize(opts); }
 	});
+
+	return validTargets;
 }
 
 /*
@@ -301,7 +317,7 @@ function QTip(target, options, id)
 
 		// Use function to parse content
 		if($.isFunction(content)) {
-			content = content();
+			content = content.call(target);
 		}
 
 		// Append new content if its a DOM array and show it if hidden
@@ -679,7 +695,7 @@ function QTip(target, options, id)
 			option[0][ option[1] ] = value;
 
 			// Re-sanitize options
-			sanitizeOptions(options);
+			sanitizeOptions(options, target);
 
 			// Execute any valid callbacks
 			for(category in checks) {
@@ -1129,7 +1145,7 @@ $.fn.qtip = function(options, notation, newValue)
 		returned = FALSE,
 		args = command === 'disable' ? [TRUE] : $.makeArray(arguments).splice(1),
 		event = args[args.length - 1],
-		opts;
+		opts, targets;
 
 	// Check for API request
 	if((!options && $(this).data('qtip')) || command === 'api') {
@@ -1180,21 +1196,21 @@ $.fn.qtip = function(options, notation, newValue)
 	else if('object' === typeof options)
 	{
 		// Sanitize options
-		sanitizeOptions(options);
+		targets = sanitizeOptions(options, this);
 
 		// Build new sanitized options object
 		opts = $.extend(TRUE, {}, $.fn.qtip.defaults, options);
 
 		// Bind the qTips
-		return $.fn.qtip.bind.call(this, opts);
+		return $.fn.qtip.bind.call(targets, opts);
 	}
 };
 
 // $.fn.qtip Bind method
 $.fn.qtip.bind = function(opts)
 {
-	return $(this).each(function() {
-		var id, self, options, targets, events, namespace;
+	return $(this).each(function(i) {
+		var id, self, options, targets, events, namespace, content = opts.content.text;
 
 		// Find next available ID, or use custom ID if provided
 		id = (opts.id === FALSE || opts.id.length < 1 || $('#ui-tooltip-'+opts.id).length) ? $.fn.qtip.nextid++ : opts.id;
@@ -1205,7 +1221,12 @@ $.fn.qtip.bind = function(opts)
 		// Initialize the qTip
 		self = init.call($(this), id, opts);
 		if(self === FALSE) { return TRUE; }
+
+		// Setup options and get correct content from array if present
 		options = self.options;
+		if($.isArray(content)) {
+			options.content.text = content[i];
+		}
 
 		// Remove title attribute and store it if present
 		if($(this).attr('title')) {
