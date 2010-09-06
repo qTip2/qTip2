@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Sep 6 14:15:53 2010 +0100
+* Date: Mon Sep 6 15:10:26 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1658,7 +1658,7 @@ function Tip(qTip, command)
 		// Determine adjustments
 		offset = size[ (corner.precedance === 'x') ? 'width' : 'height' ];
 		if(border) {
-			offset -= parseInt(wrapper.css('border-' + corner[ corner.precedance ] + '-width'), 10);
+			offset -= parseInt(wrapper.css('border-' + corner[ corner.precedance ] + '-width'), 10) || 0;
 		}
 		
 		// Adjust secondary corners

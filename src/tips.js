@@ -128,7 +128,7 @@ function Tip(qTip, command)
 		// Determine adjustments
 		offset = size[ (corner.precedance === 'x') ? 'width' : 'height' ];
 		if(border) {
-			offset -= parseInt(wrapper.css('border-' + corner[ corner.precedance ] + '-width'), 10);
+			offset -= parseInt(wrapper.css('border-' + corner[ corner.precedance ] + '-width'), 10) || 0;
 		}
 		
 		// Adjust secondary corners
