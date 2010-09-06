@@ -94,8 +94,12 @@ function sanitizeOptions(opts)
 function QTip(target, options, id)
 {
 	// Declare this reference
-	var self = this;
+	var self = this,
 
+	// Shortcut vars
+	uitooltip = 'ui-tooltip',
+	selector = '.qtip.'+uitooltip;
+	
 	// Setup class attributes
 	self.id = id;
 	self.rendered = FALSE;
@@ -130,7 +134,7 @@ function QTip(target, options, id)
 	function calculate(detail)
 	{
 		var tooltip = self.elements.tooltip,
-			accessible = 'ui-tooltip-accessible',
+			accessible = uitooltip + '-accessible',
 			show = (!tooltip.is(':visible')) ? TRUE : FALSE,
 			returned = FALSE;
 
@@ -201,12 +205,12 @@ function QTip(target, options, id)
 
 		// Create title bar and title elements
 		elems.titlebar = $('<div />', {
-			'class': 'ui-tooltip-titlebar ' + (options.style.widget ? 'ui-widget-header' : '')
+			'class': uitooltip + '-titlebar ' + (options.style.widget ? 'ui-widget-header' : '')
 		})
 		.append(
 			elems.title = $('<div />', {
-				'id': 'ui-tooltip-'+id+'-title',
-				'class': 'ui-tooltip-title',
+				'id': uitooltip + '-'+id+'-title',
+				'class': uitooltip + '-title',
 				'html': options.content.title.text
 			})
 		)
@@ -234,7 +238,7 @@ function QTip(target, options, id)
 			elems.button
 				.prependTo(elems.titlebar)
 				.attr('role', 'button')
-				.addClass('ui-tooltip-' + (button === TRUE ? 'close' : 'button'))
+				.addClass(uitooltip + '-' + (button === TRUE ? 'close' : 'button'))
 				.hover(function(event){ $(this).toggleClass('ui-state-hover', event.type === 'mouseenter'); })
 				.click(function() {
 					if(!elems.tooltip.hasClass('ui-state-disabled')) { self.hide(); }
@@ -337,7 +341,7 @@ function QTip(target, options, id)
 			if(targets.tooltip.hasClass('ui-state-disabled')) { return FALSE; }
 
 			// Check if new target was actually the tooltip element
-			var ontoTooltip = $(event.relatedTarget).parents('.qtip.ui-tooltip')[0] == targets.tooltip[0];
+			var ontoTooltip = $(event.relatedTarget).parents(selector)[0] == targets.tooltip[0];
 
 			// Clear timers and stop animation queue
 			clearTimeout(self.timers.show);
@@ -449,7 +453,7 @@ function QTip(target, options, id)
 				$(document).bind('mousedown'+namespace, function(event) {
 					var tooltip = self.elements.tooltip;
 
-					if($(event.target).parents('.qtip.ui-tooltip').length === 0 && $(event.target).add(target).length > 1 &&
+					if($(event.target).parents(selector).length === 0 && $(event.target).add(target).length > 1 &&
 					tooltip.is(':visible') && !tooltip.hasClass('ui-state-disabled')) {
 						self.hide();
 					}
@@ -528,21 +532,21 @@ function QTip(target, options, id)
 			// Create initial tooltip elements
 			elements.tooltip = $('<div/>')
 				.attr({
-					id: 'ui-tooltip-'+id,
+					id: uitooltip + '-'+id,
 					role: 'tooltip'
 				})
-				.addClass('qtip ui-tooltip ui-helper-reset '+options.style.classes)
+				.addClass(uitooltip + ' qtip ui-helper-reset ' + options.style.classes)
 				.toggleClass('ui-widget', options.style.widget)
 				.toggleClass('ui-state-disabled', self.cache.disabled)
-				.css('z-index', $.fn.qtip.zindex + $('div.qtip.ui-tooltip').length)
+				.css('z-index', $.fn.qtip.zindex + $(selector).length)
 				.data('qtip', self)
 				.appendTo(options.position.container);
 
 			// Append to container element
-			elements.wrapper = $('<div />').addClass('ui-tooltip-wrapper').appendTo(elements.tooltip);
-			elements.content = $('<div />').addClass('ui-tooltip-content')
-				.attr('id', 'ui-tooltip-'+id+'-content')
-				.addClass('ui-tooltip-content')
+			elements.wrapper = $('<div />').addClass(uitooltip + '-wrapper').appendTo(elements.tooltip);
+			elements.content = $('<div />').addClass(uitooltip + '-content')
+				.attr('id', uitooltip + '-' + id + '-content')
+				.addClass(uitooltip + '-content')
 				.toggleClass('ui-widget-content', options.style.widget)
 				.appendTo(elements.wrapper);
 
@@ -684,8 +688,8 @@ function QTip(target, options, id)
 					opacity = (/^1|0$/).test($(this).css('opacity'));
 
 				// Apply ARIA attributes when tooltip is shown
-				if(self.elements.title){ target[attr]('aria-labelledby', 'ui-tooltip-'+id+'-title'); }
-				target[attr]('aria-describedby', 'ui-tooltip-'+id+'-content');
+				if(self.elements.title){ target[attr]('aria-labelledby', uitooltip + '-'+id+'-title'); }
+				target[attr]('aria-describedby', uitooltip + '-'+id+'-content');
 
 				// Prevent antialias from disappearing in IE7 by removing filter and opacity attribute
 				if(state) {
@@ -707,7 +711,7 @@ function QTip(target, options, id)
 			if(event) {
 				// Compare targets and events
 				if(self.cache.event && (/over|enter/).test(event.type) && (/out|leave/).test(self.cache.event.type) &&
-				$(event.target).add(options.show.target).length < 2 && $(event.relatedTarget).parents('.qtip.ui-tooltip').length > 0){
+				$(event.target).add(options.show.target).length < 2 && $(event.relatedTarget).parents(selector).length > 0){
 					return self;
 				}
 
@@ -730,7 +734,7 @@ function QTip(target, options, id)
 				}
 
 				// Hide other tooltips if tooltip is solo
-				if(opts.solo) { $(':not(.qtip.ui-tooltip)').qtip('hide'); }
+				if(opts.solo) { $(':not('+selector+')').qtip('hide'); }
 			}
 			else {
 				// Clear show timer
@@ -775,16 +779,17 @@ function QTip(target, options, id)
 			if(!self.rendered) { return FALSE; }
 
 			var tooltip = self.elements.tooltip,
+				qtips = $(selector),
 				curIndex = parseInt(tooltip.css('z-index'), 10),
-				newIndex = $.fn.qtip.zindex + $('.qtip.ui-tooltip').length,
-				focusClass = 'ui-tooltip-focus',
+				newIndex = $.fn.qtip.zindex + qtips.length,
+				focusClass = uitooltip + '-focus',
 				callback,
 				cachedEvent = $.extend({}, event);
 
 			// Only update the z-index if it has changed and tooltip is not already focused
 			if(!tooltip.hasClass(focusClass) && curIndex !== newIndex)
 			{
-				$('.qtip.ui-tooltip').each(function()
+				qtips.each(function()
 				{
 					var api = $(this).qtip(), blur = $.Event('tooltipblur'), tooltip, elemIndex;
 					if(!api || !api.rendered) { return TRUE; }
@@ -955,7 +960,7 @@ function QTip(target, options, id)
 			tooltip.attr('class', function(i, val) {
 				return $(this).attr('class').replace(/ui-tooltip-pos-\w+/i, '');
 			})
-			.addClass('ui-tooltip-pos-' + my.abbreviation());
+			.addClass(uitooltip + '-pos-' + my.abbreviation());
 
 			// Call API method
 			callback.originalEvent = $.extend({}, event);
