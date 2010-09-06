@@ -95,6 +95,9 @@ function sanitizeOptions(opts, targets)
 			validTargets = validTargets.add($(this));
 		});
 	}
+	else {
+		validTargets = targets;
+	}
 
 	// Sanitize plugin options
 	$.each($.fn.qtip.plugins, function() {

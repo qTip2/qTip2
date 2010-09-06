@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Sep 6 14:13:03 2010 +0100
+* Date: Mon Sep 6 14:15:53 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -119,6 +119,9 @@ function sanitizeOptions(opts, targets)
 			opts.content.text.push(result);
 			validTargets = validTargets.add($(this));
 		});
+	}
+	else {
+		validTargets = targets;
 	}
 
 	// Sanitize plugin options
