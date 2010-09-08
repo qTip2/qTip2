@@ -147,7 +147,7 @@ function Tip(qTip, command)
 			newType = self.mimic.adjust ? $.extend({}, self.mimic) : null,
 			precedance = newCorner.precedance === 'y' ? ['y', 'top', 'left', 'height'] : ['x', 'left', 'top', 'width'],
 			adjusted = position.adjusted,
-			offset = parseInt(wrapper.css('border-' + newCorner[ precedance[0] ] + '-width'), 10),
+			offset = parseInt(wrapper.css('border-' + newCorner[ precedance[0] ] + '-width'), 10) || 0,
 			walk = [newCorner, newType];
 
 		// Adjust tip corners

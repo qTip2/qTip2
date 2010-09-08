@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Sep 6 15:10:26 2010 +0100
+* Date: Tue Sep 7 00:34:35 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1677,7 +1677,7 @@ function Tip(qTip, command)
 			newType = self.mimic.adjust ? $.extend({}, self.mimic) : null,
 			precedance = newCorner.precedance === 'y' ? ['y', 'top', 'left', 'height'] : ['x', 'left', 'top', 'width'],
 			adjusted = position.adjusted,
-			offset = parseInt(wrapper.css('border-' + newCorner[ precedance[0] ] + '-width'), 10),
+			offset = parseInt(wrapper.css('border-' + newCorner[ precedance[0] ] + '-width'), 10) || 0,
 			walk = [newCorner, newType];
 
 		// Adjust tip corners
