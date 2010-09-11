@@ -130,14 +130,9 @@ function Tip(qTip, command)
 		if(border) {
 			offset -= parseInt(wrapper.css('border-' + corner[ corner.precedance ] + '-width'), 10) || 0;
 		}
-		
+
 		// Adjust secondary corners
-		if(corner[corner.precedance] === corners[2]) {
-			tip.css(corners[2], -ieAdjust[ corners[2] ] - offset);
-		}
-		else {
-			tip.css(corners[3], ieAdjust[ corners[3] ] - offset);
-		}
+		tip.css(corner[corner.precedance], (-1 * ieAdjust[ corner[corner.precedance] ]) - offset);
 	}
 
 	function reposition(event, api, position) {
@@ -320,41 +315,27 @@ function Tip(qTip, command)
 					context.clearRect(0,0,3000,3000);
 					context.restore();
 
-					// Determine tip coordinates based on dimensions
-					if(border) {
-						coords = calculateTip(mimic.string(), width * 2, height * 2);
-						
-						// Setup additional border properties
-						context.strokeStyle = color.border;
-						context.lineWidth = border + 1;
-						context.lineJoin = 'miter';
-						context.miterLimit = 100;
-						
-						// Save and translate canvas origin
-						context.save();
-						context.translate(
-							mimic.x === 'left' ? 0 : mimic.x === 'right' ? -width : -width / 2,
-							mimic.y === 'top' ? 0 : mimic.y === 'bottom' ? -height : -height / 2
-						);
-					}
-					else {
-						coords = calculateTip(mimic.string(), width, height);
-					}
-					
-					// Setup canvas properties
-					context.fillStyle = color.fill;
-					context.miterLimit = 0;
+					// Grab tip coordinates
+					coords = calculateTip(mimic.string(), width, height);
 
 					// Draw the canvas tip (Delayed til after DOM creation)
 					for(i; i < 2; i++) {
-						context.globalCompositeOperation = i && border ? 'destination-in' : 'source-over';
+						// Save and translate canvas origin
+						if(i) {
+							context.save();
+							context.translate(
+								Math.floor((mimic.x === 'left' ? 1 : mimic.x === 'right' ? -1 : 0) * (border + 1) * (mimic.precedance === 'y' ? 0.5 : 1)),
+								Math.floor((mimic.y === 'top' ? 1 : mimic.y === 'bottom' ? -1 : 0) * (border + 1) * (mimic.precedance === 'x' ? 0.5 : 1))
+							);
+						}
+
 						context.beginPath();
 						context.moveTo(coords[0][0], coords[0][1]);
 						context.lineTo(coords[1][0], coords[1][1]);
 						context.lineTo(coords[2][0], coords[2][1]);
 						context.closePath();
+						context.fillStyle = color[ i ? 'fill' : 'border' ];
 						context.fill();
-						if(!i) { context.stroke(); }
 					}
 					break;
 					
