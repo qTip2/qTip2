@@ -1000,7 +1000,7 @@ function QTip(target, options, id)
 					$(this).dequeue();
 				});
 			}
-			else {
+			else if(!isNaN(position.left, position.right)) {
 				tooltip.css(position);
 			}
 
