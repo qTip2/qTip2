@@ -1126,7 +1126,8 @@ $.fn.qtip = function(options, notation, newValue)
 		returned = FALSE,
 		args = command === 'disable' ? [TRUE] : $.makeArray(arguments).slice(1, 10),
 		event = args[args.length - 1],
-		opts, targets;
+		opts = $.extend(true, {}, options),
+		targets;
 
 	// Check for API request
 	if((!options && $(this).data('qtip')) || command === 'api') {
@@ -1177,10 +1178,10 @@ $.fn.qtip = function(options, notation, newValue)
 	else if('object' === typeof options)
 	{
 		// Sanitize options
-		targets = sanitizeOptions(options, this);
+		targets = sanitizeOptions(opts, this);
 
 		// Build new sanitized options object
-		opts = $.extend(TRUE, {}, $.fn.qtip.defaults, options);
+		opts = $.extend(TRUE, {}, $.fn.qtip.defaults, opts);
 
 		// Bind the qTips
 		return $.fn.qtip.bind.call(targets, opts, event);
