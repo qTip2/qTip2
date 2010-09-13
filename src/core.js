@@ -1124,7 +1124,7 @@ $.fn.qtip = function(options, notation, newValue)
 {
 	var command =  String(options).toLowerCase(), // Parse command
 		returned = FALSE,
-		args = command === 'disable' ? [TRUE] : $.makeArray(arguments).splice(1),
+		args = command === 'disable' ? [TRUE] : $.makeArray(arguments).slice(1, 10),
 		event = args[args.length - 1],
 		opts, targets;
 
