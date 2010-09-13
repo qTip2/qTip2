@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sat Sep 11 09:06:11 2010 +0100
+* Date: Mon Sep 13 18:52:03 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1208,12 +1208,12 @@ $.fn.qtip = function(options, notation, newValue)
 		opts = $.extend(TRUE, {}, $.fn.qtip.defaults, options);
 
 		// Bind the qTips
-		return $.fn.qtip.bind.call(targets, opts);
+		return $.fn.qtip.bind.call(targets, opts, event);
 	}
 };
 
 // $.fn.qtip Bind method
-$.fn.qtip.bind = function(opts)
+$.fn.qtip.bind = function(opts, event)
 {
 	return $(this).each(function(i) {
 		var id, self, options, targets, events, namespace, content = opts.content.text;
@@ -1280,7 +1280,7 @@ $.fn.qtip.bind = function(opts)
 
 		// Prerendering is enabled, create tooltip now
 		if(options.show.ready || options.prerender || options.show.event === FALSE) {
-			hoverIntent();
+			hoverIntent(event);
 		}
 
 		// Prerendering is disabled, create tooltip on show event

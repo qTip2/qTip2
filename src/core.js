@@ -1183,12 +1183,12 @@ $.fn.qtip = function(options, notation, newValue)
 		opts = $.extend(TRUE, {}, $.fn.qtip.defaults, options);
 
 		// Bind the qTips
-		return $.fn.qtip.bind.call(targets, opts);
+		return $.fn.qtip.bind.call(targets, opts, event);
 	}
 };
 
 // $.fn.qtip Bind method
-$.fn.qtip.bind = function(opts)
+$.fn.qtip.bind = function(opts, event)
 {
 	return $(this).each(function(i) {
 		var id, self, options, targets, events, namespace, content = opts.content.text;
@@ -1255,7 +1255,7 @@ $.fn.qtip.bind = function(opts)
 
 		// Prerendering is enabled, create tooltip now
 		if(options.show.ready || options.prerender || options.show.event === FALSE) {
-			hoverIntent();
+			hoverIntent(event);
 		}
 
 		// Prerendering is disabled, create tooltip on show event
