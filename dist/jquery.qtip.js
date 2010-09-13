@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sat Sep 11 08:59:49 2010 +0100
+* Date: Sat Sep 11 09:06:11 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -395,7 +395,7 @@ function QTip(target, options, id)
 			clearTimeout(self.timers.hide);
 
 			// Prevent hiding if tooltip is fixed and event target is the tooltip. Or if mouse positioning is enabled and cursor momentarily overlaps
-			if((options.position.target === 'mouse' && ontoTooltip) || (options.hide.fixed && (/mouse(out|leave|move)/).test(event.type) && ontoTooltip))
+			if(options.hide.fixed && ((options.position.target === 'mouse' && ontoTooltip) || ((/mouse(out|leave|move)/).test(event.type) && ontoTooltip)))
 			{
 				// Prevent default and popagation
 				event.stopPropagation();

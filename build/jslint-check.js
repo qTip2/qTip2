@@ -30,3 +30,15 @@ if ( found > 0 ) {
 } else {
 	print( "JSLint check passed." );
 }
+
+<script type="text/javascript">
+//<![CDATA[
+jQuery('a,area').each(function(i) {
+	var href = $(this).attr('href'),
+		match = /#LiveTooltip(.+)$/.exec(href);
+
+	if (match.length > 1) {
+		$(this).qtip(TooltipClientScripts[ match[1] ]);
+	}
+});//]]>
+</script>
