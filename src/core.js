@@ -1135,7 +1135,7 @@ $.fn.qtip = function(options, notation, newValue)
 		targets;
 
 	// Check for API request
-	if((!options && $(this).data('qtip')) || command === 'api') {
+	if((!args.length && $(this).data('qtip')) || command === 'api') {
 		opts = $(this).eq(0).data('qtip');
 		return opts ? opts.hash() : undefined;
 	}
