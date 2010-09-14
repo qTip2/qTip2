@@ -926,7 +926,7 @@ function QTip(target, options, id)
 				}
 
 				// Check if window or document is the target
-				if(target[0] === document.body || target[0] === window) {
+				if(target[0] === document || target[0] === window) {
 					targetWidth = target.width();
 					targetHeight = target.height();
 

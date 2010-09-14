@@ -133,7 +133,7 @@ $.fn.qtip.plugins.modal = function(qTip)
 		return api;
 	}
 	// No API was found, create new instance
-	else if(opts.on === TRUE) {
+	else if(opts && opts.on === TRUE) {
 		qTip.plugins.modal = new Modal(qTip, opts);
 		return qTip.plugins.modal;
 	}
