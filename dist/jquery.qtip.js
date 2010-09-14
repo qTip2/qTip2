@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Sep 13 22:57:56 2010 +0100
+* Date: Tue Sep 14 16:08:03 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -884,11 +884,13 @@ function QTip(target, options, id)
 				targetHeight = 0,
 				position = { left: 0, top: 0 },
 				callback = $.Event('tooltipmove'),
+				fixed = tooltip.css('position') === 'fixed',
+				win = $(window),
 				adjust = {
 					left: function(posLeft) {
 						var targetLeft = target === 'mouse' ? event.pageX : target.offset().left,
-							winScroll = $(window).scrollLeft(),
-							winWidth = $(window).width(),
+							winScroll = win.scrollLeft(),
+							winWidth = win.width(),
 							myOffset = my.x === 'left' ? -elemWidth : my.x === 'right' ? elemWidth : elemWidth / 2,
 							atOffset = at.x === 'left' ? targetWidth : at.x === 'right' ? -targetWidth : targetWidth / 2,
 							adjustX = -2 * posOptions.adjust.x,
@@ -907,8 +909,8 @@ function QTip(target, options, id)
 						return position.left - posLeft;
 					},
 					top: function(posTop) {
-						var winScroll = $(window).scrollTop(),
-							winHeight = $(window).height(),
+						var winScroll = win.scrollTop(),
+							winHeight = win.height(),
 							myOffset = my.y === 'top' ? -elemHeight : my.y === 'bottom' ? elemHeight : -elemHeight / 2,
 							atOffset = at.y === 'top' ? targetHeight : at.y === 'bottom' ? -targetHeight : 0,
 							adjustY = -2 * posOptions.adjust.y,
@@ -949,13 +951,16 @@ function QTip(target, options, id)
 				}
 
 				// Check if window or document is the target
-				if(target[0] === document || target[0] === window) {
+				if(target[0] === document.body || target[0] === window) {
 					targetWidth = target.width();
 					targetHeight = target.height();
-					position = {
-						top: (tooltip.css('position') === 'fixed') ? 0 : target.scrollTop(),
-						left: target.scrollLeft()
-					};
+
+					if(target[0] === window) {
+						position = {
+							top: fixed ? 0 : win.scrollTop(),
+							left: fixed ? 0 : win.scrollLeft()
+						};
+					}
 				}
 				
 				// Use Imagemap plugin if target is an AREA element
@@ -999,8 +1004,8 @@ function QTip(target, options, id)
 
 			// Make sure the tooltip doesn't extend the top/left window boundaries
 			if(posOptions.container[0] == document.body) {
-				if(position.top < 1) { position.top = 0; }
-				if(position.left < 1) { position.left = 0; }
+				if(position.top + win.scrollTop() < 1) { position.top = 0; }
+				if(position.left + win.scrollLeft() < 1) { position.left = 0; }
 			}
 
 			// Set tooltip position class
@@ -1180,7 +1185,7 @@ $.fn.qtip = function(options, notation, newValue)
 			else {
 				// Render tooltip if not already rendered when tooltip is to be shown
 				if(!api.rendered && (command === 'show' || command === 'toggle')) {
-					if(event.timeStamp) { api.cache.event = event; }
+					if(event && event.timeStamp) { api.cache.event = event; }
 					api.render();
 				}
 
