@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Sep 14 16:08:03 2010 +0100
+* Date: Tue Sep 14 17:55:57 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -2264,7 +2264,7 @@ $.fn.qtip.plugins.modal = function(qTip)
 		return api;
 	}
 	// No API was found, create new instance
-	else if(typeof opts === 'object') {
+	else if(opts.on === TRUE) {
 		qTip.plugins.modal = new Modal(qTip, opts);
 		return qTip.plugins.modal;
 	}
@@ -2275,12 +2275,13 @@ $.fn.qtip.plugins.modal.initialize = 'render';
 $.fn.qtip.plugins.modal.sanitize = function(opts)
 {
 	if(opts.show && opts.show.modal !== undefined) {
-		if(typeof opts.show.modal !== 'object'){ opts.show.modal = { }; }
+		if(typeof opts.show.modal !== 'object'){ opts.show.modal = { on: opts.show.modal }; }
 	}
 };
 
 // Setup plugin defaults
 $.fn.qtip.plugins.modal.defaults = {
+	on: TRUE,
 	effect: TRUE,
 	blur: TRUE
 };

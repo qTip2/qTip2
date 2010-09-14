@@ -133,7 +133,7 @@ $.fn.qtip.plugins.modal = function(qTip)
 		return api;
 	}
 	// No API was found, create new instance
-	else if(typeof opts === 'object') {
+	else if(opts.on === TRUE) {
 		qTip.plugins.modal = new Modal(qTip, opts);
 		return qTip.plugins.modal;
 	}
@@ -144,12 +144,13 @@ $.fn.qtip.plugins.modal.initialize = 'render';
 $.fn.qtip.plugins.modal.sanitize = function(opts)
 {
 	if(opts.show && opts.show.modal !== undefined) {
-		if(typeof opts.show.modal !== 'object'){ opts.show.modal = { }; }
+		if(typeof opts.show.modal !== 'object'){ opts.show.modal = { on: opts.show.modal }; }
 	}
 };
 
 // Setup plugin defaults
 $.fn.qtip.plugins.modal.defaults = {
+	on: TRUE,
 	effect: TRUE,
 	blur: TRUE
 };
