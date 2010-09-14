@@ -1192,7 +1192,9 @@ $.fn.qtip = function(options, notation, newValue)
 $.fn.qtip.bind = function(opts, event)
 {
 	return $(this).each(function(i) {
-		var id, self, options, targets, events, namespace, content = opts.content.text;
+		var id, self, options, targets, events, namespace, 
+			content = opts.content.text,
+			immediate = opts.show.ready || opts.prerender || opts.show.event === FALSE;
 
 		// Find next available ID, or use custom ID if provided
 		id = (opts.id === FALSE || opts.id.length < 1 || $('#ui-tooltip-'+opts.id).length) ? $.fn.qtip.nextid++ : opts.id;
@@ -1247,7 +1249,7 @@ $.fn.qtip.bind = function(opts, event)
 			// Start the event sequence
 			if(options.show.delay > 0) {
 				self.timers.show = setTimeout(render, options.show.delay);
-				if(events.show !== events.hide) {
+				if(!immediate && events.show !== events.hide) {
 					targets.hide.bind(events.hide, function(event){ clearTimeout(self.timers.show); });
 				}
 			}
@@ -1255,7 +1257,7 @@ $.fn.qtip.bind = function(opts, event)
 		}
 
 		// Prerendering is enabled, create tooltip now
-		if(options.show.ready || options.prerender || options.show.event === FALSE) {
+		if(immediate) {
 			hoverIntent(event);
 		}
 
