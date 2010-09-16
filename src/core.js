@@ -187,7 +187,7 @@ function QTip(target, options, id)
 		var tooltip = self.elements.tooltip, max, min;
 
 		// Make sure tooltip is rendered and the browser is IE. If not, return
-		if(!self.rendered || !$.browser.msie) { return FALSE; }
+		if(!self.rendered || !($.browser.msie && parseInt($.browser.version.charAt(0), 10) < 9)) { return FALSE; }
 
 		// Determine actual width
 		tooltip.css({ width: 'auto', maxWidth: 'none' });
@@ -291,7 +291,7 @@ function QTip(target, options, id)
 		}
 	}
 
-	function updateContent(content)
+	function updateContent(content, move)
 	{
 		// Make sure tooltip is rendered and content is defined. If not return
 		if(!self.rendered || !content) { return FALSE; }
@@ -311,12 +311,11 @@ function QTip(target, options, id)
 			self.elements.content.html(content);
 		}
 
-		// Update width and position
+		// Update tooltip width
 		updateWidth();
-		self.reposition(self.cache.event);
 
 		// Show the tooltip if rendering is taking place
-		if(self.rendered < 0) {
+		if('number' === typeof self.rendered) {
 			// Show tooltip on ready
 			if(options.show.ready || self.rendered === -2) {
 				self.show(self.cache.event);
@@ -325,6 +324,7 @@ function QTip(target, options, id)
 			// Set rendered status to TRUE
 			self.rendered = TRUE;
 		}
+		else { self.reposition(self.cache.event); }
 
 		return self;
 	}
@@ -397,6 +397,9 @@ function QTip(target, options, id)
 			// Only update position if tooltip is visible
 			if(self.elements.tooltip.is(':visible')) { self.reposition(event); }
 		}
+
+		// Catch remove events on target element to destroy tooltip
+		target.bind('remove.qtip', function(){ self.destroy(); });
 
 		// Check if the tooltip is 'fixed'
 		if(tooltip && options.hide.fixed)
@@ -554,22 +557,22 @@ function QTip(target, options, id)
 			// Create initial tooltip elements
 			elements.tooltip = $('<div/>')
 				.attr({
-					id: uitooltip + '-'+id,
-					role: 'tooltip'
+					'id': uitooltip + '-'+id,
+					'role': 'tooltip',
+					'class': uitooltip + ' qtip ui-helper-reset ' + options.style.classes,
+					css: { 'z-index': $.fn.qtip.zindex + $(selector).length }
 				})
-				.addClass(uitooltip + ' qtip ui-helper-reset ' + options.style.classes)
 				.toggleClass('ui-widget', options.style.widget)
 				.toggleClass('ui-state-disabled', self.cache.disabled)
-				.css('z-index', $.fn.qtip.zindex + $(selector).length)
 				.data('qtip', self)
 				.appendTo(options.position.container);
 
 			// Append to container element
-			elements.wrapper = $('<div />').addClass(uitooltip + '-wrapper').appendTo(elements.tooltip);
-			elements.content = $('<div />').addClass(uitooltip + '-content')
-				.attr('id', uitooltip + '-' + id + '-content')
-				.addClass(uitooltip + '-content')
-				.toggleClass('ui-widget-content', options.style.widget)
+			elements.wrapper = $('<div />', { 'class': uitooltip + '-wrapper' }).appendTo(elements.tooltip);
+			elements.content = $('<div />', {
+					'class': uitooltip + '-content' + (options.style.widget ? 'ui-widget-content' : ''),
+					'id': uitooltip + '-' + id + '-content'
+				})
 				.appendTo(elements.wrapper);
 
 			// Create title if enabled
@@ -577,22 +580,22 @@ function QTip(target, options, id)
 				createTitle();
 			}
 
-			// Initialize plugins and apply border
-			$.each($.fn.qtip.plugins, function() {
-				if(this.initialize === 'render') { this(self); }
-			});
+			// Set the tooltips content
+			updateContent(options.content.text, 0);
 
 			// Assign events
 			assignEvents(1, 1, 1, 1);
 			$.each(options.events, function(name, callback) {
 				elements.tooltip.bind('tooltip'+name, callback);
 			});
-			
-			// Catch remove events on target element to destroy tooltip
-			target.bind('remove.qtip', function(){ self.destroy(); });
 
-			// Set the tooltips content
-			updateContent(options.content.text);
+			// Initialize plugins
+			$.each($.fn.qtip.plugins, function() {
+				if(this.initialize === 'render') { this(self); }
+			});
+
+			// Update tooltip position
+			self.reposition(self.cache.event);
 
 			// Call API method and if return value is FALSE, halt
 			elements.tooltip.trigger('tooltiprender', [self.hash()]);
