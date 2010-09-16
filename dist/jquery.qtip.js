@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Sep 14 18:26:27 2010 +0100
+* Date: Tue Sep 14 18:30:11 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1223,8 +1223,7 @@ $.fn.qtip.bind = function(opts, event)
 {
 	return $(this).each(function(i) {
 		var id, self, options, targets, events, namespace, 
-			content = opts.content.text,
-			immediate = opts.show.ready || opts.prerender || opts.show.event === FALSE;
+			content = opts.content.text;
 
 		// Find next available ID, or use custom ID if provided
 		id = (opts.id === FALSE || opts.id.length < 1 || $('#ui-tooltip-'+opts.id).length) ? $.fn.qtip.nextid++ : opts.id;
@@ -1279,22 +1278,18 @@ $.fn.qtip.bind = function(opts, event)
 			// Start the event sequence
 			if(options.show.delay > 0) {
 				self.timers.show = setTimeout(render, options.show.delay);
-				if(!immediate && events.show !== events.hide) {
+				if(events.show !== events.hide) {
 					targets.hide.bind(events.hide, function(event){ clearTimeout(self.timers.show); });
 				}
 			}
 			else { render(); }
 		}
 
-		// Prerendering is enabled, create tooltip now
-		if(immediate) {
-			hoverIntent(event);
-		}
+		// Bind show events to target
+		targets.show.bind(events.show, hoverIntent);
 
-		// Prerendering is disabled, create tooltip on show event
-		else {
-			targets.show.bind(events.show, hoverIntent);
-		}
+		// Prerendering is enabled, create tooltip now
+		if(opts.show.ready || opts.prerender || opts.show.event === FALSE) { hoverIntent(event); }
 	});
 };
 
