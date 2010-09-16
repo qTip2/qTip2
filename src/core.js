@@ -345,7 +345,11 @@ function QTip(target, options, id)
 			clearTimeout(self.timers.hide);
 
 			// Start show timer
-			self.timers.show = setTimeout(function(){ self.show(options.position.target !== 'mouse' ? event : NULL); }, options.show.delay);
+			var callback = function(){ self.show(options.position.target !== 'mouse' ? event : NULL); };
+			if(options.show.delay > 0) {
+				self.timers.show = setTimeout(callback, options.show.delay);
+			}
+			else{ callback(); }
 		}
 
 		// Define hide method
@@ -370,8 +374,12 @@ function QTip(target, options, id)
 			}
 
 			// If tooltip has displayed, start hide timer
-			targets.tooltip.stop(TRUE, TRUE);
-			self.timers.hide = setTimeout(function(){ self.hide(event); }, options.hide.delay);
+			targets.tooltip.stop(TRUE);
+
+			if(options.hide.delay > 0) {
+				self.timers.hide = setTimeout(function(){ self.hide(event); }, options.hide.delay);
+			}
+			else{ self.hide(event); }
 		}
 
 		// Define inactive method
@@ -726,11 +734,10 @@ function QTip(target, options, id)
 			// Return if element is already in correct state
 			if((!visible && !state) || tooltip.is(':animated')) { return self; }
 
-			// Attempt to prevent 'blinking' effect when tooltip and show target overlap
+			// Try to prevent flickering when tooltip overlaps show element
 			if(event) {
-				// Compare targets and events
 				if(self.cache.event && (/over|enter/).test(event.type) && (/out|leave/).test(self.cache.event.type) &&
-				$(event.target).add(options.show.target).length < 2 && $(event.relatedTarget).parents(selector).length > 0){
+					$(event.target).add(options.show.target).length < 2 && $(event.relatedTarget).parents(selector).length > 0){
 					return self;
 				}
 
@@ -750,11 +757,11 @@ function QTip(target, options, id)
 				self.reposition(event); // Update tooltip position
 				
 				// Hide other tooltips if tooltip is solo
-				if(opts.solo) { $(':not('+selector+')').qtip('hide'); }
+				if(opts.solo) { $(selector).qtip('hide'); }
 			}
 			else {
 				// Clear show timer
-				clearTimeout(self.timers.show);  
+				clearTimeout(self.timers.show);
 			}
 
 			// Set ARIA hidden status attribute
@@ -1246,9 +1253,10 @@ $.fn.qtip.bind = function(opts, event)
 
 			// Start the event sequence
 			if(options.show.delay > 0) {
+				clearTimeout(self.timers.show);
 				self.timers.show = setTimeout(render, options.show.delay);
 				if(events.show !== events.hide) {
-					targets.hide.bind(events.hide, function(event){ clearTimeout(self.timers.show); });
+					targets.hide.bind(events.hide, function() { clearTimeout(self.timers.show); });
 				}
 			}
 			else { render(); }
