@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Sep 16 17:39:34 2010 +0100
+* Date: Thu Sep 16 19:04:17 2010 +0100
 */
 
 .ui-tooltip-accessible{
@@ -209,7 +209,7 @@
 	}
 
 
-/*! Add shadows to your tooltips in all supported browsers */
+/*! Add shadows to your tooltips in: FF3+, Chrome 2+, Opera 10.6+, IE6+, Safari 2+ */
 .ui-tooltip-shadow{
   -webkit-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3);
@@ -217,6 +217,14 @@
 
   filter:progid:DXImageTransform.Microsoft.dropshadow(OffX=5, OffY=5, Color='gray');
   -ms-filter:"progid:DXImageTransform.Microsoft.dropshadow(OffX=5, OffY=5, Color='gray')";
+}
+
+/*! Add rounded corners to your tooltips in: FF3+, Chrome 2+, Opera 10.6+, IE9+, Safari 2+ */
+.ui-tooltip-rounded .ui-tooltip-wrapper{
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-o-border-radius: 5px;
+	border-radius: 5px;
 }
 
 div.ui-tooltip-tip{

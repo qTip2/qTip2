@@ -313,7 +313,7 @@ function QTip(target, options, id)
 
 		// Update tooltip width and position
 		updateWidth();
-		if(self.rendered === true) {
+		if(self.rendered === TRUE) {
 			self.reposition(self.cache.event);
 		}
 
@@ -1129,7 +1129,7 @@ $.fn.qtip = function(options, notation, newValue)
 		returned = FALSE,
 		args = command === 'disable' ? [TRUE] : $.makeArray(arguments).slice(1, 10),
 		event = args[args.length - 1],
-		opts = $.extend(true, {}, options),
+		opts = $.extend(TRUE, {}, options),
 		targets;
 
 	// Check for API request

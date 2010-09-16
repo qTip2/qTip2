@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Sep 16 17:39:34 2010 +0100
+* Date: Thu Sep 16 19:04:17 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -338,7 +338,7 @@ function QTip(target, options, id)
 
 		// Update tooltip width and position
 		updateWidth();
-		if(self.rendered === true) {
+		if(self.rendered === TRUE) {
 			self.reposition(self.cache.event);
 		}
 
@@ -1154,7 +1154,7 @@ $.fn.qtip = function(options, notation, newValue)
 		returned = FALSE,
 		args = command === 'disable' ? [TRUE] : $.makeArray(arguments).slice(1, 10),
 		event = args[args.length - 1],
-		opts = $.extend(true, {}, options),
+		opts = $.extend(TRUE, {}, options),
 		targets;
 
 	// Check for API request
@@ -1662,7 +1662,9 @@ function Tip(qTip, command)
 		// Determine adjustments
 		offset = size[ (corner.precedance === 'x') ? 'width' : 'height' ];
 		if(border) {
+			wrapper.addClass('ui-tooltip-accessible');
 			offset -= parseInt(wrapper.css('border-' + corner[ corner.precedance ] + '-width'), 10) || 0;
+			wrapper.removeClass('ui-tooltip-accessible');
 		}
 
 		// Adjust secondary corners
