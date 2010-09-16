@@ -128,7 +128,7 @@ function Tip(qTip, command)
 		// Determine adjustments
 		offset = size[ (corner.precedance === 'x') ? 'width' : 'height' ];
 		if(border) {
-			if(!tooltip.is(':visible')) { tooltip.addClass('ui-tooltip-accessible'); }
+			tooltip.toggleClass('ui-tooltip-accessible', !tooltip.is(':visible'));
 			offset -= parseInt(wrapper.css('border-' + corner[ corner.precedance ] + '-width'), 10) || 0;
 			tooltip.removeClass('ui-tooltip-accessible');
 		}

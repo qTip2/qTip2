@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Sep 16 19:53:26 2010 +0100
+* Date: Thu Sep 16 19:56:19 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1662,7 +1662,7 @@ function Tip(qTip, command)
 		// Determine adjustments
 		offset = size[ (corner.precedance === 'x') ? 'width' : 'height' ];
 		if(border) {
-			if(!tooltip.is(':visible')) { tooltip.addClass('ui-tooltip-accessible'); }
+			tooltip.toggleClass('ui-tooltip-accessible', !tooltip.is(':visible'));
 			offset -= parseInt(wrapper.css('border-' + corner[ corner.precedance ] + '-width'), 10) || 0;
 			tooltip.removeClass('ui-tooltip-accessible');
 		}
