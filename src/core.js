@@ -345,7 +345,7 @@ function QTip(target, options, id)
 			clearTimeout(self.timers.hide);
 
 			// Start show timer
-			self.timers.show = setTimeout(function(){ self.show(event); }, options.show.delay);
+			self.timers.show = setTimeout(function(){ self.show(options.position.target !== 'mouse' ? event : NULL); }, options.show.delay);
 		}
 
 		// Define hide method
@@ -481,7 +481,7 @@ function QTip(target, options, id)
 				$(document).bind('mousemove'+namespace, function(event) {
 					// Update the tooltip position only if the tooltip is visible and adjustment is enabled
 					if(options.position.adjust.mouse && !targets.tooltip.hasClass('ui-state-disabled') && targets.tooltip.is(':visible')) {
-						self.reposition(event);
+						self.reposition(event || $.fn.qtip.mouse);
 					}
 				});
 			}
@@ -580,17 +580,16 @@ function QTip(target, options, id)
 			// Set rendered status to TRUE
 			self.rendered = TRUE;
 
-			// Update tooltip position and show tooltip if needed
-			self.reposition(self.cache.event);
-			if(options.show.ready || self.rendered === -2) {
-				self.show(self.cache.event);
-			}
-
 			// Assign events
 			assignEvents(1, 1, 1, 1);
 			$.each(options.events, function(name, callback) {
 				elements.tooltip.bind('tooltip'+name, callback);
 			});
+
+			// Update tooltip position and show tooltip if needed
+			if(options.show.ready || show) {
+				self.show(self.cache.event);
+			}
 
 			// Call API method and if return value is FALSE, halt
 			elements.tooltip.trigger('tooltiprender', [self.hash()]);
@@ -690,7 +689,7 @@ function QTip(target, options, id)
 
 		toggle: function(state, event)
 		{
-			if(!self.rendered) { return FALSE; }
+			if(self.rendered === FALSE) { return FALSE; }
 
 			var type = state ? 'show' : 'hide',
 				tooltip = self.elements.tooltip,
@@ -747,12 +746,9 @@ function QTip(target, options, id)
 
 			// Execute state specific properties
 			if(state) {
-				// Check tooltip is full rendered
-				if(self.rendered === TRUE) {
-					self.focus(); // Focus the tooltip before show to prevent visual stacking
-					self.reposition(event); // Update tooltip position
-				}
-
+				self.focus(); // Focus the tooltip before show to prevent visual stacking
+				self.reposition(event); // Update tooltip position
+				
 				// Hide other tooltips if tooltip is solo
 				if(opts.solo) { $(':not('+selector+')').qtip('hide'); }
 			}
@@ -812,7 +808,7 @@ function QTip(target, options, id)
 				qtips.each(function()
 				{
 					var api = $(this).qtip(), blur = $.Event('tooltipblur'), tooltip, elemIndex;
-					if(!api || !api.rendered) { return TRUE; }
+					if(!api || api.rendered === FALSE) { return TRUE; }
 					tooltip = api.elements.tooltip;
 
 					// Reduce all other tooltip z-index by 1
@@ -909,8 +905,8 @@ function QTip(target, options, id)
 				at = { x: 'left', y: 'top' };
 
 				// Use cached event if one isn't available for positioning
-				if(!event) { event = self.cache.event; }
-				position = { top: event.pageY, left: event.pageX };
+				if(!event) { event = $.extend({}, $.fn.qtip.mouse); }
+				position = { top: $.fn.qtip.mouse.pageY, left: $.fn.qtip.mouse.pageX };
 			}
 			else {
 				// Check if event targetting is being used
@@ -1003,7 +999,7 @@ function QTip(target, options, id)
 					$(this).dequeue();
 				});
 			}
-			else if(!isNaN(position.left, position.right)) {
+			else if(!isNaN(position.left, position.top)) {
 				tooltip.css(position);
 			}
 
@@ -1245,7 +1241,7 @@ $.fn.qtip.bind = function(opts, event)
 			// Only continue if tooltip isn't disabled
 			if(self.cache.disabled) { return FALSE; }
 
-			// Cache the mouse data
+			// Cache the event data
 			self.cache.event = $.extend({}, event);
 
 			// Start the event sequence
@@ -1303,6 +1299,11 @@ function(name, func) {
  * http://wiki.jqueryui.com/Tooltip - 4.3 Accessibility recommendation
  */
 $(document.body).attr('role', function(i, val) { return !val ? 'application' : val; });
+
+// Cache mousemove events for positioning purposes
+$(document).bind('mousemove', function(event) {
+	$.fn.qtip.mouse = { pageX: event.pageX, pageY: event.pageY };
+});
 
 // Set global qTip properties
 $.fn.qtip.nextid = 0;
