@@ -291,7 +291,7 @@ function QTip(target, options, id)
 		}
 	}
 
-	function updateContent(content, move)
+	function updateContent(content)
 	{
 		// Make sure tooltip is rendered and content is defined. If not return
 		if(!self.rendered || !content) { return FALSE; }
@@ -311,20 +311,11 @@ function QTip(target, options, id)
 			self.elements.content.html(content);
 		}
 
-		// Update tooltip width
+		// Update tooltip width and position
 		updateWidth();
-
-		// Show the tooltip if rendering is taking place
-		if('number' === typeof self.rendered) {
-			// Show tooltip on ready
-			if(options.show.ready || self.rendered === -2) {
-				self.show(self.cache.event);
-			}
-
-			// Set rendered status to TRUE
-			self.rendered = TRUE;
+		if(self.rendered === true) {
+			self.reposition(self.cache.event);
 		}
-		else { self.reposition(self.cache.event); }
 
 		return self;
 	}
@@ -559,9 +550,9 @@ function QTip(target, options, id)
 				.attr({
 					'id': uitooltip + '-'+id,
 					'role': 'tooltip',
-					'class': uitooltip + ' qtip ui-helper-reset ' + options.style.classes,
-					css: { 'z-index': $.fn.qtip.zindex + $(selector).length }
+					'class': uitooltip + ' qtip ui-helper-reset ' + options.style.classes
 				})
+				.css('z-index', $.fn.qtip.zindex + $(selector).length)
 				.toggleClass('ui-widget', options.style.widget)
 				.toggleClass('ui-state-disabled', self.cache.disabled)
 				.data('qtip', self)
@@ -575,27 +566,31 @@ function QTip(target, options, id)
 				})
 				.appendTo(elements.wrapper);
 
-			// Create title if enabled
+			// Setup content and title (if enabled)
+			updateContent(options.content.text, 0);
 			if(options.content.title.text) {
 				createTitle();
 			}
 
-			// Set the tooltips content
-			updateContent(options.content.text, 0);
+			// Initialize 'render' plugins
+			$.each($.fn.qtip.plugins, function() {
+				if(this.initialize === 'render') { this(self); }
+			});
+
+			// Set rendered status to TRUE
+			self.rendered = TRUE;
+
+			// Update tooltip position and show tooltip if needed
+			self.reposition(self.cache.event);
+			if(options.show.ready || self.rendered === -2) {
+				self.show(self.cache.event);
+			}
 
 			// Assign events
 			assignEvents(1, 1, 1, 1);
 			$.each(options.events, function(name, callback) {
 				elements.tooltip.bind('tooltip'+name, callback);
 			});
-
-			// Initialize plugins
-			$.each($.fn.qtip.plugins, function() {
-				if(this.initialize === 'render') { this(self); }
-			});
-
-			// Update tooltip position
-			self.reposition(self.cache.event);
 
 			// Call API method and if return value is FALSE, halt
 			elements.tooltip.trigger('tooltiprender', [self.hash()]);

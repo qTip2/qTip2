@@ -139,7 +139,7 @@ function Tip(qTip, command)
 		if(!elems.tip) { return; }
 
 		var newCorner = $.extend({}, self.corner),
-			newType = self.mimic.adjust ? $.extend({}, self.mimic) : null,
+			newType = self.mimic.adjust ? $.extend({}, self.mimic) : NULL,
 			precedance = newCorner.precedance === 'y' ? ['y', 'top', 'left', 'height'] : ['x', 'left', 'top', 'width'],
 			adjusted = position.adjusted,
 			offset = parseInt(wrapper.css('border-' + newCorner[ precedance[0] ] + '-width'), 10) || 0,
@@ -256,7 +256,9 @@ function Tip(qTip, command)
 
 			// Create tip element and prepend to the tooltip if needed
 			if(elems.tip){ elems.tip.remove(); }
-			elems.tip = $('<div class="ui-tooltip-tip ui-widget-content"></div>').css(size).prependTo(tooltip);
+			elems.tip = $('<div class="ui-tooltip-tip" />')
+				.toggleClass('ui-widget-content', qTip.options.style.widget)
+				.css(size).prependTo(tooltip);
 			
 			// Create tip element
 			switch(method)
