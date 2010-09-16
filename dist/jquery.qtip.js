@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Sep 16 19:57:21 2010 +0100
+* Date: Thu Sep 16 20:52:35 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -930,8 +930,8 @@ function QTip(target, options, id)
 				at = { x: 'left', y: 'top' };
 
 				// Use cached event if one isn't available for positioning
-				if(!event) { event = $.extend({}, $.fn.qtip.mouse); }
-				position = { top: $.fn.qtip.mouse.pageY, left: $.fn.qtip.mouse.pageX };
+				event = $.extend({}, $.fn.qtip.mouse);
+				position = { top: event.pageY, left: event.pageX };
 			}
 			else {
 				// Check if event targetting is being used
