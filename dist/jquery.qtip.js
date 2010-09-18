@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sat Sep 18 15:35:10 2010 +0100
+* Date: Sat Sep 18 17:12:35 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -798,7 +798,7 @@ function QTip(target, options, id)
 
 			// Use custom function if provided
 			if($.isFunction(opts.effect)) {
-				opts.effect.call(tooltip);
+				opts.effect.call(tooltip, self.hash());
 				tooltip.queue(function(){ after.call(this); $(this).dequeue(); });
 			}
 
@@ -1023,8 +1023,8 @@ function QTip(target, options, id)
 			delete position.adjust;
 
 			// Use custom function if provided
-			if(tooltip.is(':visible') && $.isFunction(posOptions.adjust.effect)) {
-				posOptions.adjust.effect.call(tooltip, position);
+			if(tooltip.is(':visible') && $.isFunction(posOptions.effect)) {
+				posOptions.effect.call(tooltip, position);
 				tooltip.queue(function() {
 					// Reset attributes to avoid cross-browser rendering bugs
 					$(this).css({ opacity: '', height: '' });
@@ -1163,7 +1163,7 @@ $.fn.qtip = function(options, notation, newValue)
 		targets;
 
 	// Check for API request
-	if((!args.length && $(this).data('qtip')) || command === 'api') {
+	if((!arguments.length && $(this).data('qtip')) || command === 'api') {
 		opts = $(this).eq(0).data('qtip');
 		return opts ? opts.hash() : undefined;
 	}
@@ -1386,9 +1386,9 @@ $.fn.qtip.defaults = {
 			mouse: TRUE,
 			screen: FALSE,
 			resize: TRUE,
-			effect: TRUE,
 			offset: FALSE
-		}
+		},
+		effect: TRUE
 	},
 	show: {
 		target: FALSE,
