@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Fri Sep 17 00:47:35 2010 +0100
+* Date: Sat Sep 18 15:11:19 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1859,8 +1859,8 @@ function Tip(qTip, command)
 				case 'canvas':
 					// Grab canvas context and clear it
 					context = inner.get(0).getContext('2d');
-					context.clearRect(0,0,3000,3000);
 					context.restore();
+					context.clearRect(0,0,3000,3000);
 
 					// Grab tip coordinates
 					coords = calculateTip(mimic.string(), width, height);

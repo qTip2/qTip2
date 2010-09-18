@@ -316,8 +316,8 @@ function Tip(qTip, command)
 				case 'canvas':
 					// Grab canvas context and clear it
 					context = inner.get(0).getContext('2d');
-					context.clearRect(0,0,3000,3000);
 					context.restore();
+					context.clearRect(0,0,3000,3000);
 
 					// Grab tip coordinates
 					coords = calculateTip(mimic.string(), width, height);
