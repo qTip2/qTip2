@@ -15,13 +15,15 @@ function Ajax(qTip)
 			// Grab ajax options
 			var ajax = qTip.options.content.ajax;
 
-			// Load the remote content
-			self.load(ajax);
-
-			// Bind show event
-			qTip.elements.tooltip.bind('tooltipshow.ajax', function() {
-				// Update content if content.ajax.once is FALSE and the tooltip is rendered
-				if(ajax.once === FALSE && qTip.rendered === TRUE) { self.load(ajax); }
+			// Bind render event to load initial content
+			qTip.elements.tooltip.bind('tooltiprender.ajax', function() { 
+				self.load(ajax);
+	
+				// Bind show event
+				qTip.elements.tooltip.bind('tooltipshow.ajax', function() {
+					// Update content if content.ajax.once is FALSE and the tooltip is rendered
+					if(ajax.once === FALSE && qTip.rendered === TRUE) { self.load(ajax); }
+				});
 			});
 		},
 

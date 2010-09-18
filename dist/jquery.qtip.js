@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sat Sep 18 15:11:19 2010 +0100
+* Date: Sat Sep 18 15:35:10 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -605,11 +605,6 @@ function QTip(target, options, id)
 				createTitle();
 			}
 
-			// Update tooltip position and show tooltip if needed
-			if(options.show.ready || show) {
-				self.show(self.cache.event);
-			}
-
 			// Initialize 'render' plugins
 			$.each($.fn.qtip.plugins, function() {
 				if(this.initialize === 'render') { this(self); }
@@ -617,7 +612,13 @@ function QTip(target, options, id)
 
 			// Set rendered status to TRUE
 			self.rendered = TRUE;
-
+		
+			// Update tooltip position and show tooltip if needed
+			if(options.show.ready || show) {
+				elements.tooltip.hide();
+				self.show(self.cache.event);
+			}
+	
 			// Assign events
 			assignEvents(1, 1, 1, 1);
 			$.each(options.events, function(name, callback) {
@@ -1071,10 +1072,11 @@ function QTip(target, options, id)
 			target.removeData('qtip');
 			if(self.rendered) { elements.tooltip.remove(); }
 
-			// Reset old title attribute if removed
+			// Reset old title attribute if removed and reset describedby attribute
 			if(oldtitle) {
 				target.attr('title', oldtitle);
 			}
+			target.removeAttr('aria-describedby');
 
 			return target;
 		},
@@ -1435,13 +1437,15 @@ function Ajax(qTip)
 			// Grab ajax options
 			var ajax = qTip.options.content.ajax;
 
-			// Load the remote content
-			self.load(ajax);
-
-			// Bind show event
-			qTip.elements.tooltip.bind('tooltipshow.ajax', function() {
-				// Update content if content.ajax.once is FALSE and the tooltip is rendered
-				if(ajax.once === FALSE && qTip.rendered === TRUE) { self.load(ajax); }
+			// Bind render event to load initial content
+			qTip.elements.tooltip.bind('tooltiprender.ajax', function() { 
+				self.load(ajax);
+	
+				// Bind show event
+				qTip.elements.tooltip.bind('tooltipshow.ajax', function() {
+					// Update content if content.ajax.once is FALSE and the tooltip is rendered
+					if(ajax.once === FALSE && qTip.rendered === TRUE) { self.load(ajax); }
+				});
 			});
 		},
 
@@ -2005,7 +2009,7 @@ $.fn.qtip.plugins.tip.sanitize = function(opts)
 	if(opts.style === undefined) { opts.style = {}; }
 	if(opts.style.tip === undefined) { opts.style.tip = { corner: TRUE }; }
 
-	if(typeof opts.style.tip !== 'object'){ opts.style.tip = { corner: opts.style.tip || TRUE }; }
+	if(typeof opts.style.tip !== 'object'){ opts.style.tip = { corner: !!opts.style.tip }; }
 	if(typeof opts.style.tip.method !== 'string'){ opts.style.tip.method = TRUE; }
 	if(!(/canvas|polygon/i).test(opts.style.tip.method)){ opts.style.tip.method = TRUE; }
 	if(typeof opts.style.tip.width !== 'number'){ opts.style.tip.width = 12; }

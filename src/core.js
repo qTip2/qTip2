@@ -580,11 +580,6 @@ function QTip(target, options, id)
 				createTitle();
 			}
 
-			// Update tooltip position and show tooltip if needed
-			if(options.show.ready || show) {
-				self.show(self.cache.event);
-			}
-
 			// Initialize 'render' plugins
 			$.each($.fn.qtip.plugins, function() {
 				if(this.initialize === 'render') { this(self); }
@@ -592,7 +587,13 @@ function QTip(target, options, id)
 
 			// Set rendered status to TRUE
 			self.rendered = TRUE;
-
+		
+			// Update tooltip position and show tooltip if needed
+			if(options.show.ready || show) {
+				elements.tooltip.hide();
+				self.show(self.cache.event);
+			}
+	
 			// Assign events
 			assignEvents(1, 1, 1, 1);
 			$.each(options.events, function(name, callback) {
@@ -1046,10 +1047,11 @@ function QTip(target, options, id)
 			target.removeData('qtip');
 			if(self.rendered) { elements.tooltip.remove(); }
 
-			// Reset old title attribute if removed
+			// Reset old title attribute if removed and reset describedby attribute
 			if(oldtitle) {
 				target.attr('title', oldtitle);
 			}
+			target.removeAttr('aria-describedby');
 
 			return target;
 		},
