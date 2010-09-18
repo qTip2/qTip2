@@ -20,9 +20,9 @@ function Ajax(qTip)
 
 			// Bind show event
 			qTip.elements.tooltip.bind('tooltipshow.ajax', function() {
-					// Update content if content.ajax.once is FALSE and the tooltip is rendered
-					if(ajax.once === FALSE && qTip.rendered === TRUE) { self.load(ajax); }
-				});
+				// Update content if content.ajax.once is FALSE and the tooltip is rendered
+				if(ajax.once === FALSE && qTip.rendered === TRUE) { self.load(ajax); }
+			});
 		},
 
 		load: function(ajax)

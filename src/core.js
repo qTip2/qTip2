@@ -292,7 +292,7 @@ function QTip(target, options, id)
 	}
 
 	function updateContent(content)
-	{
+	{		
 		// Make sure tooltip is rendered and content is defined. If not return
 		if(!self.rendered || !content) { return FALSE; }
 
@@ -575,9 +575,14 @@ function QTip(target, options, id)
 				.appendTo(elements.wrapper);
 
 			// Setup content and title (if enabled)
-			updateContent(options.content.text, 0);
+			updateContent(options.content.text);
 			if(options.content.title.text) {
 				createTitle();
+			}
+
+			// Update tooltip position and show tooltip if needed
+			if(options.show.ready || show) {
+				self.show(self.cache.event);
 			}
 
 			// Initialize 'render' plugins
@@ -593,11 +598,6 @@ function QTip(target, options, id)
 			$.each(options.events, function(name, callback) {
 				elements.tooltip.bind('tooltip'+name, callback);
 			});
-
-			// Update tooltip position and show tooltip if needed
-			if(options.show.ready || show) {
-				self.show(self.cache.event);
-			}
 
 			// Call API method and if return value is FALSE, halt
 			elements.tooltip.trigger('tooltiprender', [self.hash()]);
@@ -1309,7 +1309,7 @@ function(name, func) {
 $(document.body).attr('role', function(i, val) { return !val ? 'application' : val; });
 
 // Cache mousemove events for positioning purposes
-$(document).bind('mousemove', function(event) {
+$(document).bind('mousemove.qtip', function(event) {
 	$.fn.qtip.mouse = { pageX: event.pageX, pageY: event.pageY };
 });
 

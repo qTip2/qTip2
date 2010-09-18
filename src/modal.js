@@ -141,10 +141,11 @@ $.fn.qtip.plugins.modal = function(qTip)
 
 // Plugin needs to be initialized on render
 $.fn.qtip.plugins.modal.initialize = 'render';
-$.fn.qtip.plugins.modal.sanitize = function(opts)
-{
+
+// Setup sanitiztion rules
+$.fn.qtip.plugins.modal.sanitize = function(opts) {
 	if(opts.show && opts.show.modal !== undefined) {
-		if(typeof opts.show.modal !== 'object'){ opts.show.modal = { on: opts.show.modal }; }
+		if(typeof opts.show.modal !== 'object') { opts.show.modal = { on: !!opts.show.modal }; }
 	}
 };
 

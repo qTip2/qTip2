@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Sep 16 21:00:28 2010 +0100
+* Date: Fri Sep 17 00:47:35 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -317,7 +317,7 @@ function QTip(target, options, id)
 	}
 
 	function updateContent(content)
-	{
+	{		
 		// Make sure tooltip is rendered and content is defined. If not return
 		if(!self.rendered || !content) { return FALSE; }
 
@@ -600,9 +600,14 @@ function QTip(target, options, id)
 				.appendTo(elements.wrapper);
 
 			// Setup content and title (if enabled)
-			updateContent(options.content.text, 0);
+			updateContent(options.content.text);
 			if(options.content.title.text) {
 				createTitle();
+			}
+
+			// Update tooltip position and show tooltip if needed
+			if(options.show.ready || show) {
+				self.show(self.cache.event);
 			}
 
 			// Initialize 'render' plugins
@@ -618,11 +623,6 @@ function QTip(target, options, id)
 			$.each(options.events, function(name, callback) {
 				elements.tooltip.bind('tooltip'+name, callback);
 			});
-
-			// Update tooltip position and show tooltip if needed
-			if(options.show.ready || show) {
-				self.show(self.cache.event);
-			}
 
 			// Call API method and if return value is FALSE, halt
 			elements.tooltip.trigger('tooltiprender', [self.hash()]);
@@ -1334,7 +1334,7 @@ function(name, func) {
 $(document.body).attr('role', function(i, val) { return !val ? 'application' : val; });
 
 // Cache mousemove events for positioning purposes
-$(document).bind('mousemove', function(event) {
+$(document).bind('mousemove.qtip', function(event) {
 	$.fn.qtip.mouse = { pageX: event.pageX, pageY: event.pageY };
 });
 
@@ -1440,9 +1440,9 @@ function Ajax(qTip)
 
 			// Bind show event
 			qTip.elements.tooltip.bind('tooltipshow.ajax', function() {
-					// Update content if content.ajax.once is FALSE and the tooltip is rendered
-					if(ajax.once === FALSE && qTip.rendered === TRUE) { self.load(ajax); }
-				});
+				// Update content if content.ajax.once is FALSE and the tooltip is rendered
+				if(ajax.once === FALSE && qTip.rendered === TRUE) { self.load(ajax); }
+			});
 		},
 
 		load: function(ajax)
@@ -2278,10 +2278,11 @@ $.fn.qtip.plugins.modal = function(qTip)
 
 // Plugin needs to be initialized on render
 $.fn.qtip.plugins.modal.initialize = 'render';
-$.fn.qtip.plugins.modal.sanitize = function(opts)
-{
+
+// Setup sanitiztion rules
+$.fn.qtip.plugins.modal.sanitize = function(opts) {
 	if(opts.show && opts.show.modal !== undefined) {
-		if(typeof opts.show.modal !== 'object'){ opts.show.modal = { on: opts.show.modal }; }
+		if(typeof opts.show.modal !== 'object') { opts.show.modal = { on: !!opts.show.modal }; }
 	}
 };
 
