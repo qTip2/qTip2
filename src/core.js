@@ -214,10 +214,51 @@ function QTip(target, options, id)
 		}
 	}
 
-	function createTitle()
+	function createButton()
 	{
 		var elems = self.elements,
 			button = options.content.title.button;
+
+		if(elems.button) { elems.button.remove(); }
+
+		// Use custom button if one was supplied by user, else use default
+		if(button.jquery) {
+			elems.button = button;
+		}
+		else if('string' === typeof button) {
+			elems.button = $('<a />', { 'html': button });
+		}
+		else {
+			elems.button = $('<a />', {
+				'class': 'ui-state-default',
+				'text': 'Close tooltip',
+				'title': 'Close tooltip',
+				'css': { 'text-indent': '-10000em' }
+			})
+			.prepend(
+				$('<span />', { 'class': 'ui-icon ui-icon-close' })
+			);
+		}
+
+		// Create button and setup attributes
+		elems.button
+			.prependTo(elems.titlebar)
+			.attr('role', 'button')
+			.addClass(uitooltip + '-' + (button === TRUE ? 'close' : 'button'))
+			.hover(function(event){ $(this).toggleClass('ui-state-hover', event.type === 'mouseenter'); })
+			.click(function() {
+				if(!elems.tooltip.hasClass('ui-state-disabled')) { self.hide(); }
+				return FALSE;
+			})
+			.bind('mousedown keydown mouseup keyup mouseout', function(event) {
+				$(this).toggleClass('ui-state-active ui-state-focus', (/down$/i).test(event.type));
+			});
+		
+	}
+
+	function createTitle()
+	{
+		var elems = self.elements;
 
 		// Destroy previous title element, if present
 		if(elems.titlebar) { removeTitle(); }
@@ -234,41 +275,26 @@ function QTip(target, options, id)
 			})
 		)
 		.prependTo(elems.wrapper);
+		
+		if(options.content.title.button) { createButton(); }
+	}
 
-		// Create title close buttons if enabled
-		if(button) {
-			// Use custom button if one was supplied by user, else use default
-			if(button.jquery) {
-				elems.button = button;
-			}
-			else if('string' === typeof button) {
-				elems.button = $('<a />', { 'html': button });
-			}
-			else {
-				elems.button = $('<a />', {
-					'class': 'ui-state-default',
-					'text': 'Close tooltip',
-					'title': 'Close tooltip',
-					'css': { 'text-indent': '-10000em' }
-				})
-				.prepend(
-					$('<span />', { 'class': 'ui-icon ui-icon-close' })
-				);
-			}
+	function updateButton(button)
+	{
+		var elem = self.elements.button,
+			title = self.elements.title;
 
-			// Setup event handlers
-			elems.button
-				.prependTo(elems.titlebar)
-				.attr('role', 'button')
-				.addClass(uitooltip + '-' + (button === TRUE ? 'close' : 'button'))
-				.hover(function(event){ $(this).toggleClass('ui-state-hover', event.type === 'mouseenter'); })
-				.click(function() {
-					if(!elems.tooltip.hasClass('ui-state-disabled')) { self.hide(); }
-					return FALSE;
-				})
-				.bind('mousedown keydown mouseup keyup mouseout', function(event) {
-					$(this).toggleClass('ui-state-active ui-state-focus', (/down$/i).test(event.type));
-				});
+		// Make sure tooltip is rendered and if not, return
+		if(!self.rendered) { return FALSE; }
+		
+		if(!button) {
+			elem.remove();
+		}
+		else {
+			if(!title) {
+				createTitle();
+			}
+			createButton();
 		}
 	}
 
@@ -639,6 +665,7 @@ function QTip(target, options, id)
 						// Content checks
 						'^content.text': function(){ updateContent(value); },
 						'^content.title.text': function(){ updateTitle(value); },
+						'^content.title.button': function(){ updateButton(value); },
 
 						// Position checks
 						'^position.container$': function(){
