@@ -275,7 +275,7 @@ function QTip(target, options, id)
 			})
 		)
 		.prependTo(elems.wrapper);
-		
+
 		if(options.content.title.button) { createButton(); }
 	}
 
@@ -286,7 +286,7 @@ function QTip(target, options, id)
 
 		// Make sure tooltip is rendered and if not, return
 		if(!self.rendered) { return FALSE; }
-		
+
 		if(!button) {
 			elem.remove();
 		}

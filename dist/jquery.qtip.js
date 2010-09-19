@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sat Sep 18 20:09:26 2010 +0100
+* Date: Sun Sep 19 15:39:31 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -300,7 +300,7 @@ function QTip(target, options, id)
 			})
 		)
 		.prependTo(elems.wrapper);
-		
+
 		if(options.content.title.button) { createButton(); }
 	}
 
@@ -311,7 +311,7 @@ function QTip(target, options, id)
 
 		// Make sure tooltip is rendered and if not, return
 		if(!self.rendered) { return FALSE; }
-		
+
 		if(!button) {
 			elem.remove();
 		}

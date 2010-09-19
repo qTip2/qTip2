@@ -39,6 +39,7 @@
 
 	.ui-tooltip .ui-tooltip-titlebar{
 		position: relative;
+		min-height: 19px;
 		padding: 6px 35px 6px 10px;
 
 		font-weight: bold;
