@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun Sep 19 18:32:55 2010 +0100
+* Date: Sun Sep 19 18:52:35 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1089,7 +1089,7 @@ function QTip(target, options, id)
 
 			// Use custom function if provided
 			if(tooltip.is(':visible') && $.isFunction(posOptions.effect)) {
-				posOptions.effect.call(tooltip, position);
+				posOptions.effect.call(tooltip, self.hash(), position);
 				tooltip.queue(function() {
 					var elem = $(this);
 					// Reset attributes to avoid cross-browser rendering bugs
