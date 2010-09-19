@@ -133,18 +133,21 @@ function QTip(target, options, id)
 	*/
 	function convertNotation(notation)
 	{
-		var actual, option, i;
+		var i, obj,
 
 		// Split notation into array
-		actual = notation.split('.');
+		actual = notation.split('.'),
 
 		// Locate required option
 		option = options[ actual[0] ];
+
+		// Loop through
 		for(i = 1; i < actual.length; i+=1) {
-			if(typeof option[ actual[i] ] === 'object' && !option[ actual[i] ].jquery) {
+			obj = option[ actual[i] ];
+			if(typeof obj === 'object' && !obj.jquery && !obj.precedance) {
 				option = option[ actual[i] ];
 			}
-			else{ break; }
+			else { break; }
 		}
 
 		return actual[i] !== undefined ? [option, actual[i] ] : [options, actual[0]];
