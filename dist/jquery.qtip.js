@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun Sep 19 16:43:07 2010 +0100
+* Date: Sun Sep 19 18:24:42 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1602,7 +1602,7 @@ $.fn.qtip.plugins.ajax.sanitize = function(options)
 {
 	try {
 		var opts = options.content.ajax;
-		if(typeof opts !== 'object') { opts.content.ajax = { url: opts }; }
+		if(typeof opts !== 'object') { options.content.ajax = { url: opts }; }
 		if(options.content.text === FALSE) { options.content.text = 'Loading...'; }
 		opts.once = !!opts.once;
 		opts.preload = !!opts.preload;
@@ -2082,7 +2082,7 @@ $.fn.qtip.plugins.tip.sanitize = function(options)
 {
 	try {
 		var opts = options.style.tip;
-		if(typeof opts !== 'object'){ opts.style.tip = { corner: !!opts }; }
+		if(typeof opts !== 'object'){ options.style.tip = { corner: !!opts }; }
 		if(typeof opts.method !== 'string'){ opts.method = TRUE; }
 		if(!(/canvas|polygon/i).test(opts.method)){ opts.method = TRUE; }
 		if(typeof opts.width !== 'number'){ opts.width = 12; }
@@ -2368,17 +2368,14 @@ $.fn.qtip.plugins.modal.initialize = 'render';
 
 // Setup sanitiztion rules
 $.fn.qtip.plugins.modal.sanitize = function(opts) {
-	try {
-		if(typeof opts.show.modal !== 'object') { opts.show.modal = { on: !!opts.show.modal }; }
-	}
-	catch (e) {}
+	if(opts.show && typeof opts.show.modal !== 'object') { opts.show.modal = { on: !!opts.show.modal }; }
 };
 
 // Extend original qTip defaults
 $.extend(TRUE, $.fn.qtip.defaults, {
 	show: {
 		modal: {
-			on: TRUE,
+			on: FALSE,
 			effect: TRUE,
 			blur: TRUE
 		}

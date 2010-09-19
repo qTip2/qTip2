@@ -461,7 +461,7 @@ $.fn.qtip.plugins.tip.sanitize = function(options)
 {
 	try {
 		var opts = options.style.tip;
-		if(typeof opts !== 'object'){ opts.style.tip = { corner: !!opts }; }
+		if(typeof opts !== 'object'){ options.style.tip = { corner: !!opts }; }
 		if(typeof opts.method !== 'string'){ opts.method = TRUE; }
 		if(!(/canvas|polygon/i).test(opts.method)){ opts.method = TRUE; }
 		if(typeof opts.width !== 'number'){ opts.width = 12; }
