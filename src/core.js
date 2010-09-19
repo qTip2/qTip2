@@ -147,7 +147,7 @@ function QTip(target, options, id)
 			else{ break; }
 		}
 
-		return [option, actual[i] ];
+		return actual[i] !== undefined ? [option, actual[i] ] : [options, actual[0]];
 	}
 
 	function calculate(detail)
@@ -634,7 +634,7 @@ function QTip(target, options, id)
 
 		get: function(notation)
 		{
-			var result, option;
+			var result, o;
 
 			switch(notation.toLowerCase())
 			{
@@ -647,8 +647,8 @@ function QTip(target, options, id)
 				break;
 
 				default:
-					option = convertNotation(notation.toLowerCase());
-					result = (option[0].precedance) ? option[0].string() : (option[0].jquery) ? option[0] : option[0][ option[1] ];
+					o = convertNotation(notation.toLowerCase());
+					result = (o[0].precedance) ? o[0].string() : (o[0].jquery) ? o[0] : o[0][ o[1] ];
 				break;
 			}
 
@@ -657,23 +657,32 @@ function QTip(target, options, id)
 
 		set: function(notation, value)
 		{
-			var option = convertNotation(notation.toLowerCase()),
+			notation = notation.toLowerCase();
+			var option = convertNotation(notation),
+				elems = self.elements,
+				tooltip = elems.tooltip,
 				previous,
 				category, rule,
 				checks = {
 					builtin: {
+						// Core checks
+						'id': function(obj, opt, val, prev) {
+							var id = value === TRUE ? $.fn.qtip.nextid : value,
+								idStr = uitooltip + '-' + id;
+
+							if(id !== FALSE && id.length > 0 && !$('#ui-tooltip-'+id).length) {
+								tooltip[0].id = idStr;
+								elems.content[0].id = idStr + '-content';
+								elems.title[0].id = idStr + '-title';
+							}
+						},
+
 						// Content checks
 						'^content.text': function(){ updateContent(value); },
 						'^content.title.text': function(){ updateTitle(value); },
 						'^content.title.button': function(){ updateButton(value); },
 
 						// Position checks
-						'^position.container$': function(){
-							if(self.rendered === TRUE) { 
-								self.elements.tooltip.appendTo(value); 
-								self.reposition();
-							}
-						},
 						'^position.(my|at)$': function(){
 							// Parse new corner value into Corner objecct
 							var corner = (/my$/i).test(notation) ? 'my' : 'at';
@@ -683,16 +692,41 @@ function QTip(target, options, id)
 							}
 						},
 						'^position.(my|at|adjust|target)': function(){ if(self.rendered) { self.reposition(); } },
-
+						'^position.container$': function(){
+							if(self.rendered === TRUE) { 
+								tooltip.appendTo(value); 
+								self.reposition();
+							}
+						},
+				
 						// Show & hide checks
-						'^(show|hide).(event|target|fixed)': function(obj, opt, val, prev) {
-							var args = (notation.search(/fixed/i) > -1) ? [0, [0,1,1,1]] : (notation.search(/hide/i) < 0) ? ['show', [1,0,0,0]] : ['hide', [0,1,0,0]];
+						'^(show|hide).(event|target|fixed|delay|inactive)': function(obj, opt, val, prev) {
+							var args = notation.search(/fixed/i) > -1 ? [0, [0,1,1,1]] : [notation.substr(0,3), notation.charAt(0) === 's' ? [1,0,0,0] : [0,1,0,0]];
 
 							if(args[0]) { obj[opt] = prev; }
 							unassignEvents.apply(self, args[1]);
 
 							if(args[0]) { obj[opt] = val; }
 							assignEvents.apply(self, args[1]);
+						},
+						'^show.ready$': function() { if(self.rendered === FALSE) { self.show(); } },
+
+						// Style checks
+						'^style.classes$': function() { self.elements.tooltip.css('class', uitooltip + ' qtip ui-helper-reset ' + value); },
+						'^style.widget$': function() {
+							tooltip.toggleClass('ui-widget', !!value);
+							elems.titlebar.toggleClass('ui-widget-header', !!value);
+							elems.content.toggleClass('ui-widget-content', !!value);
+						},
+						
+						// Events check
+						'^events.(render|show|move|hide|focus|blur)': function(obj, opt, val, prev) {
+							if($.isFunction(value)) {
+								elems.tooltip.bind('tooltip'+opt, val);
+							}
+							else {
+								elems.tooltip.unbind('tooltip'+opt, prev);
+							}
 						}
 					}
 				};
@@ -739,8 +773,9 @@ function QTip(target, options, id)
 			// Define after callback
 			function after()
 			{
-				var attr = state ? 'attr' : 'removeAttr',
-					opacity = (/^1|0$/).test($(this).css('opacity'));
+				var elem = $(this),
+					attr = state ? 'attr' : 'removeAttr',
+					opacity = (/^1|0$/).test(elem.css('opacity'));
 
 				// Apply ARIA attributes when tooltip is shown
 				if(self.elements.title){ target[attr]('aria-labelledby', uitooltip + '-'+id+'-title'); }
@@ -748,14 +783,14 @@ function QTip(target, options, id)
 
 				// Prevent antialias from disappearing in IE7 by removing filter and opacity attribute
 				if(state) {
-					if($.browser.msie && $(this).get(0).style && opacity) { 
-						ieStyle = $(this).get(0).style;
+					if($.browser.msie && this.style && opacity) { 
+						ieStyle = this.style;
 						ieStyle.removeAttribute('filter');
 						ieStyle.removeAttribute('opacity');
 					}
 				}
 				else if(opacity) {
-					$(this).hide();
+					elem.hide();
 				}
 			}
 
@@ -1028,10 +1063,11 @@ function QTip(target, options, id)
 			if(tooltip.is(':visible') && $.isFunction(posOptions.effect)) {
 				posOptions.effect.call(tooltip, position);
 				tooltip.queue(function() {
+					var elem = $(this);
 					// Reset attributes to avoid cross-browser rendering bugs
-					$(this).css({ opacity: '', height: '' });
-					if($.browser.msie && $(this).get(0).style) { $(this).get(0).style.removeAttribute('filter'); }
-					$(this).dequeue();
+					elem.css({ opacity: '', height: '' });
+					if($.browser.msie && this.style) { this.style.removeAttribute('filter'); }
+					elem.dequeue();
 				});
 			}
 			else if(!isNaN(position.left, position.top)) {
@@ -1101,24 +1137,28 @@ function QTip(target, options, id)
 // Initialization method
 function init(id, opts)
 {
-	var obj,
+	var obj, 
+	
+	// Setup element references
+	elem = $(this),
+	docBody = $(document.body),
 
 	// Grab metadata from element if plugin is present
-	metadata = ($(this).metadata) ? $(this).metadata(opts.metadata) : {},
+	metadata = (elem.metadata) ? elem.metadata(opts.metadata) : {},
 
 	// Create unique configuration object using metadata
 	config = $.extend(TRUE, {}, opts, metadata),
 	posOptions = config.position,
 
 	// Use document body instead of document element if needed
-	newTarget = $(this)[0] === document ? $(document.body) : $(this);
+	newTarget = this === document ? docBody : elem;
 
 	// Setup missing content if none is detected
 	if('boolean' === typeof config.content.text) {
 
 		// Grab from supplied attribute if available
-		if(config.content.attr !== FALSE && $(this).attr(config.content.attr)) {
-			config.content.text = $(this).attr(config.content.attr);
+		if(config.content.attr !== FALSE && elem.attr(config.content.attr)) {
+			config.content.text = elem.attr(config.content.attr);
 		}
 
 		// No valid content was found, abort render
@@ -1128,7 +1168,7 @@ function init(id, opts)
 	}
 
 	// Setup target options
-	if(posOptions.container === FALSE) { posOptions.container = $(document.body); }
+	if(posOptions.container === FALSE) { posOptions.container = docBody; }
 	if(posOptions.target === FALSE) { posOptions.target = newTarget; }
 	if(config.show.target === FALSE) { config.show.target = newTarget; }
 	if(config.hide.target === FALSE) { config.hide.target = newTarget; }
@@ -1138,9 +1178,9 @@ function init(id, opts)
 	posOptions.my = new $.fn.qtip.plugins.Corner(posOptions.my);
 
 	// Destroy previous tooltip if overwrite is enabled, or skip element if not
-	if($(this).data('qtip')) {
+	if(elem.data('qtip')) {
 		if(config.overwrite) {
-			$(this).qtip('destroy');
+			elem.qtip('destroy');
 		}
 		else if(config.overwrite === FALSE) {
 			return FALSE;
@@ -1148,8 +1188,8 @@ function init(id, opts)
 	}
 
 	// Initialize the tooltip and add API reference
-	obj = new QTip($(this), config, id);
-	$(this).data('qtip', obj);
+	obj = new QTip(elem, config, id);
+	elem.data('qtip', obj);
 
 	return obj;
 }
@@ -1157,23 +1197,23 @@ function init(id, opts)
 // jQuery $.fn extension method
 $.fn.qtip = function(options, notation, newValue)
 {
-	var command =  String(options).toLowerCase(), // Parse command
-		returned = FALSE,
+	var command = String(options).toLowerCase(), // Parse command
+		returned = NULL,
 		args = command === 'disable' ? [TRUE] : $.makeArray(arguments).slice(1, 10),
 		event = args[args.length - 1],
 		opts = $.extend(TRUE, {}, options),
 		targets;
 
 	// Check for API request
-	if((!arguments.length && $(this).data('qtip')) || command === 'api') {
-		opts = $(this).eq(0).data('qtip');
+	if((!arguments.length && this.data('qtip')) || command === 'api') {
+		opts = this.data('qtip');
 		return opts ? opts.hash() : undefined;
 	}
 
 	// Execute API command if present
 	else if('string' === typeof options)
 	{
-		$(this).each(function()
+		this.each(function()
 		{
 			var api = $(this).data('qtip');
 			if(!api) { return TRUE; }
@@ -1206,7 +1246,7 @@ $.fn.qtip = function(options, notation, newValue)
 			}
 		});
 
-		return returned !== FALSE ? returned : $(this);
+		return returned !== NULL ? returned : this;
 	}
 
 	// No API commands. validate provided options and setup qTips
@@ -1226,18 +1266,20 @@ $.fn.qtip = function(options, notation, newValue)
 // $.fn.qtip Bind method
 $.fn.qtip.bind = function(opts, event)
 {
-	return $(this).each(function(i) {
-		var id, self, options, targets, events, namespace, 
-			content = opts.content.text;
+	return this.each(function(i) {
+		var elem = $(this),
+			id = opts.id,
+			content = opts.content.text,
+			self, options, targets, events, namespace;
 
 		// Find next available ID, or use custom ID if provided
-		id = (opts.id === FALSE || opts.id.length < 1 || $('#ui-tooltip-'+opts.id).length) ? $.fn.qtip.nextid++ : opts.id;
+		opts.id = id = (id === FALSE || id.length < 1 || $('#ui-tooltip-'+id).length) ? $.fn.qtip.nextid++ : id;
 
 		// Setup events namespace
 		namespace = '.qtip-'+id+'-create';
 
 		// Initialize the qTip
-		self = init.call($(this), id, opts);
+		self = init.call(this, id, opts);
 		if(self === FALSE) { return TRUE; }
 
 		// Setup options and get correct content from array if present
@@ -1247,8 +1289,8 @@ $.fn.qtip.bind = function(opts, event)
 		}
 
 		// Remove title attribute and store it if present
-		if($(this).attr('title')) {
-			$(this).data('oldtitle', $(this).attr('title')).removeAttr('title');
+		if(elem.attr('title')) {
+			elem.data('oldtitle', elem.attr('title')).removeAttr('title');
 		}
 
 		// Initialize plugins
