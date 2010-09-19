@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun Sep 19 15:40:47 2010 +0100
+* Date: Sun Sep 19 16:43:07 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1579,10 +1579,10 @@ function preloadImages(url) {
 $.fn.qtip.plugins.ajax = function(qTip)
 {
 	var api = qTip.plugins.ajax,
-		opts = qTip.options.content;
+		opts = qTip.options.content.ajax;
 
 	// Make sure the qTip uses the $.ajax functionality
-	if(opts.ajax && opts.ajax.url) {
+	if(opts && opts.url) {
 		// An API is already present, return it
 		if(api) {
 			return api;
@@ -1598,23 +1598,28 @@ $.fn.qtip.plugins.ajax = function(qTip)
 $.fn.qtip.plugins.ajax.initialize = 'render';
 
 // Setup plugin sanitization
-$.fn.qtip.plugins.ajax.sanitize = function(opts)
+$.fn.qtip.plugins.ajax.sanitize = function(options)
 {
-	// Parse options into correct syntax
-	if(opts.content !== undefined) {
-		if(opts.content.ajax !== undefined) {
-			if(typeof opts.content.ajax !== 'object') { opts.content.ajax = { url: opts.content.ajax }; }
-			if(opts.content.text === FALSE) { opts.content.text = 'Loading...'; }
-			opts.content.ajax.once = Boolean(opts.content.ajax.once);
-			opts.content.ajax.preload = Boolean(opts.content.ajax.preload);
-			
-			// Preload images if enabled 
-			if(opts.content.ajax.preload) { preloadImages(opts.content.ajax.url); } 
-		}
+	try {
+		var opts = options.content.ajax;
+		if(typeof opts !== 'object') { opts.content.ajax = { url: opts }; }
+		if(options.content.text === FALSE) { options.content.text = 'Loading...'; }
+		opts.once = !!opts.once;
+		opts.preload = !!opts.preload;
+		if(opts.preload) { preloadImages(opts.url); }  // Preload images if enabled 
 	}
+	catch (e) {}
 };
 
-// Tip coordinates calculator
+// Extend original qTip defaults
+$.extend(TRUE, $.fn.qtip.defaults, {
+	content: {
+		ajax: {
+			once: TRUE,
+			preload: FALSE
+		}
+	}
+});// Tip coordinates calculator
 function calculateTip(corner, width, height)
 {
 	var width2 = Math.floor(width / 2), height2 = Math.floor(height / 2),
@@ -2073,20 +2078,32 @@ $.fn.qtip.plugins.tip = function(qTip)
 $.fn.qtip.plugins.tip.initialize = 'render';
 
 // Setup plugin sanitization options
-$.fn.qtip.plugins.tip.sanitize = function(opts)
+$.fn.qtip.plugins.tip.sanitize = function(options)
 {
-	if(opts.style === undefined) { opts.style = {}; }
-	if(opts.style.tip === undefined) { opts.style.tip = { corner: TRUE }; }
-
-	if(typeof opts.style.tip !== 'object'){ opts.style.tip = { corner: !!opts.style.tip }; }
-	if(typeof opts.style.tip.method !== 'string'){ opts.style.tip.method = TRUE; }
-	if(!(/canvas|polygon/i).test(opts.style.tip.method)){ opts.style.tip.method = TRUE; }
-	if(typeof opts.style.tip.width !== 'number'){ opts.style.tip.width = 12; }
-	if(typeof opts.style.tip.height !== 'number'){ opts.style.tip.height = 12; }
-	if(typeof opts.style.tip.border !== 'number'){ opts.style.tip.border = 0; }
+	try {
+		var opts = options.style.tip;
+		if(typeof opts !== 'object'){ opts.style.tip = { corner: !!opts }; }
+		if(typeof opts.method !== 'string'){ opts.method = TRUE; }
+		if(!(/canvas|polygon/i).test(opts.method)){ opts.method = TRUE; }
+		if(typeof opts.width !== 'number'){ opts.width = 12; }
+		if(typeof opts.height !== 'number'){ opts.height = 12; }
+		if(typeof opts.border !== 'number'){ opts.border = 0; }
+	}
+	catch(e) {}
 };
 
-$.fn.qtip.plugins.imagemap = function(area, corner)
+// Extend original qTip defaults
+$.extend(TRUE, $.fn.qtip.defaults, {
+	style: {
+		tip: {
+			corner: TRUE,
+			method: TRUE,
+			width: 12,
+			height: 12,
+			border: 0
+		}
+	}
+});$.fn.qtip.plugins.imagemap = function(area, corner)
 {
 	var shape = area.attr('shape').toLowerCase(),
 		baseCoords = area.attr('coords').split(','),
@@ -2222,9 +2239,6 @@ function Modal(qTip, options)
 	$.extend(self, {
 		init: function()
 		{
-			// Merge defaults with options
-			options = $.extend(TRUE, $.fn.qtip.plugins.modal.defaults, options);
-
 			// Check if the tooltip is modal
 			tooltip.bind(events, function(event, api, duration) {
 				var type = event.type.replace('tooltip', '');
@@ -2354,19 +2368,22 @@ $.fn.qtip.plugins.modal.initialize = 'render';
 
 // Setup sanitiztion rules
 $.fn.qtip.plugins.modal.sanitize = function(opts) {
-	if(opts.show && opts.show.modal !== undefined) {
+	try {
 		if(typeof opts.show.modal !== 'object') { opts.show.modal = { on: !!opts.show.modal }; }
 	}
+	catch (e) {}
 };
 
-// Setup plugin defaults
-$.fn.qtip.plugins.modal.defaults = {
-	on: TRUE,
-	effect: TRUE,
-	blur: TRUE
-};
-
-/* BGIFrame adaption (http://plugins.jquery.com/project/bgiframe) - Special thanks to Brandon Aaron */
+// Extend original qTip defaults
+$.extend(TRUE, $.fn.qtip.defaults, {
+	show: {
+		modal: {
+			on: TRUE,
+			effect: TRUE,
+			blur: TRUE
+		}
+	}
+});/* BGIFrame adaption (http://plugins.jquery.com/project/bgiframe) - Special thanks to Brandon Aaron */
 function BGIFrame(qTip)
 {
 	var self = this,

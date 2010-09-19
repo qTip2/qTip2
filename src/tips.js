@@ -457,16 +457,29 @@ $.fn.qtip.plugins.tip = function(qTip)
 $.fn.qtip.plugins.tip.initialize = 'render';
 
 // Setup plugin sanitization options
-$.fn.qtip.plugins.tip.sanitize = function(opts)
+$.fn.qtip.plugins.tip.sanitize = function(options)
 {
-	if(opts.style === undefined) { opts.style = {}; }
-	if(opts.style.tip === undefined) { opts.style.tip = { corner: TRUE }; }
-
-	if(typeof opts.style.tip !== 'object'){ opts.style.tip = { corner: !!opts.style.tip }; }
-	if(typeof opts.style.tip.method !== 'string'){ opts.style.tip.method = TRUE; }
-	if(!(/canvas|polygon/i).test(opts.style.tip.method)){ opts.style.tip.method = TRUE; }
-	if(typeof opts.style.tip.width !== 'number'){ opts.style.tip.width = 12; }
-	if(typeof opts.style.tip.height !== 'number'){ opts.style.tip.height = 12; }
-	if(typeof opts.style.tip.border !== 'number'){ opts.style.tip.border = 0; }
+	try {
+		var opts = options.style.tip;
+		if(typeof opts !== 'object'){ opts.style.tip = { corner: !!opts }; }
+		if(typeof opts.method !== 'string'){ opts.method = TRUE; }
+		if(!(/canvas|polygon/i).test(opts.method)){ opts.method = TRUE; }
+		if(typeof opts.width !== 'number'){ opts.width = 12; }
+		if(typeof opts.height !== 'number'){ opts.height = 12; }
+		if(typeof opts.border !== 'number'){ opts.border = 0; }
+	}
+	catch(e) {}
 };
 
+// Extend original qTip defaults
+$.extend(TRUE, $.fn.qtip.defaults, {
+	style: {
+		tip: {
+			corner: TRUE,
+			method: TRUE,
+			width: 12,
+			height: 12,
+			border: 0
+		}
+	}
+});

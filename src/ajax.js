@@ -88,10 +88,10 @@ function preloadImages(url) {
 $.fn.qtip.plugins.ajax = function(qTip)
 {
 	var api = qTip.plugins.ajax,
-		opts = qTip.options.content;
+		opts = qTip.options.content.ajax;
 
 	// Make sure the qTip uses the $.ajax functionality
-	if(opts.ajax && opts.ajax.url) {
+	if(opts && opts.url) {
 		// An API is already present, return it
 		if(api) {
 			return api;
@@ -107,19 +107,25 @@ $.fn.qtip.plugins.ajax = function(qTip)
 $.fn.qtip.plugins.ajax.initialize = 'render';
 
 // Setup plugin sanitization
-$.fn.qtip.plugins.ajax.sanitize = function(opts)
+$.fn.qtip.plugins.ajax.sanitize = function(options)
 {
-	// Parse options into correct syntax
-	if(opts.content !== undefined) {
-		if(opts.content.ajax !== undefined) {
-			if(typeof opts.content.ajax !== 'object') { opts.content.ajax = { url: opts.content.ajax }; }
-			if(opts.content.text === FALSE) { opts.content.text = 'Loading...'; }
-			opts.content.ajax.once = Boolean(opts.content.ajax.once);
-			opts.content.ajax.preload = Boolean(opts.content.ajax.preload);
-			
-			// Preload images if enabled 
-			if(opts.content.ajax.preload) { preloadImages(opts.content.ajax.url); } 
-		}
+	try {
+		var opts = options.content.ajax;
+		if(typeof opts !== 'object') { opts.content.ajax = { url: opts }; }
+		if(options.content.text === FALSE) { options.content.text = 'Loading...'; }
+		opts.once = !!opts.once;
+		opts.preload = !!opts.preload;
+		if(opts.preload) { preloadImages(opts.url); }  // Preload images if enabled 
 	}
+	catch (e) {}
 };
 
+// Extend original qTip defaults
+$.extend(TRUE, $.fn.qtip.defaults, {
+	content: {
+		ajax: {
+			once: TRUE,
+			preload: FALSE
+		}
+	}
+});

@@ -12,9 +12,6 @@ function Modal(qTip, options)
 	$.extend(self, {
 		init: function()
 		{
-			// Merge defaults with options
-			options = $.extend(TRUE, $.fn.qtip.plugins.modal.defaults, options);
-
 			// Check if the tooltip is modal
 			tooltip.bind(events, function(event, api, duration) {
 				var type = event.type.replace('tooltip', '');
@@ -144,15 +141,19 @@ $.fn.qtip.plugins.modal.initialize = 'render';
 
 // Setup sanitiztion rules
 $.fn.qtip.plugins.modal.sanitize = function(opts) {
-	if(opts.show && opts.show.modal !== undefined) {
+	try {
 		if(typeof opts.show.modal !== 'object') { opts.show.modal = { on: !!opts.show.modal }; }
 	}
+	catch (e) {}
 };
 
-// Setup plugin defaults
-$.fn.qtip.plugins.modal.defaults = {
-	on: TRUE,
-	effect: TRUE,
-	blur: TRUE
-};
-
+// Extend original qTip defaults
+$.extend(TRUE, $.fn.qtip.defaults, {
+	show: {
+		modal: {
+			on: TRUE,
+			effect: TRUE,
+			blur: TRUE
+		}
+	}
+});
