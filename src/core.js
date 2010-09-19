@@ -1060,7 +1060,7 @@ function QTip(target, options, id)
 			callback.originalEvent = $.extend({}, event);
 			tooltip.trigger(callback, [self.hash(), position]);
 			if(callback.isDefaultPrevented()){ return self; }
-			delete position.adjust;
+			delete position.adjusted;
 
 			// Use custom function if provided
 			if(tooltip.is(':visible') && $.isFunction(posOptions.effect)) {
