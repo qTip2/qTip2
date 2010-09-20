@@ -23,7 +23,7 @@ function BGIFrame(qTip)
 
 		adjust: function()
 		{
-			var dimensions = qTip.calculate('dimensions'), // Determine current tooltip dimensions
+			var dimensions = qTip.get('dimensions'), // Determine current tooltip dimensions
 				plugin = qTip.plugins.tip,
 				tip = qTip.elements.tip,
 				tipAdjust, offset;

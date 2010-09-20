@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun Sep 19 18:55:40 2010 +0100
+* Date: Sun Sep 19 19:09:37 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -2408,7 +2408,7 @@ function BGIFrame(qTip)
 
 		adjust: function()
 		{
-			var dimensions = qTip.calculate('dimensions'), // Determine current tooltip dimensions
+			var dimensions = qTip.get('dimensions'), // Determine current tooltip dimensions
 				plugin = qTip.plugins.tip,
 				tip = qTip.elements.tip,
 				tipAdjust, offset;
