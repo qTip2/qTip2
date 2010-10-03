@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun Oct 3 17:25:59 2010 +0100
+* Date: Sun Oct 3 17:38:38 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -2386,7 +2386,7 @@ $.fn.qtip.plugins.modal.sanitize = function(opts) {
 $.extend(TRUE, $.fn.qtip.defaults, {
 	show: {
 		modal: {
-			on: FALSE,
+			on: TRUE,
 			effect: TRUE,
 			blur: TRUE
 		}

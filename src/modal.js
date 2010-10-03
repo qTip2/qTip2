@@ -148,7 +148,7 @@ $.fn.qtip.plugins.modal.sanitize = function(opts) {
 $.extend(TRUE, $.fn.qtip.defaults, {
 	show: {
 		modal: {
-			on: FALSE,
+			on: TRUE,
 			effect: TRUE,
 			blur: TRUE
 		}

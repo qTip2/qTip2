@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun Oct 3 17:25:59 2010 +0100
+* Date: Sun Oct 3 17:38:38 2010 +0100
 */
 
 .ui-tooltip-accessible{
@@ -257,6 +257,10 @@ div.ui-tooltip-tip{
 
 	background-color: black;
 	cursor: pointer;
+
+	opacity: 0.7;
+	filter:alpha(opacity=70);
+	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";
 
 	/* Set this to any below 15000 (default starting z-index for qTips) */
 	z-index: 14999;
