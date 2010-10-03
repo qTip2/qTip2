@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun Oct 3 17:38:38 2010 +0100
+* Date: Sun Oct 3 17:45:11 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -2379,14 +2379,17 @@ $.fn.qtip.plugins.modal.initialize = 'render';
 
 // Setup sanitiztion rules
 $.fn.qtip.plugins.modal.sanitize = function(opts) {
-	if(opts.show && typeof opts.show.modal !== 'object') { opts.show.modal = { on: !!opts.show.modal }; }
+	if(opts.show) { 
+		if(typeof opts.show.modal !== 'object') { opts.show.modal = { on: !!opts.show.modal }; }
+		else if(typeof opts.show.modal.on === 'undefined') { opts.show.modal.on = TRUE; }
+	}
 };
 
 // Extend original qTip defaults
 $.extend(TRUE, $.fn.qtip.defaults, {
 	show: {
 		modal: {
-			on: TRUE,
+			on: FALSE,
 			effect: TRUE,
 			blur: TRUE
 		}

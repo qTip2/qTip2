@@ -141,14 +141,17 @@ $.fn.qtip.plugins.modal.initialize = 'render';
 
 // Setup sanitiztion rules
 $.fn.qtip.plugins.modal.sanitize = function(opts) {
-	if(opts.show && typeof opts.show.modal !== 'object') { opts.show.modal = { on: !!opts.show.modal }; }
+	if(opts.show) { 
+		if(typeof opts.show.modal !== 'object') { opts.show.modal = { on: !!opts.show.modal }; }
+		else if(typeof opts.show.modal.on === 'undefined') { opts.show.modal.on = TRUE; }
+	}
 };
 
 // Extend original qTip defaults
 $.extend(TRUE, $.fn.qtip.defaults, {
 	show: {
 		modal: {
-			on: TRUE,
+			on: FALSE,
 			effect: TRUE,
 			blur: TRUE
 		}
