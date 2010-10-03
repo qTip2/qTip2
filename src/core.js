@@ -982,7 +982,7 @@ function QTip(target, options, id)
 				event = $.extend({}, $.fn.qtip.mouse);
 				position = { top: event.pageY, left: event.pageX };
 			}
-			else {
+			else if(target.jquery){
 				// Check if event targetting is being used
 				if(target === 'event') {
 					if(event && event.target && event.type !== 'scroll' && event.type !== 'resize') {

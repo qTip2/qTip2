@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun Oct 3 16:45:23 2010 +0100
+* Date: Sun Oct 3 17:07:27 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1007,7 +1007,7 @@ function QTip(target, options, id)
 				event = $.extend({}, $.fn.qtip.mouse);
 				position = { top: event.pageY, left: event.pageX };
 			}
-			else {
+			else if(target.jquery){
 				// Check if event targetting is being used
 				if(target === 'event') {
 					if(event && event.target && event.type !== 'scroll' && event.type !== 'resize') {
