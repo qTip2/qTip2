@@ -982,7 +982,7 @@ function QTip(target, options, id)
 				event = $.extend({}, $.fn.qtip.mouse);
 				position = { top: event.pageY, left: event.pageX };
 			}
-			else if(target.jquery){
+			else {
 				// Check if event targetting is being used
 				if(target === 'event') {
 					if(event && event.target && event.type !== 'scroll' && event.type !== 'resize') {
@@ -993,8 +993,12 @@ function QTip(target, options, id)
 					}
 				}
 
+				// Parse the target into a jQuery object and make sure there's an element present
+				target = $(target).eq(0);
+				if(target.length === 0) { return self; }
+
 				// Check if window or document is the target
-				if(target[0] === document || target[0] === window) {
+				else if(target[0] === document || target[0] === window) {
 					targetWidth = target.width();
 					targetHeight = target.height();
 
@@ -1032,9 +1036,6 @@ function QTip(target, options, id)
 				position.left += at.x === 'right' ? targetWidth : at.x === 'center' ? targetWidth / 2 : 0;
 				position.top += at.y === 'bottom' ? targetHeight : at.y === 'center' ? targetHeight / 2 : 0;
 			}
-
-			// Return if we can't determine the position targets type
-			else { return self; }
 
 			// Adjust position relative to tooltip
 			position.left += posOptions.adjust.x + (my.x === 'right' ? -elemWidth : my.x === 'center' ? -elemWidth / 2 : 0);
