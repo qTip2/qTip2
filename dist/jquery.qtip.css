@@ -9,12 +9,12 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Sep 20 12:57:50 2010 +0100
+* Date: Sun Oct 3 15:43:13 2010 +0100
 */
 
 .ui-tooltip-accessible{
-	left: -10000em !important;
-	top: -10000em !important;
+	left: -1000em !important;
+	top: -1000em !important;
 	display: block !important;
 	visibility: hidden !important;
 }
@@ -27,8 +27,8 @@
 
 .ui-tooltip, .qtip{
 	position: absolute;
-	left: -10000em;
-	top: -10000em;
+	left: -1000em;
+	top: -1000em;
 
 	max-width: 280px;
 	min-width: 50px;
