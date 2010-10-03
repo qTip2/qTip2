@@ -12,7 +12,7 @@
 
 .ui-tooltip, .qtip{
 	position: absolute;
-	left: -31512px;
+	display: none;
 
 	max-width: 280px;
 	min-width: 50px;

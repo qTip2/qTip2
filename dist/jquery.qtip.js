@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun Oct 3 16:08:09 2010 +0100
+* Date: Sun Oct 3 16:24:20 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -612,7 +612,7 @@ function QTip(target, options, id)
 				.attr({
 					'id': uitooltip + '-'+id,
 					'role': 'tooltip',
-					'class': uitooltip + ' qtip ui-helper-reset ' + options.style.classes
+					'class': uitooltip + ' qtip ui-tooltip-accessible ui-helper-reset ' + options.style.classes
 				})
 				.css('z-index', $.fn.qtip.zindex + $(selector).length)
 				.toggleClass('ui-widget', options.style.widget)
@@ -655,6 +655,7 @@ function QTip(target, options, id)
 			});
 
 			// Call API method and if return value is FALSE, halt
+			elements.tooltip.removeClass('ui-tooltip-accessible');
 			elements.tooltip.trigger('tooltiprender', [self.hash()]);
 
 			return self;

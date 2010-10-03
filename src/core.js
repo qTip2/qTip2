@@ -587,7 +587,7 @@ function QTip(target, options, id)
 				.attr({
 					'id': uitooltip + '-'+id,
 					'role': 'tooltip',
-					'class': uitooltip + ' qtip ui-helper-reset ' + options.style.classes
+					'class': uitooltip + ' qtip ui-tooltip-accessible ui-helper-reset ' + options.style.classes
 				})
 				.css('z-index', $.fn.qtip.zindex + $(selector).length)
 				.toggleClass('ui-widget', options.style.widget)
@@ -630,6 +630,7 @@ function QTip(target, options, id)
 			});
 
 			// Call API method and if return value is FALSE, halt
+			elements.tooltip.removeClass('ui-tooltip-accessible');
 			elements.tooltip.trigger('tooltiprender', [self.hash()]);
 
 			return self;
