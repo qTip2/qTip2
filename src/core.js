@@ -1033,6 +1033,9 @@ function QTip(target, options, id)
 				position.top += at.y === 'bottom' ? targetHeight : at.y === 'center' ? targetHeight / 2 : 0;
 			}
 
+			// Return if we can't determine the position targets type
+			else { return self; }
+
 			// Adjust position relative to tooltip
 			position.left += posOptions.adjust.x + (my.x === 'right' ? -elemWidth : my.x === 'center' ? -elemWidth / 2 : 0);
 			position.top += posOptions.adjust.y + (my.y === 'bottom' ? -elemHeight : my.y === 'center' ? -elemHeight / 2 : 0);
