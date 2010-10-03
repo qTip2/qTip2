@@ -9,13 +9,13 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun Oct 3 16:24:20 2010 +0100
+* Date: Sun Oct 3 16:45:23 2010 +0100
 */
 
 .ui-tooltip-accessible{
-	left: -31512px !important;
-	display: block !important;
-	visibility: hidden !important;
+	left: -31512px;
+	display: block;
+	visibility: hidden;
 }
 
 	/* IE6 ONLY - Width detection fix */

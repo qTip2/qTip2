@@ -1,7 +1,7 @@
 .ui-tooltip-accessible{
-	left: -31512px !important;
-	display: block !important;
-	visibility: hidden !important;
+	left: -31512px;
+	display: block;
+	visibility: hidden;
 }
 
 	/* IE6 ONLY - Width detection fix */
