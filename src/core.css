@@ -1,6 +1,5 @@
 .ui-tooltip-accessible{
-	left: -1000em !important;
-	top: -1000em !important;
+	left: -31512px !important;
 	display: block !important;
 	visibility: hidden !important;
 }
@@ -13,8 +12,7 @@
 
 .ui-tooltip, .qtip{
 	position: absolute;
-	left: -1000em;
-	top: -1000em;
+	left: -31512px;
 
 	max-width: 280px;
 	min-width: 50px;
