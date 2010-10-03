@@ -744,7 +744,7 @@ function QTip(target, options, id)
 
 			// Set new option value
 			previous = option[0][ option[1] ];
-			option[0][ option[1] ] = value;
+			option[0][ option[1] ] = value.nodeType ? $(value) : value;
 
 			// Re-sanitize options
 			sanitizeOptions(options, target);

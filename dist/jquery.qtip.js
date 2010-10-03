@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun Oct 3 17:13:31 2010 +0100
+* Date: Sun Oct 3 17:14:56 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -769,7 +769,7 @@ function QTip(target, options, id)
 
 			// Set new option value
 			previous = option[0][ option[1] ];
-			option[0][ option[1] ] = value;
+			option[0][ option[1] ] = value.nodeType ? $(value) : value;
 
 			// Re-sanitize options
 			sanitizeOptions(options, target);
