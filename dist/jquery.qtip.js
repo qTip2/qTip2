@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun Oct 3 17:17:55 2010 +0100
+* Date: Sun Oct 3 17:25:59 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -599,7 +599,7 @@ function QTip(target, options, id)
 	$.extend(self, {
 		render: function(show)
 		{
-			var elements = self.elements;
+			var elements = self.elements, callback = $.Event('tooltiprender');
 
 			// If tooltip has already been rendered, exit
 			if(self.rendered) { return FALSE; }
@@ -654,9 +654,12 @@ function QTip(target, options, id)
 				elements.tooltip.bind('tooltip'+name, callback);
 			});
 
-			// Call API method and if return value is FALSE, halt
+			// Remove accessible class
 			elements.tooltip.removeClass('ui-tooltip-accessible');
-			elements.tooltip.trigger('tooltiprender', [self.hash()]);
+
+			// Call API method and if return value is FALSE, halt
+			callback.originalEvent = $.extend({}, self.cache.event);
+			elements.tooltip.trigger(callback, [self.hash()]);
 
 			return self;
 		},
