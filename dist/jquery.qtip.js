@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun Oct 3 17:45:11 2010 +0100
+* Date: Sun Oct 3 17:55:18 2010 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -894,35 +894,37 @@ function QTip(target, options, id)
 
 		focus: function(event)
 		{
-			if(!self.rendered) { return FALSE; }
+			if(self.rendered === false) { return FALSE; }
 
 			var tooltip = self.elements.tooltip,
 				qtips = $(selector),
 				curIndex = parseInt(tooltip.css('z-index'), 10),
 				newIndex = $.fn.qtip.zindex + qtips.length,
 				focusClass = uitooltip + '-focus',
-				callback,
-				cachedEvent = $.extend({}, event);
+				cachedEvent = $.extend({}, event),
+				callback;
 
 			// Only update the z-index if it has changed and tooltip is not already focused
 			if(!tooltip.hasClass(focusClass) && curIndex !== newIndex)
 			{
-				qtips.each(function()
-				{
-					var api = $(this).qtip(), blur = $.Event('tooltipblur'), tooltip, elemIndex;
-					if(!api || api.rendered === FALSE) { return TRUE; }
-					tooltip = api.elements.tooltip;
+				// Reduce our z-index's and keep them properly ordered
+				qtips.css('z-index', function(i, curIndex) {
+					return curIndex - 1;
+				});
 
-					// Reduce all other tooltip z-index by 1
-					elemIndex = parseInt(tooltip.css('z-index'), 10);
-					if(!isNaN(elemIndex)) { tooltip.css({ zIndex: elemIndex - 1 }); }
+				// Fire blur event for focussed tooltip
+				$(selector + '.' + focusClass).each(function() {
+					var self = $(this), api = self.qtip(), blur;
+
+					if(!api || api.rendered === FALSE) { return TRUE; }
 
 					// Set focused status to FALSE
-					tooltip.removeClass(focusClass);
+					self.removeClass(focusClass);
 
 					// Trigger blur event
+					blur = $.Event('tooltipblur');
 					blur.originalEvent = cachedEvent;
-					tooltip.trigger(blur, [api, newIndex]);
+					self.trigger(blur, [api, newIndex]);
 				});
 
 				// Call API method
@@ -1399,13 +1401,26 @@ $.each({
 				}
 			}
 		});
+	},
+	
+	/* iPad offset fix - See trac ticket: http://bugs.jquery.com/ticket/6446#comment:1
+	 */
+	offset: function() {
+		var result = $(this).Oldoffset();
+
+		if($.fn.qtip.isiPad) {
+			result.top -= window.scrollY;
+			result.left -= window.scrollX;
+		}
+
+		return result;
 	}
 },
 function(name, func) {
 	if(!func) { return TRUE; }
-	var old = $.fn[name];
+	$.fn['Old'+name] = $.fn[name];
 	$.fn[name] = function() {
-		return func.apply(this, arguments) || old.apply(this, arguments);
+		return func.apply(this, arguments) || $.fn['Old'+name].apply(this, arguments);
 	};
 });
 
@@ -1424,6 +1439,9 @@ $(document).bind('mousemove.qtip', function(event) {
 $.fn.qtip.nextid = 0;
 $.fn.qtip.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleave mouseenter'.split(' ');
 $.fn.qtip.zindex = 15000;
+
+// iPad offset problem detection - http://bugs.jquery.com/ticket/6446#comment:1
+$.fn.qtip.isiPad = /webkit.*mobile/i.test(navigator.userAgent) && /; CPU.*OS (?:3_2|4_0)/i.test(navigator.userAgent);
 
 // Setup base plugins
 $.fn.qtip.plugins = {
