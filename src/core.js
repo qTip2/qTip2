@@ -616,18 +616,18 @@ function QTip(target, options, id)
 
 			// Set rendered status to TRUE
 			self.rendered = TRUE;
-		
-			// Update tooltip position and show tooltip if needed
-			if(options.show.ready || show) {
-				elements.tooltip.hide();
-				self.show(self.cache.event);
-			}
-	
+
 			// Assign events
 			assignEvents(1, 1, 1, 1);
 			$.each(options.events, function(name, callback) {
 				elements.tooltip.bind('tooltip'+name, callback);
 			});
+			
+			// Update tooltip position and show tooltip if needed
+			if(options.show.ready || show) {
+				elements.tooltip.hide();
+				self.show(self.cache.event);
+			}
 
 			// Remove accessible class
 			elements.tooltip.removeClass('ui-tooltip-accessible');

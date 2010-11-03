@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Nov 3 01:53:58 2010 +0000
+* Date: Wed Nov 3 01:57:34 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -641,18 +641,18 @@ function QTip(target, options, id)
 
 			// Set rendered status to TRUE
 			self.rendered = TRUE;
-		
-			// Update tooltip position and show tooltip if needed
-			if(options.show.ready || show) {
-				elements.tooltip.hide();
-				self.show(self.cache.event);
-			}
-	
+
 			// Assign events
 			assignEvents(1, 1, 1, 1);
 			$.each(options.events, function(name, callback) {
 				elements.tooltip.bind('tooltip'+name, callback);
 			});
+			
+			// Update tooltip position and show tooltip if needed
+			if(options.show.ready || show) {
+				elements.tooltip.hide();
+				self.show(self.cache.event);
+			}
 
 			// Remove accessible class
 			elements.tooltip.removeClass('ui-tooltip-accessible');
