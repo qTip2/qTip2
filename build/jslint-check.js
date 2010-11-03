@@ -2,14 +2,15 @@ load("build/jslint.js");
 
 var src = readFile("dist/jquery.qtip.js");
 
-JSLINT(src, { browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true, forin: true });
+JSLINT(src, { evil: true, forin: true, maxerr: 100 });
 
 // All of the following are known issues that we think are 'ok'
 // (in contradiction with JSLint) more information here:
 // http://docs.jquery.com/JQuery_Core_Style_Guidelines
 var ok = {
 	"Expected an identifier and instead saw 'undefined' (a reserved word).": true,
-	"Expected a conditional expression and instead saw an assignment.": true
+	"Expected a conditional expression and instead saw an assignment.": true,
+	"Insecure '.'.": true
 };
 
 var e = JSLINT.errors, found = 0, w;

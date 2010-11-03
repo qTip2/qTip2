@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Nov 3 01:57:34 2010 +0000
+* Date: Wed Nov 3 02:03:26 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1403,9 +1403,9 @@ $.each({
 		});
 	},
 	
-	/* iPad offset fix - See trac ticket: http://bugs.jquery.com/ticket/6446#comment:1
+	/* Mobile Safari offset fix - See trac ticket: http://bugs.jquery.com/ticket/6446
 	 */
-	offset: !$.fn.qtip.isiPad ? NULL : function() {
+	offset: parseFloat(((/CPU.+OS ([0-9_]{3}).*AppleWebkit.*Mobile/i.exec(navigator.userAgent)) || [0,'4_2'])[1].replace('_','.')) > 4.1 ? NULL : function() {
 		var result = $(this).Oldoffset();
 		result.top -= window.scrollY;
 		result.left -= window.scrollX;
@@ -1436,9 +1436,6 @@ $(document).bind('mousemove.qtip', function(event) {
 $.fn.qtip.nextid = 0;
 $.fn.qtip.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleave mouseenter'.split(' ');
 $.fn.qtip.zindex = 15000;
-
-// iPad offset problem detection - http://bugs.jquery.com/ticket/6446#comment:1
-$.fn.qtip.isiPad = navigator.userAgent.indexOf('iPad') != -1 && /OS (?:3_2|4_0)/i.test(navigator.userAgent);
 
 // Setup base plugins
 $.fn.qtip.plugins = {
