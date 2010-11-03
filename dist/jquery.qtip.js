@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun Oct 3 17:55:18 2010 +0100
+* Date: Wed Nov 3 01:53:18 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1441,7 +1441,7 @@ $.fn.qtip.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleav
 $.fn.qtip.zindex = 15000;
 
 // iPad offset problem detection - http://bugs.jquery.com/ticket/6446#comment:1
-$.fn.qtip.isiPad = /webkit.*mobile/i.test(navigator.userAgent) && /; CPU.*OS (?:3_2|4_0)/i.test(navigator.userAgent);
+$.fn.qtip.isiPad = navigator.userAgent.indexOf('iPad') != -1 && /OS (?:3_2|4_0)/i.test(navigator.userAgent);
 
 // Setup base plugins
 $.fn.qtip.plugins = {

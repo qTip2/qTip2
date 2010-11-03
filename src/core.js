@@ -1416,7 +1416,7 @@ $.fn.qtip.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleav
 $.fn.qtip.zindex = 15000;
 
 // iPad offset problem detection - http://bugs.jquery.com/ticket/6446#comment:1
-$.fn.qtip.isiPad = /webkit.*mobile/i.test(navigator.userAgent) && /; CPU.*OS (?:3_2|4_0)/i.test(navigator.userAgent);
+$.fn.qtip.isiPad = navigator.userAgent.indexOf('iPad') != -1 && /OS (?:3_2|4_0)/i.test(navigator.userAgent);
 
 // Setup base plugins
 $.fn.qtip.plugins = {
