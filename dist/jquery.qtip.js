@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Nov 3 01:53:18 2010 +0000
+* Date: Wed Nov 3 01:53:58 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1405,13 +1405,10 @@ $.each({
 	
 	/* iPad offset fix - See trac ticket: http://bugs.jquery.com/ticket/6446#comment:1
 	 */
-	offset: function() {
+	offset: !$.fn.qtip.isiPad ? NULL : function() {
 		var result = $(this).Oldoffset();
-
-		if($.fn.qtip.isiPad) {
-			result.top -= window.scrollY;
-			result.left -= window.scrollX;
-		}
+		result.top -= window.scrollY;
+		result.left -= window.scrollX;
 
 		return result;
 	}

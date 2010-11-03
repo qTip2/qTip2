@@ -1380,13 +1380,10 @@ $.each({
 	
 	/* iPad offset fix - See trac ticket: http://bugs.jquery.com/ticket/6446#comment:1
 	 */
-	offset: function() {
+	offset: !$.fn.qtip.isiPad ? NULL : function() {
 		var result = $(this).Oldoffset();
-
-		if($.fn.qtip.isiPad) {
-			result.top -= window.scrollY;
-			result.left -= window.scrollX;
-		}
+		result.top -= window.scrollY;
+		result.left -= window.scrollX;
 
 		return result;
 	}
