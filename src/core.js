@@ -1394,7 +1394,7 @@ $.each({
 	
 	/* Mobile Safari offset fix - See trac ticket: http://bugs.jquery.com/ticket/6446
 	 */
-	offset: parseFloat(((/CPU.+OS ([0-9_]{3}).*AppleWebkit.*Mobile/i.exec(navigator.userAgent)) || [0,'4_2'])[1].replace('_','.')) > 4.1 ? NULL : function() {
+	offset: parseFloat(((/CPU.+OS ([0-9_]{3}).*AppleWebkit.*Mobile/i.exec(navigator.userAgent)) || [0,'4_2'])[1].replace('_','.')) > 4.0 ? NULL : function() {
 		var result = $(this).Oldoffset();
 		result.top -= window.scrollY;
 		result.left -= window.scrollX;

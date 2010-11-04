@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Nov 3 22:50:59 2010 +0000
+* Date: Thu Nov 4 03:06:32 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1419,7 +1419,7 @@ $.each({
 	
 	/* Mobile Safari offset fix - See trac ticket: http://bugs.jquery.com/ticket/6446
 	 */
-	offset: parseFloat(((/CPU.+OS ([0-9_]{3}).*AppleWebkit.*Mobile/i.exec(navigator.userAgent)) || [0,'4_2'])[1].replace('_','.')) > 4.1 ? NULL : function() {
+	offset: parseFloat(((/CPU.+OS ([0-9_]{3}).*AppleWebkit.*Mobile/i.exec(navigator.userAgent)) || [0,'4_2'])[1].replace('_','.')) > 4.0 ? NULL : function() {
 		var result = $(this).Oldoffset();
 		result.top -= window.scrollY;
 		result.left -= window.scrollX;
