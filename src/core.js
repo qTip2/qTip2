@@ -321,7 +321,9 @@ function QTip(target, options, id)
 	}
 
 	function updateContent(content)
-	{		
+	{
+		var images;
+
 		// Make sure tooltip is rendered and content is defined. If not return
 		if(!self.rendered || !content) { return FALSE; }
 
@@ -340,15 +342,27 @@ function QTip(target, options, id)
 			self.elements.content.html(content);
 		}
 
-		// Update tooltip width and position
-		updateWidth();
-		if(self.rendered === TRUE) {
-			self.reposition(self.cache.event);
+		// Update tooltip width and position when all images are loaded
+		function imageLoad() {
+			if(--images < 1) {
+				updateWidth();
+				if(self.rendered === TRUE) {
+					self.reposition(self.cache.event);
+				}
+			}
 		}
+
+		// Assign the load callback to all images to prevent positioning errors
+		images = $('img', self.elements.content).each(function() {
+			$(this).load(imageLoad);
+			var src = this.src; this.src = ''; this.src = src; // Trigger onload even if image is cached
+		}).length;
+
+		// If no images were found, run imageLoad directly
+		if(images === 0) { imageLoad(); }
 
 		return self;
 	}
-
 
 	function assignEvents(show, hide, tooltip, doc)
 	{

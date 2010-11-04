@@ -1,5 +1,3 @@
-var PRELOAD = $();
-
 function Ajax(qTip)
 {
 	var self = this;
@@ -38,9 +36,8 @@ function Ajax(qTip)
 					if(result === FALSE){ return; }
 				}
 
-				// Update content and remove preloaded iamges if present
+				// Update content
 				qTip.set('content.text', content);
-				PRELOAD.remove();
 				
 			}
 			function errorHandler(xhr, status, error)
@@ -73,17 +70,6 @@ function Ajax(qTip)
 	self.init();
 }
 
-function preloadImages(url) {
-	var id = 'qtip-preload';
-
-	if(!$('#'+id).length) {
-		$('<div id="'+id+'" class="ui-tooltip-accessible" />').appendTo(document.body);
-	}
-
-	if(!PRELOAD.length) {
-		PRELOAD = $('<div />').appendTo('#'+id).load(url + ' img');
-	}
-}
 
 $.fn.qtip.plugins.ajax = function(qTip)
 {
@@ -114,8 +100,6 @@ $.fn.qtip.plugins.ajax.sanitize = function(options)
 		if(typeof opts !== 'object') { options.content.ajax = { url: opts }; }
 		if(options.content.text === FALSE) { options.content.text = 'Loading...'; }
 		opts.once = !!opts.once;
-		opts.preload = !!opts.preload;
-		if(opts.preload) { preloadImages(opts.url); }  // Preload images if enabled 
 	}
 	catch (e) {}
 };
@@ -124,8 +108,7 @@ $.fn.qtip.plugins.ajax.sanitize = function(options)
 $.extend(TRUE, $.fn.qtip.defaults, {
 	content: {
 		ajax: {
-			once: TRUE,
-			preload: FALSE
+			once: TRUE
 		}
 	}
 });

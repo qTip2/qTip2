@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Nov 3 22:48:32 2010 +0000
+* Date: Wed Nov 3 22:50:59 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -346,7 +346,9 @@ function QTip(target, options, id)
 	}
 
 	function updateContent(content)
-	{		
+	{
+		var images;
+
 		// Make sure tooltip is rendered and content is defined. If not return
 		if(!self.rendered || !content) { return FALSE; }
 
@@ -365,15 +367,27 @@ function QTip(target, options, id)
 			self.elements.content.html(content);
 		}
 
-		// Update tooltip width and position
-		updateWidth();
-		if(self.rendered === TRUE) {
-			self.reposition(self.cache.event);
+		// Update tooltip width and position when all images are loaded
+		function imageLoad() {
+			if(--images < 1) {
+				updateWidth();
+				if(self.rendered === TRUE) {
+					self.reposition(self.cache.event);
+				}
+			}
 		}
+
+		// Assign the load callback to all images to prevent positioning errors
+		images = $('img', self.elements.content).each(function() {
+			$(this).load(imageLoad);
+			var src = this.src; this.src = ''; this.src = src; // Trigger onload even if image is cached
+		}).length;
+
+		// If no images were found, run imageLoad directly
+		if(images === 0) { imageLoad(); }
 
 		return self;
 	}
-
 
 	function assignEvents(show, hide, tooltip, doc)
 	{
@@ -1512,8 +1526,6 @@ $.fn.qtip.defaults = {
 	}
 };
 
-var PRELOAD = $();
-
 function Ajax(qTip)
 {
 	var self = this;
@@ -1552,9 +1564,8 @@ function Ajax(qTip)
 					if(result === FALSE){ return; }
 				}
 
-				// Update content and remove preloaded iamges if present
+				// Update content
 				qTip.set('content.text', content);
-				PRELOAD.remove();
 				
 			}
 			function errorHandler(xhr, status, error)
@@ -1587,17 +1598,6 @@ function Ajax(qTip)
 	self.init();
 }
 
-function preloadImages(url) {
-	var id = 'qtip-preload';
-
-	if(!$('#'+id).length) {
-		$('<div id="'+id+'" class="ui-tooltip-accessible" />').appendTo(document.body);
-	}
-
-	if(!PRELOAD.length) {
-		PRELOAD = $('<div />').appendTo('#'+id).load(url + ' img');
-	}
-}
 
 $.fn.qtip.plugins.ajax = function(qTip)
 {
@@ -1628,8 +1628,6 @@ $.fn.qtip.plugins.ajax.sanitize = function(options)
 		if(typeof opts !== 'object') { options.content.ajax = { url: opts }; }
 		if(options.content.text === FALSE) { options.content.text = 'Loading...'; }
 		opts.once = !!opts.once;
-		opts.preload = !!opts.preload;
-		if(opts.preload) { preloadImages(opts.url); }  // Preload images if enabled 
 	}
 	catch (e) {}
 };
@@ -1638,8 +1636,7 @@ $.fn.qtip.plugins.ajax.sanitize = function(options)
 $.extend(TRUE, $.fn.qtip.defaults, {
 	content: {
 		ajax: {
-			once: TRUE,
-			preload: FALSE
+			once: TRUE
 		}
 	}
 });// Tip coordinates calculator
