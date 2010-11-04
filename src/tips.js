@@ -85,56 +85,51 @@ function Tip(qTip, command)
 	{
 		var tip = elems.tip,
 			corners  = ['left', 'right'],
-			ieAdjust = { left: 0, right: 0, top: 0, bottom: 0 },
-			offset = 0;
+			offset = opts.offset,
+			precedance;
 
 		// Return if tips are disabled or tip is not yet rendered
 		if(opts.corner === FALSE || !tip) { return FALSE; }
 
 		// Inherit corner if not provided
 		corner = corner || self.corner;
+		precedance = corner.precedance;
 
 		// Reet initial position
 		tip.css({ top: '', bottom: '', left: '', right: '', margin: '' });
 
 		// Setup corners to be adjusted
-		corners[ corner.precedance === 'y' ? 'push' : 'unshift' ]('top', 'bottom');
+		corners[ precedance === 'y' ? 'push' : 'unshift' ]('top', 'bottom');
 
-		if($.browser.msie) {
-			ieAdjust = {
-				top: (corner.precedance === 'y') ? 0 : 0,
-				left: 0,
-				bottom: (corner.precedance === 'y') ? 0 : 0,
-				right: 0
-			};
-		}
+		// Calculate offset adjustments
+		offset = Math.max(corner[ precedance === 'y' ? 'x' : 'y' ] === 'center' ? offset : 0, offset);
 
 		// Adjust primary corners
-		switch(corner[ corner.precedance === 'y' ? 'x' : 'y' ])
+		switch(corner[ precedance === 'y' ? 'x' : 'y' ])
 		{
 			case 'center':
-				tip.css(corners[0], '50%').css('margin-'+corners[0], -(size[ (corner.precedance === 'y') ? 'width' : 'height' ] / 2));
+				tip.css(corners[0], '50%').css('margin-'+corners[0], -(size[ (precedance === 'y') ? 'width' : 'height' ] / 2) + offset);
 			break;
 
 			case corners[0]:
-				tip.css(corners[0], ieAdjust[ corners[0] ] + adjust);
+				tip.css(corners[0], offset);
 			break;
 
 			case corners[1]:
-				tip.css(corners[1], ieAdjust[ corners[1] ] + adjust);
+				tip.css(corners[1], offset);
 			break;
 		}
 
 		// Determine adjustments
-		offset = size[ (corner.precedance === 'x') ? 'width' : 'height' ];
+		offset = size[ (precedance === 'x') ? 'width' : 'height' ];
 		if(border) {
 			tooltip.toggleClass('ui-tooltip-accessible', !tooltip.is(':visible'));
-			offset -= parseInt(wrapper.css('border-' + corner[ corner.precedance ] + '-width'), 10) || 0;
+			offset -= parseInt(wrapper.css('border-' + corner[ precedance ] + '-width'), 10) || 0;
 			tooltip.removeClass('ui-tooltip-accessible');
 		}
 
 		// Adjust secondary corners
-		tip.css(corner[corner.precedance], (-1 * ieAdjust[ corner[corner.precedance] ]) - offset);
+		tip.css(corner[precedance], -offset);
 	}
 
 	function reposition(event, api, position) {
@@ -142,9 +137,9 @@ function Tip(qTip, command)
 
 		var newCorner = $.extend({}, self.corner),
 			newType = self.mimic.adjust ? $.extend({}, self.mimic) : NULL,
-			precedance = newCorner.precedance === 'y' ? ['y', 'top', 'left', 'height'] : ['x', 'left', 'top', 'width'],
+			precedance = newCorner.precedance === 'y' ? ['y', 'top', 'left', 'height', 'x'] : ['x', 'left', 'top', 'width', 'y'],
 			adjusted = position.adjusted,
-			offset = parseInt(wrapper.css('border-' + newCorner[ precedance[0] ] + '-width'), 10) || 0,
+			offset = [ parseInt(wrapper.css('border-' + newCorner[ precedance[0] ] + '-width'), 10) || 0, 0 ],
 			walk = [newCorner, newType];
 
 		// Adjust tip corners
@@ -158,8 +153,9 @@ function Tip(qTip, command)
 		});
 
 		// Adjust tooltip position if needed in relation to tip element
-		position[ precedance[1] ] += (newCorner[ precedance[0] ] === precedance[1] ? 1 : -1) * (size[ precedance[3] ] - offset);
-		position[ precedance[2] ] -= adjust;
+		offset[1] = Math.max(newCorner[ precedance[4] ] === 'center' ? opts.offset : 0, opts.offset);
+		position[ precedance[1] ] += (newCorner[ precedance[0] ] === precedance[1] ? 1 : -1) * (size[ precedance[3] ] - offset[0]);
+		position[ precedance[2] ] -= (newCorner[ precedance[4] ] === precedance[2] || newCorner[ precedance[4] ] === 'center' ? 1 : -1) * offset[1];
 
 		// Update and redraw the tip if needed
 		if(newCorner.string() !== cache.corner.string() && (cache.top !== adjusted.top || cache.left !== adjusted.left)) { 
@@ -175,17 +171,20 @@ function Tip(qTip, command)
 	$.extend(self, {
 		init: function()
 		{
+			var ie = $.browser.msie,
+				center = self.mimic && (/center/i).test(self.mimic.string());
+
 			// Check if rendering method is possible and if not fall back
 			if(method === TRUE) {
 				method = $('<canvas />')[0].getContext ? 'canvas' :
-					$.browser.msie && (self.mimic && ((/center/i).test(self.mimic.string())) || size.height !== size.width) ? 'vml' : 'polygon';
+					ie && (center || size.height !== size.width) ? 'vml' : 'polygon';
 			}
 			else {
 				if(method === 'canvas') {
-					method = $.browser.msie ? 'vml' : !$('<canvas />')[0].getContext ? 'polygon' : 'canvas';
+					method = ie ? 'vml' : !$('<canvas />')[0].getContext ? 'polygon' : 'canvas';
 				}
 				else if(method === 'polygon') {
-					method = $.browser.msie && (/center/i).test(self.mimic.string()) ? 'vml' : method;
+					method = ie && center ? 'vml' : method;
 				}
 			}
 
@@ -479,7 +478,8 @@ $.extend(TRUE, $.fn.qtip.defaults, {
 			method: TRUE,
 			width: 12,
 			height: 12,
-			border: 0
+			border: 0,
+			offset: 0
 		}
 	}
 });
