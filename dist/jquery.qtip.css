@@ -9,11 +9,11 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Nov 4 03:06:32 2010 +0000
+* Date: Thu Nov 4 03:12:56 2010 +0000
 */
 
 .ui-tooltip-accessible{
-	left: -31512px;
+	left: -31000px;
 	display: block;
 	visibility: hidden;
 }

@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Nov 4 03:06:32 2010 +0000
+* Date: Thu Nov 4 03:12:56 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1402,9 +1402,9 @@ $.each({
 	},
 
 	/* 
-	 * Taken directly from jQuery 1.8.2 widget source code
-	 * Trigger 'remove' event on all elements on removal if jQuery UI isn't present 
-	 */
+	* Taken directly from jQuery 1.8.2 widget source code
+	* Trigger 'remove' event on all elements on removal if jQuery UI isn't present 
+	*/
 	remove: $.ui ? NULL : function( selector, keepData ) {
 		this.each(function() {
 			if (!keepData) {
@@ -1416,10 +1416,10 @@ $.each({
 			}
 		});
 	},
-	
+
 	/* Mobile Safari offset fix - See trac ticket: http://bugs.jquery.com/ticket/6446
-	 */
-	offset: parseFloat(((/CPU.+OS ([0-9_]{3}).*AppleWebkit.*Mobile/i.exec(navigator.userAgent)) || [0,'4_2'])[1].replace('_','.')) > 4.0 ? NULL : function() {
+	*/
+	offset: parseFloat(((/CPU.+OS ([0-9_]{3}).*AppleWebkit.*Mobile/i.exec(navigator.userAgent)) || [0,'4_2'])[1].replace('_','.')) > 4 ? NULL : function() {
 		var result = $(this).Oldoffset();
 		result.top -= window.scrollY;
 		result.left -= window.scrollX;
@@ -1436,9 +1436,9 @@ function(name, func) {
 });
 
 /* 
- * Add ARIA role attribute to document body if not already present
- * http://wiki.jqueryui.com/Tooltip - 4.3 Accessibility recommendation
- */
+* Add ARIA role attribute to document body if not already present
+* http://wiki.jqueryui.com/Tooltip - 4.3 Accessibility recommendation
+*/
 $(document.body).attr('role', function(i, val) { return !val ? 'application' : val; });
 
 // Cache mousemove events for positioning purposes
