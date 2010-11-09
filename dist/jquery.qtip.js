@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Nov 9 17:11:30 2010 +0000
+* Date: Tue Nov 9 17:49:22 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -178,19 +178,20 @@ function QTip(target, options, id)
 		return actual[i] !== undefined ? [option, actual[i] ] : [options, actual[0]];
 	}
 
-	function offset(e) {
-		var elem = e[0],
-			o = { left: 0, top: 0 };
+	function offset(jElem) {
+		var elem = jElem[0],
+			pos = { left: 0, top: 0 },
+			absolute = !options.position.adjust.offset;
 
-		if(elem.offsetParent) {
+		if(absolute && elem.offsetParent) {
 			do {
-				o.left += elem.offsetLeft;
-				o.top += elem.offsetTop;
+				pos.left += elem.offsetLeft;
+				pos.top += elem.offsetTop;
 			}
 			while(elem = elem.offsetParent);
 		}
-		
-		return o;
+
+		return pos;
 	}
 
 	function calculate(detail)
@@ -1081,13 +1082,6 @@ function QTip(target, options, id)
 					targetHeight = target.outerHeight();
 					
 					position = offset(target);
-					if(posOptions.adjust.offset) {
-						do {
-							position.left -= offsetParent.offsetLeft - offsetParent.scrollLeft;
-							position.top -= offsetParent.offsetTop - offsetParent.scrollTop;
-						}
-						while (offsetParent = offsetParent.offsetParent);
-					}
 				}
 
 				// Adjust position relative to target
