@@ -334,7 +334,7 @@ function QTip(target, options, id)
 
 		// Append new content if its a DOM array and show it if hidden
 		if(content.jquery && content.length > 0) {
-			self.elements.content.append(content.css({ display: 'block' }));
+			self.elements.content.empty().append(content.css({ display: 'block' }));
 		}
 
 		// Content is a regular string, insert the new content

@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Nov 4 14:16:50 2010 +0000
+* Date: Thu Nov 4 15:07:43 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -359,7 +359,7 @@ function QTip(target, options, id)
 
 		// Append new content if its a DOM array and show it if hidden
 		if(content.jquery && content.length > 0) {
-			self.elements.content.append(content.css({ display: 'block' }));
+			self.elements.content.empty().append(content.css({ display: 'block' }));
 		}
 
 		// Content is a regular string, insert the new content
