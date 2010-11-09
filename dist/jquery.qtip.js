@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Nov 9 17:49:22 2010 +0000
+* Date: Tue Nov 9 18:00:33 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -181,14 +181,14 @@ function QTip(target, options, id)
 	function offset(jElem) {
 		var elem = jElem[0],
 			pos = { left: 0, top: 0 },
-			absolute = !options.position.adjust.offset;
+			absolute = !options.position.adjust.container;
 
-		if(absolute && elem.offsetParent) {
+		if(elem.offsetParent) {
 			do {
 				pos.left += elem.offsetLeft;
 				pos.top += elem.offsetTop;
 			}
-			while(elem = elem.offsetParent);
+			while(elem = absolute ? elem.offsetParent : 0);
 		}
 
 		return pos;
@@ -1490,7 +1490,7 @@ $.fn.qtip.defaults = {
 			mouse: TRUE,
 			screen: FALSE,
 			resize: TRUE,
-			offset: FALSE
+			container: TRUE
 		},
 		effect: TRUE
 	},

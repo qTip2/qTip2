@@ -156,14 +156,14 @@ function QTip(target, options, id)
 	function offset(jElem) {
 		var elem = jElem[0],
 			pos = { left: 0, top: 0 },
-			absolute = !options.position.adjust.offset;
+			absolute = !options.position.adjust.container;
 
-		if(absolute && elem.offsetParent) {
+		if(elem.offsetParent) {
 			do {
 				pos.left += elem.offsetLeft;
 				pos.top += elem.offsetTop;
 			}
-			while(elem = elem.offsetParent);
+			while(elem = absolute ? elem.offsetParent : 0);
 		}
 
 		return pos;
@@ -1465,7 +1465,7 @@ $.fn.qtip.defaults = {
 			mouse: TRUE,
 			screen: FALSE,
 			resize: TRUE,
-			offset: FALSE
+			container: TRUE
 		},
 		effect: TRUE
 	},
