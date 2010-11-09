@@ -51,18 +51,12 @@ function Tip(qTip, command)
 			border = opts.border;
 
 			// Make sure a tip can be drawn
-			if(self.detectCorner()) {
-				// Create a new tip
-				self.create();
-				self.detectColours();
-				self.update();
-			}
-			else {
-				elems.tip.remove();
+			if(!self.init()) {
+				self.destroy();
 			}
 
 			// Only update the position if mouse isn't the target
-			if(this.get('position.target') !== 'mouse') {
+			else if(this.get('position.target') !== 'mouse') {
 				this.reposition();
 			}
 		},
@@ -172,24 +166,25 @@ function Tip(qTip, command)
 		init: function()
 		{
 			var ie = $.browser.msie,
-				center = self.mimic && (/center/i).test(self.mimic.string());
-
-			// Check if rendering method is possible and if not fall back
-			if(method === TRUE) {
-				method = $('<canvas />')[0].getContext ? 'canvas' :
-					ie && (center || size.height !== size.width) ? 'vml' : 'polygon';
-			}
-			else {
-				if(method === 'canvas') {
-					method = ie ? 'vml' : !$('<canvas />')[0].getContext ? 'polygon' : 'canvas';
-				}
-				else if(method === 'polygon') {
-					method = ie && center ? 'vml' : method;
-				}
-			}
+				center = self.mimic && (/center/i).test(self.mimic.string()),
+				enabled = self.detectCorner();
 
 			// Determine tip corner and type
-			if(self.detectCorner()) {
+			if(enabled) {
+				// Check if rendering method is possible and if not fall back
+				if(method === TRUE) {
+					method = $('<canvas />')[0].getContext ? 'canvas' :
+					ie && (center || size.height !== size.width) ? 'vml' : 'polygon';
+				}
+				else {
+					if(method === 'canvas') {
+						method = ie ? 'vml' : !$('<canvas />')[0].getContext ? 'polygon' : 'canvas';
+					}
+					else if(method === 'polygon') {
+						method = ie && center ? 'vml' : method;
+					}
+				}
+
 				// Create a new tip
 				self.create();
 				self.detectColours();
@@ -199,7 +194,7 @@ function Tip(qTip, command)
 				tooltip.bind('tooltipmove.tip', reposition);
 			}
 
-			return self;
+			return enabled;
 		},
 
 		detectCorner: function()

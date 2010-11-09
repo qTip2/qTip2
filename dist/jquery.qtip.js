@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Nov 9 16:56:59 2010 +0000
+* Date: Tue Nov 9 17:11:30 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -990,8 +990,7 @@ function QTip(target, options, id)
 				win = $(window),
 				adjust = {
 					left: function(posLeft) {
-						var targetLeft = target === 'mouse' ? event.pageX : offset(target),
-							winScroll = win.scrollLeft(),
+						var winScroll = win.scrollLeft(),
 							winWidth = win.width(),
 							myOffset = my.x === 'left' ? -elemWidth : my.x === 'right' ? elemWidth : elemWidth / 2,
 							atOffset = at.x === 'left' ? targetWidth : at.x === 'right' ? -targetWidth : targetWidth / 2,
@@ -1001,11 +1000,11 @@ function QTip(target, options, id)
 							overflowLeft = winScroll - posLeft,
 							overflowRight = posLeft + elemWidth - winWidth - winScroll;
 
-						if(overflowLeft > 0 && !(posLeft >= targetLeft && posLeft < targetLeft + targetWidth)) {
-							position.left += newOffset - atOffset + adjustWidth;
-						}
-						else if(overflowRight > 0 && posLeft + elemWidth > targetLeft) {
+						if(overflowRight > 0) {
 							position.left += (my.x === 'center' ? -1 : 1) * (newOffset - atOffset - adjustWidth);
+						}
+						else if(overflowLeft > 0) {
+							position.left += newOffset - atOffset + adjustWidth;
 						}
 
 						return position.left - posLeft;
@@ -1022,7 +1021,7 @@ function QTip(target, options, id)
 							overflowBottom = posTop + elemHeight - winHeight - winScroll;
 
 						if(overflowTop > 0) {
-							position.top += my.y === 'center' ? -newOffset + atOffset : newOffset;
+							position.top += (my.y === 'center' ? -1 : 1) * (newOffset - atOffset - adjustHeight);
 						}
 						else if(overflowBottom > 0) {
 							position.top += newOffset - atOffset - adjustHeight;
@@ -1695,18 +1694,12 @@ function Tip(qTip, command)
 			border = opts.border;
 
 			// Make sure a tip can be drawn
-			if(self.detectCorner()) {
-				// Create a new tip
-				self.create();
-				self.detectColours();
-				self.update();
-			}
-			else {
-				elems.tip.remove();
+			if(!self.init()) {
+				self.destroy();
 			}
 
 			// Only update the position if mouse isn't the target
-			if(this.get('position.target') !== 'mouse') {
+			else if(this.get('position.target') !== 'mouse') {
 				this.reposition();
 			}
 		},
@@ -1816,24 +1809,25 @@ function Tip(qTip, command)
 		init: function()
 		{
 			var ie = $.browser.msie,
-				center = self.mimic && (/center/i).test(self.mimic.string());
-
-			// Check if rendering method is possible and if not fall back
-			if(method === TRUE) {
-				method = $('<canvas />')[0].getContext ? 'canvas' :
-					ie && (center || size.height !== size.width) ? 'vml' : 'polygon';
-			}
-			else {
-				if(method === 'canvas') {
-					method = ie ? 'vml' : !$('<canvas />')[0].getContext ? 'polygon' : 'canvas';
-				}
-				else if(method === 'polygon') {
-					method = ie && center ? 'vml' : method;
-				}
-			}
+				center = self.mimic && (/center/i).test(self.mimic.string()),
+				enabled = self.detectCorner();
 
 			// Determine tip corner and type
-			if(self.detectCorner()) {
+			if(enabled) {
+				// Check if rendering method is possible and if not fall back
+				if(method === TRUE) {
+					method = $('<canvas />')[0].getContext ? 'canvas' :
+					ie && (center || size.height !== size.width) ? 'vml' : 'polygon';
+				}
+				else {
+					if(method === 'canvas') {
+						method = ie ? 'vml' : !$('<canvas />')[0].getContext ? 'polygon' : 'canvas';
+					}
+					else if(method === 'polygon') {
+						method = ie && center ? 'vml' : method;
+					}
+				}
+
 				// Create a new tip
 				self.create();
 				self.detectColours();
@@ -1843,7 +1837,7 @@ function Tip(qTip, command)
 				tooltip.bind('tooltipmove.tip', reposition);
 			}
 
-			return self;
+			return enabled;
 		},
 
 		detectCorner: function()

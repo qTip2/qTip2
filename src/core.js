@@ -965,8 +965,7 @@ function QTip(target, options, id)
 				win = $(window),
 				adjust = {
 					left: function(posLeft) {
-						var targetLeft = target === 'mouse' ? event.pageX : offset(target),
-							winScroll = win.scrollLeft(),
+						var winScroll = win.scrollLeft(),
 							winWidth = win.width(),
 							myOffset = my.x === 'left' ? -elemWidth : my.x === 'right' ? elemWidth : elemWidth / 2,
 							atOffset = at.x === 'left' ? targetWidth : at.x === 'right' ? -targetWidth : targetWidth / 2,
@@ -976,11 +975,11 @@ function QTip(target, options, id)
 							overflowLeft = winScroll - posLeft,
 							overflowRight = posLeft + elemWidth - winWidth - winScroll;
 
-						if(overflowLeft > 0 && !(posLeft >= targetLeft && posLeft < targetLeft + targetWidth)) {
-							position.left += newOffset - atOffset + adjustWidth;
-						}
-						else if(overflowRight > 0 && posLeft + elemWidth > targetLeft) {
+						if(overflowRight > 0) {
 							position.left += (my.x === 'center' ? -1 : 1) * (newOffset - atOffset - adjustWidth);
+						}
+						else if(overflowLeft > 0) {
+							position.left += newOffset - atOffset + adjustWidth;
 						}
 
 						return position.left - posLeft;
@@ -997,7 +996,7 @@ function QTip(target, options, id)
 							overflowBottom = posTop + elemHeight - winHeight - winScroll;
 
 						if(overflowTop > 0) {
-							position.top += my.y === 'center' ? -newOffset + atOffset : newOffset;
+							position.top += (my.y === 'center' ? -1 : 1) * (newOffset - atOffset - adjustHeight);
 						}
 						else if(overflowBottom > 0) {
 							position.top += newOffset - atOffset - adjustHeight;
