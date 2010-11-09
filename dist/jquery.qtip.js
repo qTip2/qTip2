@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Nov 9 16:41:12 2010 +0000
+* Date: Tue Nov 9 16:56:59 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1702,7 +1702,7 @@ function Tip(qTip, command)
 				self.update();
 			}
 			else {
-				self.tip.remove();
+				elems.tip.remove();
 			}
 
 			// Only update the position if mouse isn't the target

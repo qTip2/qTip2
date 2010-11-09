@@ -58,7 +58,7 @@ function Tip(qTip, command)
 				self.update();
 			}
 			else {
-				self.tip.remove();
+				elems.tip.remove();
 			}
 
 			// Only update the position if mouse isn't the target
