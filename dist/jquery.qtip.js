@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Nov 9 15:52:32 2010 +0000
+* Date: Tue Nov 9 16:41:12 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -184,8 +184,8 @@ function QTip(target, options, id)
 
 		if(elem.offsetParent) {
 			do {
-				offset.left += elem.offsetLeft;
-				offset.top += elem.offsetTop;
+				o.left += elem.offsetLeft;
+				o.top += elem.offsetTop;
 			}
 			while(elem = elem.offsetParent);
 		}
@@ -1529,9 +1529,7 @@ $.fn.qtip.defaults = {
 		focus: $.noop,
 		blur: $.noop
 	}
-};
-
-function Ajax(qTip)
+};function Ajax(qTip)
 {
 	var self = this;
 

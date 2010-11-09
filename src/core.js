@@ -159,8 +159,8 @@ function QTip(target, options, id)
 
 		if(elem.offsetParent) {
 			do {
-				offset.left += elem.offsetLeft;
-				offset.top += elem.offsetTop;
+				o.left += elem.offsetLeft;
+				o.top += elem.offsetTop;
 			}
 			while(elem = elem.offsetParent);
 		}
@@ -1505,4 +1505,3 @@ $.fn.qtip.defaults = {
 		blur: $.noop
 	}
 };
-
