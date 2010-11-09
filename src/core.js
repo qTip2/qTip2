@@ -124,7 +124,7 @@ function QTip(target, options, id)
 	self.rendered = FALSE;
 	self.elements = { target: target };
 	self.cache = { event: {}, target: NULL, disabled: FALSE };
-	self.timers = {};
+	self.timers = { img: [] };
 	self.options = options;
 	self.plugins = {};
 
@@ -338,7 +338,7 @@ function QTip(target, options, id)
 
 	function updateContent(content)
 	{
-		var images;
+		var elements = self.elements;
 
 		// Make sure tooltip is rendered and content is defined. If not return
 		if(!self.rendered || !content) { return FALSE; }
@@ -350,32 +350,60 @@ function QTip(target, options, id)
 
 		// Append new content if its a DOM array and show it if hidden
 		if(content.jquery && content.length > 0) {
-			self.elements.content.empty().append(content.css({ display: 'block' }));
+			elements.content.empty().append(content.css({ display: 'block' }));
 		}
 
 		// Content is a regular string, insert the new content
 		else {
-			self.elements.content.html(content);
+			elements.content.html(content);
 		}
 
-		// Update tooltip width and position when all images are loaded
-		function imageLoad() {
-			if(--images < 1) {
-				updateWidth();
-				if(self.rendered === TRUE) {
-					self.reposition(self.cache.event);
+		// Insert into 'fx' queue our image dimension checker which will halt the showing of the tooltip until image dimensions can be detected
+		elements.tooltip.queue('fx', function(next) {
+			// Find all content images without dimensions
+			var images = $('img:not([height]):not([width])', self.elements.content);
+
+			// Update tooltip width and position when all images are loaded
+			function imageLoad(img) {
+				// Remove the image from the array
+				images = images.not(img);
+
+				// If queue is empty, update tooltip and continue the queue
+				if(images.length === 0) {
+					updateWidth();
+					if(self.rendered === TRUE) {
+						self.reposition(self.cache.event);
+					}
+
+					next();
 				}
 			}
-		}
 
-		// Assign the load callback to all images to prevent positioning errors
-		images = $('img', self.elements.content).each(function() {
-			$(this).load(imageLoad);
-			var src = this.src; this.src = ''; this.src = src; // Trigger onload even if image is cached
-		}).length;
+			// Apply the callback to img events and height checker method to ensure queue continues no matter what!
+			images.each(function(i, elem) {
+				// Apply the imageLoad to regular events to make sure the queue continues
+				var events = ['abort','error','load','unload',''].join('.qtip-image ');
+				$(this).bind(events, function() {
+					clearTimeout(self.timers.img[i]);
+					imageLoad(this);
+				});
 
-		// If no images were found, run imageLoad directly
-		if(images === 0) { imageLoad(); }
+				// Apply a recursive method that polls the image for dimensions every 20ms
+				(function timer(){
+					// When the dimensions are found, remove the image from the queue
+					if(elem.height) {
+						return imageLoad(elem);
+					}
+
+					self.timers.img[i] = setTimeout(timer, 20);
+				}());
+				
+				return true;
+			});
+
+			// If no images were found, continue with queue
+			if(images.length === 0) { imageLoad(images);  }
+		});
 
 		return self;
 	}
@@ -652,19 +680,28 @@ function QTip(target, options, id)
 			$.each(options.events, function(name, callback) {
 				elements.tooltip.bind('tooltip'+name, callback);
 			});
+
+			/* Queue this part of the render process in our fx queue so we can
+			 * load images before the tooltip renders fully.
+			 
+			 * See: updateContent method
+			*/
+			elements.tooltip.queue('fx', function(next) {
+				// Update tooltip position and show tooltip if needed
+				if(options.show.ready || show) {
+					elements.tooltip.hide();
+					self.show(self.cache.event);
+				}
+				
+				// Remove accessible class
+				elements.tooltip.removeClass('ui-tooltip-accessible');
 			
-			// Update tooltip position and show tooltip if needed
-			if(options.show.ready || show) {
-				elements.tooltip.hide();
-				self.show(self.cache.event);
-			}
-
-			// Remove accessible class
-			elements.tooltip.removeClass('ui-tooltip-accessible');
-
-			// Call API method and if return value is FALSE, halt
-			callback.originalEvent = $.extend({}, self.cache.event);
-			elements.tooltip.trigger(callback, [self.hash()]);
+				// Call API method
+				callback.originalEvent = $.extend({}, self.cache.event);
+				elements.tooltip.trigger(callback, [self.hash()]);
+				
+				next(); // Move on
+			});
 
 			return self;
 		},
