@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Nov 9 18:07:15 2010 +0000
+* Date: Tue Nov 9 20:45:39 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1527,7 +1527,7 @@ $.fn.qtip.defaults = {
 			mouse: TRUE,
 			screen: FALSE,
 			resize: TRUE,
-			container: TRUE
+			container: FALSE
 		},
 		effect: TRUE
 	},

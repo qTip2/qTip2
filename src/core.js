@@ -1502,7 +1502,7 @@ $.fn.qtip.defaults = {
 			mouse: TRUE,
 			screen: FALSE,
 			resize: TRUE,
-			container: TRUE
+			container: FALSE
 		},
 		effect: TRUE
 	},
