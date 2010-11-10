@@ -16,7 +16,7 @@ function Ajax(qTip)
 			// Bind render event to load initial content
 			qTip.elements.tooltip.bind('tooltiprender.ajax', function() { 
 				self.load(ajax);
-	
+
 				// Bind show event
 				qTip.elements.tooltip.bind('tooltipshow.ajax', function() {
 					// Update content if content.ajax.once is FALSE and the tooltip is rendered
@@ -98,7 +98,7 @@ $.fn.qtip.plugins.ajax.sanitize = function(options)
 	try {
 		var opts = options.content.ajax;
 		if(typeof opts !== 'object') { options.content.ajax = { url: opts }; }
-		opts.once = !!opts.once;
+		if('boolean' !== typeof opts.once && opts.once) { opts.once = !!opts.once; }
 	}
 	catch (e) {}
 };
