@@ -683,7 +683,7 @@ function QTip(target, options, id)
 
 			/* Queue this part of the render process in our fx queue so we can
 			 * load images before the tooltip renders fully.
-			 
+			 *
 			 * See: updateContent method
 			*/
 			elements.tooltip.queue('fx', function(next) {
@@ -692,14 +692,14 @@ function QTip(target, options, id)
 					elements.tooltip.hide();
 					self.show(self.cache.event);
 				}
-				
+
 				// Remove accessible class
 				elements.tooltip.removeClass('ui-tooltip-accessible');
-			
-				// Call API method
+
+				// Trigger tooltiprender event and pass original triggering event as original
 				callback.originalEvent = $.extend({}, self.cache.event);
 				elements.tooltip.trigger(callback, [self.hash()]);
-				
+
 				next(); // Move on
 			});
 

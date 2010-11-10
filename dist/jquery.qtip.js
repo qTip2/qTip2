@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Nov 10 11:19:13 2010 +0000
+* Date: Wed Nov 10 11:21:36 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -708,7 +708,7 @@ function QTip(target, options, id)
 
 			/* Queue this part of the render process in our fx queue so we can
 			 * load images before the tooltip renders fully.
-			 
+			 *
 			 * See: updateContent method
 			*/
 			elements.tooltip.queue('fx', function(next) {
@@ -717,14 +717,14 @@ function QTip(target, options, id)
 					elements.tooltip.hide();
 					self.show(self.cache.event);
 				}
-				
+
 				// Remove accessible class
 				elements.tooltip.removeClass('ui-tooltip-accessible');
-			
-				// Call API method
+
+				// Trigger tooltiprender event and pass original triggering event as original
 				callback.originalEvent = $.extend({}, self.cache.event);
 				elements.tooltip.trigger(callback, [self.hash()]);
-				
+
 				next(); // Move on
 			});
 
