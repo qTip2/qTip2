@@ -98,7 +98,6 @@ $.fn.qtip.plugins.ajax.sanitize = function(options)
 	try {
 		var opts = options.content.ajax;
 		if(typeof opts !== 'object') { options.content.ajax = { url: opts }; }
-		if(options.content.text === FALSE) { options.content.text = 'Loading...'; }
 		opts.once = !!opts.once;
 	}
 	catch (e) {}

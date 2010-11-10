@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Nov 9 20:45:39 2010 +0000
+* Date: Wed Nov 10 11:19:13 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1659,7 +1659,6 @@ $.fn.qtip.plugins.ajax.sanitize = function(options)
 	try {
 		var opts = options.content.ajax;
 		if(typeof opts !== 'object') { options.content.ajax = { url: opts }; }
-		if(options.content.text === FALSE) { options.content.text = 'Loading...'; }
 		opts.once = !!opts.once;
 	}
 	catch (e) {}
