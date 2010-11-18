@@ -216,7 +216,7 @@ function QTip(target, options, id)
 		// Parse and simulate max and min width
 		max = parseInt(tooltip.css('max-width'), 10) || 0;
 		min = parseInt(tooltip.css('min-width'), 10) || 0;
-		newWidth = Math.min( Math.max(newWidth, min), max );
+		newWidth = max + min ? Math.min( Math.max(newWidth, min), max ) : newWidth;
 
 		// Set the new calculated width and if width has not numerical, grab new pixel width
 		tooltip.width(newWidth);

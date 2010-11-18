@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Nov 10 12:50:04 2010 +0000
+* Date: Wed Nov 10 22:36:25 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -241,7 +241,7 @@ function QTip(target, options, id)
 		// Parse and simulate max and min width
 		max = parseInt(tooltip.css('max-width'), 10) || 0;
 		min = parseInt(tooltip.css('min-width'), 10) || 0;
-		newWidth = Math.min( Math.max(newWidth, min), max );
+		newWidth = max + min ? Math.min( Math.max(newWidth, min), max ) : newWidth;
 
 		// Set the new calculated width and if width has not numerical, grab new pixel width
 		tooltip.width(newWidth);
@@ -2461,7 +2461,7 @@ function BGIFrame(qTip)
 				tipAdjust, offset;
 
 			// Adjust border offset
-			offset = parseInt(tooltip.css('border-left-width'), 10);
+			offset = parseInt(tooltip.css('border-left-width'), 10) || 0;
 			offset = { left: -offset, top: -offset };
 
 			// Adjust for tips plugin

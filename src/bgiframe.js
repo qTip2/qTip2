@@ -29,7 +29,7 @@ function BGIFrame(qTip)
 				tipAdjust, offset;
 
 			// Adjust border offset
-			offset = parseInt(tooltip.css('border-left-width'), 10);
+			offset = parseInt(tooltip.css('border-left-width'), 10) || 0;
 			offset = { left: -offset, top: -offset };
 
 			// Adjust for tips plugin
