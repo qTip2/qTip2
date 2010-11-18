@@ -97,7 +97,7 @@ $.fn.qtip.plugins.ajax.sanitize = function(options)
 {
 	try {
 		var opts = options.content.ajax;
-		if(typeof opts !== 'object') { options.content.ajax = { url: opts }; }
+		if(typeof opts !== 'object') { opts = options.content.ajax = { url: opts }; }
 		if('boolean' !== typeof opts.once && opts.once) { opts.once = !!opts.once; }
 	}
 	catch (e) {}
