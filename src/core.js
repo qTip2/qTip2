@@ -1322,7 +1322,7 @@ $.fn.qtip = function(options, notation, newValue)
 	}
 
 	// No API commands. validate provided options and setup qTips
-	else if('object' === typeof options)
+	else if('object' === typeof options || !arguments.length)
 	{
 		// Sanitize options
 		targets = sanitizeOptions(opts, this);

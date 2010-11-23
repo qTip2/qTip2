@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Nov 18 23:48:37 2010 +0000
+* Date: Thu Nov 18 23:52:21 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1347,7 +1347,7 @@ $.fn.qtip = function(options, notation, newValue)
 	}
 
 	// No API commands. validate provided options and setup qTips
-	else if('object' === typeof options)
+	else if('object' === typeof options || !arguments.length)
 	{
 		// Sanitize options
 		targets = sanitizeOptions(opts, this);
