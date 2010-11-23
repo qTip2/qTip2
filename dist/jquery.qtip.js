@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Nov 23 01:25:40 2010 +0000
+* Date: Tue Nov 23 01:40:57 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1241,10 +1241,13 @@ function init(id, opts)
 	docBody = $(document.body),
 
 	// Grab metadata from element if plugin is present
-	metadata = (elem.metadata) ? sanitizeOptions(elem.metadata(opts.metadata)) : {},
+	metadata = (elem.metadata) ? elem.metadata(opts.metadata) : {},
+	
+	// Check if the metadata returned is in HTML5 form and grab 'name' from the object instead
+	metadata5 = metadata && opts.metadata.type === 'html5' ? metadata[opts.metadata.name] : {},
 
 	// Create unique configuration object using metadata
-	config = $.extend(TRUE, {}, opts, metadata),
+	config = $.extend(TRUE, {}, opts, sanitizeOptions(metadata5 || metadata)),
 	posOptions = config.position,
 
 	// Use document body instead of document element if needed

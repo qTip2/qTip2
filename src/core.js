@@ -1216,10 +1216,13 @@ function init(id, opts)
 	docBody = $(document.body),
 
 	// Grab metadata from element if plugin is present
-	metadata = (elem.metadata) ? sanitizeOptions(elem.metadata(opts.metadata)) : {},
+	metadata = (elem.metadata) ? elem.metadata(opts.metadata) : {},
+	
+	// Check if the metadata returned is in HTML5 form and grab 'name' from the object instead
+	metadata5 = metadata && opts.metadata.type === 'html5' ? metadata[opts.metadata.name] : {},
 
 	// Create unique configuration object using metadata
-	config = $.extend(TRUE, {}, opts, metadata),
+	config = $.extend(TRUE, {}, opts, sanitizeOptions(metadata5 || metadata)),
 	posOptions = config.position,
 
 	// Use document body instead of document element if needed
