@@ -445,7 +445,7 @@ function QTip(target, options, id)
 			if(targets.tooltip.hasClass('ui-state-disabled')) { return FALSE; }
 
 			// Check if new target was actually the tooltip element
-			var ontoTooltip = $(event.relatedTarget).parents(selector)[0] == targets.tooltip[0];
+			var ontoTooltip = $(event.relatedTarget || event.target).parents(selector)[0] == targets.tooltip[0];
 
 			// Clear timers and stop animation queue
 			clearTimeout(self.timers.show);
