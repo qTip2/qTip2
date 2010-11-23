@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Nov 23 01:40:57 2010 +0000
+* Date: Tue Nov 23 02:10:21 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1331,7 +1331,7 @@ $.fn.qtip = function(options, notation, newValue)
 				// Render tooltip if not already rendered when tooltip is to be shown
 				if(!api.rendered && (command === 'show' || command === 'toggle')) {
 					if(event && event.timeStamp) { api.cache.event = event; }
-					api.render();
+					api.render(1);
 				}
 
 				// Check for disable/enable commands
@@ -1437,7 +1437,7 @@ $.fn.qtip.bind = function(opts, event)
 		targets.show.bind(events.show, hoverIntent);
 
 		// Prerendering is enabled, create tooltip now
-		if(opts.show.ready || opts.prerender || opts.show.event === FALSE) { hoverIntent(event); }
+		if(opts.show.ready || opts.prerender) { hoverIntent(event); }
 	});
 };
 
@@ -1445,8 +1445,8 @@ $.fn.qtip.bind = function(opts, event)
 $.each({
 	/* Allow other plugins to successfully retrieve the title of an element with a qTip applied */
 	attr: function(attr) {
-		var api = $(this).data('qtip');
-		return (arguments.length === 1 && attr === 'title' && api && api.rendered === TRUE) ? $(this).data('oldtitle') : NULL;
+		var api = this.data('qtip');
+		return (arguments.length === 1 && attr === 'title' && api && api.rendered === TRUE) ? this.data('oldtitle') : NULL;
 	},
 
 	/* 
