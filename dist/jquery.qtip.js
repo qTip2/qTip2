@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Nov 23 01:06:44 2010 +0000
+* Date: Tue Nov 23 01:25:40 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -129,7 +129,7 @@ function sanitizeOptions(opts, targets)
 		if(this.sanitize) { this.sanitize(opts); }
 	});
 
-	return validTargets;
+	return targets ? validTargets : opts;
 }
 
 /*
@@ -1241,7 +1241,7 @@ function init(id, opts)
 	docBody = $(document.body),
 
 	// Grab metadata from element if plugin is present
-	metadata = (elem.metadata) ? elem.metadata(opts.metadata) : {},
+	metadata = (elem.metadata) ? sanitizeOptions(elem.metadata(opts.metadata)) : {},
 
 	// Create unique configuration object using metadata
 	config = $.extend(TRUE, {}, opts, metadata),

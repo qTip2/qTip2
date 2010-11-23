@@ -104,7 +104,7 @@ function sanitizeOptions(opts, targets)
 		if(this.sanitize) { this.sanitize(opts); }
 	});
 
-	return validTargets;
+	return targets ? validTargets : opts;
 }
 
 /*
@@ -1216,7 +1216,7 @@ function init(id, opts)
 	docBody = $(document.body),
 
 	// Grab metadata from element if plugin is present
-	metadata = (elem.metadata) ? elem.metadata(opts.metadata) : {},
+	metadata = (elem.metadata) ? sanitizeOptions(elem.metadata(opts.metadata)) : {},
 
 	// Create unique configuration object using metadata
 	config = $.extend(TRUE, {}, opts, metadata),
