@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Nov 23 02:10:21 2010 +0000
+* Date: Tue Nov 23 23:26:02 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1445,8 +1445,8 @@ $.fn.qtip.bind = function(opts, event)
 $.each({
 	/* Allow other plugins to successfully retrieve the title of an element with a qTip applied */
 	attr: function(attr) {
-		var api = this.data('qtip');
-		return (arguments.length === 1 && attr === 'title' && api && api.rendered === TRUE) ? this.data('oldtitle') : NULL;
+		var self = $(this), api = self.data('qtip');
+		return (arguments.length === 1 && attr === 'title' && api && api.rendered === TRUE) ? self.data('oldtitle') : NULL;
 	},
 
 	/* 
@@ -1454,7 +1454,7 @@ $.each({
 	* Trigger 'remove' event on all elements on removal if jQuery UI isn't present 
 	*/
 	remove: $.ui ? NULL : function( selector, keepData ) {
-		this.each(function() {
+		$(this).each(function() {
 			if (!keepData) {
 				if (!selector || $.filter( selector, [ this ] ).length) {
 					$('*', this).add(this).each(function() {

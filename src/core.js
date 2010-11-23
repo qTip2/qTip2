@@ -1420,8 +1420,8 @@ $.fn.qtip.bind = function(opts, event)
 $.each({
 	/* Allow other plugins to successfully retrieve the title of an element with a qTip applied */
 	attr: function(attr) {
-		var api = this.data('qtip');
-		return (arguments.length === 1 && attr === 'title' && api && api.rendered === TRUE) ? this.data('oldtitle') : NULL;
+		var self = $(this), api = self.data('qtip');
+		return (arguments.length === 1 && attr === 'title' && api && api.rendered === TRUE) ? self.data('oldtitle') : NULL;
 	},
 
 	/* 
@@ -1429,7 +1429,7 @@ $.each({
 	* Trigger 'remove' event on all elements on removal if jQuery UI isn't present 
 	*/
 	remove: $.ui ? NULL : function( selector, keepData ) {
-		this.each(function() {
+		$(this).each(function() {
 			if (!keepData) {
 				if (!selector || $.filter( selector, [ this ] ).length) {
 					$('*', this).add(this).each(function() {
