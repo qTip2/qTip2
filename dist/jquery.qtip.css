@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Nov 24 22:19:30 2010 +0000
+* Date: Wed Nov 24 23:29:43 2010 +0000
 */
 
 .ui-tooltip-accessible{
@@ -211,9 +211,9 @@
 
 /*! Add shadows to your tooltips in: FF3+, Chrome 2+, Opera 10.6+, IE6+, Safari 2+ */
 .ui-tooltip-shadow{
-  -webkit-box-shadow: 1px 1px 7px rgba(0, 0, 0, 0.15);
-  -moz-box-shadow: 1px 1px 7px rgba(0, 0, 0, 0.15);
-  box-shadow: 1px 1px 7px rgba(0, 0, 0, 0.15);
+	-webkit-box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.15);
+  -moz-box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.15);
+  box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.15);
 
   filter:progid:DXImageTransform.Microsoft.dropshadow(OffX=1, OffY=1, Color='gray');
   -ms-filter:"progid:DXImageTransform.Microsoft.dropshadow(OffX=1, OffY=1, Color='gray')";
