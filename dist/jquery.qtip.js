@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Nov 23 23:26:02 2010 +0000
+* Date: Tue Nov 23 23:28:06 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -423,7 +423,7 @@ function QTip(target, options, id)
 					self.timers.img[i] = setTimeout(timer, 20);
 				}());
 				
-				return true;
+				return TRUE;
 			});
 
 			// If no images were found, continue with queue
@@ -1247,7 +1247,7 @@ function init(id, opts)
 	metadata5 = metadata && opts.metadata.type === 'html5' ? metadata[opts.metadata.name] : {},
 
 	// Create unique configuration object using metadata
-	config = $.extend(TRUE, {}, opts, sanitizeOptions(metadata5 || metadata)),
+	config = $.extend(TRUE, {}, opts, sanitizeOptions( $.extend(TRUE, {}, metadata5 || metadata) )),
 	posOptions = config.position,
 
 	// Use document body instead of document element if needed
