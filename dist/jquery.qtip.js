@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Nov 24 22:16:44 2010 +0000
+* Date: Wed Nov 24 22:19:30 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -2131,12 +2131,14 @@ $.fn.qtip.plugins.tip.sanitize = function(options)
 {
 	try {
 		var opts = options.style.tip;
-		if(typeof opts !== 'object'){ options.style.tip = { corner: !!opts }; }
+		if(typeof opts !== 'object'){ options.style.tip = { corner: opts }; }
+		if(!(/string|boolean/i).test(typeof opts.corner)) { opts.corner = true; }
 		if(typeof opts.method !== 'string'){ opts.method = TRUE; }
 		if(!(/canvas|polygon/i).test(opts.method)){ opts.method = TRUE; }
-		if(typeof opts.width !== 'number'){ opts.width = 12; }
-		if(typeof opts.height !== 'number'){ opts.height = 12; }
-		if(typeof opts.border !== 'number'){ opts.border = 0; }
+		if(typeof opts.width !== 'number'){ delete opts.width; }
+		if(typeof opts.height !== 'number'){ delete opts.height; }
+		if(typeof opts.border !== 'number'){ delete opts.border; }
+		if(typeof opts.offset !== 'number'){ delete opts.offset; }
 	}
 	catch(e) {}
 };
@@ -2147,8 +2149,8 @@ $.extend(TRUE, $.fn.qtip.defaults, {
 		tip: {
 			corner: TRUE,
 			method: TRUE,
-			width: 12,
-			height: 12,
+			width: 9,
+			height: 9,
 			border: 0,
 			offset: 0
 		}
