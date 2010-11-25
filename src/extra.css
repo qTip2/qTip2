@@ -1,17 +1,18 @@
 /*! Youtube tooltip style */
 div.ui-tooltip-youtube .ui-tooltip-wrapper{
+	background-color: rgba(0, 0, 0, 0.85);
+	color: white;
+
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 	border-radius: 5px;
 
-	-webkit-box-shadow: 0 0 3px #333;
-	-moz-box-shadow: 0 0 3px #333;
-	box-shadow: 0 0 3px #333;
-
 	border-color: #CCCCCC;
 	border-width: 1px;
 
-	color: white;
+	-webkit-box-shadow: 0 0 3px #333;
+	-moz-box-shadow: 0 0 3px #333;
+	box-shadow: 0 0 3px #333;
 }
 
 	div.ui-tooltip-youtube .ui-tooltip-close .ui-icon{
@@ -20,8 +21,8 @@ div.ui-tooltip-youtube .ui-tooltip-wrapper{
 
 	div.ui-tooltip-youtube .ui-tooltip-titlebar,
 	div.ui-tooltip-youtube .ui-tooltip-content{
-		background-color: rgba(0, 0, 0, 0.85);
-		border: 0;
+		background: transparent;
+		margin: 0;
 	}
 
 	/* IE6 Fallback */
@@ -54,7 +55,7 @@ div.ui-tooltip-jtools .ui-tooltip-wrapper{
 
 	div.ui-tooltip-jtools .ui-tooltip-titlebar,
 	div.ui-tooltip-jtools .ui-tooltip-content{
-		background: none;
+		background: transparent;
 	}
 
 	div.ui-tooltip-jtools .ui-tooltip-close .ui-icon{
@@ -64,6 +65,7 @@ div.ui-tooltip-jtools .ui-tooltip-wrapper{
 
 /* Cluetip style */
 div.ui-tooltip-cluetip .ui-tooltip-wrapper{
+	background-color: #D9D9C2;
 	border: 0px solid #D9D9C2;
 
 	-webkit-box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.4);
@@ -77,7 +79,6 @@ div.ui-tooltip-cluetip .ui-tooltip-wrapper{
 		border: 0;
 	}
 	div.ui-tooltip-cluetip .ui-tooltip-content{
-		background-color: #D9D9C2;
 		color: #111;
 	}
 
