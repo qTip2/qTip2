@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Nov 24 23:43:38 2010 +0000
+* Date: Thu Nov 25 00:00:16 2010 +0000
 */
 
 .ui-tooltip-accessible{
@@ -284,12 +284,13 @@ div.ui-tooltip-youtube .ui-tooltip-wrapper{
 }
 
 	div.ui-tooltip-youtube .ui-tooltip-close .ui-icon{
-		background: #4D9FBF url('images/close-dark.png') no-repeat 50% 50%;
+		background: black url('images/close-dark.png') no-repeat 50% 50%;
 	}
 
 	div.ui-tooltip-youtube .ui-tooltip-titlebar,
 	div.ui-tooltip-youtube .ui-tooltip-content{
 		background-color: rgba(0, 0, 0, 0.85);
+		border: 0;
 	}
 
 	/* IE6 Fallback */
@@ -332,7 +333,7 @@ div.ui-tooltip-jtools .ui-tooltip-wrapper{
 
 /* Cluetip style */
 div.ui-tooltip-cluetip .ui-tooltip-wrapper{
-	border-width: 0;
+	border: 0px solid #D9D9C2;
 
 	-webkit-box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.4);
 	-moz-box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.4);
@@ -342,6 +343,7 @@ div.ui-tooltip-cluetip .ui-tooltip-wrapper{
 	div.ui-tooltip-cluetip .ui-tooltip-titlebar{
 		background-color: #87876A;
 		color: white;
+		border: 0;
 	}
 	div.ui-tooltip-cluetip .ui-tooltip-content{
 		background-color: #D9D9C2;
