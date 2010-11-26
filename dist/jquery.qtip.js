@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Nov 25 05:03:59 2010 +0000
+* Date: Thu Nov 25 05:10:49 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1138,12 +1138,6 @@ function QTip(target, options, id)
 				position.adjusted = { left: 0, top: 0 };
 			}
 
-			// Make sure the tooltip doesn't extend the top/left window boundaries
-			if(posOptions.container[0] == document.body) {
-				if(position.top + win.scrollTop() < 1) { position.top = 0; }
-				if(position.left + win.scrollLeft() < 1) { position.left = 0; }
-			}
-
 			// Set tooltip position class
 			tooltip.attr('class', function(i, val) {
 				return $(this).attr('class').replace(/ui-tooltip-pos-\w+/i, '');
@@ -1155,6 +1149,12 @@ function QTip(target, options, id)
 			tooltip.trigger(callback, [self.hash(), position]);
 			if(callback.isDefaultPrevented()){ return self; }
 			delete position.adjusted;
+
+			// Make sure the tooltip doesn't extend the top/left window boundaries
+			if(posOptions.container[0] == document.body) {
+				if(position.top + win.scrollTop() < 1) { position.top = 0; }
+				if(position.left + win.scrollLeft() < 1) { position.left = 0; }
+			}
 
 			// Use custom function if provided
 			if(tooltip.is(':visible') && $.isFunction(posOptions.effect)) {
@@ -1716,8 +1716,8 @@ function Tip(qTip, command)
 		},
 		color = { },
 		border = opts.border || 0,
-		adjust = opts.adjust || 0,
-		method = opts.method || FALSE;
+		method = opts.method || FALSE,
+		adjust = { x: 0, y: 0 };
 
 	self.corner = NULL;
 	self.mimic = NULL;
@@ -1756,7 +1756,8 @@ function Tip(qTip, command)
 		var tip = elems.tip,
 			corners  = ['left', 'right'],
 			offset = opts.offset,
-			precedance;
+			precedance,
+			oppositeP;
 
 		// Return if tips are disabled or tip is not yet rendered
 		if(opts.corner === FALSE || !tip) { return FALSE; }
@@ -1772,7 +1773,8 @@ function Tip(qTip, command)
 		corners[ precedance === 'y' ? 'push' : 'unshift' ]('top', 'bottom');
 
 		// Calculate offset adjustments
-		offset = Math.max(corner[ precedance === 'y' ? 'x' : 'y' ] === 'center' ? offset : 0, offset);
+		oppositeP = precedance === 'y' ? 'x' : 'y';
+		offset = Math.max(corner[ oppositeP ] === 'center' ? offset : 0, offset) - adjust[ oppositeP ];
 
 		// Adjust primary corners
 		switch(corner[ precedance === 'y' ? 'x' : 'y' ])
@@ -1802,15 +1804,16 @@ function Tip(qTip, command)
 		tip.css(corner[precedance], -offset);
 	}
 
-	function reposition(event, api, position) {
+	function reposition(event, api, pos) {
 		if(!elems.tip) { return; }
 
 		var newCorner = $.extend({}, self.corner),
 			newType = self.mimic.adjust ? $.extend({}, self.mimic) : NULL,
 			precedance = newCorner.precedance === 'y' ? ['y', 'top', 'left', 'height', 'x'] : ['x', 'left', 'top', 'width', 'y'],
-			adjusted = position.adjusted,
+			adjusted = pos.adjusted,
 			offset = [ parseInt(wrapper.css('border-' + newCorner[ precedance[0] ] + '-width'), 10) || 0, 0 ],
-			walk = [newCorner, newType];
+			walk = [newCorner, newType],
+			win = $(window);
 
 		// Adjust tip corners
 		$.each(walk, function() {
@@ -1822,14 +1825,21 @@ function Tip(qTip, command)
 			}
 		});
 
-		// Adjust tooltip position if needed in relation to tip element
+		// Adjust tooltip pos if needed in relation to tip element
 		offset[1] = Math.max(newCorner[ precedance[4] ] === 'center' ? opts.offset : 0, opts.offset);
-		position[ precedance[1] ] += (newCorner[ precedance[0] ] === precedance[1] ? 1 : -1) * (size[ precedance[3] ] - offset[0]);
-		position[ precedance[2] ] -= (newCorner[ precedance[4] ] === precedance[2] || newCorner[ precedance[4] ] === 'center' ? 1 : -1) * offset[1];
+		pos[ precedance[1] ] += (newCorner[ precedance[0] ] === precedance[1] ? 1 : -1) * (size[ precedance[3] ] - offset[0]);
+		pos[ precedance[2] ] -= (newCorner[ precedance[4] ] === precedance[2] || newCorner[ precedance[4] ] === 'center' ? 1 : -1) * offset[1];
+
+		// Account for overflow by modifying tip
+		adjust.x = Math.max(-pos.left - win.scrollLeft(), 0);
+		adjust.y = Math.max(-pos.top - win.scrollTop(), 0);
 
 		// Update and redraw the tip if needed
-		if(newCorner.string() !== cache.corner.string() && (cache.top !== adjusted.top || cache.left !== adjusted.left)) { 
+		if(newCorner.string() !== cache.corner.string() && (cache.top !== adjusted.top || cache.left !== adjusted.left)) {
 			self.update(newCorner, newType);
+		}
+		else if(Math.max(adjust.x, adjust.y, 0)) {
+			position();
 		}
 
 		// Cache overflow details

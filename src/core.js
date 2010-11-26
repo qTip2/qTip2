@@ -1113,12 +1113,6 @@ function QTip(target, options, id)
 				position.adjusted = { left: 0, top: 0 };
 			}
 
-			// Make sure the tooltip doesn't extend the top/left window boundaries
-			if(posOptions.container[0] == document.body) {
-				if(position.top + win.scrollTop() < 1) { position.top = 0; }
-				if(position.left + win.scrollLeft() < 1) { position.left = 0; }
-			}
-
 			// Set tooltip position class
 			tooltip.attr('class', function(i, val) {
 				return $(this).attr('class').replace(/ui-tooltip-pos-\w+/i, '');
@@ -1130,6 +1124,12 @@ function QTip(target, options, id)
 			tooltip.trigger(callback, [self.hash(), position]);
 			if(callback.isDefaultPrevented()){ return self; }
 			delete position.adjusted;
+
+			// Make sure the tooltip doesn't extend the top/left window boundaries
+			if(posOptions.container[0] == document.body) {
+				if(position.top + win.scrollTop() < 1) { position.top = 0; }
+				if(position.left + win.scrollLeft() < 1) { position.left = 0; }
+			}
 
 			// Use custom function if provided
 			if(tooltip.is(':visible') && $.isFunction(posOptions.effect)) {
