@@ -1209,15 +1209,15 @@ function QTip(target, options, id)
 // Initialization method
 function init(id, opts)
 {
-	var obj, 
-	
+	var obj,
+
 	// Setup element references
 	elem = $(this),
 	docBody = $(document.body),
 
 	// Grab metadata from element if plugin is present
 	metadata = (elem.metadata) ? elem.metadata(opts.metadata) : {},
-	
+
 	// Check if the metadata returned is in HTML5 form and grab 'name' from the object instead
 	metadata5 = metadata && opts.metadata.type === 'html5' ? metadata[opts.metadata.name] : {},
 
@@ -1227,6 +1227,9 @@ function init(id, opts)
 
 	// Use document body instead of document element if needed
 	newTarget = this === document ? docBody : elem;
+
+	// Make sure to remove metadata object so we don't interfere with other metadata calls
+	elem.removeData('metadata');
 
 	// Setup missing content if none is detected
 	if('boolean' === typeof config.content.text) {
