@@ -1000,11 +1000,11 @@ function QTip(target, options, id)
 				position = { left: 0, top: 0 },
 				callback = $.Event('tooltipmove'),
 				fixed = tooltip.css('position') === 'fixed',
-				win = $(window),
+				viewport = $(posOptions.adjust.container && offsetParent !== document.body ? offsetParent : window),
 				adjust = {
 					left: function(posLeft) {
-						var winScroll = win.scrollLeft(),
-							winWidth = win.width(),
+						var winScroll = viewport.scrollLeft(),
+							winWidth = viewport.width(),
 							myOffset = my.x === 'left' ? -elemWidth : my.x === 'right' ? elemWidth : elemWidth / 2,
 							atOffset = at.x === 'left' ? targetWidth : at.x === 'right' ? -targetWidth : targetWidth / 2,
 							adjustX = -2 * posOptions.adjust.x,
@@ -1023,8 +1023,8 @@ function QTip(target, options, id)
 						return position.left - posLeft;
 					},
 					top: function(posTop) {
-						var winScroll = win.scrollTop(),
-							winHeight = win.height(),
+						var winScroll = viewport.scrollTop(),
+							winHeight = viewport.height(),
 							myOffset = my.y === 'top' ? -elemHeight : my.y === 'bottom' ? elemHeight : -elemHeight / 2,
 							atOffset = at.y === 'top' ? targetHeight : at.y === 'bottom' ? -targetHeight : 0,
 							adjustY = -2 * posOptions.adjust.y,
@@ -1075,8 +1075,8 @@ function QTip(target, options, id)
 
 					if(target[0] === window) {
 						position = {
-							top: fixed ? 0 : win.scrollTop(),
-							left: fixed ? 0 : win.scrollLeft()
+							top: fixed ? 0 : viewport.scrollTop(),
+							left: fixed ? 0 : viewport.scrollLeft()
 						};
 					}
 				}
@@ -1127,8 +1127,8 @@ function QTip(target, options, id)
 
 			// Make sure the tooltip doesn't extend the top/left window boundaries
 			if(posOptions.container[0] == document.body) {
-				if(position.top + win.scrollTop() < 1) { position.top = 0; }
-				if(position.left + win.scrollLeft() < 1) { position.left = 0; }
+				if(position.top + viewport.scrollTop() < 1) { position.top = 0; }
+				if(position.left + viewport.scrollLeft() < 1) { position.left = 0; }
 			}
 
 			// Use custom function if provided
