@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Nov 29 04:03:29 2010 +0000
+* Date: Mon Nov 29 04:06:43 2010 +0000
 */
 
 .ui-tooltip-accessible{
@@ -268,7 +268,7 @@ div.ui-tooltip-tip{
 }
 
 /*! Youtube tooltip style */
-div.ui-tooltip-youtube .ui-tooltip-wrapper{
+.ui-tooltip-youtube .ui-tooltip-wrapper{
 	background-color: rgba(0, 0, 0, 0.85);
 	color: white;
 
@@ -288,8 +288,8 @@ div.ui-tooltip-youtube .ui-tooltip-wrapper{
 		background: black url('images/close-dark.png') no-repeat 50% 50%;
 	}
 
-	div.ui-tooltip-youtube .ui-tooltip-titlebar,
-	div.ui-tooltip-youtube .ui-tooltip-content{
+	.ui-tooltip-youtube .ui-tooltip-titlebar,
+	.ui-tooltip-youtube .ui-tooltip-content{
 		background: transparent;
 		margin: 0;
 	}
@@ -301,7 +301,7 @@ div.ui-tooltip-youtube .ui-tooltip-wrapper{
 
 
 /* jQuery TOOLS Tooltip style */
-div.ui-tooltip-jtools .ui-tooltip-wrapper{
+.ui-tooltip-jtools .ui-tooltip-wrapper{
 	-moz-border-radius: 2px;
 	-webkit-border-radius: 2px;
 	border-radius: 2px;
@@ -322,18 +322,18 @@ div.ui-tooltip-jtools .ui-tooltip-wrapper{
 	color: white;
 }
 
-	div.ui-tooltip-jtools .ui-tooltip-titlebar,
-	div.ui-tooltip-jtools .ui-tooltip-content{
+	.ui-tooltip-jtools .ui-tooltip-titlebar,
+	.ui-tooltip-jtools .ui-tooltip-content{
 		background: transparent;
 	}
 
-	div.ui-tooltip-jtools .ui-tooltip-close .ui-icon{
+	.ui-tooltip-jtools .ui-tooltip-close .ui-icon{
 		background: black url('images/close-dark.png') no-repeat 50% 50%;
 	}
 
 
 /* Cluetip style */
-div.ui-tooltip-cluetip .ui-tooltip-wrapper{
+.ui-tooltip-cluetip .ui-tooltip-wrapper{
 	background-color: #D9D9C2;
 	border: 0px solid #D9D9C2;
 
@@ -342,12 +342,12 @@ div.ui-tooltip-cluetip .ui-tooltip-wrapper{
 	box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.4);
 }
 
-	div.ui-tooltip-cluetip .ui-tooltip-titlebar{
+	.ui-tooltip-cluetip .ui-tooltip-titlebar{
 		background-color: #87876A;
 		color: white;
 		border: 0;
 	}
-	div.ui-tooltip-cluetip .ui-tooltip-content{
+	.ui-tooltip-cluetip .ui-tooltip-content{
 		color: #111;
 	}
 
@@ -361,15 +361,23 @@ div.ui-tooltip-cluetip .ui-tooltip-wrapper{
 	background: rgba(0,0,0, .8);
 	filter: alpha(opacity=80);
 	
-	color: white;
-	font-size: 11px;
-	font-family: 'Lucida Grande', sans-serif;
-	font-weight: bold;
-	line-height: 16px;
-	text-shadow: 0 1px black;
-	
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
 	-o-border-radius: 4px;
 	border-radius: 4px;
 }
+
+	.ui-tooltip-tipsy .ui-tooltip-titlebar,
+	.ui-tooltip-tipsy .ui-tooltip-content{
+		background: transparent;
+		color: white;
+		font-size: 11px;
+		font-family: 'Lucida Grande', sans-serif;
+		font-weight: bold;
+		line-height: 16px;
+		text-shadow: 0 1px black;
+	}
+	
+	.ui-tooltip-tipsy .ui-tooltip-close .ui-icon{
+		background: black url('images/close-dark.png') no-repeat 50% 50%;
+	}
