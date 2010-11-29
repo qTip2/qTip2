@@ -2,3 +2,4 @@
 *.diff
 *.patch
 .DS_Store
+dist/images

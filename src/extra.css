@@ -82,3 +82,24 @@ div.ui-tooltip-cluetip .ui-tooltip-wrapper{
 		color: #111;
 	}
 
+
+/* Tipsy style */
+.ui-tooltip-tipsy .ui-tooltip-wrapper{
+	border: 0px solid black;
+	border: 0px solid rgba(0,0,0, .8);
+	
+	background: black;
+	background: rgba(0,0,0, .8);
+	filter: alpha(opacity=80);
+	
+	color: white;
+	font-size: 11px;
+	font-family: 'Lucida Grande', sans-serif;
+	font-weight: bold;
+	line-height: 16px;
+	
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-o-border-radius: 4px;
+	border-radius: 4px;
+}
