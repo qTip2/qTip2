@@ -432,7 +432,7 @@ function QTip(target, options, id)
 			clearTimeout(self.timers.hide);
 
 			// Start show timer
-			var callback = function(){ self.show(options.position.target !== 'mouse' ? event : NULL); };
+			var callback = function(){ self.show(event); };
 			if(options.show.delay > 0) {
 				self.timers.show = setTimeout(callback, options.show.delay);
 			}
@@ -1050,7 +1050,7 @@ function QTip(target, options, id)
 				at = { x: 'left', y: 'top' };
 
 				// Use cached event if one isn't available for positioning
-				event = $.extend({}, $.fn.qtip.mouse);
+				event = posOptions.adjust.mouse || !event ? $.extend({}, $.fn.qtip.mouse) : event;
 				position = { top: event.pageY, left: event.pageX };
 			}
 			else {
