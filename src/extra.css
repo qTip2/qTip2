@@ -97,6 +97,7 @@ div.ui-tooltip-cluetip .ui-tooltip-wrapper{
 	font-family: 'Lucida Grande', sans-serif;
 	font-weight: bold;
 	line-height: 16px;
+	text-shadow: 0 1px black;
 	
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
