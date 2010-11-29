@@ -108,7 +108,16 @@
 		line-height: 16px;
 		text-shadow: 0 1px black;
 	}
-	
+
+	.ui-tooltip-tipsy .ui-tooltip-titlebar{
+		padding: 6px 35px 3px 10px;
+		margin-bottom: 0;
+	}
+
+	.ui-tooltip-tipsy .ui-tooltip-content{
+		padding: 2px 10px 6px;
+	}
+
 	.ui-tooltip-tipsy .ui-tooltip-close .ui-icon{
 		background: black url('images/close-dark.png') no-repeat 50% 50%;
 	}
