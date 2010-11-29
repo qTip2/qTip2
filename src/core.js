@@ -90,7 +90,7 @@ function sanitizeOptions(opts, targets)
 		targets.each(function() {
 			var result = content.call(this);
 			if(!result) { return; }
-			
+
 			opts.content.text.push(result);
 			validTargets = validTargets.add($(this));
 		});
@@ -118,7 +118,7 @@ function QTip(target, options, id)
 	// Shortcut vars
 	uitooltip = 'ui-tooltip',
 	selector = '.qtip.'+uitooltip;
-	
+
 	// Setup class attributes
 	self.id = id;
 	self.rendered = FALSE;
@@ -272,7 +272,7 @@ function QTip(target, options, id)
 			.bind('mousedown keydown mouseup keyup mouseout', function(event) {
 				$(this).toggleClass('ui-state-active ui-state-focus', (/down$/i).test(event.type));
 			});
-		
+
 	}
 
 	function createTitle()
@@ -397,7 +397,7 @@ function QTip(target, options, id)
 
 					self.timers.img[i] = setTimeout(timer, 20);
 				}());
-				
+
 				return TRUE;
 			});
 
@@ -478,7 +478,7 @@ function QTip(target, options, id)
 			clearTimeout(self.timers.inactive);
 			self.timers.inactive = setTimeout(function(){ self.hide(event); }, options.hide.inactive);
 		}
-		
+
 		function repositionMethod(event) {
 			// Only update position if tooltip is visible
 			if(self.elements.tooltip.is(':visible')) { self.reposition(event); }
@@ -553,7 +553,7 @@ function QTip(target, options, id)
 			if(options.position.adjust.resize || options.position.adjust.screen) {
 				$(window).bind('resize'+namespace, repositionMethod);
 			}
-			
+
 			// Adjust tooltip position on scroll if screen adjustment is enabled
 			if(options.position.adjust.screen || (IE6 && targets.tooltip.css('position') === 'fixed')) {
 				$(document).bind('scroll'+namespace, repositionMethod);
@@ -772,7 +772,7 @@ function QTip(target, options, id)
 								self.reposition();
 							}
 						},
-				
+
 						// Show & hide checks
 						'^(show|hide).(event|target|fixed|delay|inactive)': function(obj, opt, val, prev) {
 							var args = notation.search(/fixed/i) > -1 ? [0, [0,1,1,1]] : [notation.substr(0,3), notation.charAt(0) === 's' ? [1,0,0,0] : [0,1,0,0]];
@@ -792,7 +792,7 @@ function QTip(target, options, id)
 							elems.titlebar.toggleClass('ui-widget-header', !!value);
 							elems.content.toggleClass('ui-widget-content', !!value);
 						},
-						
+
 						// Events check
 						'^events.(render|show|move|hide|focus|blur)': function(obj, opt, val, prev) {
 							if($.isFunction(value)) {
@@ -892,7 +892,7 @@ function QTip(target, options, id)
 			if(state) {
 				self.focus(); // Focus the tooltip before show to prevent visual stacking
 				self.reposition(event); // Update tooltip position
-				
+
 				// Hide other tooltips if tooltip is solo
 				if(opts.solo) { $(selector).qtip('hide'); }
 			}
@@ -1080,7 +1080,7 @@ function QTip(target, options, id)
 						};
 					}
 				}
-				
+
 				// Use Imagemap plugin if target is an AREA element
 				else if(target.is('area') && $.fn.qtip.plugins.imagemap) {
 					position = $.fn.qtip.plugins.imagemap(target, at);
@@ -1092,7 +1092,7 @@ function QTip(target, options, id)
 				else {
 					targetWidth = target.outerWidth();
 					targetHeight = target.outerHeight();
-					
+
 					position = offset(target);
 				}
 

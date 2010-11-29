@@ -5,7 +5,7 @@ function Ajax(qTip)
 	self.checks = {
 		'^content.ajax': function() { this.plugins.ajax.load(this.options.content.ajax); }
 	};
-	
+
 	$.extend(self, {
 
 		init: function()
@@ -38,7 +38,7 @@ function Ajax(qTip)
 
 				// Update content
 				qTip.set('content.text', content);
-				
+
 			}
 			function errorHandler(xhr, status, error)
 			{

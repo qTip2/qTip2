@@ -72,12 +72,12 @@ function Modal(qTip, options)
 			if($.isFunction(effect)) {
 				effect.call(overlay, state);
 			}
-			
+
 			// If no effect type is supplied, use a simple toggle
 			else if(effect === FALSE) {
 				overlay[ type ]();
 			}
-			
+
 			// Use basic fade function
 			else {
 				overlay.fadeTo(90, state ? 0.7 : 0, function() {

@@ -87,11 +87,11 @@
 .ui-tooltip-tipsy .ui-tooltip-wrapper{
 	border: 0px solid black;
 	border: 0px solid rgba(0,0,0, .8);
-	
+
 	background: black;
 	background: rgba(0,0,0, .8);
 	filter: alpha(opacity=80);
-	
+
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
 	-o-border-radius: 4px;

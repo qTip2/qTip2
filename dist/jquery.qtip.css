@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Nov 29 04:43:46 2010 +0000
+* Date: Mon Nov 29 17:02:40 2010 +0000
 */
 
 .ui-tooltip-accessible{
@@ -355,11 +355,11 @@ div.ui-tooltip-tip{
 .ui-tooltip-tipsy .ui-tooltip-wrapper{
 	border: 0px solid black;
 	border: 0px solid rgba(0,0,0, .8);
-	
+
 	background: black;
 	background: rgba(0,0,0, .8);
 	filter: alpha(opacity=80);
-	
+
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
 	-o-border-radius: 4px;
