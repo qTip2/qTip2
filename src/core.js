@@ -1060,7 +1060,7 @@ function QTip(target, options, id)
 				at = { x: 'left', y: 'top' };
 
 				// Use cached event if one isn't available for positioning
-				event = posOptions.adjust.mouse || !event ? $.extend({}, $.fn.qtip.mouse) : event;
+				event = posOptions.adjust.mouse || !event || !event.pageX ? $.extend({}, $.fn.qtip.mouse) : event;
 				position = { top: event.pageY, left: event.pageX };
 			}
 			else {
