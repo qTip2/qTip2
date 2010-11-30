@@ -70,6 +70,10 @@ function Tip(qTip, command)
 
 			// Reposition the tooltip
 			qTip.reposition();
+		},
+		'^style.classes$': function() {
+			self.detectColours();
+			self.update();
 		}
 	};
 
