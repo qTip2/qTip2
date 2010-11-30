@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Nov 30 19:19:11 2010 +0000
+* Date: Tue Nov 30 19:39:43 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1036,10 +1036,10 @@ function QTip(target, options, id)
 							overflowRight = posLeft + elemWidth - viewport.width - viewportScroll;
 
 						if(overflowLeft > 0) {
-							position.left -= myWidth + adjustX;
+							position.left -= myWidth - adjustX;
 						}
 						else if(overflowRight > 0) {
-							position.left -= (my.x === 'center' ? -1 : 1) * (myWidth + adjustX);
+							position.left -= (my.x === 'center' ? -1 : 1) * (myWidth - adjustX);
 						}
 
 						return position.left - posLeft;
@@ -1053,10 +1053,10 @@ function QTip(target, options, id)
 							overflowBottom = posTop + elemHeight - viewport.height - viewportScroll;
 
 						if(overflowTop > 0) {
-							position.top -= myHeight + adjustY;
+							position.top -= myHeight - adjustY;
 						}
 						else if(overflowBottom > 0) {
-							position.top -= (my.y === 'center' ? -1 : 1) * (myHeight + adjustY);
+							position.top -= (my.y === 'center' ? -1 : 1) * (myHeight - adjustY);
 						}
 
 						return position.top - posTop;
