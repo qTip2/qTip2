@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Nov 30 03:47:08 2010 +0000
+* Date: Tue Nov 30 03:53:34 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -2241,8 +2241,8 @@ $.extend(TRUE, $.fn.qtip.defaults, {
 	}
 
 	// Make sure we account for padding and borders on the image
-	imageOffset.left += Math.floor((image.outerWidth() - image.width()) / 2);
-	imageOffset.top += Math.floor((image.outerHeight() - image.height()) / 2);
+	imageOffset.left += Math.ceil((image.outerWidth() - image.width()) / 2);
+	imageOffset.top += Math.ceil((image.outerHeight() - image.height()) / 2);
 
 	// Parse coordinates into proper array
 	if(shape === 'poly') {

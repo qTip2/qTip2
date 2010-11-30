@@ -58,8 +58,8 @@ $.fn.qtip.plugins.imagemap = function(area, corner)
 	}
 
 	// Make sure we account for padding and borders on the image
-	imageOffset.left += Math.floor((image.outerWidth() - image.width()) / 2);
-	imageOffset.top += Math.floor((image.outerHeight() - image.height()) / 2);
+	imageOffset.left += Math.ceil((image.outerWidth() - image.width()) / 2);
+	imageOffset.top += Math.ceil((image.outerHeight() - image.height()) / 2);
 
 	// Parse coordinates into proper array
 	if(shape === 'poly') {
