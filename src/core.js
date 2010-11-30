@@ -1003,8 +1003,8 @@ function QTip(target, options, id)
 				position = { left: 0, top: 0 },
 				adjust = {
 					left: function(posLeft) {
-						var winScroll = viewport.scrollLeft(),
-							winWidth = viewport.width(),
+						var winScroll = viewport.scrollLeft,
+							winWidth = viewport.width,
 							myOffset = my.x === 'left' ? -elemWidth : my.x === 'right' ? elemWidth : elemWidth / 2,
 							atOffset = at.x === 'left' ? targetWidth : at.x === 'right' ? -targetWidth : targetWidth / 2,
 							adjustX = -2 * posOptions.adjust.x,
@@ -1023,8 +1023,8 @@ function QTip(target, options, id)
 						return position.left - posLeft;
 					},
 					top: function(posTop) {
-						var winScroll = viewport.scrollTop(),
-							winHeight = viewport.height(),
+						var winScroll = viewport.scrollTop,
+							winHeight = viewport.height,
 							myOffset = my.y === 'top' ? -elemHeight : my.y === 'bottom' ? elemHeight : -elemHeight / 2,
 							atOffset = at.y === 'top' ? targetHeight : at.y === 'bottom' ? -targetHeight : 0,
 							adjustY = -2 * posOptions.adjust.y,
@@ -1044,6 +1044,15 @@ function QTip(target, options, id)
 						return position.top - posTop;
 					}
 				};
+
+			// Cache our viewport details
+			viewport = {
+				elem: viewport,
+				height: viewport[ (viewport[0] === window ? 'h' : 'outerH') + 'eight' ](),
+				width: viewport[ (viewport[0] === window ? 'w' : 'outerW') + 'idth' ](),
+				scrollLeft: viewport.scrollLeft(),
+				scrollTop: viewport.scrollTop()
+			};
 
 			// Check if mouse was the target
 			if(target === 'mouse') {
@@ -1076,8 +1085,8 @@ function QTip(target, options, id)
 
 					if(target[0] === window) {
 						position = {
-							top: fixed ? 0 : viewport.scrollTop(),
-							left: fixed ? 0 : viewport.scrollLeft()
+							top: fixed ? 0 : viewport.scrollTop,
+							left: fixed ? 0 : viewport.scrollLeft
 						};
 					}
 				}
@@ -1123,14 +1132,14 @@ function QTip(target, options, id)
 
 			// Call API method
 			callback.originalEvent = $.extend({}, event);
-			tooltip.trigger(callback, [self.hash(), position, viewport]);
+			tooltip.trigger(callback, [self.hash(), position, viewport.elem]);
 			if(callback.isDefaultPrevented()){ return self; }
 			delete position.adjusted;
 
 			// Make sure the tooltip doesn't extend the top/left window boundaries
 			if(posOptions.container[0] == document.body) {
-				if(position.top + viewport.scrollTop() < 1) { position.top = 0; }
-				if(position.left + viewport.scrollLeft() < 1) { position.left = 0; }
+				if(position.top + viewport.scrollTop < 1) { position.top = 0; }
+				if(position.left + viewport.scrollLeft < 1) { position.left = 0; }
 			}
 
 			// Use custom function if provided
