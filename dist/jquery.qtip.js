@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Nov 30 03:56:37 2010 +0000
+* Date: Tue Nov 30 16:22:11 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1507,8 +1507,9 @@ $.fn.qtip.zindex = 15000;
 $.fn.qtip.plugins = {
 	// Corner object parser
 	Corner: function(corner) {
-		this.x = (String(corner).replace(/middle/i, 'center').match(/left|right|center/i) || ['false'])[0].toLowerCase();
-		this.y = (String(corner).replace(/middle/i, 'center').match(/top|bottom|center/i) || ['false'])[0].toLowerCase();
+		corner = String(corner).replace(/([A-Z])/, ' $1').replace(/middle/gi, 'center').toLowerCase();
+		this.x = (corner.match(/left|right|center/i) || ['inherit'])[0].toLowerCase();
+		this.y = (corner.match(/top|bottom|center/i) || ['inherit'])[0].toLowerCase();
 		this.precedance = (corner.charAt(0).search(/^(t|b)/) > -1) ? 'y' : 'x';
 		this.string = function() { return this.precedance === 'y' ? this.y+this.x : this.x+this.y; };
 		this.abbreviation = function() { 
@@ -1779,6 +1780,7 @@ function Tip(qTip, command)
 		// Inherit corner if not provided
 		corner = corner || self.corner;
 		precedance = corner.precedance;
+		oppositeP = precedance === 'y' ? 'x' : 'y';
 
 		// Reet initial position
 		tip.css({ top: '', bottom: '', left: '', right: '', margin: '' });
@@ -1787,7 +1789,6 @@ function Tip(qTip, command)
 		corners[ precedance === 'y' ? 'push' : 'unshift' ]('top', 'bottom');
 
 		// Calculate offset adjustments
-		oppositeP = precedance === 'y' ? 'x' : 'y';
 		offset = Math.max(corner[ oppositeP ] === 'center' ? offset : 0, offset) - adjust[ oppositeP ];
 
 		// Adjust primary corners
@@ -1822,21 +1823,18 @@ function Tip(qTip, command)
 		if(!elems.tip) { return; }
 
 		var newCorner = $.extend({}, self.corner),
-			newType = self.mimic.adjust ? $.extend({}, self.mimic) : NULL,
 			precedance = newCorner.precedance === 'y' ? ['y', 'top', 'left', 'height', 'x'] : ['x', 'left', 'top', 'width', 'y'],
 			adjusted = pos.adjusted,
 			offset = [ parseInt(wrapper.css('border-' + newCorner[ precedance[0] ] + '-width'), 10) || 0, 0 ],
-			walk = [newCorner, newType];
+			walk = [newCorner];
 
 		// Adjust tip corners
-		$.each(walk, function() {
-			if(adjusted.left) {
-				this.x = this.x === 'center' ? (adjusted.left > 0 ? 'left' : 'right') : (this.x === 'left' ? 'right' : 'left');
-			}
-			if(adjusted.top) {
-				this.y = this.y === 'center' ? (adjusted.top > 0 ? 'top' : 'bottom') : (this.y === 'top' ? 'bottom' : 'top');
-			}
-		});
+		if(adjusted.left) {
+			newCorner.x = newCorner.x === 'center' ? (adjusted.left > 0 ? 'left' : 'right') : (newCorner.x === 'left' ? 'right' : 'left');
+		}
+		if(adjusted.top) {
+			newCorner.y = newCorner.y === 'center' ? (adjusted.top > 0 ? 'top' : 'bottom') : (newCorner.y === 'top' ? 'bottom' : 'top');
+		}
 
 		// Adjust tooltip pos if needed in relation to tip element
 		offset[1] = Math.max(newCorner[ precedance[4] ] === 'center' ? opts.offset : 0, opts.offset);
@@ -1849,7 +1847,7 @@ function Tip(qTip, command)
 
 		// Update and redraw the tip if needed
 		if(newCorner.string() !== cache.corner.string() && (cache.top !== adjusted.top || cache.left !== adjusted.left)) {
-			self.update(newCorner, newType);
+			self.update(newCorner);
 		}
 		else if(Math.max(adjust.x, adjust.y, 0)) {
 			position();
@@ -1981,7 +1979,7 @@ function Tip(qTip, command)
 			return self;
 		},
 
-		update: function(corner, mimic)
+		update: function(corner)
 		{
 			var tip = elems.tip,
 				width = size.width,
@@ -1990,18 +1988,21 @@ function Tip(qTip, command)
 				transparent = 'px dashed transparent', // Dashed IE6 border-transparency hack. Awesome!
 				i = border > 0 ? 0 : 1,
 				translate = Math.ceil(border / 2 + 0.5),
+				mimic = $.extend({}, self.mimic),
 				factor, context, path, coords, inner, round;
 
 			// Re-determine tip if not already set
-			if(!mimic) { mimic = corner ? corner : self.mimic; }
 			if(!corner) { corner = self.corner; }
 
-			// Inherit tip corners from corner object if not present
-			if(mimic.x === 'false') { mimic.x = corner.x; }
-			if(mimic.y === 'false') { mimic.y = corner.y; }
+			// Inherit mimic properties from the corner object as necessary
+			if(mimic.x === 'inherit') { mimic.x = corner.x; }
+			else if(mimic.y === 'inherit') { mimic.y = corner.y; }
+			else if(mimic.x === mimic.y) {
+				mimic[ corner.precedance ] = corner[ corner.precedance ];
+			}
 			
 			// Determine what type of rounding to use so we get pixel perfect precision!
-			round = Math[ /b|r/.test(mimic[ mimic.precedance === 'y' ? 'x' : 'y' ]) ? 'ceil' : 'floor'];
+			round = Math[ /b|r/.test(mimic[ mimic.precedance === 'y' ? 'x' : 'y' ]) ? 'ceil' : 'floor' ];
 
 			// Find inner child of tip element
 			inner = tip.children();
