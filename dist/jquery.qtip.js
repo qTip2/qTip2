@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Nov 29 23:33:41 2010 +0000
+* Date: Tue Nov 30 01:50:54 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1809,14 +1809,13 @@ function Tip(qTip, command)
 		tip.css(corner[precedance], -offset);
 	}
 
-	function reposition(event, api, p, viewport) {
+	function reposition(event, api, pos, viewport) {
 		if(!elems.tip) { return; }
 
-		var pos = { left: p.left, top: p.top },
-			newCorner = $.extend({}, self.corner),
+		var newCorner = $.extend({}, self.corner),
 			newType = self.mimic.adjust ? $.extend({}, self.mimic) : NULL,
 			precedance = newCorner.precedance === 'y' ? ['y', 'top', 'left', 'height', 'x'] : ['x', 'left', 'top', 'width', 'y'],
-			adjusted = p.adjusted,
+			adjusted = pos.adjusted,
 			offset = [ parseInt(wrapper.css('border-' + newCorner[ precedance[0] ] + '-width'), 10) || 0, 0 ],
 			walk = [newCorner, newType];
 
@@ -1851,8 +1850,6 @@ function Tip(qTip, command)
 		cache.left = adjusted.left;
 		cache.top = adjusted.top;
 		cache.corner = newCorner;
-		
-		$.extend(p, pos);
 	}
 
 	$.extend(self, {
