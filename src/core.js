@@ -786,7 +786,7 @@ function QTip(target, options, id)
 						'^show.ready$': function() { if(self.rendered === FALSE) { self.show(); } },
 
 						// Style checks
-						'^style.classes$': function() { self.elements.tooltip.css('class', uitooltip + ' qtip ui-helper-reset ' + value); },
+						'^style.classes$': function() { self.elements.tooltip.attr('class', uitooltip + ' qtip ui-helper-reset ' + value); },
 						'^style.widget$': function() {
 							tooltip.toggleClass('ui-widget', !!value);
 							elems.titlebar.toggleClass('ui-widget-header', !!value);

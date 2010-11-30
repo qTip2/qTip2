@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Nov 30 19:43:41 2010 +0000
+* Date: Tue Nov 30 19:51:52 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -811,7 +811,7 @@ function QTip(target, options, id)
 						'^show.ready$': function() { if(self.rendered === FALSE) { self.show(); } },
 
 						// Style checks
-						'^style.classes$': function() { self.elements.tooltip.css('class', uitooltip + ' qtip ui-helper-reset ' + value); },
+						'^style.classes$': function() { self.elements.tooltip.attr('class', uitooltip + ' qtip ui-helper-reset ' + value); },
 						'^style.widget$': function() {
 							tooltip.toggleClass('ui-widget', !!value);
 							elems.titlebar.toggleClass('ui-widget-header', !!value);
