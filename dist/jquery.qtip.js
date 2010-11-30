@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Nov 30 19:05:05 2010 +0000
+* Date: Tue Nov 30 19:06:56 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1154,12 +1154,6 @@ function QTip(target, options, id)
 			if(callback.isDefaultPrevented()){ return self; }
 			delete position.adjusted;
 
-			// Make sure the tooltip doesn't extend the top/left window boundaries
-			if(posOptions.container[0] == document.body) {
-				if(position.top + viewport.scrollTop < 1) { position.top = 0; }
-				if(position.left + viewport.scrollLeft < 1) { position.left = 0; }
-			}
-
 			// Use custom function if provided
 			if(tooltip.is(':visible') && $.isFunction(posOptions.effect)) {
 				posOptions.effect.call(tooltip, self.hash(), position);
@@ -1724,8 +1718,7 @@ function Tip(qTip, command)
 		},
 		color = { },
 		border = opts.border || 0,
-		method = opts.method || FALSE,
-		adjust = { x: 0, y: 0 };
+		method = opts.method || FALSE;
 
 	self.corner = NULL;
 	self.mimic = NULL;
@@ -1764,26 +1757,27 @@ function Tip(qTip, command)
 		var tip = elems.tip,
 			corners  = ['left', 'right'],
 			offset = opts.offset,
-			precedance,
-			oppositeP;
+			precedance, precedanceOp;
 
 		// Return if tips are disabled or tip is not yet rendered
 		if(opts.corner === FALSE || !tip) { return FALSE; }
 
 		// Inherit corner if not provided
 		corner = corner || self.corner;
-		precedance = corner.precedance;
-		oppositeP = precedance === 'y' ? 'x' : 'y';
 
-		// Reet initial position
-		tip.css({ top: '', bottom: '', left: '', right: '', margin: '' });
+		// Cache precedances
+		precedance = corner.precedance;
+		precedanceOp = precedance === 'y' ? 'x' : 'y';
 
 		// Setup corners to be adjusted
 		corners[ precedance === 'y' ? 'push' : 'unshift' ]('top', 'bottom');
 
 		// Calculate offset adjustments
-		offset = Math.max(corner[ oppositeP ] === 'center' ? offset : 0, offset) - adjust[ oppositeP ];
+		offset = Math.max(corner[ precedanceOp ] === 'center' ? offset : 0, offset);
 
+		// Reet initial position
+		tip.css({ top: '', bottom: '', left: '', right: '', margin: '' });
+		
 		// Adjust primary corners
 		switch(corner[ precedance === 'y' ? 'x' : 'y' ])
 		{
@@ -1834,16 +1828,9 @@ function Tip(qTip, command)
 		pos[ precedance[1] ] += (newCorner[ precedance[0] ] === precedance[1] ? 1 : -1) * (size[ precedance[3] ] - offset[0]);
 		pos[ precedance[2] ] -= (newCorner[ precedance[4] ] === precedance[2] || newCorner[ precedance[4] ] === 'center' ? 1 : -1) * offset[1];
 
-		// Account for overflow by modifying tip
-		adjust.x = Math.max(-pos.left - viewport.scrollLeft(), 0);
-		adjust.y = Math.max(-pos.top - viewport.scrollTop(), 0);
-
 		// Update and redraw the tip if needed
 		if(newCorner.string() !== cache.corner.string() && (cache.top !== adjusted.top || cache.left !== adjusted.left)) {
 			self.update(newCorner);
-		}
-		else if(Math.max(adjust.x, adjust.y, 0)) {
-			position();
 		}
 
 		// Cache overflow details
@@ -1993,7 +1980,7 @@ function Tip(qTip, command)
 			else if(mimic.x === mimic.y) {
 				mimic[ corner.precedance ] = corner[ corner.precedance ];
 			}
-			
+
 			// Determine what type of rounding to use so we get pixel perfect precision!
 			round = Math[ /b|r/.test(mimic[ mimic.precedance === 'y' ? 'x' : 'y' ]) ? 'ceil' : 'floor' ];
 

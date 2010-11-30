@@ -1129,12 +1129,6 @@ function QTip(target, options, id)
 			if(callback.isDefaultPrevented()){ return self; }
 			delete position.adjusted;
 
-			// Make sure the tooltip doesn't extend the top/left window boundaries
-			if(posOptions.container[0] == document.body) {
-				if(position.top + viewport.scrollTop < 1) { position.top = 0; }
-				if(position.left + viewport.scrollLeft < 1) { position.left = 0; }
-			}
-
 			// Use custom function if provided
 			if(tooltip.is(':visible') && $.isFunction(posOptions.effect)) {
 				posOptions.effect.call(tooltip, self.hash(), position);
