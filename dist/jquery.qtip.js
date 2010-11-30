@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Nov 30 16:22:11 2010 +0000
+* Date: Tue Nov 30 19:05:05 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1028,42 +1028,35 @@ function QTip(target, options, id)
 				position = { left: 0, top: 0 },
 				adjust = {
 					left: function(posLeft) {
-						var winScroll = viewport.scrollLeft,
-							winWidth = viewport.width,
-							myOffset = my.x === 'left' ? -elemWidth : my.x === 'right' ? elemWidth : elemWidth / 2,
-							atOffset = at.x === 'left' ? targetWidth : at.x === 'right' ? -targetWidth : targetWidth / 2,
+						var viewportScroll = viewport.scrollTop,
+							myWidth = my.x === 'left' ? elemWidth : my.x === 'right' ? -elemWidth : -elemWidth / 2,
+							atWidth = at.x === 'left' ? targetWidth : at.x === 'right' ? -targetWidth : -targetWidth / 2,
 							adjustX = -2 * posOptions.adjust.x,
-							adjustWidth = my.x !== at.x && at.x !== 'center' ? targetWidth : 0,
-							newOffset = atOffset + myOffset + adjustX,
-							overflowLeft = winScroll - posLeft,
-							overflowRight = posLeft + elemWidth - winWidth - winScroll;
+							overflowLeft = viewportScroll - posLeft,
+							overflowRight = posLeft + elemWidth - viewport.width - viewportScroll;
 
-						if(overflowRight > 0) {
-							position.left += (my.x === 'center' ? -1 : 1) * (newOffset - atOffset - adjustWidth);
+						if(overflowLeft > 0) {
+							position.left -= myWidth + adjustX;
 						}
-						else if(overflowLeft > 0) {
-							position.left += newOffset - atOffset + adjustWidth;
+						else if(overflowRight > 0) {
+							position.left -= (my.x === 'center' ? -1 : 1) * (myWidth + adjustX);
 						}
 
 						return position.left - posLeft;
 					},
 					top: function(posTop) {
-						var winScroll = viewport.scrollTop,
-							winHeight = viewport.height,
-							myOffset = my.y === 'top' ? -elemHeight : my.y === 'bottom' ? elemHeight : -elemHeight / 2,
-							atOffset = at.y === 'top' ? targetHeight : at.y === 'bottom' ? -targetHeight : 0,
+						var viewportScroll = viewport.scrollTop,
+							myHeight = my.y === 'top' ? elemHeight : my.y === 'bottom' ? -elemHeight : -elemHeight / 2,
+							atHeight = at.y === 'top' ? targetHeight : at.y === 'bottom' ? -targetHeight : -targetHeight / 2,
 							adjustY = -2 * posOptions.adjust.y,
-							adjustHeight = my.y !== at.y && at.y !== 'center' ? targetHeight : 0,
-							newOffset = atOffset + myOffset + adjustY,
-							overflowTop = winScroll - posTop,
-							overflowBottom = posTop + elemHeight - winHeight - winScroll;
-							
-							
+							overflowTop = viewportScroll - posTop,
+							overflowBottom = posTop + elemHeight - viewport.height - viewportScroll;
+
 						if(overflowTop > 0) {
-							position.top += (my.y === 'center' ? -1 : 1) * (newOffset - atOffset - adjustHeight);
+							position.top -= myHeight + adjustY;
 						}
 						else if(overflowBottom > 0) {
-							position.top += newOffset - atOffset - adjustHeight;
+							position.top -= (my.y === 'center' ? -1 : 1) * (myHeight + adjustY);
 						}
 
 						return position.top - posTop;
