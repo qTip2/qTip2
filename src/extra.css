@@ -86,11 +86,11 @@
 /* Tipsy style */
 .ui-tooltip-tipsy .ui-tooltip-wrapper{
 	border: 0px solid black;
-	border: 0px solid rgba(0,0,0, .8);
+	border: 0px solid rgba(0,0,0,.9);
 
 	background: black;
-	background: rgba(0,0,0, .8);
-	filter: alpha(opacity=80);
+	background: rgba(0,0,0,.9);
+	filter: alpha(opacity=90);
 
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
