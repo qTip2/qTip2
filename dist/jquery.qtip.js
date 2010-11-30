@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Nov 30 21:45:57 2010 +0000
+* Date: Tue Nov 30 21:47:27 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1033,13 +1033,14 @@ function QTip(target, options, id)
 							atWidth = at.x === 'left' ? targetWidth : at.x === 'right' ? -targetWidth : -targetWidth / 2,
 							adjustX = -2 * posOptions.adjust.x,
 							overflowLeft = viewportScroll - posLeft,
-							overflowRight = posLeft + elemWidth - viewport.width - viewportScroll;
+							overflowRight = posLeft + elemWidth - viewport.width - viewportScroll,
+							offset = myWidth - adjustX - (my.precedance === 'y' ? atWidth : 0);
 
 						if(overflowLeft > 0) {
-							position.left -= myWidth - adjustX;
+							position.left -= offset;
 						}
 						else if(overflowRight > 0) {
-							position.left -= (my.x === 'center' ? -1 : 1) * (myWidth - adjustX);
+							position.left -= (my.x === 'center' ? -1 : 1) * offset;
 						}
 
 						return position.left - posLeft;
@@ -1050,13 +1051,14 @@ function QTip(target, options, id)
 							atHeight = at.y === 'top' ? targetHeight : at.y === 'bottom' ? -targetHeight : -targetHeight / 2,
 							adjustY = -2 * posOptions.adjust.y,
 							overflowTop = viewportScroll - posTop,
-							overflowBottom = posTop + elemHeight - viewport.height - viewportScroll;
+							overflowBottom = posTop + elemHeight - viewport.height - viewportScroll,
+							offset = myHeight - adjustY - (my.precedance === 'y' ? atHeight : 0);
 
 						if(overflowTop > 0) {
-							position.top -= myHeight - adjustY;
+							position.top -= offset;
 						}
 						else if(overflowBottom > 0) {
-							position.top -= (my.y === 'center' ? -1 : 1) * (myHeight - adjustY);
+							position.top -= (my.y === 'center' ? -1 : 1) * offset;
 						}
 
 						return position.top - posTop;
