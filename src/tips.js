@@ -288,11 +288,13 @@ function Tip(qTip, command)
 			if(!corner) { corner = self.corner; }
 
 			// Use corner property if we detect an invalid mimic value
-			if(mimic === FALSE || mimic === 'center') { mimic = corner; }
+			if(mimic === FALSE) { mimic = corner; }
 
 			// Otherwise inherit mimic properties from the corner object as necessary
 			else {
 				mimic = new $.fn.qtip.plugins.Corner(mimic);
+				mimic.precedance = corner.precedance;
+
 				if(mimic.x === 'inherit') { mimic.x = corner.x; }
 				else if(mimic.y === 'inherit') { mimic.y = corner.y; }
 				else if(mimic.x === mimic.y) {
