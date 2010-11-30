@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Nov 30 19:06:56 2010 +0000
+* Date: Tue Nov 30 19:19:11 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1877,7 +1877,6 @@ function Tip(qTip, command)
 		detectCorner: function()
 		{
 			var corner = opts.corner,
-				mimic = opts.mimic || corner,
 				at = qTip.options.position.at,
 				my = qTip.options.position.my;
 				if(my.string) { my = my.string(); }
@@ -1893,14 +1892,6 @@ function Tip(qTip, command)
 				else if(!corner.string) {
 					self.corner = new $.fn.qtip.plugins.Corner(corner);
 				}
-
-				if(mimic === TRUE) {
-					self.mimic = new $.fn.qtip.plugins.Corner(my);
-				}
-				else if(!mimic.string) {
-					self.mimic = new $.fn.qtip.plugins.Corner(mimic);
-					self.mimic.precedance = self.corner.precedance;
-				}
 			}
 
 			return self.corner.string() !== 'centercenter';
@@ -1908,7 +1899,7 @@ function Tip(qTip, command)
 
 		detectColours: function() {
 			var tip = elems.tip,
-				precedance = self.mimic[ self.mimic.precedance ],
+				precedance = self.corner[ self.corner.precedance ],
 				borderSide = 'border-' + precedance + '-color';
 
 			// Detect tip colours
@@ -1968,17 +1959,23 @@ function Tip(qTip, command)
 				transparent = 'px dashed transparent', // Dashed IE6 border-transparency hack. Awesome!
 				i = border > 0 ? 0 : 1,
 				translate = Math.ceil(border / 2 + 0.5),
-				mimic = $.extend({}, self.mimic),
+				mimic = opts.mimic,
 				factor, context, path, coords, inner, round;
 
 			// Re-determine tip if not already set
 			if(!corner) { corner = self.corner; }
 
-			// Inherit mimic properties from the corner object as necessary
-			if(mimic.x === 'inherit') { mimic.x = corner.x; }
-			else if(mimic.y === 'inherit') { mimic.y = corner.y; }
-			else if(mimic.x === mimic.y) {
-				mimic[ corner.precedance ] = corner[ corner.precedance ];
+			// Use corner property if we detect an invalid mimic value
+			if(mimic === FALSE || mimic === 'center') { mimic = corner; }
+
+			// Otherwise inherit mimic properties from the corner object as necessary
+			else {
+				mimic = new $.fn.qtip.plugins.Corner(mimic);
+				if(mimic.x === 'inherit') { mimic.x = corner.x; }
+				else if(mimic.y === 'inherit') { mimic.y = corner.y; }
+				else if(mimic.x === mimic.y) {
+					mimic[ corner.precedance ] = corner[ corner.precedance ];
+				}
 			}
 
 			// Determine what type of rounding to use so we get pixel perfect precision!
@@ -2155,6 +2152,7 @@ $.extend(TRUE, $.fn.qtip.defaults, {
 	style: {
 		tip: {
 			corner: TRUE,
+			mimic: FALSE,
 			method: TRUE,
 			width: 9,
 			height: 9,
