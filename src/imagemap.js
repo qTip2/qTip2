@@ -3,7 +3,8 @@ $.fn.qtip.plugins.imagemap = function(area, corner)
 	var shape = area.attr('shape').toLowerCase(),
 		baseCoords = area.attr('coords').split(','),
 		coords = [],
-		imageOffset = $('img[usemap="#'+area.parent('map').attr('name')+'"]').offset(),
+		image = $('img[usemap="#'+area.parent('map').attr('name')+'"]'),
+		imageOffset = image.offset(),
 		result = {
 			width: 0, height: 0,
 			offset: { top: 1e10, right: 0, bottom: 0, left: 1e10 }
@@ -55,6 +56,10 @@ $.fn.qtip.plugins.imagemap = function(area, corner)
 
 		return { left: coords[0][0], top: coords[0][1] };
 	}
+
+	// Make sure we account for padding and borders on the image
+	imageOffset.left += Math.floor((image.outerWidth() - image.width()) / 2);
+	imageOffset.top += Math.floor((image.outerHeight() - image.height()) / 2);
 
 	// Parse coordinates into proper array
 	if(shape === 'poly') {
