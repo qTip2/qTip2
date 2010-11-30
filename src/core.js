@@ -1003,7 +1003,7 @@ function QTip(target, options, id)
 				position = { left: 0, top: 0 },
 				adjust = {
 					left: function(posLeft) {
-						var viewportScroll = viewport.scrollTop,
+						var viewportScroll = viewport.scrollLeft,
 							myWidth = my.x === 'left' ? elemWidth : my.x === 'right' ? -elemWidth : -elemWidth / 2,
 							atWidth = at.x === 'left' ? targetWidth : at.x === 'right' ? -targetWidth : -targetWidth / 2,
 							adjustX = -2 * posOptions.adjust.x,
