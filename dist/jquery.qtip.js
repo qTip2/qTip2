@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Nov 29 20:13:19 2010 +0000
+* Date: Mon Nov 29 23:33:41 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1022,10 +1022,10 @@ function QTip(target, options, id)
 				offsetParent = $(posOptions.container)[0],
 				targetWidth = 0,
 				targetHeight = 0,
-				position = { left: 0, top: 0 },
 				callback = $.Event('tooltipmove'),
 				fixed = tooltip.css('position') === 'fixed',
 				viewport = $(posOptions.adjust.container && offsetParent !== document.body ? offsetParent : window),
+				position = { left: 0, top: 0 },
 				adjust = {
 					left: function(posLeft) {
 						var winScroll = viewport.scrollLeft(),
@@ -1057,7 +1057,8 @@ function QTip(target, options, id)
 							newOffset = atOffset + myOffset + adjustY,
 							overflowTop = winScroll - posTop,
 							overflowBottom = posTop + elemHeight - winHeight - winScroll;
-
+							
+							
 						if(overflowTop > 0) {
 							position.top += (my.y === 'center' ? -1 : 1) * (newOffset - atOffset - adjustHeight);
 						}
@@ -1130,6 +1131,7 @@ function QTip(target, options, id)
 			position.left += posOptions.adjust.x + (my.x === 'right' ? -elemWidth : my.x === 'center' ? -elemWidth / 2 : 0);
 			position.top += posOptions.adjust.y + (my.y === 'bottom' ? -elemHeight : my.y === 'center' ? -elemHeight / 2 : 0);
 
+			
 			// Calculate collision offset values
 			if(posOptions.adjust.screen && target[0] !== window && target[0] !== document.body) {
 				position.adjusted = { left: adjust.left(position.left), top: adjust.top(position.top) };
@@ -1146,7 +1148,7 @@ function QTip(target, options, id)
 
 			// Call API method
 			callback.originalEvent = $.extend({}, event);
-			tooltip.trigger(callback, [self.hash(), position]);
+			tooltip.trigger(callback, [self.hash(), position, viewport]);
 			if(callback.isDefaultPrevented()){ return self; }
 			delete position.adjusted;
 
@@ -1807,16 +1809,16 @@ function Tip(qTip, command)
 		tip.css(corner[precedance], -offset);
 	}
 
-	function reposition(event, api, pos) {
+	function reposition(event, api, p, viewport) {
 		if(!elems.tip) { return; }
 
-		var newCorner = $.extend({}, self.corner),
+		var pos = { left: p.left, top: p.top },
+			newCorner = $.extend({}, self.corner),
 			newType = self.mimic.adjust ? $.extend({}, self.mimic) : NULL,
 			precedance = newCorner.precedance === 'y' ? ['y', 'top', 'left', 'height', 'x'] : ['x', 'left', 'top', 'width', 'y'],
-			adjusted = pos.adjusted,
+			adjusted = p.adjusted,
 			offset = [ parseInt(wrapper.css('border-' + newCorner[ precedance[0] ] + '-width'), 10) || 0, 0 ],
-			walk = [newCorner, newType],
-			win = $(window);
+			walk = [newCorner, newType];
 
 		// Adjust tip corners
 		$.each(walk, function() {
@@ -1834,8 +1836,8 @@ function Tip(qTip, command)
 		pos[ precedance[2] ] -= (newCorner[ precedance[4] ] === precedance[2] || newCorner[ precedance[4] ] === 'center' ? 1 : -1) * offset[1];
 
 		// Account for overflow by modifying tip
-		adjust.x = Math.max(-pos.left - win.scrollLeft(), 0);
-		adjust.y = Math.max(-pos.top - win.scrollTop(), 0);
+		adjust.x = Math.max(-pos.left - viewport.scrollLeft(), 0);
+		adjust.y = Math.max(-pos.top - viewport.scrollTop(), 0);
 
 		// Update and redraw the tip if needed
 		if(newCorner.string() !== cache.corner.string() && (cache.top !== adjusted.top || cache.left !== adjusted.left)) {
@@ -1849,6 +1851,8 @@ function Tip(qTip, command)
 		cache.left = adjusted.left;
 		cache.top = adjusted.top;
 		cache.corner = newCorner;
+		
+		$.extend(p, pos);
 	}
 
 	$.extend(self, {
@@ -1880,7 +1884,7 @@ function Tip(qTip, command)
 				self.update();
 
 				// Bind update events
-				tooltip.bind('tooltipmove.tip', reposition);
+				tooltip.unbind('.qtip-tip').bind('tooltipmove.qtip-tip', reposition);
 			}
 
 			return enabled;
@@ -1980,7 +1984,7 @@ function Tip(qTip, command)
 				transparent = 'px dashed transparent', // Dashed IE6 border-transparency hack. Awesome!
 				i = border > 0 ? 0 : 1,
 				translate = Math.ceil(border / 2 + 0.5),
-				factor, context, path, coords, inner;
+				factor, context, path, coords, inner, round;
 
 			// Re-determine tip if not already set
 			if(!mimic) { mimic = corner ? corner : self.mimic; }
@@ -1989,6 +1993,9 @@ function Tip(qTip, command)
 			// Inherit tip corners from corner object if not present
 			if(mimic.x === 'false') { mimic.x = corner.x; }
 			if(mimic.y === 'false') { mimic.y = corner.y; }
+			
+			// Determine what type of rounding to use so we get pixel perfect precision!
+			round = Math[ /b|r/.test(mimic[ mimic.precedance === 'y' ? 'x' : 'y' ]) ? 'ceil' : 'floor'];
 
 			// Find inner child of tip element
 			inner = tip.children();
@@ -2011,8 +2018,8 @@ function Tip(qTip, command)
 						if(i) {
 							context.save();
 							context.translate(
-								Math.floor((mimic.x === 'left' ? 1 : mimic.x === 'right' ? -1 : 0) * (border + 1) * (mimic.precedance === 'y' ? 0.5 : 1)),
-								Math.floor((mimic.y === 'top' ? 1 : mimic.y === 'bottom' ? -1 : 0) * (border + 1) * (mimic.precedance === 'x' ? 0.5 : 1))
+								round((mimic.x === 'left' ? 1 : mimic.x === 'right' ? -1 : 0) * (border + 1) * (mimic.precedance === 'y' ? 0.5 : 1)),
+								round((mimic.y === 'top' ? 1 : mimic.y === 'bottom' ? -1 : 0) * (border + 1) * (mimic.precedance === 'x' ? 0.5 : 1))
 							);
 						}
 
@@ -2102,7 +2109,7 @@ function Tip(qTip, command)
 			return self;
 		},
 
-		destroy: function(unbind)
+		destroy: function()
 		{
 			// Remove previous tip if present
 			if(elems.tip) {
@@ -2110,7 +2117,7 @@ function Tip(qTip, command)
 			}
 
 			// Remove bound events
-			tooltip.unbind('tooltipmove.tip');
+			tooltip.unbind('.qtip-tip');
 		}
 	});
 }

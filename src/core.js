@@ -997,10 +997,10 @@ function QTip(target, options, id)
 				offsetParent = $(posOptions.container)[0],
 				targetWidth = 0,
 				targetHeight = 0,
-				position = { left: 0, top: 0 },
 				callback = $.Event('tooltipmove'),
 				fixed = tooltip.css('position') === 'fixed',
 				viewport = $(posOptions.adjust.container && offsetParent !== document.body ? offsetParent : window),
+				position = { left: 0, top: 0 },
 				adjust = {
 					left: function(posLeft) {
 						var winScroll = viewport.scrollLeft(),
@@ -1032,7 +1032,8 @@ function QTip(target, options, id)
 							newOffset = atOffset + myOffset + adjustY,
 							overflowTop = winScroll - posTop,
 							overflowBottom = posTop + elemHeight - winHeight - winScroll;
-
+							
+							
 						if(overflowTop > 0) {
 							position.top += (my.y === 'center' ? -1 : 1) * (newOffset - atOffset - adjustHeight);
 						}
@@ -1105,6 +1106,7 @@ function QTip(target, options, id)
 			position.left += posOptions.adjust.x + (my.x === 'right' ? -elemWidth : my.x === 'center' ? -elemWidth / 2 : 0);
 			position.top += posOptions.adjust.y + (my.y === 'bottom' ? -elemHeight : my.y === 'center' ? -elemHeight / 2 : 0);
 
+			
 			// Calculate collision offset values
 			if(posOptions.adjust.screen && target[0] !== window && target[0] !== document.body) {
 				position.adjusted = { left: adjust.left(position.left), top: adjust.top(position.top) };
@@ -1121,7 +1123,7 @@ function QTip(target, options, id)
 
 			// Call API method
 			callback.originalEvent = $.extend({}, event);
-			tooltip.trigger(callback, [self.hash(), position]);
+			tooltip.trigger(callback, [self.hash(), position, viewport]);
 			if(callback.isDefaultPrevented()){ return self; }
 			delete position.adjusted;
 
