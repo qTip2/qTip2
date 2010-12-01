@@ -1009,7 +1009,7 @@ function QTip(target, options, id)
 							adjustX = -2 * posOptions.adjust.x,
 							overflowLeft = viewportScroll - posLeft,
 							overflowRight = posLeft + elemWidth - viewport.width - viewportScroll,
-							offset = myWidth - adjustX - (my.precedance === 'y' ? atWidth : 0);
+							offset = myWidth - adjustX - (my.precedance === 'x' ? atWidth : 0);
 
 						if(overflowLeft > 0) {
 							position.left -= offset;
