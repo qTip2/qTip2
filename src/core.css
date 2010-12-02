@@ -2,6 +2,11 @@
 	left: -31000px;
 	display: block;
 	visibility: hidden;
+
+	max-width: none !important;
+	min-width: 0px !important;
+	max-height: none !important;
+	min-height: 0px !important;
 }
 
 	/* IE6 ONLY - Width detection fix */

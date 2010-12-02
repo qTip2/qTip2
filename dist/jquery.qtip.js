@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Nov 30 23:08:22 2010 +0000
+* Date: Wed Dec 1 02:43:15 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -198,7 +198,7 @@ function QTip(target, options, id)
 	{
 		var tooltip = self.elements.tooltip,
 			accessible = uitooltip + '-accessible',
-			show = (!tooltip.is(':visible')) ? TRUE : FALSE,
+			show = !tooltip.is(':visible'),
 			returned = FALSE;
 
 		// Make sure tooltip is rendered and if not, return
@@ -223,28 +223,6 @@ function QTip(target, options, id)
 		if(show) { tooltip.removeClass(accessible); }
 
 		return returned;
-	}
-
-	// IE max-width/min-width simulator function
-	function updateWidth(newWidth)
-	{
-		var tooltip = self.elements.tooltip, max, min;
-
-		// Make sure tooltip is rendered and the browser is IE. If not, return
-		if(!self.rendered || !($.browser.msie && parseInt($.browser.version.charAt(0), 10) < 9)) { return FALSE; }
-
-		// Determine actual width
-		tooltip.css({ width: 'auto', maxWidth: 'none' });
-		newWidth = calculate('dimensions').width;
-		tooltip.css({ maxWidth: '' });
-
-		// Parse and simulate max and min width
-		max = parseInt(tooltip.css('max-width'), 10) || 0;
-		min = parseInt(tooltip.css('min-width'), 10) || 0;
-		newWidth = max + min ? Math.min( Math.max(newWidth, min), max ) : newWidth;
-
-		// Set the new calculated width and if width has not numerical, grab new pixel width
-		tooltip.width(newWidth);
 	}
 
 	function removeTitle()
@@ -395,7 +373,7 @@ function QTip(target, options, id)
 
 				// If queue is empty, update tooltip and continue the queue
 				if(images.length === 0) {
-					updateWidth();
+					self.redraw();
 					if(self.rendered === TRUE) {
 						self.reposition(self.cache.event);
 					}
@@ -1174,6 +1152,34 @@ function QTip(target, options, id)
 			return self;
 		},
 
+		// IE max/min height/width function
+		redraw: function()
+		{
+			// Make sure tooltip is rendered and the browser is IE8 or below
+			if(!self.rendered || !($.browser.msie && parseInt($.browser.version.charAt(0), 10) < 9)) { return FALSE; }
+
+			var tooltip = self.elements.tooltip, 
+				style = tooltip.attr('style'),
+				dimensions;
+
+			// Determine actual dimensions using our calculate function
+			tooltip.css({ width: 'auto', height: 'auto' });
+			dimensions = calculate('dimensions');
+
+			// Determine actual width
+			$.each(['width', 'height'], function(i, prop) {
+				// Parse our max/min properties
+				var max = parseInt(tooltip.css('max-'+prop), 10) || 0,
+					min = parseInt(tooltip.css('min-'+prop), 10) || 0;
+
+				// Determine new dimension size based on max/min/current values
+				dimensions[prop] = max + min ? Math.min( Math.max( dimensions[prop], min ), max ) : dimensions[prop];
+			});
+
+			// Set the newly calculated dimensions
+			tooltip.css(dimensions);
+		},
+		
 		disable: function(state)
 		{
 			var tooltip = self.elements.tooltip;
