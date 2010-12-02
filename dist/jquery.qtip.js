@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Dec 1 02:43:15 2010 +0000
+* Date: Thu Dec 2 00:58:28 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -225,6 +225,34 @@ function QTip(target, options, id)
 		return returned;
 	}
 
+	// IE max/min height/width function
+	function redraw()
+	{
+		// Make sure tooltip is rendered and the browser is IE8 or below
+		if(!self.rendered || !($.browser.msie && parseInt($.browser.version.charAt(0), 10) < 9)) { return FALSE; }
+		
+		var tooltip = self.elements.tooltip, 
+		style = tooltip.attr('style'),
+									dimensions;
+									
+									// Determine actual dimensions using our calculate function
+									tooltip.css({ width: 'auto', height: 'auto' });
+									dimensions = calculate('dimensions');
+		
+		// Determine actual width
+		$.each(['width', 'height'], function(i, prop) {
+			// Parse our max/min properties
+			var max = parseInt(tooltip.css('max-'+prop), 10) || 0,
+				min = parseInt(tooltip.css('min-'+prop), 10) || 0;
+				
+				// Determine new dimension size based on max/min/current values
+				dimensions[prop] = max + min ? Math.min( Math.max( dimensions[prop], min ), max ) : dimensions[prop];
+		});
+		
+		// Set the newly calculated dimensions
+		tooltip.css(dimensions);
+	}
+
 	function removeTitle()
 	{
 		var elems = self.elements;
@@ -373,7 +401,7 @@ function QTip(target, options, id)
 
 				// If queue is empty, update tooltip and continue the queue
 				if(images.length === 0) {
-					self.redraw();
+					redraw();
 					if(self.rendered === TRUE) {
 						self.reposition(self.cache.event);
 					}
@@ -1152,34 +1180,6 @@ function QTip(target, options, id)
 			return self;
 		},
 
-		// IE max/min height/width function
-		redraw: function()
-		{
-			// Make sure tooltip is rendered and the browser is IE8 or below
-			if(!self.rendered || !($.browser.msie && parseInt($.browser.version.charAt(0), 10) < 9)) { return FALSE; }
-
-			var tooltip = self.elements.tooltip, 
-				style = tooltip.attr('style'),
-				dimensions;
-
-			// Determine actual dimensions using our calculate function
-			tooltip.css({ width: 'auto', height: 'auto' });
-			dimensions = calculate('dimensions');
-
-			// Determine actual width
-			$.each(['width', 'height'], function(i, prop) {
-				// Parse our max/min properties
-				var max = parseInt(tooltip.css('max-'+prop), 10) || 0,
-					min = parseInt(tooltip.css('min-'+prop), 10) || 0;
-
-				// Determine new dimension size based on max/min/current values
-				dimensions[prop] = max + min ? Math.min( Math.max( dimensions[prop], min ), max ) : dimensions[prop];
-			});
-
-			// Set the newly calculated dimensions
-			tooltip.css(dimensions);
-		},
-		
 		disable: function(state)
 		{
 			var tooltip = self.elements.tooltip;
