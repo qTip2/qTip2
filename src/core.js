@@ -445,7 +445,7 @@ function QTip(target, options, id)
 			}
 
 			// If tooltip has displayed, start hide timer
-			targets.tooltip.stop(TRUE);
+			targets.tooltip.stop(1, 1);
 
 			if(options.hide.delay > 0) {
 				self.timers.hide = setTimeout(function(){ self.hide(event); }, options.hide.delay);
@@ -889,7 +889,7 @@ function QTip(target, options, id)
 			tooltip.attr('aria-hidden', Boolean(!state));
 
 			// Clear animation queue
-			tooltip.stop(TRUE, FALSE);
+			tooltip.stop(1, 1);
 
 			// Use custom function if provided
 			if($.isFunction(opts.effect)) {
