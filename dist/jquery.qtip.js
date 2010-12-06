@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Dec 6 03:25:25 2010 +0000
+* Date: Mon Dec 6 18:42:59 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1799,7 +1799,7 @@ function Tip(qTip, command)
 		switch(corner[ precedance === 'y' ? 'x' : 'y' ])
 		{
 			case 'center':
-				tip.css(corners[0], '50%').css('margin-'+corners[0], -(size[ (precedance === 'y') ? 'width' : 'height' ] / 2) + offset);
+				tip.css(corners[0], '50%').css('margin-'+corners[0], -Math.floor(size[ (precedance === 'y') ? 'width' : 'height' ] / 2) + offset);
 			break;
 
 			case corners[0]:
@@ -1811,8 +1811,13 @@ function Tip(qTip, command)
 			break;
 		}
 
-		// Determine adjustments
+		// Determine secondary adjustments
 		offset = size[ (precedance === 'x') ? 'width' : 'height' ];
+		if(method === 'vml' && (/bottom|right/).test(corner[ corner.precedance ])) {
+			offset += 1;
+		}
+
+		// Adjust to border width
 		if(border) {
 			tooltip.toggleClass('ui-tooltip-accessible', !tooltip.is(':visible'));
 			offset -= parseInt(wrapper.css('border-' + corner[ precedance ] + '-width'), 10) || 0;
@@ -1842,7 +1847,7 @@ function Tip(qTip, command)
 
 		// Adjust tooltip pos if needed in relation to tip element
 		offset[1] = Math.max(newCorner[ precedance[4] ] === 'center' ? opts.offset : 0, opts.offset);
-		pos[ precedance[1] ] += (newCorner[ precedance[0] ] === precedance[1] ? 1 : -1) * (size[ precedance[3] ] - offset[0]);
+		pos[ precedance[1] ] += (newCorner[ precedance[0] ] === precedance[1] ? 1 : -1) * (size[ precedance[3] ] - offset[0]) - ((method === 'vml') ? 1 : 0);
 		pos[ precedance[2] ] -= (newCorner[ precedance[4] ] === precedance[2] || newCorner[ precedance[4] ] === 'center' ? 1 : -1) * offset[1];
 
 		// Update and redraw the tip if needed
