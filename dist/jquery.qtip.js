@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Dec 6 02:06:41 2010 +0000
+* Date: Mon Dec 6 02:15:36 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -276,6 +276,8 @@ function QTip(target, options, id)
 				$(this).toggleClass('ui-state-active ui-state-focus', (/down$/i).test(event.type));
 			});
 
+		// Redraw the tooltip when we're done
+		self.redraw();
 	}
 
 	function createTitle()
@@ -298,7 +300,11 @@ function QTip(target, options, id)
 		)
 		.prependTo(elems.wrapper);
 
+		// Create button if enabled
 		if(options.content.title.button) { createButton(); }
+
+		// Redraw the tooltip dimensions if it's rendered
+		else if(self.rendered === TRUE){ self.redraw(); } 
 	}
 
 	function updateButton(button)
@@ -665,10 +671,10 @@ function QTip(target, options, id)
 				.appendTo(elements.wrapper);
 
 			// Setup content and title (if enabled)
-			updateContent(options.content.text);
 			if(options.content.title.text) {
 				createTitle();
 			}
+			updateContent(options.content.text);
 
 			// Initialize 'render' plugins
 			$.each($.fn.qtip.plugins, function() {
