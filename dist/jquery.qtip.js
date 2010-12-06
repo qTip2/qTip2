@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Dec 6 02:15:36 2010 +0000
+* Date: Mon Dec 6 03:13:27 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1945,7 +1945,8 @@ function Tip(qTip, command)
 			switch(method)
 			{
 				case 'canvas':
-					elems.tip.append('<canvas height="'+height+'" width="'+width+'" />');
+					// save() as soon as we create the canvas element so FF2 doesn't bork on our first restore()!
+					$('<canvas height="'+height+'" width="'+width+'" />').appendTo(elems.tip)[0].getContext('2d').save(); 
 				break;
 
 				case 'vml':
@@ -2009,7 +2010,7 @@ function Tip(qTip, command)
 				case 'canvas':
 					// Grab canvas context and clear it
 					context = inner.get(0).getContext('2d');
-					context.restore();
+					if(context.restore) { context.restore(); }
 					context.clearRect(0,0,3000,3000);
 
 					// Grab tip coordinates
