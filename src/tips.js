@@ -154,7 +154,7 @@ function Tip(qTip, command)
 		}
 
 		// Setup offset adjustments
-		offset[0] = border ? parseInt(wrapper.css('border-' + newCorner[ precedance[0] ] + '-width'), 10) || 0 : 0;
+		offset[0] = border ? parseInt(wrapper.css('border-' + newCorner[ precedance[0] ] + '-width'), 10) || 0 : (method === 'vml' ? 1 : 0);
 		offset[1] = Math.max(newCorner[ precedance[4] ] === 'center' ? opts.offset : 0, opts.offset);
 
 		// Adjust tooltip position in relation to tip element
