@@ -138,7 +138,7 @@ function Tip(qTip, command)
 	}
 
 	function reposition(event, api, pos, viewport) {
-		if(!elems.tip) { return; }
+		if(!elems.tip || self.corner.fixed) { return; }
 
 		var newCorner = $.extend({}, self.corner),
 			precedance = newCorner.precedance === 'y' ? ['y', 'top', 'left', 'height', 'x'] : ['x', 'left', 'top', 'width', 'y'],
@@ -223,6 +223,7 @@ function Tip(qTip, command)
 				}
 				else if(!corner.string) {
 					self.corner = new $.fn.qtip.plugins.Corner(corner);
+					self.corner.fixed = true;
 				}
 			}
 

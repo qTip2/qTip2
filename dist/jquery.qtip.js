@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Dec 6 20:09:48 2010 +0000
+* Date: Mon Dec 6 20:16:17 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1830,7 +1830,7 @@ function Tip(qTip, command)
 	}
 
 	function reposition(event, api, pos, viewport) {
-		if(!elems.tip) { return; }
+		if(!elems.tip || self.corner.fixed) { return; }
 
 		var newCorner = $.extend({}, self.corner),
 			precedance = newCorner.precedance === 'y' ? ['y', 'top', 'left', 'height', 'x'] : ['x', 'left', 'top', 'width', 'y'],
@@ -1915,6 +1915,7 @@ function Tip(qTip, command)
 				}
 				else if(!corner.string) {
 					self.corner = new $.fn.qtip.plugins.Corner(corner);
+					self.corner.fixed = true;
 				}
 			}
 
