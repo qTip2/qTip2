@@ -1483,8 +1483,9 @@ $.fn.qtip.plugins = {
 	// Corner object parser
 	Corner: function(corner) {
 		corner = String(corner).replace(/([A-Z])/, ' $1').replace(/middle/gi, 'center').toLowerCase();
-		this.x = (corner.match(/left|right|center/i) || ['inherit'])[0].toLowerCase();
+		this.x = (corner.match(/left|right/i) || corner.match(/center/) || ['inherit'])[0].toLowerCase();
 		this.y = (corner.match(/top|bottom|center/i) || ['inherit'])[0].toLowerCase();
+
 		this.precedance = (corner.charAt(0).search(/^(t|b)/) > -1) ? 'y' : 'x';
 		this.string = function() { return this.precedance === 'y' ? this.y+this.x : this.x+this.y; };
 		this.abbreviation = function() { 
