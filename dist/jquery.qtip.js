@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Dec 2 00:58:28 2010 +0000
+* Date: Thu Dec 2 01:10:40 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -228,17 +228,17 @@ function QTip(target, options, id)
 	// IE max/min height/width function
 	function redraw()
 	{
-		// Make sure tooltip is rendered and the browser is IE8 or below
-		if(!self.rendered || !($.browser.msie && parseInt($.browser.version.charAt(0), 10) < 9)) { return FALSE; }
+		// Make sure tooltip is rendered and the browser needs the redraw
+		if(!self.rendered || !$.fn.qtip.redraw) { return FALSE; }
 		
 		var tooltip = self.elements.tooltip, 
-		style = tooltip.attr('style'),
-									dimensions;
-									
-									// Determine actual dimensions using our calculate function
-									tooltip.css({ width: 'auto', height: 'auto' });
-									dimensions = calculate('dimensions');
-		
+			style = tooltip.attr('style'),
+			dimensions;
+
+		// Determine actual dimensions using our calculate function
+		tooltip.css({ width: 'auto', height: 'auto' });
+		dimensions = calculate('dimensions');
+
 		// Determine actual width
 		$.each(['width', 'height'], function(i, prop) {
 			// Parse our max/min properties
@@ -401,7 +401,6 @@ function QTip(target, options, id)
 
 				// If queue is empty, update tooltip and continue the queue
 				if(images.length === 0) {
-					redraw();
 					if(self.rendered === TRUE) {
 						self.reposition(self.cache.event);
 					}
@@ -1080,6 +1079,9 @@ function QTip(target, options, id)
 				scrollTop: viewport.scrollTop()
 			};
 
+			// Update tooltip dimensions if needed
+			redraw();
+
 			// Check if mouse was the target
 			if(target === 'mouse') {
 				// Force left top to allow flipping
@@ -1497,6 +1499,7 @@ $(document).bind('mousemove.qtip', function(event) {
 $.fn.qtip.nextid = 0;
 $.fn.qtip.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleave mouseenter'.split(' ');
 $.fn.qtip.zindex = 15000;
+$.fn.qtip.redraw = $.browser.msie && parseInt($.browser.version.charAt(0), 10) < 9;
 
 // Setup base plugins
 $.fn.qtip.plugins = {
