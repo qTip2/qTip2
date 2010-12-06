@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Dec 6 22:41:27 2010 +0000
+* Date: Mon Dec 6 23:22:04 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1830,19 +1830,27 @@ function Tip(qTip, command)
 	}
 
 	function reposition(event, api, pos, viewport) {
-		if(!elems.tip || self.corner.fixed) { return; }
+		if(!elems.tip) { return; }
 
 		var newCorner = $.extend({}, self.corner),
 			precedance = newCorner.precedance === 'y' ? ['y', 'top', 'left', 'height', 'x'] : ['x', 'left', 'top', 'width', 'y'],
 			adjusted = pos.adjusted,
 			offset = [0, 0];
 
-		// Adjust tip corners
-		if(adjusted.left) {
-			newCorner.x = newCorner.x === 'center' ? (adjusted.left > 0 ? 'left' : 'right') : (newCorner.x === 'left' ? 'right' : 'left');
-		}
-		if(adjusted.top) {
-			newCorner.y = newCorner.y === 'center' ? (adjusted.top > 0 ? 'top' : 'bottom') : (newCorner.y === 'top' ? 'bottom' : 'top');
+		// Make sure our tip position isn't fixed e.g. doesn't adjust with adjust.screen
+		if(self.corner.fixed !== TRUE) {
+			// Adjust tip corners
+			if(adjusted.left) {
+				newCorner.x = newCorner.x === 'center' ? (adjusted.left > 0 ? 'left' : 'right') : (newCorner.x === 'left' ? 'right' : 'left');
+			}
+			if(adjusted.top) {
+				newCorner.y = newCorner.y === 'center' ? (adjusted.top > 0 ? 'top' : 'bottom') : (newCorner.y === 'top' ? 'bottom' : 'top');
+			}
+
+			// Update and redraw the tip if needed
+			if(newCorner.string() !== cache.corner.string() && (cache.top !== adjusted.top || cache.left !== adjusted.left)) {
+				self.update(newCorner);
+			}
 		}
 
 		// Setup offset adjustments
@@ -1853,12 +1861,7 @@ function Tip(qTip, command)
 		pos[ precedance[1] ] += (newCorner[ precedance[0] ] === precedance[1] ? 1 : -1) * (size[ precedance[3] ] - offset[0]);
 		pos[ precedance[2] ] -= (newCorner[ precedance[4] ] === precedance[2] || newCorner[ precedance[4] ] === 'center' ? 1 : -1) * offset[1];
 
-		// Update and redraw the tip if needed
-		if(newCorner.string() !== cache.corner.string() && (cache.top !== adjusted.top || cache.left !== adjusted.left)) {
-			self.update(newCorner);
-		}
-
-		// Cache overflow details
+		// Cache details
 		cache.left = adjusted.left;
 		cache.top = adjusted.top;
 		cache.corner = newCorner;
@@ -1915,7 +1918,7 @@ function Tip(qTip, command)
 				}
 				else if(!corner.string) {
 					self.corner = new $.fn.qtip.plugins.Corner(corner);
-					self.corner.fixed = true;
+					self.corner.fixed = TRUE;
 				}
 			}
 
