@@ -169,15 +169,14 @@ function Tip(qTip, command)
 		init: function()
 		{
 			var ie = $.browser.msie,
-				center = self.mimic && (/center/i).test(self.mimic.string()),
-				enabled = self.detectCorner();
+				enabled = self.detectCorner(),
+				center = self[self.mimic ? 'mimic' : 'corner'].string().indexOf('center') > -1;
 
 			// Determine tip corner and type
 			if(enabled) {
 				// Check if rendering method is possible and if not fall back
 				if(method === TRUE) {
-					method = $('<canvas />')[0].getContext ? 'canvas' :
-					ie && (center || size.height !== size.width) ? 'vml' : 'polygon';
+					method = $('<canvas />')[0].getContext ? 'canvas' : ie && (center || size.height !== size.width) ? 'vml' : 'polygon';
 				}
 				else {
 					if(method === 'canvas') {
