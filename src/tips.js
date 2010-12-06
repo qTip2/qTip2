@@ -122,15 +122,15 @@ function Tip(qTip, command)
 
 		// Determine secondary adjustments
 		offset = size[ (precedance === 'x') ? 'width' : 'height' ];
-		if(method === 'vml' && (/bottom|right/).test(corner[ corner.precedance ])) {
-			offset += 1;
-		}
-
-		// Adjust to border width
 		if(border) {
 			tooltip.toggleClass('ui-tooltip-accessible', !tooltip.is(':visible'));
 			offset -= parseInt(wrapper.css('border-' + corner[ precedance ] + '-width'), 10) || 0;
 			tooltip.removeClass('ui-tooltip-accessible');
+		}
+
+		// VML adjustments
+		if(method === 'vml' && (/bottom|right/).test(corner[ corner.precedance ])) {
+			offset += border ? 1 : -1;
 		}
 
 		// Adjust secondary corners
@@ -143,8 +143,7 @@ function Tip(qTip, command)
 		var newCorner = $.extend({}, self.corner),
 			precedance = newCorner.precedance === 'y' ? ['y', 'top', 'left', 'height', 'x'] : ['x', 'left', 'top', 'width', 'y'],
 			adjusted = pos.adjusted,
-			offset = [ parseInt(wrapper.css('border-' + newCorner[ precedance[0] ] + '-width'), 10) || 0, 0 ],
-			walk = [newCorner];
+			offset = [0, 0];
 
 		// Adjust tip corners
 		if(adjusted.left) {
@@ -154,9 +153,12 @@ function Tip(qTip, command)
 			newCorner.y = newCorner.y === 'center' ? (adjusted.top > 0 ? 'top' : 'bottom') : (newCorner.y === 'top' ? 'bottom' : 'top');
 		}
 
-		// Adjust tooltip pos if needed in relation to tip element
+		// Setup offset adjustments
+		offset[0] = border ? parseInt(wrapper.css('border-' + newCorner[ precedance[0] ] + '-width'), 10) || 0 : 0;
 		offset[1] = Math.max(newCorner[ precedance[4] ] === 'center' ? opts.offset : 0, opts.offset);
-		pos[ precedance[1] ] += (newCorner[ precedance[0] ] === precedance[1] ? 1 : -1) * (size[ precedance[3] ] - offset[0]) - ((method === 'vml') ? 1 : 0);
+
+		// Adjust tooltip position in relation to tip element
+		pos[ precedance[1] ] += (newCorner[ precedance[0] ] === precedance[1] ? 1 : -1) * (size[ precedance[3] ] - offset[0]);
 		pos[ precedance[2] ] -= (newCorner[ precedance[4] ] === precedance[2] || newCorner[ precedance[4] ] === 'center' ? 1 : -1) * offset[1];
 
 		// Update and redraw the tip if needed
