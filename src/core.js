@@ -200,34 +200,6 @@ function QTip(target, options, id)
 		return returned;
 	}
 
-	// IE max/min height/width function
-	function redraw()
-	{
-		// Make sure tooltip is rendered and the browser needs the redraw
-		if(!self.rendered || !$.fn.qtip.redraw) { return FALSE; }
-		
-		var tooltip = self.elements.tooltip, 
-			style = tooltip.attr('style'),
-			dimensions;
-
-		// Determine actual dimensions using our calculate function
-		tooltip.css({ width: 'auto', height: 'auto' });
-		dimensions = calculate('dimensions');
-
-		// Determine actual width
-		$.each(['width', 'height'], function(i, prop) {
-			// Parse our max/min properties
-			var max = parseInt(tooltip.css('max-'+prop), 10) || 0,
-				min = parseInt(tooltip.css('min-'+prop), 10) || 0;
-				
-				// Determine new dimension size based on max/min/current values
-				dimensions[prop] = max + min ? Math.min( Math.max( dimensions[prop], min ), max ) : dimensions[prop];
-		});
-		
-		// Set the newly calculated dimensions
-		tooltip.css(dimensions);
-	}
-
 	function removeTitle()
 	{
 		var elems = self.elements;
@@ -376,6 +348,7 @@ function QTip(target, options, id)
 
 				// If queue is empty, update tooltip and continue the queue
 				if(images.length === 0) {
+					self.redraw();
 					if(self.rendered === TRUE) {
 						self.reposition(self.cache.event);
 					}
@@ -1054,9 +1027,6 @@ function QTip(target, options, id)
 				scrollTop: viewport.scrollTop()
 			};
 
-			// Update tooltip dimensions if needed
-			redraw();
-
 			// Check if mouse was the target
 			if(target === 'mouse') {
 				// Force left top to allow flipping
@@ -1118,7 +1088,6 @@ function QTip(target, options, id)
 			position.left += posOptions.adjust.x + (my.x === 'right' ? -elemWidth : my.x === 'center' ? -elemWidth / 2 : 0);
 			position.top += posOptions.adjust.y + (my.y === 'bottom' ? -elemHeight : my.y === 'center' ? -elemHeight / 2 : 0);
 
-			
 			// Calculate collision offset values
 			if(posOptions.adjust.screen && target[0] !== window && target[0] !== document.body) {
 				position.adjusted = { left: adjust.left(position.left), top: adjust.top(position.top) };
@@ -1155,6 +1124,34 @@ function QTip(target, options, id)
 			}
 
 			return self;
+		},
+
+		// IE max/min height/width simulartor function
+		redraw: function()
+		{
+			// Make sure tooltip is rendered and the browser needs the redraw
+			if(!self.rendered || !($.browser.msie && parseInt($.browser.version.charAt(0), 10) < 9)) { return FALSE; }
+
+			var tooltip = self.elements.tooltip, 
+				style = tooltip.attr('style'),
+				dimensions;
+
+			// Determine actual dimensions using our calculate function
+			tooltip.css({ width: 'auto', height: 'auto' });
+			dimensions = calculate('dimensions');
+
+			// Determine actual width
+			$.each(['width', 'height'], function(i, prop) {
+				// Parse our max/min properties
+				var max = parseInt(tooltip.css('max-'+prop), 10) || 0,
+					min = parseInt(tooltip.css('min-'+prop), 10) || 0;
+
+				// Determine new dimension size based on max/min/current values
+				dimensions[prop] = max + min ? Math.min( Math.max( dimensions[prop], min ), max ) : dimensions[prop];
+			});
+
+			// Set the newly calculated dimensions
+			tooltip.css(dimensions);
 		},
 
 		disable: function(state)
@@ -1474,7 +1471,6 @@ $(document).bind('mousemove.qtip', function(event) {
 $.fn.qtip.nextid = 0;
 $.fn.qtip.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleave mouseenter'.split(' ');
 $.fn.qtip.zindex = 15000;
-$.fn.qtip.redraw = $.browser.msie && parseInt($.browser.version.charAt(0), 10) < 9;
 
 // Setup base plugins
 $.fn.qtip.plugins = {
