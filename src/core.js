@@ -1474,6 +1474,7 @@ $(document).bind('mousemove.qtip', function(event) {
 });
 
 // Set global qTip properties
+$.fn.qtip.version = '@VERSION';
 $.fn.qtip.nextid = 0;
 $.fn.qtip.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleave mouseenter'.split(' ');
 $.fn.qtip.zindex = 15000;
