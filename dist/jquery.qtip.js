@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Dec 7 05:56:17 2010 +0000
+* Date: Tue Dec 7 06:14:47 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1001,6 +1001,7 @@ function QTip(target, options, id)
 				posOptions = options.position,
 				my = posOptions.my, 
 				at = posOptions.at,
+				adjust = posOptions.adjust,
 				elemWidth = self.elements.tooltip.width(),
 				elemHeight = self.elements.tooltip.height(),
 				offsetParent = $(posOptions.container)[0],
@@ -1008,14 +1009,14 @@ function QTip(target, options, id)
 				targetHeight = 0,
 				callback = $.Event('tooltipmove'),
 				fixed = tooltip.css('position') === 'fixed',
-				viewport = $(posOptions.adjust.container && offsetParent !== document.body ? offsetParent : window),
+				viewport = $(adjust.container && offsetParent !== document.body ? offsetParent : window),
 				position = { left: 0, top: 0 },
-				adjust = {
+				readjust = {
 					left: function(posLeft) {
 						var viewportScroll = viewport.scrollLeft,
 							myWidth = my.x === 'left' ? elemWidth : my.x === 'right' ? -elemWidth : -elemWidth / 2,
 							atWidth = at.x === 'left' ? targetWidth : at.x === 'right' ? -targetWidth : -targetWidth / 2,
-							adjustX = -2 * posOptions.adjust.x,
+							adjustX = (my.x === my.y ? 1 : -2) * adjust.x,
 							overflowLeft = viewportScroll - posLeft,
 							overflowRight = posLeft + elemWidth - viewport.width - viewportScroll,
 							offset = myWidth - adjustX - (my.precedance === 'x' || my.x === my.y ? atWidth : 0);
@@ -1033,7 +1034,7 @@ function QTip(target, options, id)
 						var viewportScroll = viewport.scrollTop,
 							myHeight = my.y === 'top' ? elemHeight : my.y === 'bottom' ? -elemHeight : -elemHeight / 2,
 							atHeight = at.y === 'top' ? targetHeight : at.y === 'bottom' ? -targetHeight : -targetHeight / 2,
-							adjustY = -2 * posOptions.adjust.y,
+							adjustY = (my.y === my.x ? 1 : -2) * adjust.y,
 							overflowTop = viewportScroll - posTop,
 							overflowBottom = posTop + elemHeight - viewport.height - viewportScroll,
 							offset = myHeight - adjustY - (my.precedance === 'y' || my.x === my.y ? atHeight : 0);
@@ -1064,7 +1065,7 @@ function QTip(target, options, id)
 				at = { x: 'left', y: 'top' };
 
 				// Use cached event if one isn't available for positioning
-				event = posOptions.adjust.mouse || !event || !event.pageX ? $.extend({}, $.fn.qtip.mouse) : event;
+				event = adjust.mouse || !event || !event.pageX ? $.extend({}, $.fn.qtip.mouse) : event;
 				position = { top: event.pageY, left: event.pageX };
 			}
 			else {
@@ -1116,12 +1117,12 @@ function QTip(target, options, id)
 			}
 
 			// Adjust position relative to tooltip
-			position.left += posOptions.adjust.x + (my.x === 'right' ? -elemWidth : my.x === 'center' ? -elemWidth / 2 : 0);
-			position.top += posOptions.adjust.y + (my.y === 'bottom' ? -elemHeight : my.y === 'center' ? -elemHeight / 2 : 0);
+			position.left += adjust.x + (my.x === 'right' ? -elemWidth : my.x === 'center' ? -elemWidth / 2 : 0);
+			position.top += adjust.y + (my.y === 'bottom' ? -elemHeight : my.y === 'center' ? -elemHeight / 2 : 0);
 
 			// Calculate collision offset values
-			if(posOptions.adjust.screen && target[0] !== window && target[0] !== document.body) {
-				position.adjusted = { left: adjust.left(position.left), top: adjust.top(position.top) };
+			if(adjust.screen && target[0] !== window && target[0] !== document.body) {
+				position.adjusted = { left: readjust.left(position.left), top: readjust.top(position.top) };
 			}
 			else {
 				position.adjusted = { left: 0, top: 0 };
