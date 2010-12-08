@@ -233,7 +233,7 @@ function QTip(target, options, id)
 				'css': { 'text-indent': '-10000em' }
 			})
 			.prepend(
-				$('<span />', { 'class': 'ui-icon ui-icon-close' })
+				$('<span />', { 'class': (options.style.widget ? 'ui-tooltip-icon' : 'ui-icon') + 'ui-icon-close' })
 			);
 		}
 
@@ -241,7 +241,7 @@ function QTip(target, options, id)
 		elems.button
 			.prependTo(elems.titlebar)
 			.attr('role', 'button')
-			.addClass(uitooltip + '-' + (button === TRUE ? 'close' : 'button'))
+			.addClass(uitooltip + '-close')
 			.hover(function(event){ $(this).toggleClass('ui-state-hover', event.type === 'mouseenter'); })
 			.click(function() {
 				if(!elems.tooltip.hasClass('ui-state-disabled')) { self.hide(); }

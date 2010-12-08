@@ -65,7 +65,7 @@
 			font-size: 0px;
 		}
 
-			.ui-tooltip .ui-tooltip-close .ui-icon{
+			.ui-tooltip-close .ui-tooltip-icon{
 				height: 16px;
 				width: 16px;
 				display: block;
@@ -74,7 +74,7 @@
 				-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
 				filter: alpha(opacity=80);
 			}
-			.ui-tooltip .ui-tooltip-close:hover .ui-icon{
+			.ui-tooltip-close:hover .ui-tooltip-icon{
 				opacity: 1;
 				-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
 				filter: alpha(opacity=100);
@@ -107,7 +107,7 @@
 		background-color: #F0DE7D;
 	}
 
-	.ui-tooltip .ui-tooltip-close .ui-icon{
+	.ui-tooltip .ui-tooltip-icon{
 		background: #A27D35 url('images/close.png') no-repeat 50% 50%;
 	}
 
@@ -124,7 +124,7 @@
 		background-color: white;
 	}
 
-	.ui-tooltip-plain .ui-tooltip-close .ui-icon{
+	.ui-tooltip-plain .ui-tooltip-icon{
 		background: black;
 	}
 
@@ -139,7 +139,7 @@
 		background-color: #f1f1f1;
 	}
 
-	.ui-tooltip-light .ui-tooltip-close .ui-icon{
+	.ui-tooltip-light .ui-tooltip-icon{
 		background: #454545 url('images/close-light.png') no-repeat 50% 50%;
 	}
 
@@ -155,7 +155,7 @@
 		background-color: #404040;
 	}
 
-	.ui-tooltip-dark .ui-tooltip-close .ui-icon{
+	.ui-tooltip-dark .ui-tooltip-icon{
 		background: #f3f3f3 url('images/close-dark.png') no-repeat 50% 50%;
 	}
 
@@ -171,7 +171,7 @@
 		background-color: #F06D65;
 	}
 
-	.ui-tooltip-red .ui-tooltip-close .ui-icon{
+	.ui-tooltip-red .ui-tooltip-icon{
 		background: #9C2F2F url('images/close-red.png') no-repeat 50% 50%;
 	}
 
@@ -187,7 +187,7 @@
 		background-color: #B0DE78;
 	}
 
-	.ui-tooltip-green .ui-tooltip-close .ui-icon{
+	.ui-tooltip-green .ui-tooltip-icon{
 		background: #58792E url('images/close-green.png') no-repeat 50% 50%;
 	}
 
@@ -203,7 +203,7 @@
 		background-color: #D0E9F5;
 	}
 
-	.ui-tooltip-blue .ui-tooltip-close .ui-icon{
+	.ui-tooltip-blue .ui-tooltip-icon{
 		background: #4D9FBF url('images/close-blue.png') no-repeat 50% 50%;
 	}
 
