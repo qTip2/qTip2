@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Dec 8 18:43:13 2010 +0000
+* Date: Wed Dec 8 18:47:25 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1931,7 +1931,8 @@ function Tip(qTip, command)
 		detectColours: function() {
 			var tip = elems.tip,
 				precedance = self.corner[ self.corner.precedance ],
-				borderSide = 'border-' + precedance + '-color';
+				borderSide = 'border-' + precedance + '-color',
+				reference = qTip.options.style.widget ? elems.content : elems.wrapper;
 
 			// Detect tip colours
 			color.fill = tip.css('background-color', '').css('border', '').css('background-color') || 'transparent';

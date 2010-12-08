@@ -236,7 +236,8 @@ function Tip(qTip, command)
 		detectColours: function() {
 			var tip = elems.tip,
 				precedance = self.corner[ self.corner.precedance ],
-				borderSide = 'border-' + precedance + '-color';
+				borderSide = 'border-' + precedance + '-color',
+				reference = qTip.options.style.widget ? elems.content : elems.wrapper;
 
 			// Detect tip colours
 			color.fill = tip.css('background-color', '').css('border', '').css('background-color') || 'transparent';
