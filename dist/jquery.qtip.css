@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Dec 8 18:37:35 2010 +0000
+* Date: Wed Dec 8 18:41:36 2010 +0000
 */
 
 .ui-tooltip-accessible{
@@ -83,7 +83,6 @@
 				height: 16px;
 				width: 16px;
 				display: block;
-				float: right;
 
 				opacity: 0.8;
 				-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
@@ -100,10 +99,15 @@
 
 	}
 
-/*! ThemeRoller compatibility */
+
+/*! ThemeRoller compatibility classes */
 .ui-widget .ui-tooltip-wrapper{
 	border-width: 0;
 }
+
+	.ui-widget .ui-tooltip-close .ui-icon{
+		float: right;
+	}
 
 
 /*! Default tooltip style */

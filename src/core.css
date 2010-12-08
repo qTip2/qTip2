@@ -69,7 +69,6 @@
 				height: 16px;
 				width: 16px;
 				display: block;
-				float: right;
 
 				opacity: 0.8;
 				-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
@@ -86,10 +85,15 @@
 
 	}
 
-/*! ThemeRoller compatibility */
+
+/*! ThemeRoller compatibility classes */
 .ui-widget .ui-tooltip-wrapper{
 	border-width: 0;
 }
+
+	.ui-widget .ui-tooltip-close .ui-icon{
+		float: right;
+	}
 
 
 /*! Default tooltip style */
