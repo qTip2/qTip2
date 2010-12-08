@@ -239,11 +239,12 @@ function Tip(qTip, command)
 				precedance = self.corner[ self.corner.precedance ],
 				borderSide = 'border-' + precedance + '-color',
 				invalid = /rgba?\(0, 0, 0(, 0)?\)|transparent/i,
-				elemFill = elems.titlebar.length && corner.y === 'top' ? elems.titlebar : elems.wrapper,
-				elemBorder = qTip.options.style.widget ? elems.content : elems.wrapper;
+				isTitleTop = elems.titlebar.length && corner.y === 'top',
+				elemFill = isTitleTop ? elems.titlebar : elems.wrapper,
+				elemBorder = isTitleTop ? elems.wrapper : qTip.options.style.widget ? elems.content : elems.wrapper;
 
 			// Detect tip colours
-			color.fill = tip.css('background-color', '').css('border', '').css('background-color') || 'transparent';
+			color.fill = tip.css({ backgroundColor: '', border: '' }).css('background-color') || 'transparent';
 			color.border = tip.get(0).style ? tip.get(0).style['border' + precedance.charAt(0) + precedance.substr(1) + 'Color'] : tip.css(borderSide) || 'transparent';
 
 			// Make sure colours are valid and reset background and border properties
