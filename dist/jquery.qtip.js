@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Dec 8 21:30:36 2010 +0000
+* Date: Wed Dec 8 21:39:11 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1934,7 +1934,7 @@ function Tip(qTip, command)
 				precedance = self.corner[ self.corner.precedance ],
 				borderSide = 'border-' + precedance + '-color',
 				invalid = /rgba?\(0, 0, 0(, 0)?\)|transparent/i,
-				isTitleTop = elems.titlebar.length && corner.y === 'top',
+				isTitleTop = elems.titlebar && corner.y === 'top',
 				isWidget = qTip.options.style.widget,
 				elemFill = isWidget ? elems.content : isTitleTop ? elems.titlebar : elems.wrapper,
 				elemBorder = !isWidget ? elems.wrapper : isTitleTop ? elems.titlebar : elems.content;

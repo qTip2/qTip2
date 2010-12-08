@@ -239,7 +239,7 @@ function Tip(qTip, command)
 				precedance = self.corner[ self.corner.precedance ],
 				borderSide = 'border-' + precedance + '-color',
 				invalid = /rgba?\(0, 0, 0(, 0)?\)|transparent/i,
-				isTitleTop = elems.titlebar.length && corner.y === 'top',
+				isTitleTop = elems.titlebar && corner.y === 'top',
 				isWidget = qTip.options.style.widget,
 				elemFill = isWidget ? elems.content : isTitleTop ? elems.titlebar : elems.wrapper,
 				elemBorder = !isWidget ? elems.wrapper : isTitleTop ? elems.titlebar : elems.content;
