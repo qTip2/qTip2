@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Dec 8 18:19:01 2010 +0000
+* Date: Wed Dec 8 18:32:12 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -258,7 +258,7 @@ function QTip(target, options, id)
 				'css': { 'text-indent': '-10000em' }
 			})
 			.prepend(
-				$('<span />', { 'class': (options.style.widget ? 'ui-tooltip-icon' : 'ui-icon') + 'ui-icon-close' })
+				$('<span />', { 'class': (options.style.widget ? 'ui-' : uitooltip) + '-icon ui-icon-close' })
 			);
 		}
 
