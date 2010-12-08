@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Dec 8 18:41:36 2010 +0000
+* Date: Wed Dec 8 18:43:13 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1766,7 +1766,7 @@ function Tip(qTip, command)
 			// Reposition the tooltip
 			qTip.reposition();
 		},
-		'^style.classes$': function() {
+		'^style.(classes|widget)$': function() {
 			self.detectColours();
 			self.update();
 		}
