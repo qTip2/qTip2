@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Dec 8 18:33:40 2010 +0000
+* Date: Wed Dec 8 18:34:54 2010 +0000
 */
 
 .ui-tooltip-accessible{
@@ -83,6 +83,7 @@
 				height: 16px;
 				width: 16px;
 				display: block;
+				float: right;
 
 				opacity: 0.8;
 				-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";

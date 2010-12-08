@@ -69,6 +69,7 @@
 				height: 16px;
 				width: 16px;
 				display: block;
+				float: right;
 
 				opacity: 0.8;
 				-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
