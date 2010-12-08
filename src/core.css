@@ -2,17 +2,20 @@
 	left: -31000px;
 	display: block;
 	visibility: hidden;
-
-	max-width: none !important;
-	min-width: 0px !important;
-	max-height: none !important;
-	min-height: 0px !important;
 }
 
 	/* IE6 ONLY - Width detection fix */
 	* html .ui-tooltip-accessible{
 		position: static !important;
 		float: left !important;
+	}
+
+	/* Accessible fluid class for determining actual width */
+	.ui-tooltip-accessible-fluid{
+		max-width: none !important;
+		min-width: 0px !important;
+		max-height: none !important;
+		min-height: 0px !important;
 	}
 
 .ui-tooltip, .qtip{

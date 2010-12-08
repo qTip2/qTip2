@@ -169,10 +169,10 @@ function QTip(target, options, id)
 		return pos;
 	}
 
-	function calculate(detail)
+	function calculate(detail, fluid)
 	{
 		var tooltip = self.elements.tooltip,
-			accessible = uitooltip + '-accessible',
+			accessible = uitooltip + '-accessible ' + (fluid ? uitooltip + '-accessible-fluid' : ''),
 			show = !tooltip.is(':visible'),
 			returned = FALSE;
 
@@ -1034,6 +1034,9 @@ function QTip(target, options, id)
 				scrollTop: viewport.scrollTop()
 			};
 
+			
+			
+			
 			// Check if mouse was the target
 			if(target === 'mouse') {
 				// Force left top to allow flipping
@@ -1145,7 +1148,7 @@ function QTip(target, options, id)
 
 			// Determine actual dimensions using our calculate function
 			tooltip.css({ width: 'auto', height: 'auto' });
-			dimensions = calculate('dimensions');
+			dimensions = calculate('dimensions', 1);
 
 			// Determine actual width
 			$.each(['width', 'height'], function(i, prop) {
