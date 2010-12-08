@@ -23,10 +23,10 @@ CSS_MODULES = ${SRC_DIR}/header.txt\
 	${SRC_DIR}/modal.css\
 	${SRC_DIR}/extra.css
 
-QTIP = ${DIST_DIR}/jquery.qtip2.js
-QTIP_MIN = ${DIST_DIR}/jquery.qtip2.min.js
-QTIP_PACK = ${DIST_DIR}/jquery.qtip2.pack.js
-QTIP_CSS = ${DIST_DIR}/jquery.qtip2.css
+QTIP = ${DIST_DIR}/jquery.qtip.js
+QTIP_MIN = ${DIST_DIR}/jquery.qtip.min.js
+QTIP_PACK = ${DIST_DIR}/jquery.qtip.pack.js
+QTIP_CSS = ${DIST_DIR}/jquery.qtip.css
 QTIP_IMG = ${DIST_DIR}/images
 
 QTIP_VER = `cat version.txt`
