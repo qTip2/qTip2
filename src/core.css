@@ -90,6 +90,11 @@
 
 	}
 
+/*! ThemeRoller compatibility */
+.ui-widget .ui-tooltip-wrapper{
+	border-width: 0;
+}
+
 
 /*! Default tooltip style */
 .ui-tooltip-wrapper{

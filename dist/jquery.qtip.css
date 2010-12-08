@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Dec 8 14:39:35 2010 +0000
+* Date: Wed Dec 8 17:37:27 2010 +0000
 */
 
 .ui-tooltip-accessible{
@@ -103,6 +103,11 @@
 	.ui-tooltip-focus{
 
 	}
+
+/*! ThemeRoller compatibility */
+.ui-widget .ui-tooltip-wrapper{
+	border-width: 0;
+}
 
 
 /*! Default tooltip style */
