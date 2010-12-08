@@ -235,17 +235,19 @@ function Tip(qTip, command)
 
 		detectColours: function() {
 			var tip = elems.tip,
+				corner = self.corner,
 				precedance = self.corner[ self.corner.precedance ],
 				borderSide = 'border-' + precedance + '-color',
-				reference = qTip.options.style.widget ? elems.content : elems.wrapper;
+				invalid = /rgba?\(0, 0, 0(, 0)?\)|transparent/i,
+				reference = elems.titlebar.length && self.corner.y === 'top' ? elems.titlebar : qTip.options.style.widget ? elems.content : elems.wrapper;
 
 			// Detect tip colours
 			color.fill = tip.css('background-color', '').css('border', '').css('background-color') || 'transparent';
 			color.border = tip.get(0).style ? tip.get(0).style['border' + precedance.charAt(0) + precedance.substr(1) + 'Color'] : tip.css(borderSide) || 'transparent';
 
 			// Make sure colours are valid and reset background and border properties
-			if((/rgba?\(0, 0, 0(, 0)?\)|transparent/i).test(color.fill)) { color.fill = reference.css(border ? 'background-color' : borderSide); }
-			if(!color.border || (/rgba?\(0, 0, 0(, 0)?\)|transparent/i).test(color.border)) { color.border = reference.css(borderSide) || color.fill; }
+			if(invalid.test(color.fill)) { color.fill = reference.css(border ? 'background-color' : borderSide); }
+			if(!color.border || invalid.test(color.border)) { color.border = reference.css(borderSide) || color.fill; }
 
 			$('*', tip).add(tip).css('background-color', 'transparent').css('border', 0);
 		},
