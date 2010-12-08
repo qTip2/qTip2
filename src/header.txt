@@ -3,7 +3,7 @@
 * http://craigsworks.com/projects/qtip2/
 *
 * Version: @VERSION
-* Copyright 2010 Craig Michael Thompson - http://craigsworks.com
+* Copyright 2009-2010 Craig Michael Thompson - http://craigsworks.com
 *
 * Dual licensed under MIT or GPLv2 licenses
 *   http://en.wikipedia.org/wiki/MIT_License
