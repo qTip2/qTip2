@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Dec 8 18:34:54 2010 +0000
+* Date: Wed Dec 8 18:37:35 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -797,19 +797,17 @@ function QTip(target, options, id)
 						// Style checks
 						'^style.classes$': function() { self.elements.tooltip.attr('class', uitooltip + ' qtip ui-helper-reset ' + value); },
 						'^style.widget$': function() {
-							tooltip.toggleClass('ui-widget', !!value);
-							elems.titlebar.toggleClass('ui-widget-header', !!value);
-							elems.content.toggleClass('ui-widget-content', !!value);
+							var trigger = !!value;
+							
+							tooltip.toggleClass('ui-widget', trigger);
+							elems.titlebar.toggleClass('ui-widget-header', trigger);
+							elems.content.toggleClass('ui-widget-content', trigger);
+							elems.button.children('span').toggleClass(uitooltip+'-icon', !trigger).toggleClass('ui-icon', trigger);
 						},
 
 						// Events check
 						'^events.(render|show|move|hide|focus|blur)': function(obj, opt, val, prev) {
-							if($.isFunction(value)) {
-								elems.tooltip.bind('tooltip'+opt, val);
-							}
-							else {
-								elems.tooltip.unbind('tooltip'+opt, prev);
-							}
+							elems.tooltip[($.isFunction(value) ? '' : 'un') + 'bind']('tooltip'+opt, val);
 						}
 					}
 				};
