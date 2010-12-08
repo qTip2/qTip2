@@ -80,11 +80,6 @@
 				filter: alpha(opacity=100);
 			}
 
-		/*! Custom button class */
-		.ui-tooltip .ui-tooltip-button{
-			float: right;
-		}
-
 	/* Applied to 'focused' tooltips e.g. most recently displayed/interacted with */
 	.ui-tooltip-focus{
 

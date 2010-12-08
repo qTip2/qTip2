@@ -233,7 +233,7 @@ function QTip(target, options, id)
 				'css': { 'text-indent': '-10000em' }
 			})
 			.prepend(
-				$('<span />', { 'class': (options.style.widget ? 'ui-' : uitooltip) + '-icon ui-icon-close' })
+				$('<span />', { 'class': (options.style.widget ? 'ui' : uitooltip) + '-icon ui-icon-close' })
 			);
 		}
 

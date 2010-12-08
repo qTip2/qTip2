@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Dec 8 18:32:12 2010 +0000
+* Date: Wed Dec 8 18:33:40 2010 +0000
 */
 
 .ui-tooltip-accessible{
@@ -93,11 +93,6 @@
 				-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
 				filter: alpha(opacity=100);
 			}
-
-		/*! Custom button class */
-		.ui-tooltip .ui-tooltip-button{
-			float: right;
-		}
 
 	/* Applied to 'focused' tooltips e.g. most recently displayed/interacted with */
 	.ui-tooltip-focus{
