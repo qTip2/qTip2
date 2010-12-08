@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Dec 8 18:53:54 2010 +0000
+* Date: Wed Dec 8 19:03:35 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1934,15 +1934,16 @@ function Tip(qTip, command)
 				precedance = self.corner[ self.corner.precedance ],
 				borderSide = 'border-' + precedance + '-color',
 				invalid = /rgba?\(0, 0, 0(, 0)?\)|transparent/i,
-				reference = elems.titlebar.length && self.corner.y === 'top' ? elems.titlebar : qTip.options.style.widget ? elems.content : elems.wrapper;
+				elemFill = elems.titlebar.length && corner.y === 'top' ? elems.titlebar : elems.wrapper,
+				elemBorder = qTip.options.style.widget ? elems.content : elems.wrapper;
 
 			// Detect tip colours
 			color.fill = tip.css('background-color', '').css('border', '').css('background-color') || 'transparent';
 			color.border = tip.get(0).style ? tip.get(0).style['border' + precedance.charAt(0) + precedance.substr(1) + 'Color'] : tip.css(borderSide) || 'transparent';
 
 			// Make sure colours are valid and reset background and border properties
-			if(invalid.test(color.fill)) { color.fill = reference.css(border ? 'background-color' : borderSide); }
-			if(!color.border || invalid.test(color.border)) { color.border = reference.css(borderSide) || color.fill; }
+			if(invalid.test(color.fill)) { color.fill = elemFill.css(border ? 'background-color' : borderSide); }
+			if(!color.border || invalid.test(color.border)) { color.border = elemBorder.css(borderSide) || color.fill; }
 
 			$('*', tip).add(tip).css('background-color', 'transparent').css('border', 0);
 		},
