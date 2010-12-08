@@ -10,10 +10,10 @@
 	<property name="DIST_DIR" value="./dist" description="Compiled qTip folder" />
 	<property name="IMG_DIR" value="./images" description="Images folder" />
 
-	<property name="QTIP" value="${DIST_DIR}/jquery.qtip.js" />
-	<property name="QTIP_MIN" value="${DIST_DIR}/jquery.qtip.min.js" />
-	<property name="QTIP_PACK" value="${DIST_DIR}/jquery.qtip.pack.js" />
-	<property name="QTIP_CSS" value="${DIST_DIR}/jquery.qtip.css" />
+	<property name="QTIP" value="${DIST_DIR}/jquery.qtip2.js" />
+	<property name="QTIP_MIN" value="${DIST_DIR}/jquery.qtip2.min.js" />
+	<property name="QTIP_PACK" value="${DIST_DIR}/jquery.qtip2.pack.js" />
+	<property name="QTIP_CSS" value="${DIST_DIR}/jquery.qtip2.css" />
 	<property name="QTIP_IMG" value="${DIST_DIR}/images" />
 	
 	<property name="PLUGINS" value="${SRC_DIR}/ajax.js ${SRC_DIR}/tips.js ${SRC_DIR}/imagemap.js ${SRC_DIR}/modal.js ${SRC_DIR}/bgiframe.js" />
@@ -46,7 +46,7 @@
 
 		<apply executable="java" parallel="false" verbose="true" dest="${DIST_DIR}">
 			<fileset dir="${DIST_DIR}">
-				<include name="jquery.qtip.js" />
+				<include name="jquery.qtip2.js" />
 			</fileset>
 			
 			<arg line="-jar" />
@@ -56,7 +56,7 @@
 			<arg value="--js_output_file" />
 			<targetfile />
 			<arg value="--js" />
-			<mapper type="glob" from="jquery.qtip.js" to="tmpmin" />
+			<mapper type="glob" from="jquery.qtip2.js" to="tmpmin" />
 		</apply>
 
 		<concat destfile="${QTIP_MIN}">
@@ -79,7 +79,7 @@
 
 		<apply executable="java" parallel="false" verbose="true">
 			<fileset dir="${DIST_DIR}">
-				<include name="jquery.qtip.js" />
+				<include name="jquery.qtip2.js" />
 			</fileset>
 			
 			<arg line="-jar" />

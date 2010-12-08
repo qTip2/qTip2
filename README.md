@@ -1,4 +1,4 @@
-[qTip](http://craigsworks.com/projects/qtip/) - The jQuery tooltip plugin
+[qTip2](http://craigsworks.com/projects/qtip2/) - Pretty powerful tooltips
 ================================
 
 Pre-compiled scripts
