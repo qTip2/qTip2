@@ -3,30 +3,30 @@
 
 Pre-compiled scripts
 ---------------------------------------
-If you're not interested in compiling your own version of qTip, you can grab the pre-compiled scripts from the 
-[dist](http://github.com/Craga89/qTip/tree/master/dist/) directory and get started quickly. If you want more options
+If you're not interested in compiling your own version of qTip2, you can grab the pre-compiled scripts from the 
+[dist](http://github.com/Craga89/qTip2/tree/master/dist/) directory and get started quickly. If you want more options
 over what plugins are included in your build, take a look below.
 
 
-What you need to build qTip
+What you need to build qTip2
 ---------------------------------------
 * *nix make or [Apache Ant](http://ant.apache.org/bindownload.cgi)
 * [Java Runtime Environment](http://java.sun.com/javase/downloads/index.jsp) (If you wish to build minified sources or use JSLint check)
 
 
-How to build qTip (using MAKE)
+How to build qTip2 (using MAKE)
 ------------------------
 
 In the main directory of the distribution (the one that this file is in), type
-the following to build qTip and its accompanying CSS and images:
+the following to build qTip2 and its accompanying CSS and images:
 
 	make
 
 You can also create each individually using these commands:
 
-	make qtip		# Build non-minified qTip source
-	make min 		# Build minified qTip source
-	make pack		# Build minified and packed qTip source (Smallest filesize!)
+	make qtip		# Build non-minified qTip2 source
+	make min 		# Build minified qTip2 source
+	make pack		# Build minified and packed qTip2 source (Smallest filesize!)
 	make css 		# Build CSS files
 	make images		# Build images
 
@@ -39,7 +39,7 @@ Finally, you can remove all the built files using the command:
 	make clean
 
 
-How to build qTip (Using ANT)
+How to build qTip2 (Using ANT)
 ------------------------
 
 For those of you without access to *nix make, an ANT build file is also included in the repository. Build instructions are identical to
@@ -53,25 +53,25 @@ those above, but replace _make_ with _ant_ e.g.
 Building to a different directory (MAKE only)
 ----------------------------------
 
-If you want to build qTip to a directory that is different from the default location, you can...
+If you want to build qTip2 to a directory that is different from the default location, you can...
 
-	make PREFIX=/home/craig/qtip/ [command]
+	make PREFIX=/home/craig/qtip2/ [command]
 	
-With this, the output files would be contained in `/home/craig/qtip/dist/`
+With this, the output files would be contained in `/home/craig/qtip2/dist/`
 
 *`[command]` is optional.*
 
 
 Choosing which features are included in your build (MAKE only)
 ----------------------------------
-By default qTip is built with all plugins built into the file. You can see an example of this in the [dist](http://github.com/Craga89/qTip/tree/master/dist/)
+By default qTip2 is built with all plugins built into the file. You can see an example of this in the [dist](http://github.com/Craga89/qTip2/tree/master/dist/)
 directory files. If you want more control over what plugins are included, you can do so by adding some extra parameters to your build commands.
 
 For example, if you plan on using only the tips plugin, you'd specify the plugins variable as so:
 
 	make PLUGINS="src/tips.js" all
 	
-Notice the only thing that was added was the PLUGINS parameter. This tells the compiler which files to include in the final qTip build. You can specify multiple
+Notice the only thing that was added was the PLUGINS parameter. This tells the compiler which files to include in the final qTip2 build. You can specify multiple
 plugins by separating them wit a space:
 
 	make PLUGINS="src/tips.js src/ajax.js src/modal.js" all
