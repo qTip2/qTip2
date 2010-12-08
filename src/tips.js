@@ -248,7 +248,7 @@ function Tip(qTip, command)
 			color.border = tip.get(0).style ? tip.get(0).style['border' + precedance.charAt(0) + precedance.substr(1) + 'Color'] : tip.css(borderSide) || 'transparent';
 
 			// Make sure colours are valid and reset background and border properties
-			if(invalid.test(color.fill)) { color.fill = elemFill.css(border ? 'background-color' : borderSide); }
+			if(invalid.test(color.fill)) { color.fill = border ? elemFill.css('background-color') : elemBorder.css(borderSide); }
 			if(!color.border || invalid.test(color.border)) { color.border = elemBorder.css(borderSide) || color.fill; }
 
 			$('*', tip).add(tip).css('background-color', 'transparent').css('border', 0);
