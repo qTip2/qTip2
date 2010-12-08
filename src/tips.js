@@ -250,7 +250,7 @@ function Tip(qTip, command)
 
 			// Make sure colours are valid and reset background and border properties
 			if(invalid.test(color.fill)) { 
-				color.fill = border ? elemFill.css('background-color') : elemFill.css(borderSide);
+				color.fill = border ? elemFill.css('background-color') : elemBorder.css(borderSide);
 			}
 			if(!color.border || invalid.test(color.border)) {
 				color.border = elemBorder.css(borderSide) || color.fill;

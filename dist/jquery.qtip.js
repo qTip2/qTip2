@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Dec 8 19:46:50 2010 +0000
+* Date: Wed Dec 8 21:30:36 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1945,7 +1945,7 @@ function Tip(qTip, command)
 
 			// Make sure colours are valid and reset background and border properties
 			if(invalid.test(color.fill)) { 
-				color.fill = border ? elemFill.css('background-color') : elemFill.css(borderSide);
+				color.fill = border ? elemFill.css('background-color') : elemBorder.css(borderSide);
 			}
 			if(!color.border || invalid.test(color.border)) {
 				color.border = elemBorder.css(borderSide) || color.fill;
