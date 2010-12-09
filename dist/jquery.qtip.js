@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Dec 9 15:47:15 2010 +0000
+* Date: Thu Dec 9 16:04:20 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1008,7 +1008,7 @@ function QTip(target, options, id)
 							atHeight = at.y === 'top' ? targetHeight : at.y === 'bottom' ? -targetHeight : -targetHeight / 2,
 							adjustY = (my.y === my.x ? 1 : -2) * adjust.y,
 							overflowTop = viewportScroll - posTop,
-							overflowBottom = posTop + elemHeight - viewport.height - viewportScroll,
+							overflowBottom = posTop + elemHeight - viewport.height - viewportScroll + adjust.y,
 							offset = myHeight - adjustY - (my.precedance === 'y' || my.x === my.y ? atHeight : 0);
 
 						if(overflowTop > 0) {

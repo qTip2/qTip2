@@ -983,7 +983,7 @@ function QTip(target, options, id)
 							atHeight = at.y === 'top' ? targetHeight : at.y === 'bottom' ? -targetHeight : -targetHeight / 2,
 							adjustY = (my.y === my.x ? 1 : -2) * adjust.y,
 							overflowTop = viewportScroll - posTop,
-							overflowBottom = posTop + elemHeight - viewport.height - viewportScroll,
+							overflowBottom = posTop + elemHeight - viewport.height - viewportScroll + adjust.y,
 							offset = myHeight - adjustY - (my.precedance === 'y' || my.x === my.y ? atHeight : 0);
 
 						if(overflowTop > 0) {
