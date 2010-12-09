@@ -5,84 +5,81 @@ function sanitizeOptions(opts, targets)
 
 	if(!opts) { return FALSE; }
 
-	try {
-		if('metadata' in opts && 'object' !== typeof opts.metadata) {
-			opts.metadata = {
-				type: opts.metadata
+	if('metadata' in opts && 'object' !== typeof opts.metadata) {
+		opts.metadata = {
+			type: opts.metadata
+		};
+	}
+
+	if('content' in opts) {
+		if('object' !== typeof opts.content || opts.content.jquery) {
+			opts.content = {
+				text: opts.content
 			};
 		}
 
-		if('content' in opts) {
-			if('object' !== typeof opts.content || opts.content.jquery) {
-				opts.content = {
-					text: opts.content
-				};
-			}
-
-			content = opts.content.text || FALSE;
-			if(!$.isFunction(content) && ((!content && !content.attr) || content.length < 1 || ('object' === typeof content && !content.jquery))) {
-				content = opts.content.text = FALSE;
-			}
-
-			if('title' in opts.content && 'object' !== typeof opts.content.title) {
-				opts.content.title = {
-					text: opts.content.title
-				};
-			}
+		content = opts.content.text || FALSE;
+		if(!$.isFunction(content) && ((!content && !content.attr) || content.length < 1 || ('object' === typeof content && !content.jquery))) {
+			content = opts.content.text = FALSE;
 		}
 
-		if('position' in opts) {
-			if('object' !== typeof opts.position) {
-				opts.position = {
-					my: opts.position,
-					at: opts.position
-				};
-			}
-
-			if('object' !== typeof opts.position.adjust) {
-				opts.position.adjust = {};
-			}
-
-			if('undefined' !== typeof opts.position.adjust.screen) {
-				opts.position.adjust.screen = !!opts.position.adjust.screen;
-			}
-		}
-
-		if('show' in opts) {
-			if('object' !== typeof opts.show) {
-				opts.show = {
-					event: opts.show
-				};
-			}
-
-			if('object' !== typeof opts.show) {
-				if(opts.show.jquery) {
-					opts.show = { target: opts.show };
-				}
-				else {
-					opts.show = { event: opts.show };
-				}
-			}
-		}
-
-		if('hide' in opts) {
-			if('object' !== typeof opts.hide) {
-				if(opts.hide.jquery) {
-					opts.hide = { target: opts.hide };
-				}
-				else {
-					opts.hide = { event: opts.hide };
-				}
-			}
-		}
-
-		if('style' in opts && 'object' !== typeof opts.style) {
-			opts.style = {
-				classes: opts.style
+		if('title' in opts.content && 'object' !== typeof opts.content.title) {
+			opts.content.title = {
+				text: opts.content.title
 			};
 		}
 	}
-	catch (e) {}
+
+	if('position' in opts) {
+		if('object' !== typeof opts.position) {
+			opts.position = {
+				my: opts.position,
+				at: opts.position
+			};
+		}
+
+		if('object' !== typeof opts.position.adjust) {
+			opts.position.adjust = {};
+		}
+
+		if('undefined' !== typeof opts.position.adjust.screen) {
+			opts.position.adjust.screen = !!opts.position.adjust.screen;
+		}
+	}
+
+	if('show' in opts) {
+		if('object' !== typeof opts.show) {
+			opts.show = {
+				event: opts.show
+			};
+		}
+
+		if('object' !== typeof opts.show) {
+			if(opts.show.jquery) {
+				opts.show = { target: opts.show };
+			}
+			else {
+				opts.show = { event: opts.show };
+			}
+		}
+	}
+
+	if('hide' in opts) {
+		if('object' !== typeof opts.hide) {
+			if(opts.hide.jquery) {
+				opts.hide = { target: opts.hide };
+			}
+			else {
+				opts.hide = { event: opts.hide };
+			}
+		}
+	}
+
+	if('style' in opts && 'object' !== typeof opts.style) {
+		opts.style = {
+			classes: opts.style
+		};
+	}
 
 	// Make sure content functions return something
 	if($.isFunction(content)) {
