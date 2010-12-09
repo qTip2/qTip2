@@ -922,7 +922,7 @@ function QTip(target, options, id)
 
 			var tooltip = self.elements.tooltip,
 				qtips = $(selector),
-				curIndex = parseInt(tooltip.css('z-index'), 10),
+				curIndex = parseInt(tooltip[0].style.zIndex, 10),
 				newIndex = $.fn.qtip.zindex + qtips.length,
 				focusClass = uitooltip + '-focus',
 				cachedEvent = $.extend({}, event),
@@ -932,8 +932,8 @@ function QTip(target, options, id)
 			if(!tooltip.hasClass(focusClass) && curIndex !== newIndex)
 			{
 				// Reduce our z-index's and keep them properly ordered
-				qtips.css('z-index', function(i, curIndex) {
-					return curIndex - 1;
+				qtips.each(function() {
+					this.style.zIndex = this.style.zIndex - 1;
 				});
 
 				// Fire blur event for focussed tooltip
@@ -958,7 +958,7 @@ function QTip(target, options, id)
 
 				// Set the new z-index and set focus status to TRUE if callback wasn't FALSE
 				if(!callback.isDefaultPrevented()) {
-					tooltip.css({ zIndex: newIndex }).addClass(focusClass);
+					tooltip.addClass(focusClass)[0].style.zIndex = newIndex;
 				}
 			}
 
