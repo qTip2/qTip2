@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Dec 9 04:03:40 2010 +0000
+* Date: Thu Dec 9 15:26:00 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -402,13 +402,15 @@ function QTip(target, options, id)
 	function assignEvents(show, hide, tooltip, doc)
 	{
 		var namespace = '.qtip-'+id,
+			posOptions = options.position,
 			targets = {
 				show: options.show.target,
 				hide: options.hide.target,
-				tooltip: self.elements.tooltip
+				tooltip: self.elements.tooltip,
+				container: posOptions.container[0] === document.body ? document : posOptions.container
 			},
 			events = { show: String(options.show.event).split(' '), hide: String(options.hide.event).split(' ') },
-			IE6 = $.browser.msie && (/^6\.[0-9]/).test($.browser.version);
+			IE6 = $.browser.msie && parseInt($.browser.version, 10) === 6;
 
 		// Define show event method
 		function showMethod(event)
@@ -443,7 +445,7 @@ function QTip(target, options, id)
 			clearTimeout(self.timers.hide);
 
 			// Prevent hiding if tooltip is fixed and event target is the tooltip. Or if mouse positioning is enabled and cursor momentarily overlaps
-			if(options.hide.fixed && ((options.position.target === 'mouse' && ontoTooltip) || ((/mouse(out|leave|move)/).test(event.type) && ontoTooltip)))
+			if(options.hide.fixed && ((posOptions.target === 'mouse' && ontoTooltip) || ((/mouse(out|leave|move)/).test(event.type) && ontoTooltip)))
 			{
 				// Prevent default and popagation
 				event.stopPropagation();
@@ -471,8 +473,13 @@ function QTip(target, options, id)
 		}
 
 		function repositionMethod(event) {
+			console.log(event)
+			if(self.cache.processing) { return; }
+
 			// Only update position if tooltip is visible
+			self.cache.processing = 1;
 			if(self.elements.tooltip.is(':visible')) { self.reposition(event); }
+			self.cache.processing = 0;
 		}
 
 		// Catch remove events on target element to destroy tooltip
@@ -541,13 +548,13 @@ function QTip(target, options, id)
 		// Apply document events
 		if(doc) {
 			// Adjust positions of the tooltip on window resize if enabled
-			if(options.position.adjust.resize || options.position.adjust.screen) {
-				$(window).bind('resize'+namespace, repositionMethod);
+			if(posOptions.adjust.resize || posOptions.adjust.screen) {
+				$($.event.special.resize ? targets.container : window).bind('resize'+namespace, repositionMethod);
 			}
 
 			// Adjust tooltip position on scroll if screen adjustment is enabled
-			if(options.position.adjust.screen || (IE6 && targets.tooltip.css('position') === 'fixed')) {
-				$(document).bind('scroll'+namespace, repositionMethod);
+			if(posOptions.adjust.screen || (IE6 && targets.tooltip.css('position') === 'fixed')) {
+				$(targets.container).bind('scroll'+namespace, repositionMethod);
 			}
 
 			// Hide tooltip on document mousedown if unfocus events are enabled
@@ -563,10 +570,10 @@ function QTip(target, options, id)
 			}
 
 			// If mouse is the target, update tooltip position on document mousemove
-			if(options.position.target === 'mouse') {
+			if(posOptions.target === 'mouse') {
 				$(document).bind('mousemove'+namespace, function(event) {
 					// Update the tooltip position only if the tooltip is visible and adjustment is enabled
-					if(options.position.adjust.mouse && !targets.tooltip.hasClass('ui-state-disabled') && targets.tooltip.is(':visible')) {
+					if(posOptions.adjust.mouse && !targets.tooltip.hasClass('ui-state-disabled') && targets.tooltip.is(':visible')) {
 						self.reposition(event || $.fn.qtip.mouse);
 					}
 				});
@@ -974,11 +981,7 @@ function QTip(target, options, id)
 
 		reposition: function(event)
 		{
-			// Return if tooltip isn't rendered or we're already processing a previous call
-			if(self.rendered === FALSE || self.cache.processing) { return FALSE; }
-
-			// Set processing flag and continue otherwise
-			else { self.cache.processing = 1; }
+			if(self.rendered === FALSE) { return FALSE; }
 
 			var target = options.position.target,
 				tooltip = self.elements.tooltip,
@@ -1043,6 +1046,9 @@ function QTip(target, options, id)
 				scrollTop: viewport.scrollTop()
 			};
 
+			
+			
+			
 			// Check if mouse was the target
 			if(target === 'mouse') {
 				// Force left top to allow flipping
@@ -1138,9 +1144,6 @@ function QTip(target, options, id)
 			else if(!isNaN(position.left, position.top)) {
 				tooltip.css(position);
 			}
-
-			// Revoke processing flag now we're done
-			self.cache.processing = 0;
 
 			return self;
 		},
