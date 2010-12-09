@@ -1,11 +1,11 @@
 // Option object sanitizer
-function sanitizeOptions(opts)
+function sanitizeOptions(opts, plugins)
 {
 	var content;
 
 	if(!opts) { return FALSE; }
 
-	if('metadata' in opts && 'object' !== typeof opts.metadata) {
+	if('object' !== typeof opts.metadata) {
 		opts.metadata = {
 			type: opts.metadata
 		};
@@ -81,10 +81,12 @@ function sanitizeOptions(opts)
 		};
 	}
 
-	// Sanitize plugin options
-	$.each($.fn.qtip.plugins, function() {
-		if(this.sanitize) { this.sanitize(opts); }
-	});
+	// Sanitize plugin options if enabled
+	if(plugins) {
+		$.each($.fn.qtip.plugins, function() {
+			if(this.sanitize) { this.sanitize(opts); }
+		});
+	}
 
 	return opts;
 }
@@ -781,7 +783,7 @@ function QTip(target, options, id)
 			option[0][ option[1] ] = value.nodeType ? $(value) : value;
 
 			// Re-sanitize options
-			sanitizeOptions(options);
+			sanitizeOptions(options, 1);
 
 			// Execute any valid callbacks
 			for(category in checks) {
@@ -1204,27 +1206,27 @@ function QTip(target, options, id)
 // Initialization method
 function init(id, opts)
 {
-	var obj,
+	var obj, posOptions,
 
 	// Setup element references
 	elem = $(this),
 	docBody = $(document.body),
 
+	// Use document body instead of document element if needed
+	newTarget = this === document ? docBody : elem,
+
 	// Grab metadata from element if plugin is present
-	metadata = (elem.metadata) ? elem.metadata(opts.metadata) : {},
+	metadata = (elem.metadata) ? elem.metadata(opts.metadata) : NULL,
 
 	// Check if the metadata returned is in HTML5 form and grab 'name' from the object instead
-	metadata5 = metadata && opts.metadata.type === 'html5' ? metadata[opts.metadata.name] : {},
+	metadata5 = metadata && opts.metadata.type === 'html5' ? metadata[opts.metadata.name] : NULL,
 
-	// Create unique configuration object using metadata
-	config = $.extend(TRUE, {}, opts, sanitizeOptions( $.extend(TRUE, {}, metadata5 || metadata) )),
-	posOptions = config.position,
-
-	// Use document body instead of document element if needed
-	newTarget = this === document ? docBody : elem;
-
-	// Make sure to remove metadata object so we don't interfere with other metadata calls
+	// Merge in our sanitized metadata and remove metadata object so we don't interfere with other metadata calls
+	config = $.extend(TRUE, {}, $.fn.qtip.defaults, opts, sanitizeOptions(metadata5 || metadata), 1);
 	elem.removeData('metadata');
+
+	// Re-grab our positioning options now we've merged our metadata
+	posOptions = config.position;
 
 	// Setup missing content if none is detected
 	if('boolean' === typeof config.content.text) {
@@ -1260,6 +1262,11 @@ function init(id, opts)
 		}
 	}
 
+	// Remove title attribute and store it if present
+	if(elem.attr('title')) {
+		elem.data('oldtitle', elem.attr('title')).removeAttr('title');
+	}
+
 	// Initialize the tooltip and add API reference
 	obj = new QTip(elem, config, id);
 	elem.data('qtip', obj);
@@ -1274,7 +1281,7 @@ $.fn.qtip = function(options, notation, newValue)
 		returned = NULL,
 		args = command === 'disable' ? [TRUE] : $.makeArray(arguments).slice(1, 10),
 		event = args[args.length - 1],
-		opts = $.extend(TRUE, {}, options);
+		opts;
 
 	// Check for API request
 	if((!arguments.length && this.data('qtip')) || command === 'api') {
@@ -1324,8 +1331,7 @@ $.fn.qtip = function(options, notation, newValue)
 	// No API commands. validate provided options and setup qTips
 	else if('object' === typeof options || !arguments.length)
 	{
-		// Build new sanitized options object
-		opts = $.extend(TRUE, {}, $.fn.qtip.defaults, sanitizeOptions(opts));
+		opts = sanitizeOptions($.extend(TRUE, {}, options));
 
 		// Bind the qTips
 		return $.fn.qtip.bind.call(this, opts, event);
@@ -1336,27 +1342,18 @@ $.fn.qtip = function(options, notation, newValue)
 $.fn.qtip.bind = function(opts, event)
 {
 	return this.each(function(i) {
-		var elem = $(this),
-			id = opts.id,
-			content = opts.content.text,
-			self, options, targets, events, namespace;
-
+		var options, targets, events,
+			
 		// Find next available ID, or use custom ID if provided
-		opts.id = id = (id === FALSE || id.length < 1 || $('#ui-tooltip-'+id).length) ? $.fn.qtip.nextid++ : id;
-
+		id = opts.id = (!opts.id || opts.id === FALSE || opts.id.length < 1 || $('#ui-tooltip-'+opts.id).length) ? $.fn.qtip.nextid++ : opts.id,
+		
 		// Setup events namespace
-		namespace = '.qtip-'+id+'-create';
+		namespace = '.qtip-'+id+'-create',
 
 		// Initialize the qTip and re-grab newly sanitized options
 		self = init.call(this, id, opts);
 		if(self === FALSE) { return TRUE; }
 		options = self.options;
-
-		// Remove title attribute and store it if present
-		if(elem.attr('title')) {
-			elem.data('oldtitle', elem.attr('title')).removeAttr('title');
-		}
-
 		// Initialize plugins
 		$.each($.fn.qtip.plugins, function() {
 			if(this.initialize === 'initialize') { this(self); }
