@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Dec 9 02:59:24 2010 +0000
+* Date: Thu Dec 9 03:06:34 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1372,9 +1372,10 @@ $.fn.qtip.bind = function(opts, event)
 		// Setup events namespace
 		namespace = '.qtip-'+id+'-create';
 
-		// Initialize the qTip
+		// Initialize the qTip and re-grab newly sanitized options
 		self = init.call(this, id, opts);
 		if(self === FALSE) { return TRUE; }
+		options = self.options;
 
 		// Remove title attribute and store it if present
 		if(elem.attr('title')) {

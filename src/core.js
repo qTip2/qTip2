@@ -1347,9 +1347,10 @@ $.fn.qtip.bind = function(opts, event)
 		// Setup events namespace
 		namespace = '.qtip-'+id+'-create';
 
-		// Initialize the qTip
+		// Initialize the qTip and re-grab newly sanitized options
 		self = init.call(this, id, opts);
 		if(self === FALSE) { return TRUE; }
+		options = self.options;
 
 		// Remove title attribute and store it if present
 		if(elem.attr('title')) {
