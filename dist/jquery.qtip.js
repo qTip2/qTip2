@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Dec 9 02:38:38 2010 +0000
+* Date: Thu Dec 9 02:47:11 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -30,104 +30,101 @@ function sanitizeOptions(opts, targets)
 
 	if(!opts) { return FALSE; }
 
-	try {
-		if('metadata' in opts && 'object' !== typeof opts.metadata) {
-			opts.metadata = {
-				type: opts.metadata
+	if('metadata' in opts && 'object' !== typeof opts.metadata) {
+		opts.metadata = {
+			type: opts.metadata
+		};
+	}
+
+	if('content' in opts) {
+		if('object' !== typeof opts.content || opts.content.jquery) {
+			opts.content = {
+				text: opts.content
 			};
 		}
 
-		if('content' in opts) {
-			if('object' !== typeof opts.content || opts.content.jquery) {
-				opts.content = {
-					text: opts.content
-				};
-			}
-
-			content = opts.content.text || FALSE;
-			if(!$.isFunction(content) && ((!content && !content.attr) || content.length < 1 || ('object' === typeof content && !content.jquery))) {
-				content = opts.content.text = FALSE;
-			}
-
-			if('title' in opts.content && 'object' !== typeof opts.content.title) {
-				opts.content.title = {
-					text: opts.content.title
-				};
-			}
+		content = opts.content.text || FALSE;
+		if(!$.isFunction(content) && ((!content && !content.attr) || content.length < 1 || ('object' === typeof content && !content.jquery))) {
+			content = opts.content.text = FALSE;
 		}
 
-		if('position' in opts) {
-			if('object' !== typeof opts.position) {
-				opts.position = {
-					my: opts.position,
-					at: opts.position
-				};
-			}
-
-			if('object' !== typeof opts.position.adjust) {
-				opts.position.adjust = {};
-			}
-
-			if('undefined' !== typeof opts.position.adjust.screen) {
-				opts.position.adjust.screen = !!opts.position.adjust.screen;
-			}
+		if('title' in opts.content && 'object' !== typeof opts.content.title) {
+			opts.content.title = {
+				text: opts.content.title
+			};
 		}
+	}
 
-		if('show' in opts) {
-			if('object' !== typeof opts.show) {
-				opts.show = {
-					event: opts.show
-				};
-			}
-
-			if('object' !== typeof opts.show) {
-				if(opts.show.jquery) {
-					opts.show = { target: opts.show };
-				}
-				else {
-					opts.show = { event: opts.show };
-				}
-			}
-		}
-
-		if('hide' in opts) {
-			if('object' !== typeof opts.hide) {
-				if(opts.hide.jquery) {
-					opts.hide = { target: opts.hide };
-				}
-				else {
-					opts.hide = { event: opts.hide };
-				}
-			}
-		}
-
-		if('style' in opts && 'object' !== typeof opts.style) {
-			opts.style = {
-				classes: opts.style
+	if('position' in opts) {
+		if('object' !== typeof opts.position) {
+			opts.position = {
+				my: opts.position,
+				at: opts.position
 			};
 		}
 
-		// Make sure content functions return something
-		if($.isFunction(content)) {
-			opts.content.text = [];
-			targets.each(function() {
-				var result = content.call(this);
-				if(!result) { return; }
-
-				opts.content.text.push(result);
-				validTargets = validTargets.add($(this));
-			});
-		}
-		else {
-			validTargets = targets;
+		if('object' !== typeof opts.position.adjust) {
+			opts.position.adjust = {};
 		}
 
-		// Sanitize plugin options
-		$.each($.fn.qtip.plugins, function() {
-			if(this.sanitize) { this.sanitize(opts); }
+		if('undefined' !== typeof opts.position.adjust.screen) {
+			opts.position.adjust.screen = !!opts.position.adjust.screen;
+		}
+	}
+
+	if('show' in opts) {
+		if('object' !== typeof opts.show) {
+			opts.show = {
+				event: opts.show
+			};
+		}
+
+		if('object' !== typeof opts.show) {
+			if(opts.show.jquery) {
+				opts.show = { target: opts.show };
+			}
+			else {
+				opts.show = { event: opts.show };
+			}
+		}
+	}
+
+	if('hide' in opts) {
+		if('object' !== typeof opts.hide) {
+			if(opts.hide.jquery) {
+				opts.hide = { target: opts.hide };
+			}
+			else {
+				opts.hide = { event: opts.hide };
+			}
+		}
+	}
+
+	if('style' in opts && 'object' !== typeof opts.style) {
+		opts.style = {
+			classes: opts.style
+		};
+	}
+
+	// Make sure content functions return something
+	if($.isFunction(content)) {
+		opts.content.text = [];
+		targets.each(function() {
+			var result = content.call(this);
+			if(!result) { return; }
+
+			opts.content.text.push(result);
+			validTargets = validTargets.add($(this));
 		});
 	}
-	catch(e) {}
+	else {
+		validTargets = targets;
+	}
+
+	// Sanitize plugin options
+	$.each($.fn.qtip.plugins, function() {
+		if(this.sanitize) { this.sanitize(opts); }
+	});
 
 	return targets ? validTargets : opts;
 }
@@ -1678,9 +1675,12 @@ $.fn.qtip.plugins.ajax.initialize = 'render';
 // Setup plugin sanitization
 $.fn.qtip.plugins.ajax.sanitize = function(options)
 {
-	var opts = options.content.ajax;
-	if(typeof opts !== 'object') { opts = options.content.ajax = { url: opts }; }
-	if('boolean' !== typeof opts.once && opts.once) { opts.once = !!opts.once; }
+	var content = options.content, opts;
+	if(content && 'ajax' in content) {
+		opts = content.ajax;
+		if(typeof opts !== 'object') { opts = options.content.ajax = { url: opts }; }
+		if('boolean' !== typeof opts.once && opts.once) { opts.once = !!opts.once; }
+	}
 };
 
 // Extend original qTip defaults
@@ -2175,15 +2175,18 @@ $.fn.qtip.plugins.tip.initialize = 'render';
 // Setup plugin sanitization options
 $.fn.qtip.plugins.tip.sanitize = function(options)
 {
-	var opts = options.style.tip;
-	if(typeof opts !== 'object'){ options.style.tip = { corner: opts }; }
-	if(!(/string|boolean/i).test(typeof opts.corner)) { opts.corner = true; }
-	if(typeof opts.method !== 'string'){ opts.method = TRUE; }
-	if(!(/canvas|polygon/i).test(opts.method)){ opts.method = TRUE; }
-	if(typeof opts.width !== 'number'){ delete opts.width; }
-	if(typeof opts.height !== 'number'){ delete opts.height; }
-	if(typeof opts.border !== 'number'){ delete opts.border; }
-	if(typeof opts.offset !== 'number'){ delete opts.offset; }
+	var style = options.style, opts;
+	if(style && 'tip' in style) {
+		opts = options.style.tip;
+		if(typeof opts !== 'object'){ options.style.tip = { corner: opts }; }
+		if(!(/string|boolean/i).test(typeof opts.corner)) { opts.corner = true; }
+		if(typeof opts.method !== 'string'){ opts.method = TRUE; }
+		if(!(/canvas|polygon/i).test(opts.method)){ opts.method = TRUE; }
+		if(typeof opts.width !== 'number'){ delete opts.width; }
+		if(typeof opts.height !== 'number'){ delete opts.height; }
+		if(typeof opts.border !== 'number'){ delete opts.border; }
+		if(typeof opts.offset !== 'number'){ delete opts.offset; }
+	}
 };
 
 // Extend original qTip defaults

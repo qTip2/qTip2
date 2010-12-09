@@ -95,9 +95,12 @@ $.fn.qtip.plugins.ajax.initialize = 'render';
 // Setup plugin sanitization
 $.fn.qtip.plugins.ajax.sanitize = function(options)
 {
-	var opts = options.content.ajax;
-	if(typeof opts !== 'object') { opts = options.content.ajax = { url: opts }; }
-	if('boolean' !== typeof opts.once && opts.once) { opts.once = !!opts.once; }
+	var content = options.content, opts;
+	if(content && 'ajax' in content) {
+		opts = content.ajax;
+		if(typeof opts !== 'object') { opts = options.content.ajax = { url: opts }; }
+		if('boolean' !== typeof opts.once && opts.once) { opts.once = !!opts.once; }
+	}
 };
 
 // Extend original qTip defaults
