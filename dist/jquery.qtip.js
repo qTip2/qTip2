@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Dec 9 03:56:41 2010 +0000
+* Date: Thu Dec 9 04:00:53 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -24,7 +24,7 @@ var TRUE = true,
 (function($, window, undefined) {
 
 // Option object sanitizer
-function sanitizeOptions(opts, plugins)
+function sanitizeOptions(opts)
 {
 	var content;
 
@@ -106,12 +106,10 @@ function sanitizeOptions(opts, plugins)
 		};
 	}
 
-	// Sanitize plugin options if enabled
-	if(plugins) {
-		$.each($.fn.qtip.plugins, function() {
-			if(this.sanitize) { this.sanitize(opts); }
-		});
-	}
+	// Sanitize plugin options
+	$.each($.fn.qtip.plugins, function() {
+		if(this.sanitize) { this.sanitize(opts); }
+	});
 
 	return opts;
 }
@@ -808,7 +806,7 @@ function QTip(target, options, id)
 			option[0][ option[1] ] = value.nodeType ? $(value) : value;
 
 			// Re-sanitize options
-			sanitizeOptions(options, 1);
+			sanitizeOptions(options);
 
 			// Execute any valid callbacks
 			for(category in checks) {
@@ -1247,7 +1245,7 @@ function init(id, opts)
 	metadata5 = metadata && opts.metadata.type === 'html5' ? metadata[opts.metadata.name] : NULL,
 
 	// Merge in our sanitized metadata and remove metadata object so we don't interfere with other metadata calls
-	config = $.extend(TRUE, {}, $.fn.qtip.defaults, opts, sanitizeOptions(metadata5 || metadata), 1);
+	config = $.extend(TRUE, {}, $.fn.qtip.defaults, opts, sanitizeOptions(metadata5 || metadata));
 	elem.removeData('metadata');
 
 	// Re-grab our positioning options now we've merged our metadata
