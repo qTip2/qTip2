@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Dec 9 03:08:07 2010 +0000
+* Date: Thu Dec 9 03:56:41 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1379,6 +1379,7 @@ $.fn.qtip.bind = function(opts, event)
 		self = init.call(this, id, opts);
 		if(self === FALSE) { return TRUE; }
 		options = self.options;
+
 		// Initialize plugins
 		$.each($.fn.qtip.plugins, function() {
 			if(this.initialize === 'initialize') { this(self); }
@@ -1423,7 +1424,7 @@ $.fn.qtip.bind = function(opts, event)
 		targets.show.bind(events.show, hoverIntent);
 
 		// Prerendering is enabled, create tooltip now
-		if(opts.show.ready || opts.prerender) { hoverIntent(event); }
+		if(options.show.ready || options.prerender) { hoverIntent(event); }
 	});
 };
 

@@ -1354,6 +1354,7 @@ $.fn.qtip.bind = function(opts, event)
 		self = init.call(this, id, opts);
 		if(self === FALSE) { return TRUE; }
 		options = self.options;
+
 		// Initialize plugins
 		$.each($.fn.qtip.plugins, function() {
 			if(this.initialize === 'initialize') { this(self); }
@@ -1398,7 +1399,7 @@ $.fn.qtip.bind = function(opts, event)
 		targets.show.bind(events.show, hoverIntent);
 
 		// Prerendering is enabled, create tooltip now
-		if(opts.show.ready || opts.prerender) { hoverIntent(event); }
+		if(options.show.ready || options.prerender) { hoverIntent(event); }
 	});
 };
 
