@@ -949,7 +949,11 @@ function QTip(target, options, id)
 
 		reposition: function(event)
 		{
-			if(self.rendered === FALSE) { return FALSE; }
+			// Return if tooltip isn't rendered or we're already processing a previous call
+			if(self.rendered === FALSE || self.cache.processing) { return FALSE; }
+
+			// Set processing flag and continue otherwise
+			else { self.cache.processing = 1; }
 
 			var target = options.position.target,
 				tooltip = self.elements.tooltip,
@@ -1014,9 +1018,6 @@ function QTip(target, options, id)
 				scrollTop: viewport.scrollTop()
 			};
 
-			
-			
-			
 			// Check if mouse was the target
 			if(target === 'mouse') {
 				// Force left top to allow flipping
@@ -1112,6 +1113,9 @@ function QTip(target, options, id)
 			else if(!isNaN(position.left, position.top)) {
 				tooltip.css(position);
 			}
+
+			// Revoke processing flag now we're done
+			self.cache.processing = 0;
 
 			return self;
 		},
