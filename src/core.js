@@ -1,7 +1,7 @@
 // Option object sanitizer
-function sanitizeOptions(opts, targets)
+function sanitizeOptions(opts)
 {
-	var content, validTargets = $();
+	var content;
 
 	if(!opts) { return FALSE; }
 
@@ -81,27 +81,12 @@ function sanitizeOptions(opts, targets)
 		};
 	}
 
-	// Make sure content functions return something
-	if($.isFunction(content)) {
-		opts.content.text = [];
-		targets.each(function() {
-			var result = content.call(this);
-			if(!result) { return; }
-
-			opts.content.text.push(result);
-			validTargets = validTargets.add($(this));
-		});
-	}
-	else {
-		validTargets = targets;
-	}
-
 	// Sanitize plugin options
 	$.each($.fn.qtip.plugins, function() {
 		if(this.sanitize) { this.sanitize(opts); }
 	});
 
-	return targets ? validTargets : opts;
+	return opts;
 }
 
 /*
@@ -796,7 +781,7 @@ function QTip(target, options, id)
 			option[0][ option[1] ] = value.nodeType ? $(value) : value;
 
 			// Re-sanitize options
-			sanitizeOptions(options, target);
+			sanitizeOptions(options);
 
 			// Execute any valid callbacks
 			for(category in checks) {
@@ -1289,8 +1274,7 @@ $.fn.qtip = function(options, notation, newValue)
 		returned = NULL,
 		args = command === 'disable' ? [TRUE] : $.makeArray(arguments).slice(1, 10),
 		event = args[args.length - 1],
-		opts = $.extend(TRUE, {}, options),
-		targets;
+		opts = $.extend(TRUE, {}, options);
 
 	// Check for API request
 	if((!arguments.length && this.data('qtip')) || command === 'api') {
@@ -1340,14 +1324,11 @@ $.fn.qtip = function(options, notation, newValue)
 	// No API commands. validate provided options and setup qTips
 	else if('object' === typeof options || !arguments.length)
 	{
-		// Sanitize options
-		targets = sanitizeOptions(opts, this);
-
 		// Build new sanitized options object
-		opts = $.extend(TRUE, {}, $.fn.qtip.defaults, opts);
+		opts = $.extend(TRUE, {}, $.fn.qtip.defaults, sanitizeOptions(opts));
 
 		// Bind the qTips
-		return $.fn.qtip.bind.call(targets, opts, event);
+		return $.fn.qtip.bind.call(this, opts, event);
 	}
 };
 
