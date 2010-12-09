@@ -1351,12 +1351,6 @@ $.fn.qtip.bind = function(opts, event)
 		self = init.call(this, id, opts);
 		if(self === FALSE) { return TRUE; }
 
-		// Setup options and get correct content from array if present
-		options = self.options;
-		if($.isArray(content)) {
-			options.content.text = content[i];
-		}
-
 		// Remove title attribute and store it if present
 		if(elem.attr('title')) {
 			elem.data('oldtitle', elem.attr('title')).removeAttr('title');
