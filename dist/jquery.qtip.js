@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Dec 9 15:26:00 2010 +0000
+* Date: Thu Dec 9 15:47:15 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -473,7 +473,6 @@ function QTip(target, options, id)
 		}
 
 		function repositionMethod(event) {
-			console.log(event)
 			if(self.cache.processing) { return; }
 
 			// Only update position if tooltip is visible
@@ -586,42 +585,28 @@ function QTip(target, options, id)
 		doc = parseInt(doc, 10) !== 0;
 		var namespace = '.qtip-'+id,
 			targets = {
-				show: show ? options.show.target : $('<div/>'),
-				hide: hide ? options.hide.target : $('<div/>'),
-				tooltip: tooltip ? self.elements.tooltip : $('<div/>')
-			},
-			events = { show: String(options.show.event).split(' '), hide: String(options.hide.event).split(' ') };
+				show: show ? options.show.target : NULL,
+				hide: hide ? options.hide.target : NULL,
+				tooltip: tooltip ? self.elements.tooltip : NULL,
+				content: tooltip ? self.elements.content : NULL,
+				container: doc ? options.position.container[0] === document.body ? document : options.position.container : NULL,
+				window: doc ? window : NULL
+			};
 
 		// Check if tooltip is rendered
 		if(self.rendered)
 		{
-			// Remove show events
-			$.each(events.show, function(index, type){ targets.show.unbind(type+namespace); });
-			targets.show.unbind('mousemove'+namespace)
-				.unbind('mouseout'+namespace)
-				.unbind('qtip-'+id+'-inactive');
-
-			// Remove hide events
-			$.each(events.hide, function(index, type) {
-				targets.hide.add(targets.tooltip).unbind(type+namespace);
-			});
-			$.each($.fn.qtip.inactiveEvents, function(index, type){
-				targets.hide.add(tooltip ? self.elements.content : NULL).unbind(type+namespace+'-inactive');
-			});
-			targets.hide.unbind('mouseout'+namespace);
-
-			// Remove tooltip events
-			targets.tooltip.unbind('mouseover'+namespace);
-
-			// Remove document events
-			if(doc) {
-				$(window).unbind('resize'+namespace);
-				$(document).unbind('mousedown'+namespace+' mousemove'+namespace);
-			}
+			$([]).pushStack(
+				$.grep(
+					[ targets.show, targets.hide, targets.tooltip, targets.container, targets.content, targets.window ],
+					function(){ return this !== null; }
+				)
+			)
+			.unbind(namespace);
 		}
 
 		// Tooltip isn't yet rendered, remove render event
-		else if(show) { targets.show.unbind(events.show+namespace+'-create'); }
+		else if(show) { targets.show.unbind(namespace+'-create'); }
 	}
 
 	/*
