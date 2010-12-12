@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun Dec 12 04:09:27 2010 +0000
+* Date: Sun Dec 12 05:14:24 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -444,14 +444,15 @@ function QTip(target, options, id)
 			if(targets.tooltip.hasClass('ui-state-disabled')) { return FALSE; }
 
 			// Check if new target was actually the tooltip element
-			var ontoTooltip = $(event.relatedTarget || event.target).parents(selector)[0] == targets.tooltip[0];
+			var ontoTooltip = $(event.relatedTarget || event.target).parents(selector)[0] === targets.tooltip[0],
+				ontoTarget = $(event.relatedTarget || event.target)[0] === targets.show[0];
 
 			// Clear timers and stop animation queue
 			clearTimeout(self.timers.show);
 			clearTimeout(self.timers.hide);
 
 			// Prevent hiding if tooltip is fixed and event target is the tooltip. Or if mouse positioning is enabled and cursor momentarily overlaps
-			if(options.hide.fixed && ((posOptions.target === 'mouse' && ontoTooltip) || ((/mouse(out|leave|move)/).test(event.type) && ontoTooltip)))
+			if(options.hide.fixed && ((posOptions.target === 'mouse' && ontoTooltip) || ((/mouse(out|leave|move)/).test(event.type) && (ontoTooltip || ontoTarget))))
 			{
 				// Prevent default and popagation
 				event.stopPropagation();

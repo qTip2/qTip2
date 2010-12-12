@@ -419,14 +419,15 @@ function QTip(target, options, id)
 			if(targets.tooltip.hasClass('ui-state-disabled')) { return FALSE; }
 
 			// Check if new target was actually the tooltip element
-			var ontoTooltip = $(event.relatedTarget || event.target).parents(selector)[0] == targets.tooltip[0];
+			var ontoTooltip = $(event.relatedTarget || event.target).parents(selector)[0] === targets.tooltip[0],
+				ontoTarget = $(event.relatedTarget || event.target)[0] === targets.show[0];
 
 			// Clear timers and stop animation queue
 			clearTimeout(self.timers.show);
 			clearTimeout(self.timers.hide);
 
 			// Prevent hiding if tooltip is fixed and event target is the tooltip. Or if mouse positioning is enabled and cursor momentarily overlaps
-			if(options.hide.fixed && ((posOptions.target === 'mouse' && ontoTooltip) || ((/mouse(out|leave|move)/).test(event.type) && ontoTooltip)))
+			if(options.hide.fixed && ((posOptions.target === 'mouse' && ontoTooltip) || ((/mouse(out|leave|move)/).test(event.type) && (ontoTooltip || ontoTarget))))
 			{
 				// Prevent default and popagation
 				event.stopPropagation();
