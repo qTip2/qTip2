@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun Dec 12 02:09:30 2010 +0000
+* Date: Sun Dec 12 03:58:11 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -687,7 +687,7 @@ function QTip(target, options, id)
 
 				// Trigger tooltiprender event and pass original triggering event as original
 				callback.originalEvent = self.cache.event;
-				elements.tooltip.trigger(callback, [self.hash()]);
+				elements.tooltip.trigger(callback, [self]);
 
 				next(); // Move on
 			});
@@ -872,7 +872,7 @@ function QTip(target, options, id)
 			// Call API methods
 			callback = $.Event('tooltip'+type); 
 			callback.originalEvent = event ? self.cache.event : NULL;
-			tooltip.trigger(callback, [self.hash(), 90]);
+			tooltip.trigger(callback, [self, 90]);
 			if(callback.isDefaultPrevented()){ return self; }
 
 			// Execute state specific properties
@@ -895,7 +895,7 @@ function QTip(target, options, id)
 
 			// Use custom function if provided
 			if($.isFunction(opts.effect)) {
-				opts.effect.call(tooltip, self.hash());
+				opts.effect.call(tooltip, self);
 				tooltip.queue(function(){ after.call(this); $(this).dequeue(); });
 			}
 
@@ -956,7 +956,7 @@ function QTip(target, options, id)
 				// Call API method
 				callback = $.Event('tooltipfocus'); 
 				callback.originalEvent = cachedEvent;
-				tooltip.trigger(callback, [self.hash(), newIndex]);
+				tooltip.trigger(callback, [self, newIndex]);
 
 				// Set the new z-index and set focus status to TRUE if callback wasn't FALSE
 				if(!callback.isDefaultPrevented()) {
@@ -1114,13 +1114,13 @@ function QTip(target, options, id)
 
 			// Call API method
 			callback.originalEvent = $.extend({}, event);
-			tooltip.trigger(callback, [self.hash(), position, viewport.elem]);
+			tooltip.trigger(callback, [self, position, viewport.elem]);
 			if(callback.isDefaultPrevented()){ return self; }
 			delete position.adjusted;
 
 			// Use custom function if provided
 			if(tooltip.is(':visible') && $.isFunction(posOptions.effect)) {
-				posOptions.effect.call(tooltip, self.hash(), position);
+				posOptions.effect.call(tooltip, self, position);
 				tooltip.queue(function() {
 					var elem = $(this);
 					// Reset attributes to avoid cross-browser rendering bugs
@@ -1204,24 +1204,6 @@ function QTip(target, options, id)
 			target.removeAttr('aria-describedby');
 
 			return target;
-		},
-
-		hash: function()
-		{
-			var apiHash = {};
-
-			$.each([
-				// Properties
-				'id', 'rendered', 'elements', 'timers',
-				// Methods
-				'get', 'set', 'toggle', 'show', 'hide', 'focus', 
-				'reposition', 'redraw', 'disable', 'destroy'
-			],
-			function(i, name){
-				apiHash[name] = self[name];
-			});
-
-			return apiHash;
 		}
 	});
 }
@@ -1309,7 +1291,7 @@ $.fn.qtip = function(options, notation, newValue)
 	// Check for API request
 	if((!arguments.length && this.data('qtip')) || command === 'api') {
 		opts = this.data('qtip');
-		return opts ? opts.hash() : undefined;
+		return opts ? opts : undefined;
 	}
 
 	// Execute API command if present
