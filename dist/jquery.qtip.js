@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun Dec 12 02:01:38 2010 +0000
+* Date: Sun Dec 12 02:03:02 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -826,7 +826,7 @@ function QTip(target, options, id)
 				tooltip = self.elements.tooltip,
 				opts = options[type],
 				visible = tooltip.is(':visible'),
-				callback, ieStyle;
+				callback;
 
 			// Detect state if valid one isn't provided
 			if((typeof state).search('boolean|number')) { state = !tooltip.is(':visible'); }
@@ -840,9 +840,9 @@ function QTip(target, options, id)
 					event.target === options.show.target[0] && tooltip.has(event.relatedTarget).length){
 					return self;
 					}
-					
-					// Cache event
-					self.cache.event = $.extend({}, event);
+
+				// Cache event
+				self.cache.event = $.extend({}, event);
 			}
 
 			// Define after callback
@@ -850,7 +850,8 @@ function QTip(target, options, id)
 			{
 				var elem = $(this),
 					attr = state ? 'attr' : 'removeAttr',
-					opacity = (/^1|0$/).test(elem.css('opacity'));
+					opacity = (/^1|0$/).test(elem.css('opacity')),
+					ieStyle = this.style;
 
 				// Apply ARIA attributes when tooltip is shown
 				if(self.elements.title){ target[attr]('aria-labelledby', uitooltip + '-'+id+'-title'); }
@@ -858,15 +859,14 @@ function QTip(target, options, id)
 
 				// Prevent antialias from disappearing in IE7 by removing filter and opacity attribute
 				if(state) {
-					if($.browser.msie && this.style && opacity) { 
-						ieStyle = this.style;
+					if($.browser.msie && ieStyle && opacity) {
 						ieStyle.removeAttribute('filter');
 						ieStyle.removeAttribute('opacity');
 					}
 				}
-				else if(opacity) {
-					elem.hide();
-				}
+
+				// Otherwise just hide
+				else if(opacity) { elem.hide(); }
 			}
 
 			// Call API methods
@@ -883,10 +883,9 @@ function QTip(target, options, id)
 				// Hide other tooltips if tooltip is solo
 				if(opts.solo) { $(selector).qtip('hide'); }
 			}
-			else {
-				// Clear show timer
-				clearTimeout(self.timers.show);
-			}
+
+			// Clear show timer if we're hiding 
+			else { clearTimeout(self.timers.show); }
 
 			// Set ARIA hidden status attribute
 			tooltip.attr('aria-hidden', Boolean(!state));
@@ -906,10 +905,8 @@ function QTip(target, options, id)
 				after.call(tooltip);
 			}
 
-			// Use basic fade function
-			else {
-				tooltip.fadeTo(90, state ? 1 : 0, after);
-			}
+			// Use basic fade function by default
+			else { tooltip.fadeTo(90, state ? 1 : 0, after); }
 
 			// If inactive hide method is set, active it
 			if(state) { opts.target.trigger('qtip-'+id+'-inactive'); }
