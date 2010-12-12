@@ -1183,13 +1183,18 @@ function QTip(target, options, id)
 
 		hash: function()
 		{
-			var apiHash = $.extend({}, self);
-			delete apiHash.cache;
-			delete apiHash.timers;
-			delete apiHash.options;
-			delete apiHash.plugins;
-			delete apiHash.render;
-			delete apiHash.hash;
+			var apiHash = {};
+
+			$.each([
+				// Properties
+				'id', 'rendered', 'elements', 'timers',
+				// Methods
+				'get', 'set', 'toggle', 'show', 'hide', 'focus', 
+				'reposition', 'redraw', 'disable', 'destroy'
+			],
+			function(i, name){
+				apiHash[name] = self[name];
+			});
 
 			return apiHash;
 		}
