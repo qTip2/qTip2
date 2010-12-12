@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun Dec 12 03:58:11 2010 +0000
+* Date: Sun Dec 12 04:08:31 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -676,18 +676,18 @@ function QTip(target, options, id)
 			 * See: updateContent method
 			*/
 			elements.tooltip.queue('fx', function(next) {
-				// Update tooltip position and show tooltip if needed
-				if(options.show.ready || show) {
-					elements.tooltip.hide();
-					self.show(self.cache.event);
-				}
-
 				// Remove accessible class
 				elements.tooltip.removeClass('ui-tooltip-accessible');
 
 				// Trigger tooltiprender event and pass original triggering event as original
 				callback.originalEvent = self.cache.event;
 				elements.tooltip.trigger(callback, [self]);
+
+				// Update tooltip position and show tooltip if needed
+				if(options.show.ready || show) {
+					elements.tooltip.hide();
+					self.show(self.cache.event);
+				}
 
 				next(); // Move on
 			});

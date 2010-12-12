@@ -651,18 +651,18 @@ function QTip(target, options, id)
 			 * See: updateContent method
 			*/
 			elements.tooltip.queue('fx', function(next) {
-				// Update tooltip position and show tooltip if needed
-				if(options.show.ready || show) {
-					elements.tooltip.hide();
-					self.show(self.cache.event);
-				}
-
 				// Remove accessible class
 				elements.tooltip.removeClass('ui-tooltip-accessible');
 
 				// Trigger tooltiprender event and pass original triggering event as original
 				callback.originalEvent = self.cache.event;
 				elements.tooltip.trigger(callback, [self]);
+
+				// Update tooltip position and show tooltip if needed
+				if(options.show.ready || show) {
+					elements.tooltip.hide();
+					self.show(self.cache.event);
+				}
 
 				next(); // Move on
 			});
