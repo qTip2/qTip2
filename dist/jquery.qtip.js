@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun Dec 12 04:08:31 2010 +0000
+* Date: Sun Dec 12 04:09:27 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -130,7 +130,7 @@ function QTip(target, options, id)
 	self.id = id;
 	self.rendered = FALSE;
 	self.elements = { target: target };
-	self.cache = { event: {}, target: NULL, disabled: FALSE };
+	self.cache = { event: {}, target: NULL, disabled: FALSE, position: NULL };
 	self.timers = { img: [] };
 	self.options = options;
 	self.plugins = {};
@@ -1034,16 +1034,16 @@ function QTip(target, options, id)
 				scrollTop: viewport.scrollTop()
 			};
 
-			
-			
-			
 			// Check if mouse was the target
 			if(target === 'mouse') {
 				// Force left top to allow flipping
 				at = { x: 'left', y: 'top' };
 
 				// Use cached event if one isn't available for positioning
-				event = adjust.mouse || !event || !event.pageX ? $.extend({}, $.fn.qtip.mouse) : event;
+				event = (event.type === 'resize' || event.type === 'scroll') ? self.cache.event :
+					adjust.mouse || !event || !event.pageX ? $.extend({}, $.fn.qtip.mouse) : event;
+
+				// Use event coordinates for position
 				position = { top: event.pageY, left: event.pageX };
 			}
 			else {
@@ -1111,6 +1111,7 @@ function QTip(target, options, id)
 				return $(this).attr('class').replace(/ui-tooltip-pos-\w+/i, '');
 			})
 			.addClass(uitooltip + '-pos-' + my.abbreviation());
+			
 
 			// Call API method
 			callback.originalEvent = $.extend({}, event);
