@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun Dec 12 01:43:24 2010 +0000
+* Date: Sun Dec 12 02:01:38 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -828,9 +828,22 @@ function QTip(target, options, id)
 				visible = tooltip.is(':visible'),
 				callback, ieStyle;
 
-				
 			// Detect state if valid one isn't provided
 			if((typeof state).search('boolean|number')) { state = !tooltip.is(':visible'); }
+
+			// Return if element is already in correct state
+			if((!visible && !state) || tooltip.is(':animated')) { return self; }
+
+			// Try to prevent flickering when tooltip overlaps show element
+			if(event) {
+				if((/over|enter/).test(event.type) && (/out|leave/).test(self.cache.event.type) &&
+					event.target === options.show.target[0] && tooltip.has(event.relatedTarget).length){
+					return self;
+					}
+					
+					// Cache event
+					self.cache.event = $.extend({}, event);
+			}
 
 			// Define after callback
 			function after()
@@ -854,20 +867,6 @@ function QTip(target, options, id)
 				else if(opacity) {
 					elem.hide();
 				}
-			}
-
-			// Return if element is already in correct state
-			if((!visible && !state) || tooltip.is(':animated')) { return self; }
-
-			// Try to prevent flickering when tooltip overlaps show element
-			if(event) {
-				if((/over|enter/).test(event.type) && (/out|leave/).test(self.cache.event.type) &&
-					event.target === options.show.target[0] && tooltip.has(event.relatedTarget).length){
-					return self;
-				}
-
-				// Cache event
-				self.cache.event = $.extend({}, event);
 			}
 
 			// Call API methods

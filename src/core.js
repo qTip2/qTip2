@@ -803,9 +803,22 @@ function QTip(target, options, id)
 				visible = tooltip.is(':visible'),
 				callback, ieStyle;
 
-				
 			// Detect state if valid one isn't provided
 			if((typeof state).search('boolean|number')) { state = !tooltip.is(':visible'); }
+
+			// Return if element is already in correct state
+			if((!visible && !state) || tooltip.is(':animated')) { return self; }
+
+			// Try to prevent flickering when tooltip overlaps show element
+			if(event) {
+				if((/over|enter/).test(event.type) && (/out|leave/).test(self.cache.event.type) &&
+					event.target === options.show.target[0] && tooltip.has(event.relatedTarget).length){
+					return self;
+					}
+					
+					// Cache event
+					self.cache.event = $.extend({}, event);
+			}
 
 			// Define after callback
 			function after()
@@ -829,20 +842,6 @@ function QTip(target, options, id)
 				else if(opacity) {
 					elem.hide();
 				}
-			}
-
-			// Return if element is already in correct state
-			if((!visible && !state) || tooltip.is(':animated')) { return self; }
-
-			// Try to prevent flickering when tooltip overlaps show element
-			if(event) {
-				if((/over|enter/).test(event.type) && (/out|leave/).test(self.cache.event.type) &&
-					event.target === options.show.target[0] && tooltip.has(event.relatedTarget).length){
-					return self;
-				}
-
-				// Cache event
-				self.cache.event = $.extend({}, event);
 			}
 
 			// Call API methods
