@@ -803,6 +803,7 @@ function QTip(target, options, id)
 				visible = tooltip.is(':visible'),
 				callback, ieStyle;
 
+				
 			// Detect state if valid one isn't provided
 			if((typeof state).search('boolean|number')) { state = !tooltip.is(':visible'); }
 
@@ -835,8 +836,8 @@ function QTip(target, options, id)
 
 			// Try to prevent flickering when tooltip overlaps show element
 			if(event) {
-				if(self.cache.event && (/over|enter/).test(event.type) && (/out|leave/).test(self.cache.event.type) &&
-					$(event.target).add(options.show.target).length < 2 && $(event.relatedTarget).parents(selector).length > 0){
+				if((/over|enter/).test(event.type) && (/out|leave/).test(self.cache.event.type) &&
+					event.target === options.show.target[0] && tooltip.has(event.relatedTarget).length){
 					return self;
 				}
 

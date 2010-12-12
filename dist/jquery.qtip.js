@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun Dec 12 00:13:54 2010 +0000
+* Date: Sun Dec 12 01:43:24 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -828,6 +828,7 @@ function QTip(target, options, id)
 				visible = tooltip.is(':visible'),
 				callback, ieStyle;
 
+				
 			// Detect state if valid one isn't provided
 			if((typeof state).search('boolean|number')) { state = !tooltip.is(':visible'); }
 
@@ -860,8 +861,8 @@ function QTip(target, options, id)
 
 			// Try to prevent flickering when tooltip overlaps show element
 			if(event) {
-				if(self.cache.event && (/over|enter/).test(event.type) && (/out|leave/).test(self.cache.event.type) &&
-					$(event.target).add(options.show.target).length < 2 && $(event.relatedTarget).parents(selector).length > 0){
+				if((/over|enter/).test(event.type) && (/out|leave/).test(self.cache.event.type) &&
+					event.target === options.show.target[0] && tooltip.has(event.relatedTarget).length){
 					return self;
 				}
 
