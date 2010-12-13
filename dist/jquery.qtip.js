@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Dec 13 01:26:04 2010 +0000
+* Date: Mon Dec 13 01:42:06 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -980,12 +980,11 @@ function QTip(target, options, id)
 				adjust = posOptions.adjust,
 				elemWidth = self.elements.tooltip.width(),
 				elemHeight = self.elements.tooltip.height(),
-				offsetParent = $(posOptions.container)[0],
 				targetWidth = 0,
 				targetHeight = 0,
 				callback = $.Event('tooltipmove'),
 				fixed = tooltip.css('position') === 'fixed',
-				viewport = $(offsetParent !== document.body ? offsetParent : window),
+				viewport = posOptions.container[0] !== document.body ? posOptions.container : $(window),
 				position = { left: 0, top: 0 },
 				readjust = {
 					left: function(posLeft) {
@@ -997,10 +996,10 @@ function QTip(target, options, id)
 							overflowRight = posLeft + elemWidth - viewport.width - viewportScroll,
 							offset = myWidth - adjustX - (my.precedance === 'x' || my.x === my.y ? atWidth : 0);
 
-						if(overflowLeft > 0) {
+						if(overflowLeft > 0 && (my.x !== 'left' || overflowRight > 0)) {
 							position.left -= offset;
 						}
-						else if(overflowRight > 0) {
+						else if(overflowRight > 0 && (my.x !== 'right' || overflowLeft > 0)  ) {
 							position.left -= (my.x === 'center' ? -1 : 1) * offset;
 						}
 
@@ -1015,10 +1014,10 @@ function QTip(target, options, id)
 							overflowBottom = posTop + elemHeight - viewport.height - viewportScroll + adjust.y,
 							offset = myHeight - adjustY - (my.precedance === 'y' || my.x === my.y ? atHeight : 0);
 
-						if(overflowTop > 0) {
+						if(overflowTop > 0 && (my.y !== 'top' || overflowBottom > 0)) {
 							position.top -= offset;
 						}
-						else if(overflowBottom > 0) {
+						else if(overflowBottom > 0 && (my.y !== 'bottom' || overflowTop > 0)  ) {
 							position.top -= (my.y === 'center' ? -1 : 1) * offset;
 						}
 
@@ -1087,7 +1086,7 @@ function QTip(target, options, id)
 					targetWidth = target.outerWidth();
 					targetHeight = target.outerHeight();
 
-					position = offset(target[0], offsetParent);
+					position = offset(target[0], posOptions.container[0]);
 				}
 
 				// Adjust position relative to target
