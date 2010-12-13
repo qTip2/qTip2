@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun Dec 12 05:14:24 2010 +0000
+* Date: Sun Dec 12 18:31:07 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1041,7 +1041,7 @@ function QTip(target, options, id)
 				at = { x: 'left', y: 'top' };
 
 				// Use cached event if one isn't available for positioning
-				event = (event.type === 'resize' || event.type === 'scroll') ? self.cache.event :
+				event = event && (event.type === 'resize' || event.type === 'scroll') ? self.cache.event :
 					adjust.mouse || !event || !event.pageX ? $.extend({}, $.fn.qtip.mouse) : event;
 
 				// Use event coordinates for position
