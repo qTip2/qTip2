@@ -135,21 +135,23 @@ function QTip(target, options, id)
 		return actual[i] !== undefined ? [option, actual[i] ] : [options, actual[0]];
 	}
 
-	function offset(elem, relativeTo) {
+	function offset(elem, container) {
 		var pos = { left: 0, top: 0 },
 			addScroll = !$.fn.qtip.plugins.iOS,
-			offsetParent;
+			offsetParent, parentIsContainer;
 		
-		if(relativeTo) {
-			pos = offset(relativeTo);
+		if(container) {
+			pos = offset(container);
 			pos.left *= -1; pos.top *= -1;
 		}
 		
 		if(elem.offsetParent) {
 			do {
 				offsetParent = elem.offsetParent;
-				pos.left += elem.offsetLeft - (addScroll && offsetParent ? offsetParent.scrollLeft : 0);
-				pos.top += elem.offsetTop - (addScroll &&  offsetParent ? offsetParent.scrollTop : 0);
+				parentIsContainer = offsetParent === container;
+
+				pos.left += elem.offsetLeft - (addScroll && offsetParent && !parentIsContainer ? offsetParent.scrollLeft : 0);
+				pos.top += elem.offsetTop - (addScroll &&  offsetParent && !parentIsContainer ? offsetParent.scrollTop : 0);
 			}
 			while(elem = offsetParent);
 		}
@@ -978,6 +980,8 @@ function QTip(target, options, id)
 							position.left -= (my.x === 'center' ? -1 : 1) * offset;
 						}
 
+						if(position.left < 0) { position.left = posLeft; }
+
 						return position.left - posLeft;
 					},
 					top: function(posTop) {
@@ -995,6 +999,8 @@ function QTip(target, options, id)
 						else if(overflowBottom > 0 && (my.y !== 'bottom' || overflowTop > 0)  ) {
 							position.top -= (my.y === 'center' ? -1 : 1) * offset;
 						}
+
+						if(position.top < 0) { position.top = posTop; }
 
 						return position.top - posTop;
 					}
