@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun Dec 12 18:31:07 2010 +0000
+* Date: Mon Dec 13 01:26:04 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1572,7 +1572,7 @@ $.fn.qtip.defaults = {
 			{
 				// Call user-defined success handler if present
 				if($.isFunction(ajax.success)) {
-					var result = ajax.success.call(qTip.hash(), content, status);
+					var result = ajax.success.call(qTip, content, status);
 					if(result === FALSE){ return; }
 				}
 
@@ -1586,7 +1586,7 @@ $.fn.qtip.defaults = {
 
 				// Call user-defined success handler if present
 				if($.isFunction(ajax.error)) {
-					result = ajax.error.call(qTip.hash(), xhr, status, error);
+					result = ajax.error.call(qTip, xhr, status, error);
 					if(result === FALSE){ return; }
 				}
 

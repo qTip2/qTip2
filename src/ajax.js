@@ -32,7 +32,7 @@ function Ajax(qTip)
 			{
 				// Call user-defined success handler if present
 				if($.isFunction(ajax.success)) {
-					var result = ajax.success.call(qTip.hash(), content, status);
+					var result = ajax.success.call(qTip, content, status);
 					if(result === FALSE){ return; }
 				}
 
@@ -46,7 +46,7 @@ function Ajax(qTip)
 
 				// Call user-defined success handler if present
 				if($.isFunction(ajax.error)) {
-					result = ajax.error.call(qTip.hash(), xhr, status, error);
+					result = ajax.error.call(qTip, xhr, status, error);
 					if(result === FALSE){ return; }
 				}
 
