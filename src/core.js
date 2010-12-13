@@ -137,11 +137,11 @@ function QTip(target, options, id)
 
 	function offset(elem, relativeTo) {
 		var pos = { left: 0, top: 0 },
-			addScroll = relativeTo === FALSE && !$.fn.qtip.plugins.iOS,
+			addScroll = !$.fn.qtip.plugins.iOS,
 			offsetParent;
 		
 		if(relativeTo) {
-			pos = offset(relativeTo, FALSE);
+			pos = offset(relativeTo);
 			pos.left *= -1; pos.top *= -1;
 		}
 		
@@ -149,7 +149,7 @@ function QTip(target, options, id)
 			do {
 				offsetParent = elem.offsetParent;
 				pos.left += elem.offsetLeft - (addScroll && offsetParent ? offsetParent.scrollLeft : 0);
-				pos.top += elem.offsetTop - (addScroll &&  offsetParent ? offsetParent.scrollLeft : 0);
+				pos.top += elem.offsetTop - (addScroll &&  offsetParent ? offsetParent.scrollTop : 0);
 			}
 			while(elem = offsetParent);
 		}
