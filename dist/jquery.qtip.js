@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun Dec 19 18:51:55 2010 +0000
+* Date: Sun Dec 19 18:58:10 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -987,7 +987,7 @@ function QTip(target, options, id)
 				callback = $.Event('tooltipmove'),
 				fixed = tooltip.css('position') === 'fixed',
 				viewport = posOptions.container[0] !== document.body ? posOptions.container : $(window),
-				position = { left: 0, top: 0, adjusted: { left: 0, top: 0 } },
+				position = { left: 0, top: 0 },
 				readjust = {
 					left: function(posLeft) {
 						var viewportScroll = viewport.scrollLeft,
@@ -1105,6 +1105,9 @@ function QTip(target, options, id)
 			// Calculate collision offset values
 			if(adjust.screen && target[0] !== window && target[0] !== document.body) {
 				position.adjusted = { left: readjust.left(position.left), top: readjust.top(position.top) };
+			}
+			else {
+				position.adjusted = { left: 0, top: 0 };
 			}
 
 			// Set tooltip position class

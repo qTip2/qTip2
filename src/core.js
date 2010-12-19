@@ -962,7 +962,7 @@ function QTip(target, options, id)
 				callback = $.Event('tooltipmove'),
 				fixed = tooltip.css('position') === 'fixed',
 				viewport = posOptions.container[0] !== document.body ? posOptions.container : $(window),
-				position = { left: 0, top: 0, adjusted: { left: 0, top: 0 } },
+				position = { left: 0, top: 0 },
 				readjust = {
 					left: function(posLeft) {
 						var viewportScroll = viewport.scrollLeft,
@@ -1080,6 +1080,9 @@ function QTip(target, options, id)
 			// Calculate collision offset values
 			if(adjust.screen && target[0] !== window && target[0] !== document.body) {
 				position.adjusted = { left: readjust.left(position.left), top: readjust.top(position.top) };
+			}
+			else {
+				position.adjusted = { left: 0, top: 0 };
 			}
 
 			// Set tooltip position class
