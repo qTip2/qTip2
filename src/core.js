@@ -980,7 +980,7 @@ function QTip(target, options, id)
 						}
 
 						// Make sure we haven't made things worse with the adjustment and return the adjusted difference
-						if(position.left < 0) { position.left = posLeft; }
+						if(position.left < 0 && -position.left > overflowRight) { position.left = posLeft; }
 						return position.left - posLeft;
 					},
 					top: function(posTop) {
@@ -999,7 +999,7 @@ function QTip(target, options, id)
 						}
 
 						// Make sure we haven't made things worse with the adjustment and return the adjusted difference
-						if(position.top < 0) { position.top = posTop; }
+						if(position.top < 0 && -position.top > overflowBottom) { position.top = posTop; }
 						return position.top - posTop;
 					}
 				};

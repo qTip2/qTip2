@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Dec 13 22:40:29 2010 +0000
+* Date: Sun Dec 19 18:40:44 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1005,7 +1005,7 @@ function QTip(target, options, id)
 						}
 
 						// Make sure we haven't made things worse with the adjustment and return the adjusted difference
-						if(position.left < 0) { position.left = posLeft; }
+						if(position.left < 0 && -position.left > overflowRight) { position.left = posLeft; }
 						return position.left - posLeft;
 					},
 					top: function(posTop) {
@@ -1024,7 +1024,7 @@ function QTip(target, options, id)
 						}
 
 						// Make sure we haven't made things worse with the adjustment and return the adjusted difference
-						if(position.top < 0) { position.top = posTop; }
+						if(position.top < 0 && -position.top > overflowBottom) { position.top = posTop; }
 						return position.top - posTop;
 					}
 				};
