@@ -962,46 +962,44 @@ function QTip(target, options, id)
 				callback = $.Event('tooltipmove'),
 				fixed = tooltip.css('position') === 'fixed',
 				viewport = posOptions.container[0] !== document.body ? posOptions.container : $(window),
-				position = { left: 0, top: 0 },
+				position = { left: 0, top: 0, adjusted: { left: 0, top: 0 } },
 				readjust = {
 					left: function(posLeft) {
 						var viewportScroll = viewport.scrollLeft,
 							myWidth = my.x === 'left' ? elemWidth : my.x === 'right' ? -elemWidth : -elemWidth / 2,
 							atWidth = at.x === 'left' ? targetWidth : at.x === 'right' ? -targetWidth : -targetWidth / 2,
-							adjustX = (my.x === my.y ? 1 : -2) * adjust.x,
 							overflowLeft = viewportScroll - posLeft,
 							overflowRight = posLeft + elemWidth - viewport.width - viewportScroll,
-							offset = myWidth - adjustX - (my.precedance === 'x' || my.x === my.y ? atWidth : 0);
+							offset = myWidth - (my.precedance === 'x' || my.x === my.y ? atWidth : 0);
 
 						if(overflowLeft > 0 && (my.x !== 'left' || overflowRight > 0)) {
 							position.left -= offset;
 						}
 						else if(overflowRight > 0 && (my.x !== 'right' || overflowLeft > 0)  ) {
-							position.left -= (my.x === 'center' ? -1 : 1) * offset;
+							position.left -= (my.x === 'center' ? -1 : 1) * offset + (2 * adjust.x);
 						}
 
+						// Make sure we haven't made things worse with the adjustment and return the adjusted difference
 						if(position.left < 0) { position.left = posLeft; }
-
 						return position.left - posLeft;
 					},
 					top: function(posTop) {
 						var viewportScroll = viewport.scrollTop,
 							myHeight = my.y === 'top' ? elemHeight : my.y === 'bottom' ? -elemHeight : -elemHeight / 2,
 							atHeight = at.y === 'top' ? targetHeight : at.y === 'bottom' ? -targetHeight : -targetHeight / 2,
-							adjustY = (my.y === my.x ? 1 : -2) * adjust.y,
 							overflowTop = viewportScroll - posTop,
-							overflowBottom = posTop + elemHeight - viewport.height - viewportScroll + adjust.y,
-							offset = myHeight - adjustY - (my.precedance === 'y' || my.x === my.y ? atHeight : 0);
+							overflowBottom = posTop + elemHeight - viewport.height - viewportScroll,
+							offset = myHeight - (my.precedance === 'y' || my.x === my.y ? atHeight : 0);
 
 						if(overflowTop > 0 && (my.y !== 'top' || overflowBottom > 0)) {
 							position.top -= offset;
 						}
 						else if(overflowBottom > 0 && (my.y !== 'bottom' || overflowTop > 0)  ) {
-							position.top -= (my.y === 'center' ? -1 : 1) * offset;
+							position.top -= (my.y === 'center' ? -1 : 1) * offset + (2 * adjust.y);
 						}
 
+						// Make sure we haven't made things worse with the adjustment and return the adjusted difference
 						if(position.top < 0) { position.top = posTop; }
-
 						return position.top - posTop;
 					}
 				};
@@ -1083,16 +1081,12 @@ function QTip(target, options, id)
 			if(adjust.screen && target[0] !== window && target[0] !== document.body) {
 				position.adjusted = { left: readjust.left(position.left), top: readjust.top(position.top) };
 			}
-			else {
-				position.adjusted = { left: 0, top: 0 };
-			}
 
 			// Set tooltip position class
 			tooltip.attr('class', function(i, val) {
 				return $(this).attr('class').replace(/ui-tooltip-pos-\w+/i, '');
 			})
 			.addClass(uitooltip + '-pos-' + my.abbreviation());
-			
 
 			// Call API method
 			callback.originalEvent = $.extend({}, event);
