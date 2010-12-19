@@ -547,7 +547,7 @@ function QTip(target, options, id)
 
 					if($(event.target).parents(selector).length === 0 && $(event.target).add(target).length > 1 &&
 					tooltip.is(':visible') && !tooltip.hasClass('ui-state-disabled')) {
-						self.hide();
+						self.hide(event);
 					}
 				});
 			}
