@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun Dec 19 18:58:10 2010 +0000
+* Date: Sun Dec 19 19:18:43 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1938,7 +1938,7 @@ function Tip(qTip, command)
 						' style="behavior:url(#default#VML); display:inline-block; antialias:TRUE; position: absolute; ' +
 						' top:0; left:0; width:'+width+'px; height:'+height+'px; vertical-align:'+self.corner.y+';">' +
 
-						'<vml:stroke weight="' + (border-2) + 'px" joinstyle="miter" miterlimit="10" ' + 
+						'<vml:stroke weight="'+border+'px" joinstyle="miter" miterlimit="10" ' + 
 							' style="behavior:url(#default#VML); display:inline-block;" />' +
 
 						'</vml:shape>');
@@ -2035,11 +2035,11 @@ function Tip(qTip, command)
 						inner.children().attr('color', color.border);
 
 						if(mimic.precedance === 'y') {
-							inner.css('top', (mimic.y === 'top' ? 1 : -1) * (border - 2));
+							inner.css('top', (mimic.y === 'top' ? 1 : -1) * border);
 							inner.css('left', (mimic.x === 'left' ? 1 : -2));
 						}
 						else {
-							inner.css('left', (mimic.x === 'left' ? 1 : -1) * (border - 2));
+							inner.css('left', (mimic.x === 'left' ? 1 : -1) * border);
 							inner.css('top', (mimic.y === 'top' ? 1 : -2));
 						}
 
