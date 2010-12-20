@@ -645,7 +645,10 @@ function QTip(target, options, id)
 			// Assign events
 			assignEvents(1, 1, 1, 1);
 			$.each(options.events, function(name, callback) {
-				if(callback) { elements.tooltip.bind('tooltip'+name, callback); }
+				if(callback) {
+					var events = name === 'toggle' ? 'tooltipshow tooltiphide' : 'tooltip'+name;
+					elements.tooltip.bind(events, callback);
+				}
 			});
 
 			/* Queue this part of the render process in our fx queue so we can
@@ -1512,6 +1515,7 @@ $.fn.qtip.defaults = {
 		move: NULL,
 		show: NULL,
 		hide: NULL,
+		toggle: NULL,
 		focus: NULL,
 		blur: NULL
 	}

@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun Dec 19 19:18:43 2010 +0000
+* Date: Sun Dec 19 19:22:38 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -670,7 +670,10 @@ function QTip(target, options, id)
 			// Assign events
 			assignEvents(1, 1, 1, 1);
 			$.each(options.events, function(name, callback) {
-				if(callback) { elements.tooltip.bind('tooltip'+name, callback); }
+				if(callback) {
+					var events = name === 'toggle' ? 'tooltipshow tooltiphide' : 'tooltip'+name;
+					elements.tooltip.bind(events, callback);
+				}
 			});
 
 			/* Queue this part of the render process in our fx queue so we can
@@ -1537,6 +1540,7 @@ $.fn.qtip.defaults = {
 		move: NULL,
 		show: NULL,
 		hide: NULL,
+		toggle: NULL,
 		focus: NULL,
 		blur: NULL
 	}
