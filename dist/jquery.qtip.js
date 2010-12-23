@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Dec 20 17:21:18 2010 +0000
+* Date: Thu Dec 23 17:17:44 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1713,7 +1713,7 @@ function Tip(qTip, command)
 
 			// Only update the position if mouse isn't the target
 			else if(this.get('position.target') !== 'mouse') {
-				this.reposition();
+				qTip.reposition();
 			}
 		},
 		'^style.tip.(height|width)': function() {
@@ -1733,66 +1733,6 @@ function Tip(qTip, command)
 			self.update();
 		}
 	};
-
-	// Tip position method
-	function position(corner)
-	{
-		var tip = elems.tip,
-			corners  = ['left', 'right'],
-			offset = opts.offset,
-			precedance, precedanceOp;
-
-		// Return if tips are disabled or tip is not yet rendered
-		if(opts.corner === FALSE || !tip) { return FALSE; }
-
-		// Inherit corner if not provided
-		corner = corner || self.corner;
-
-		// Cache precedances
-		precedance = corner.precedance;
-		precedanceOp = precedance === 'y' ? 'x' : 'y';
-
-		// Setup corners to be adjusted
-		corners[ precedance === 'y' ? 'push' : 'unshift' ]('top', 'bottom');
-
-		// Calculate offset adjustments
-		offset = Math.max(corner[ precedanceOp ] === 'center' ? offset : 0, offset);
-
-		// Reet initial position
-		tip.css({ top: '', bottom: '', left: '', right: '', margin: '' });
-		
-		// Adjust primary corners
-		switch(corner[ precedance === 'y' ? 'x' : 'y' ])
-		{
-			case 'center':
-				tip.css(corners[0], '50%').css('margin-'+corners[0], -Math.floor(size[ (precedance === 'y') ? 'width' : 'height' ] / 2) + offset);
-			break;
-
-			case corners[0]:
-				tip.css(corners[0], offset);
-			break;
-
-			case corners[1]:
-				tip.css(corners[1], offset);
-			break;
-		}
-
-		// Determine secondary adjustments
-		offset = size[ (precedance === 'x') ? 'width' : 'height' ];
-		if(border) {
-			tooltip.toggleClass('ui-tooltip-accessible', !tooltip.is(':visible'));
-			offset -= parseInt(wrapper.css('border-' + corner[ precedance ] + '-width'), 10) || 0;
-			tooltip.removeClass('ui-tooltip-accessible');
-		}
-
-		// VML adjustments
-		if(method === 'vml' && (/bottom|right/).test(corner[ corner.precedance ])) {
-			offset += border ? 1 : -1;
-		}
-
-		// Adjust secondary corners
-		tip.css(corner[precedance], -offset);
-	}
 
 	function reposition(event, api, pos, viewport) {
 		if(!elems.tip) { return; }
@@ -1922,13 +1862,16 @@ function Tip(qTip, command)
 			var width = size.width,
 				height = size.height;
 
-			// Create tip element and prepend to the tooltip if needed
+			// Remove previous tip element if present
 			if(elems.tip){ elems.tip.remove(); }
-			elems.tip = $('<div class="ui-tooltip-tip" />')
-				.toggleClass('ui-widget-content', qTip.options.style.widget)
-				.css(size).prependTo(tooltip);
 
-			// Create tip element
+			// Create tip element and prepend to the tooltip
+			elems.tip = $('<div />', { 'class': 'ui-tooltip-tip' })
+				.css(size)
+				.toggleClass('ui-widget-content', qTip.options.style.widget)
+				.prependTo(tooltip);
+
+			// Create tip drawing element(s)
 			switch(method)
 			{
 				case 'canvas':
@@ -1948,7 +1891,8 @@ function Tip(qTip, command)
 				break;
 
 				case 'polygon':
-					elems.tip.append('<div class="ui-tooltip-tip-inner" />').append(border ? '<div class="ui-tooltip-tip-border" />' : '');
+					elems.tip.append('<div class="ui-tooltip-tip-inner" />')
+						.append(border ? '<div class="ui-tooltip-tip-border" />' : '');
 				break;
 			}
 
@@ -2095,11 +2039,71 @@ function Tip(qTip, command)
 			}
 
 			// Update position
-			position(corner);
+			self.reposition(corner);
 
 			return self;
 		},
 
+		// Tip positioning method
+		reposition: function(corner)
+		{
+			var tip = elems.tip,
+				corners  = ['left', 'right'],
+				offset = opts.offset,
+				precedance, precedanceOp;
+
+			// Return if tips are disabled or tip is not yet rendered
+			if(opts.corner === FALSE || !tip) { return FALSE; }
+
+			// Inherit corner if not provided
+			corner = corner || self.corner;
+
+			// Cache precedances
+			precedance = corner.precedance;
+			precedanceOp = precedance === 'y' ? 'x' : 'y';
+
+			// Setup corners to be adjusted
+			corners[ precedance === 'y' ? 'push' : 'unshift' ]('top', 'bottom');
+
+			// Calculate offset adjustments
+			offset = Math.max(corner[ precedanceOp ] === 'center' ? offset : 0, offset);
+
+			// Reet initial position
+			tip.css({ top: '', bottom: '', left: '', right: '', margin: '' });
+			
+			// Adjust primary corners
+			switch(corner[ precedance === 'y' ? 'x' : 'y' ])
+			{
+				case 'center':
+					tip.css(corners[0], '50%').css('margin-'+corners[0], -Math.floor(size[ (precedance === 'y') ? 'width' : 'height' ] / 2) + offset);
+				break;
+
+				case corners[0]:
+					tip.css(corners[0], offset);
+				break;
+
+				case corners[1]:
+					tip.css(corners[1], offset);
+				break;
+			}
+
+			// Determine secondary adjustments
+			offset = size[ (precedance === 'x') ? 'width' : 'height' ];
+			if(border) {
+				tooltip.toggleClass('ui-tooltip-accessible', !tooltip.is(':visible'));
+				offset -= parseInt(wrapper.css('border-' + corner[ precedance ] + '-width'), 10) || 0;
+				tooltip.removeClass('ui-tooltip-accessible');
+			}
+
+			// VML adjustments
+			if(method === 'vml' && (/bottom|right/).test(corner[ corner.precedance ])) {
+				offset += border ? 1 : -1;
+			}
+
+			// Adjust secondary corners
+			tip.css(corner[precedance], -offset);
+		},
+		
 		destroy: function()
 		{
 			// Remove previous tip if present
@@ -2111,27 +2115,15 @@ function Tip(qTip, command)
 			tooltip.unbind('.qtip-tip');
 		}
 	});
+	
+	self.init();
 }
 
 $.fn.qtip.plugins.tip = function(qTip)
 {
-	var api = qTip.plugins.tip,
-		opts = qTip.options.style.tip;
+	var api = qTip.plugins.tip;
 
-	// Make sure tip options are present
-	if(opts && opts.corner) {
-		// An API is already present,
-		if(api) {
-			return api;
-		}
-		// No API was found, create new instance
-		else {
-			qTip.plugins.tip = new Tip(qTip);
-			qTip.plugins.tip.init();
-
-			return qTip.plugins.tip;
-		}
-	}
+	return 'object' === typeof api ? api : (qTip.plugins.tip = new Tip(qTip));
 };
 
 // Initialize tip on render
@@ -2294,53 +2286,69 @@ $.extend(TRUE, $.fn.qtip.defaults, {
 	return result;
 };
 
-function Modal(qTip, options)
+function Modal(qTip)
 {
 	var self = this,
+		options = qTip.options.show.modal,
 		elems = qTip.elements,
 		tooltip = elems.tooltip,
+		
+		selector = '#qtip-overlay',
 		namespace = '.qtipmodal',
 		events = 'tooltipshow'+namespace+' tooltiphide'+namespace;
 
-	// See if overlay is already present
-	elems.overlay = $('#qtip-overlay');
+	// Setup option set checks
+	self.checks = {
+		'^show.modal.(on|blur)$': function() {
+			// Initialise
+			self.init();
+			
+			// Show the modal if not visible already and tooltip is visible
+			elems.overlay.toggle( tooltip.is(':visible') );
+		}
+	};
 
 	$.extend(self, {
 		init: function()
 		{
-			// Check if the tooltip is modal
-			tooltip.bind(events, function(event, api, duration) {
-				var type = event.type.replace('tooltip', '');
+			if(options.on) {
+				// Apply our modal events (unbind the mfirst so we don't duplicate)
+				tooltip.unbind(namespace).bind(events, function(event, api, duration) {
+					var type = event.type.replace('tooltip', '');
 
-				if($.isFunction(options[type])) {
-					options[type].call(elems.overlay, duration, api);
-				}
-				else {
-					self[type](duration);
-				}
-			});
+					if($.isFunction(options[type])) {
+						options[type].call(elems.overlay, duration, api);
+					}
+					else {
+						self[type](duration);
+					}
+				});
 
-			// Create the overlay if needed
-			if(!elems.overlay.length) {
+				// Create the overlay if needed
 				self.create();
-			}
 
-			// Hide tooltip on overlay click if enabled
-			if(options.blur === TRUE) {
-				elems.overlay.bind('click'+namespace+qTip.id, function(){ qTip.hide.call(qTip); });
+				// Hide tooltip on overlay click if enabled
+				if(options.blur === TRUE) {
+					elems.overlay.unbind(namespace+qTip.id).bind('click'+namespace+qTip.id, function(){ qTip.hide.call(qTip); });
+				}
 			}
 		},
 
 		create: function()
 		{
+			// Return if overlay is already rendered
+			var elem = $(selector);
+			if(elem.length) { elems.overlay = elem; return; }
+
 			// Create document overlay
 			elems.overlay = $('<div />', {
-				id: 'qtip-overlay',
+				id: selector.substr(1),
 				css: {
 					position: 'absolute',
 					top: 0,
 					left: 0,
-					display: 'none'
+					display: 'none',
+					zIndex: parseInt( tooltip.css('z-index'), 10 ) // Use the current tooltips z-index
 				}
 			})
 			.appendTo(document.body);
@@ -2392,20 +2400,20 @@ function Modal(qTip, options)
 			// Check if any other modal tooltips are present
 			$('*').each(function() {
 				var api = $(this).data('qtip');
+
+				// If another modal tooltip is present, leave overlay
 				if(api && api.id !== qTip.id && api.options.show.modal) {
-					// Another modal tooltip was present, leave overlay
-					delBlanket = FALSE;
-					return FALSE;
+					return delBlanket = FALSE;
 				}
 			});
 
 			// Remove overlay if needed
 			if(delBlanket) {
 				elems.overlay.remove();
-				$(window).unbind('scroll'+namespace+' resize'+namespace);
+				$(window).unbind(namespace);
 			}
 			else {
-				elems.overlay.unbind('click'+namespace+qTip.id);
+				elems.overlay.unbind(namespace+qTip.id);
 			}
 
 			// Remove bound events
@@ -2418,18 +2426,9 @@ function Modal(qTip, options)
 
 $.fn.qtip.plugins.modal = function(qTip)
 {
-	var api = qTip.plugins.modal,
-		opts = qTip.options.show.modal;
+	var api = qTip.plugins.modal;
 
-	// An API is already present,
-	if(api) {
-		return api;
-	}
-	// No API was found, create new instance
-	else if(opts && opts.on === TRUE) {
-		qTip.plugins.modal = new Modal(qTip, opts);
-		return qTip.plugins.modal;
-	}
+	return 'object' === typeof api ? api : (qTip.plugins.tip = new Modal(qTip));
 };
 
 // Plugin needs to be initialized on render
