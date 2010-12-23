@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun Dec 19 19:22:38 2010 +0000
+* Date: Mon Dec 20 17:21:18 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -243,7 +243,6 @@ function QTip(target, options, id)
 		else {
 			elems.button = $('<a />', {
 				'class': 'ui-state-default',
-				'text': 'Close tooltip',
 				'title': 'Close tooltip',
 				'css': { 'text-indent': '-10000em' }
 			})

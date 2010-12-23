@@ -218,7 +218,6 @@ function QTip(target, options, id)
 		else {
 			elems.button = $('<a />', {
 				'class': 'ui-state-default',
-				'text': 'Close tooltip',
 				'title': 'Close tooltip',
 				'css': { 'text-indent': '-10000em' }
 			})
