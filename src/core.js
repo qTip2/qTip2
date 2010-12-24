@@ -464,9 +464,6 @@ function QTip(target, options, id)
 			self.cache.processing = 0;
 		}
 
-		// Catch remove events on target element to destroy tooltip
-		target.bind('remove.qtip', function(){ self.destroy(); });
-
 		// Check if the tooltip is 'fixed'
 		if(tooltip && options.hide.fixed)
 		{
@@ -1164,19 +1161,22 @@ function QTip(target, options, id)
 			var elements = self.elements,
 				oldtitle = elements.target.data('oldtitle');
 
-			// Destroy any associated plugins when rendered
+			// Destroy tooltip and  any associated plugins if rendered
 			if(self.rendered) {
+				elements.tooltip.remove();
+				
 				$.each(self.plugins, function() {
 					if(this.initialize === 'render') { this.destroy(); }
 				});
 			}
 
-			// Remove bound events
+			// Clear timers and remove bound events
+			clearTimeout(self.timers.show);
+			clearTimeout(self.timers.hide);
 			unassignEvents(1, 1, 1, 1);
 
-			// Remove api object and tooltip
+			// Remove api object
 			target.removeData('qtip');
-			if(self.rendered) { elements.tooltip.remove(); }
 
 			// Reset old title attribute if removed and reset describedby attribute
 			if(oldtitle) {
@@ -1256,6 +1256,9 @@ function init(id, opts)
 	// Initialize the tooltip and add API reference
 	obj = new QTip(elem, config, id);
 	elem.data('qtip', obj);
+
+	// Catch remove events on target element to destroy redundant tooltip
+	elem.bind('remove.qtip', function(){ obj.destroy(); });
 
 	return obj;
 }
