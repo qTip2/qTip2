@@ -120,15 +120,13 @@ function Tip(qTip, command)
 	$.extend(self, {
 		init: function()
 		{
-			var ie = $.browser.msie,
-				enabled = self.detectCorner(),
-				center = (self.mimic || self.corner).string().indexOf('center') > -1;
+			var enabled = self.detectCorner();
 
 			// Determine tip corner and type
 			if(enabled) {
 				// Check if rendering method is possible and if not fall back
 				if(method !== 'polygon') {
-					method = $('<canvas />')[0].getContext ? 'canvas' : ie ? 'vml' : 'polygon';
+					method = $('<canvas />')[0].getContext ? 'canvas' : $.browser.msie ? 'vml' : 'polygon';
 				}
 
 				// Create a new tip
