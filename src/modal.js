@@ -115,7 +115,7 @@ function Modal(qTip)
 
 				// If another modal tooltip is present, leave overlay
 				if(api && api.id !== qTip.id && api.options.show.modal) {
-					return delBlanket = FALSE;
+					return (delBlanket = FALSE);
 				}
 			});
 
