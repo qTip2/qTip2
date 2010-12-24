@@ -60,7 +60,7 @@ function Modal(qTip)
 					top: 0,
 					left: 0,
 					display: 'none',
-					zIndex: parseInt( tooltip.css('z-index'), 10 ) // Use the current tooltips z-index
+					zIndex: parseInt( tooltip.css('z-index'), 10 ) - 1 // Use the current tooltips z-index as a base
 				}
 			})
 			.appendTo(document.body);

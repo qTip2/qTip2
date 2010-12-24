@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Fri Dec 24 05:37:38 2010 +0000
+* Date: Fri Dec 24 05:40:57 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -2337,7 +2337,7 @@ function Modal(qTip)
 					top: 0,
 					left: 0,
 					display: 'none',
-					zIndex: parseInt( tooltip.css('z-index'), 10 ) // Use the current tooltips z-index
+					zIndex: parseInt( tooltip.css('z-index'), 10 ) - 1 // Use the current tooltips z-index as a base
 				}
 			})
 			.appendTo(document.body);
