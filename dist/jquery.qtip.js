@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Fri Dec 24 00:45:55 2010 +0000
+* Date: Fri Dec 24 01:07:40 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1169,10 +1169,15 @@ function QTip(target, options, id)
 
 		disable: function(state)
 		{
-			var tooltip = self.elements.tooltip;
-
+			var tooltip = self.elements.tooltip,
+				c = 'ui-state-disabled';
+			
+			if('boolean' !== typeof state) {
+				state = !(tooltip.hasClass(c) || self.cache.disabled);
+			}
+			 
 			if(self.rendered) {
-				tooltip.toggleClass('ui-state-disabled', state);
+				tooltip.toggleClass(c, state);
 			}
 			else {
 				self.cache.disabled = !!state;

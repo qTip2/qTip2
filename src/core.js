@@ -1144,10 +1144,15 @@ function QTip(target, options, id)
 
 		disable: function(state)
 		{
-			var tooltip = self.elements.tooltip;
-
+			var tooltip = self.elements.tooltip,
+				c = 'ui-state-disabled';
+			
+			if('boolean' !== typeof state) {
+				state = !(tooltip.hasClass(c) || self.cache.disabled);
+			}
+			 
 			if(self.rendered) {
-				tooltip.toggleClass('ui-state-disabled', state);
+				tooltip.toggleClass(c, state);
 			}
 			else {
 				self.cache.disabled = !!state;
