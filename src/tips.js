@@ -170,10 +170,12 @@ function Tip(qTip, command)
 		detectColours: function() {
 			var tip = elems.tip.css({ backgroundColor: '', border: '' }),
 				corner = self.corner,
-				precedance = self.corner[ self.corner.precedance ],
-				borderSide = 'border' + precedance.charAt(0).toUpperCase() +  precedance.substr(1) + 'Color',
+				precedance = corner[ corner.precedance ],
 
-				invalid = /rgba?\(0, 0, 0(, 0)?\)|transparent|#000000/i,
+				borderSide = 'border-' + precedance + '-color',
+				borderSideCamel = 'border' + precedance.charAt(0) + precedance.substr(1) + 'Color',
+
+				invalid = /rgba?\(0, 0, 0(, 0)?\)|transparent/i,
 				backgroundColor = 'background-color',
 				transparent = 'transparent',
 
@@ -184,13 +186,12 @@ function Tip(qTip, command)
 
 			// Detect tip colours from CSS styles
 			color.fill = tip.css(backgroundColor) || transparent;
-			color.border = tip.css(borderSide) || transparent;
+			color.border = tip[0].style[borderSideCamel]; // Make sure we grab the actual border color ad not inherited font color!
 
-			// Make sure colours are valid and reset background and border properties
+			// Make sure colours are valid
 			if(invalid.test(color.fill)) { 
 				color.fill = border ? elemFill.css(backgroundColor) : elemBorder.css(borderSide);
 			}
-
 			if(!color.border || invalid.test(color.border)) {
 				color.border = elemBorder.css(borderSide) || color.fill;
 			}
