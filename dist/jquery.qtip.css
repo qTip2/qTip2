@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Fri Dec 24 05:40:57 2010 +0000
+* Date: Fri Dec 24 05:42:25 2010 +0000
 */
 
 .ui-tooltip-accessible{
@@ -226,8 +226,8 @@
   -moz-box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.15);
   box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.15);
 
-  filter: Shadow(Color='gray', Direction=135, Strength=3);
-  -ms-filter:"progid:DXImageTransform.Microsoft.shadow(Color='gray', Direction=135, Strength=3)";
+  filter: progid:DXImageTransform.Microsoft.Shadow(Color='gray', Direction=135, Strength=3);
+  -ms-filter:"progid:DXImageTransform.Microsoft.Shadow(Color='gray', Direction=135, Strength=3)";
 }
 
 /*! Add rounded corners to your tooltips in: FF3+, Chrome 2+, Opera 10.6+, IE9+, Safari 2+ */

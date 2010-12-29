@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Fri Dec 24 05:40:57 2010 +0000
+* Date: Fri Dec 24 05:42:25 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -2417,7 +2417,7 @@ $.fn.qtip.plugins.modal = function(qTip)
 {
 	var api = qTip.plugins.modal;
 
-	return 'object' === typeof api ? api : (qTip.plugins.tip = new Modal(qTip));
+	return 'object' === typeof api ? api : (qTip.plugins.modal = new Modal(qTip));
 };
 
 // Plugin needs to be initialized on render
