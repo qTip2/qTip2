@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Fri Dec 24 05:42:25 2010 +0000
+* Date: Wed Dec 29 19:38:15 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1553,62 +1553,49 @@ $.fn.qtip.defaults = {
 	}
 };function Ajax(qTip)
 {
-	var self = this;
+	var self = this,
+		tooltip = qTip.elements.tooltip,
+		opts = qTip.options.content.ajax;
 
 	self.checks = {
-		'^content.ajax': function() { this.plugins.ajax.load(this.options.content.ajax); }
+		'^content.ajax': function(obj, name, val, lastval) {
+			if(name === 'once') {
+				self.once();
+			}
+			else if(opts && opts.url) {
+				self.load();
+			}
+		}
 	};
 
 	$.extend(self, {
-
 		init: function()
 		{
-			// Grab ajax options
-			var ajax = qTip.options.content.ajax;
-
-			// Bind render event to load initial content
-			qTip.elements.tooltip.bind('tooltiprender.ajax', function() { 
-				self.load(ajax);
-
-				// Bind show event
-				qTip.elements.tooltip.bind('tooltipshow.ajax', function() {
-					// Update content if content.ajax.once is FALSE and the tooltip is rendered
-					if(ajax.once === FALSE && qTip.rendered === TRUE) { self.load(ajax); }
-				});
-			});
+			// Make sure ajax options are enabled before proceeding
+			if(opts && opts.url) {
+				self.load(); 
+				self.once();
+			}
 		},
 
-		load: function(ajax)
+		once: function()
+		{
+			if(opts.once) { 
+				self.destroy();
+			}
+			else {
+				tooltip.bind('tooltipshow.ajax', function() { self.load(); });
+			}
+		},
+
+		load: function()
 		{
 			// Define success and error handlers
-			function successHandler(content, status)
-			{
-				// Call user-defined success handler if present
-				if($.isFunction(ajax.success)) {
-					var result = ajax.success.call(qTip, content, status);
-					if(result === FALSE){ return; }
-				}
-
-				// Update content
-				qTip.set('content.text', content);
-
-			}
-			function errorHandler(xhr, status, error)
-			{
-				var content = status || error, result;
-
-				// Call user-defined success handler if present
-				if($.isFunction(ajax.error)) {
-					result = ajax.error.call(qTip, xhr, status, error);
-					if(result === FALSE){ return; }
-				}
-
-				// Update tooltip content to indicate error
-				qTip.set('content.text', content);
-			}
+			function successHandler(content){ qTip.set('content.text', content); }
+			function errorHandler(xh, status, error){ qTip.set('content.text', status + ': ' + error); }
 
 			// Setup $.ajax option object and process the request
-			$.ajax( $.extend(TRUE, {}, ajax, { success: successHandler, error: errorHandler }) );
+			$.ajax( $.extend({ success: successHandler, error: errorHandler }, opts) );
 
 			return self;
 		},
@@ -1616,7 +1603,7 @@ $.fn.qtip.defaults = {
 		destroy: function()
 		{
 			// Remove bound events
-			qTip.elements.tooltip.unbind('tooltipshow.ajax');
+			tooltip.unbind('.ajax');
 		}
 	});
 
@@ -1626,21 +1613,9 @@ $.fn.qtip.defaults = {
 
 $.fn.qtip.plugins.ajax = function(qTip)
 {
-	var api = qTip.plugins.ajax,
-		opts = qTip.options.content.ajax;
-
-	// Make sure the qTip uses the $.ajax functionality
-	if(opts && opts.url) {
-		// An API is already present, return it
-		if(api) {
-			return api;
-		}
-		// No API was found, create new instance
-		else {
-			qTip.plugins.ajax = new Ajax(qTip);
-			return qTip.plugins.ajax;
-		}
-	}
+	var api = qTip.plugins.ajax;
+	
+	return 'object' === typeof api ? api : (qTip.plugins.ajax = new Ajax(qTip));
 };
 
 $.fn.qtip.plugins.ajax.initialize = 'render';
