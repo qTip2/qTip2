@@ -5,7 +5,7 @@ function Ajax(qTip)
 		opts = qTip.options.content.ajax;
 
 	self.checks = {
-		'^content.ajax': function(obj, name, val, lastval) {
+		'^content.ajax': function(obj, name) {
 			if(name === 'once') {
 				self.once();
 			}
