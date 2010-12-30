@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Dec 30 18:01:42 2010 +0000
+* Date: Thu Dec 30 18:27:43 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1882,8 +1882,7 @@ function Tip(qTip, command)
 				regular = 'px solid ',
 				transparent = 'px dashed transparent', // Dashed IE6 border-transparency hack. Awesome!
 				mimic = opts.mimic,
-
-				context, coords, center, translate, round;
+				i, context, coords, center, translate, round;
 
 			// Re-determine tip if not already set
 			if(!corner) { corner = self.corner; }

@@ -258,8 +258,7 @@ function Tip(qTip, command)
 				regular = 'px solid ',
 				transparent = 'px dashed transparent', // Dashed IE6 border-transparency hack. Awesome!
 				mimic = opts.mimic,
-
-				context, coords, center, translate, round;
+				i, context, coords, center, translate, round;
 
 			// Re-determine tip if not already set
 			if(!corner) { corner = self.corner; }
