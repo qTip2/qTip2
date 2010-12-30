@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Dec 30 18:29:08 2010 +0000
+* Date: Thu Dec 30 19:23:12 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -766,9 +766,10 @@ function QTip(target, options, id)
 							var trigger = !!value;
 							
 							tooltip.toggleClass('ui-widget', trigger);
-							elems.titlebar.toggleClass('ui-widget-header', trigger);
 							elems.content.toggleClass('ui-widget-content', trigger);
-							elems.button.children('span').toggleClass(uitooltip+'-icon', !trigger).toggleClass('ui-icon', trigger);
+							
+							if(elems.titlebar){ elems.titlebar.toggleClass('ui-widget-header', trigger); }
+							if(elems.button){ elems.button.children('span').toggleClass(uitooltip+'-icon', !trigger).toggleClass('ui-icon', trigger); }
 						},
 
 						// Events check

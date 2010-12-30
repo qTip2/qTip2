@@ -741,9 +741,10 @@ function QTip(target, options, id)
 							var trigger = !!value;
 							
 							tooltip.toggleClass('ui-widget', trigger);
-							elems.titlebar.toggleClass('ui-widget-header', trigger);
 							elems.content.toggleClass('ui-widget-content', trigger);
-							elems.button.children('span').toggleClass(uitooltip+'-icon', !trigger).toggleClass('ui-icon', trigger);
+							
+							if(elems.titlebar){ elems.titlebar.toggleClass('ui-widget-header', trigger); }
+							if(elems.button){ elems.button.children('span').toggleClass(uitooltip+'-icon', !trigger).toggleClass('ui-icon', trigger); }
 						},
 
 						// Events check
