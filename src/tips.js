@@ -47,9 +47,6 @@ function Tip(qTip, command)
 	self.mimic = NULL;
 	self.checks = {
 		'^position.my|style.tip.(corner|mimic|method|border)': function() {
-			// Re-determine tip type and update
-			border = opts.border;
-
 			// Make sure a tip can be drawn
 			if(!self.init()) {
 				self.destroy();
@@ -117,6 +114,15 @@ function Tip(qTip, command)
 		cache.corner = newCorner.string();
 	}
 
+	/* border width calculator */
+	function borderWidth(corner, side) {
+		var isTitleTop = elems.titlebar && corner.y === 'top',
+			elem = isTitleTop ? elems.titlebar : elems.content;
+			side = !side ? corner[corner.precedance] : side;
+
+		return parseInt(elem.css('border-' + side + '-width'), 10) || 0;
+	}
+
 	$.extend(self, {
 		init: function()
 		{
@@ -132,6 +138,9 @@ function Tip(qTip, command)
 				// Create a new tip
 				self.create();
 				self.detectColours();
+				
+				// Detect initial border width if auto-detect is on and draw the tip
+				border = opts.border === TRUE ? borderWidth(self.corner) : opts.border;
 				self.update();
 
 				// Bind update events
@@ -248,8 +257,8 @@ function Tip(qTip, command)
 				height = size.height,
 				regular = 'px solid ',
 				transparent = 'px dashed transparent', // Dashed IE6 border-transparency hack. Awesome!
-				i = border > 0 ? 0 : 1,
 				mimic = opts.mimic,
+
 				context, coords, center, translate, round;
 
 			// Re-determine tip if not already set
@@ -269,6 +278,10 @@ function Tip(qTip, command)
 					mimic[ corner.precedance ] = corner[ corner.precedance ];
 				}
 			}
+			
+			// Detect border width
+			border = opts.border === TRUE ? borderWidth(corner) : opts.border;
+			i = border > 0 ? 0 : 1;
 
 			// Determine if tip is a "center" based one
 			center = mimic.string().indexOf('center') > -1;
@@ -394,14 +407,6 @@ function Tip(qTip, command)
 			// Determine which tip dimension to use for adjustment
 			dimension = size[ precedance === 'x' ? 'width' : 'height' ];
 
-			/* border width calculator */
-			function borderWidth(corner, side) {
-				var isTitleTop = elems.titlebar && corner.y === 'top',
-					elem = isTitleTop ? elems.titlebar : elems.content;
-				
-				return parseInt(elem.css('border-' + side + '-width'), 10) || 0;
-			}
-
 			/* Calculate tip position */
 			$.each(
 				precedance === 'y' ? [ corner.x, corner.y ] : [ corner.y, corner.x ],
@@ -458,7 +463,7 @@ $.fn.qtip.plugins.tip.sanitize = function(options)
 		if(!(/canvas|polygon/i).test(opts.method)){ opts.method = TRUE; }
 		if(typeof opts.width !== 'number'){ delete opts.width; }
 		if(typeof opts.height !== 'number'){ delete opts.height; }
-		if(typeof opts.border !== 'number'){ delete opts.border; }
+		if(typeof opts.border !== 'number' && opts.border !== TRUE){ delete opts.border; }
 		if(typeof opts.offset !== 'number'){ delete opts.offset; }
 	}
 };
