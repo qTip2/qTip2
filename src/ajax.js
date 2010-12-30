@@ -42,7 +42,7 @@ function Ajax(qTip)
 			function errorHandler(xh, status, error){ qTip.set('content.text', status + ': ' + error); }
 
 			// Setup $.ajax option object and process the request
-			$.ajax( $.extend({ success: successHandler, error: errorHandler }, opts) );
+			$.ajax( $.extend({ success: successHandler, error: errorHandler, context: qTip }, opts) );
 
 			return self;
 		},
