@@ -26,12 +26,24 @@
 	min-width: 50px;
 }
 
+	.ui-tooltip-titlebar{
+		position: relative;
+		min-height: 19px;
+		padding: 6px 35px 6px 10px;
+		overflow: hidden;
+		
+		border-width: 3px 3px 0;
+		border-style: solid;
+		
+		font-weight: bold;
+	}
+
 	.ui-tooltip-content{
 		position: relative;
 		padding: 5px 9px;
 		overflow: hidden;
 
-		border-width: 0 3px 3px;
+		border-width: 3px;
 		border-style: solid;
 
 		text-align: left;
@@ -39,17 +51,7 @@
 		overflow: hidden;
 	}
 
-	.ui-tooltip-titlebar{
-		position: relative;
-		min-height: 19px;
-		padding: 6px 35px 6px 10px;
-		overflow: hidden;
-
-		border-width: 3px 3px 0;
-		border-style: solid;
-
-		font-weight: bold;
-	}
+	.ui-tooltip-titlebar + .ui-tooltip-content{ border-top-width: 0px; }
 
 		/*! Default close button class */
 		.ui-tooltip-close{
