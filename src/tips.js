@@ -29,7 +29,6 @@ function Tip(qTip, command)
 		opts = qTip.options.style.tip,
 		elems = qTip.elements,
 		tooltip = elems.tooltip,
-		wrapper = elems.wrapper,
 		cache = { 
 			top: 0, 
 			left: 0, 
@@ -104,7 +103,7 @@ function Tip(qTip, command)
 		}
 
 		// Setup offset adjustments
-		offset[0] = border ? parseInt(wrapper.css('border-' + newCorner[ precedance[0] ] + '-width'), 10) || 0 : (method === 'vml' ? 1 : 0);
+		offset[0] = border ? parseInt(tooltip.css('border-' + newCorner[ precedance[0] ] + '-width'), 10) || 0 : (method === 'vml' ? 1 : 0);
 		offset[1] = Math.max(newCorner[ precedance[4] ] === 'center' ? opts.offset : 0, opts.offset);
 
 		// Adjust tooltip position in relation to tip element
@@ -179,8 +178,8 @@ function Tip(qTip, command)
 
 				isTitleTop = elems.titlebar && corner.y === 'top',
 				isWidget = qTip.options.style.widget,
-				elemFill = isWidget ? elems.content : isTitleTop ? elems.titlebar : elems.wrapper,
-				elemBorder = !isWidget ? elems.wrapper : isTitleTop ? elems.titlebar : elems.content;
+				elemFill = isWidget ? elems.content : isTitleTop ? elems.titlebar : tooltip,
+				elemBorder = !isWidget ? tooltip : isTitleTop ? elems.titlebar : elems.content;
 
 			// Detect tip colours from CSS styles
 			color.fill = tip.css(backgroundColor) || transparent;
@@ -380,56 +379,46 @@ function Tip(qTip, command)
 		reposition: function(corner)
 		{
 			var tip = elems.tip,
-				corners  = ['left', 'right'],
+				position = {},
 				offset = opts.offset,
-				accessible = 'ui-tooltip-accessible',
-				precedance, precedanceOp;
+				precedance, dimension;
 
 			// Return if tips are disabled or tip is not yet rendered
 			if(opts.corner === FALSE || !tip) { return FALSE; }
 
 			// Inherit corner if not provided
 			corner = corner || self.corner;
-
-			// Cache precedances
 			precedance = corner.precedance;
-			precedanceOp = corner[ precedance === 'y' ? 'x' : 'y' ];
 
-			// Setup corners to be adjusted
-			corners[ precedance === 'y' ? 'push' : 'unshift' ]('top', 'bottom');
+			// Determine which tip dimension to use for adjustment
+			dimension = size[ (precedance === 'x') ? 'width' : 'height' ];
 
 			// Calculate offset adjustments
-			offset = Math.max(precedanceOp === 'center' ? offset : 0, offset);
+			offset = Math.max(corner[ precedance === 'y' ? 'x' : 'y' ] === 'center' ? offset : 0, offset);
 
-			// Reet initial position
+			// Reset initial position
 			tip.css({ top: '', bottom: '', left: '', right: '', margin: '' });
+
+			/* Calculate tip position */
+			$.each(
+				precedance === 'y' ? [ corner.x, corner.y ] : [ corner.y, corner.x ],
+				function(i, side)
+				{
+					if(side === 'center') {
+						var other = precedance === 'y' ? 'left' : 'top';
+
+						position[ other ] = '50%';
+						tip.css('margin-' + other, -Math.floor(dimension / 2) + offset);
+					}
+					else {
+						position[ side ] = offset - (!i || !border ? parseInt(tooltip.css('border-' + side + '-width'), 10) : 0);
+					}
+				}
+			);
+			position[ corner[precedance] ] -= dimension;
 			
-			// Adjust primary corners
-			switch(precedanceOp)
-			{
-				case 'center':
-					tip.css(corners[0], '50%').css('margin-'+corners[0], -Math.floor(size[ (precedance === 'y') ? 'width' : 'height' ] / 2) + offset);
-				break;
-
-				case corners[0]:
-					tip.css(corners[0], offset);
-				break;
-
-				case corners[1]:
-					tip.css(corners[1], offset);
-				break;
-			}
-
-			// Determine secondary adjustments
-			offset = size[ precedance === 'x' ? 'width' : 'height' ];
-			if(border) {
-				tooltip.toggleClass(accessible, !tooltip.is(':visible'));
-				offset -= parseInt(wrapper.css('border-' + corner[ precedance ] + '-width'), 10) || 0;
-				tooltip.removeClass(accessible);
-			}
-
-			// Adjust secondary corners
-			tip.css(corner[precedance], -offset);
+			// Set position
+			tip.css(position);
 		},
 		
 		destroy: function()

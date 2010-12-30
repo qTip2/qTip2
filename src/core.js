@@ -248,7 +248,7 @@ function QTip(target, options, id)
 				'html': options.content.title.text
 			})
 		)
-		.prependTo(elems.wrapper);
+		.prependTo(elems.tooltip);
 
 		// Create button if enabled
 		if(options.content.title.button) { createButton(); }
@@ -603,12 +603,11 @@ function QTip(target, options, id)
 				.appendTo(options.position.container);
 
 			// Append to container element
-			elements.wrapper = $('<div />', { 'class': uitooltip + '-wrapper ' + options.style.wrapper }).appendTo(elements.tooltip);
 			elements.content = $('<div />', {
 					'class': uitooltip + '-content ' + (options.style.widget ? 'ui-widget-content' : ''),
 					'id': uitooltip + '-' + id + '-content'
 				})
-				.appendTo(elements.wrapper);
+				.appendTo(elements.tooltip);
 
 			// Setup content and title (if enabled)
 			if(options.content.title.text) {
@@ -940,8 +939,8 @@ function QTip(target, options, id)
 				my = posOptions.my, 
 				at = posOptions.at,
 				adjust = posOptions.adjust,
-				elemWidth = self.elements.tooltip.width(),
-				elemHeight = self.elements.tooltip.height(),
+				elemWidth = self.elements.tooltip.outerWidth(),
+				elemHeight = self.elements.tooltip.outerHeight(),
 				targetWidth = 0,
 				targetHeight = 0,
 				callback = $.Event('tooltipmove'),
@@ -1501,7 +1500,6 @@ $.fn.qtip.defaults = {
 	},
 	style: {
 		classes: '',
-		wrapper: '',
 		widget: FALSE
 	},
 	events: {

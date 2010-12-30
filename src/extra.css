@@ -1,5 +1,5 @@
 /*! Youtube tooltip style */
-.ui-tooltip-youtube .ui-tooltip-wrapper{
+.ui-tooltip-youtube{
 	background-color: rgba(0, 0, 0, 0.85);
 	color: white;
 
@@ -26,13 +26,13 @@
 	}
 
 	/* IE6 Fallback */
-	* html div.ui-tooltip-youtube-wrapper{
+	* html div.ui-tooltip-youtube{
 		background-color: black;
 	}
 
 
 /* jQuery TOOLS Tooltip style */
-.ui-tooltip-jtools .ui-tooltip-wrapper{
+.ui-tooltip-jtools{
 	-moz-border-radius: 2px;
 	-webkit-border-radius: 2px;
 	border-radius: 2px;
@@ -64,7 +64,7 @@
 
 
 /* Cluetip style */
-.ui-tooltip-cluetip .ui-tooltip-wrapper{
+.ui-tooltip-cluetip{
 	background-color: #D9D9C2;
 	border: 0px solid #D9D9C2;
 
@@ -84,7 +84,7 @@
 
 
 /* Tipsy style */
-.ui-tooltip-tipsy .ui-tooltip-wrapper{
+.ui-tooltip-tipsy{
 	border: 0px solid black;
 	border: 0px solid rgba(0,0,0,.9);
 

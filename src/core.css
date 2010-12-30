@@ -24,19 +24,15 @@
 
 	max-width: 280px;
 	min-width: 50px;
+	
+	border-width: 3px;
+	border-style: solid;
 }
-
-	.ui-tooltip .ui-tooltip-wrapper{
-		position: relative;
-		overflow: hidden;
-
-		border-width: 3px;
-		border-style: solid;
-	}
 
 	.ui-tooltip .ui-tooltip-content{
 		position: relative;
 		padding: 5px 9px;
+		overflow: hidden;
 
 		text-align: left;
 		word-wrap: break-word;
@@ -47,6 +43,7 @@
 		position: relative;
 		min-height: 19px;
 		padding: 6px 35px 6px 10px;
+		overflow: hidden;
 
 		font-weight: bold;
 	}
@@ -85,7 +82,7 @@
 
 
 /*! ThemeRoller compatibility classes */
-.ui-widget .ui-tooltip-wrapper{
+.ui-widget{
 	border-width: 0;
 }
 
@@ -95,7 +92,7 @@
 
 
 /*! Default tooltip style */
-.ui-tooltip-wrapper{
+.ui-tooltip{
 	border-color: #F9E98E;
 	background-color: #FBF7AA;
 	color: #A27D35;
@@ -110,7 +107,7 @@
 	}
 
 /*! Plain tooltip style */
-.ui-tooltip-plain .ui-tooltip-wrapper{
+.ui-tooltip-plain{
 	border-color: black;
 	border-width: 1px;
 
@@ -127,7 +124,7 @@
 	}
 
 /*! Light tooltip style */
-.ui-tooltip-light .ui-tooltip-wrapper{
+.ui-tooltip-light{
 	border-color: #E2E2E2;
 	background-color: white;
 	color: #454545;
@@ -143,7 +140,7 @@
 
 
 /*! Dark tooltip style */
-.ui-tooltip-dark .ui-tooltip-wrapper{
+.ui-tooltip-dark{
 	border-color: #303030;
 	background-color: #505050;
 	color: #f3f3f3;
@@ -159,7 +156,7 @@
 
 
 /*! Red tooltip style */
-.ui-tooltip-red .ui-tooltip-wrapper{
+.ui-tooltip-red{
 	border-color: #D95252;
 	background-color: #F78B83;
 	color: #912323;
@@ -175,7 +172,7 @@
 
 
 /*! Green tooltip style */
-.ui-tooltip-green .ui-tooltip-wrapper{
+.ui-tooltip-green{
 	border-color: #90D93F;
 	background-color: #CAED9E;
 	color: #3F6219;
@@ -191,7 +188,7 @@
 
 
 /*! Blue tooltip style */
-.ui-tooltip-blue .ui-tooltip-wrapper{
+.ui-tooltip-blue{
 	border-color: #ADD9ED;
 	background-color: #E5F6FE;
 	color: #5E99BD;
@@ -207,7 +204,7 @@
 
 
 /*! Add shadows to your tooltips in: FF3+, Chrome 2+, Opera 10.6+, IE6+, Safari 2+ */
-.ui-tooltip-shadow .ui-tooltip-wrapper{
+.ui-tooltip-shadow{
 	-webkit-box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.15);
   -moz-box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.15);
   box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.15);
@@ -217,7 +214,7 @@
 }
 
 /*! Add rounded corners to your tooltips in: FF3+, Chrome 2+, Opera 10.6+, IE9+, Safari 2+ */
-.ui-tooltip-rounded .ui-tooltip-wrapper{
+.ui-tooltip-rounded{
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 	-o-border-radius: 5px;
