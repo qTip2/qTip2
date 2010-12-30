@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Dec 29 20:05:20 2010 +0000
+* Date: Thu Dec 30 02:56:40 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -538,13 +538,13 @@ function QTip(target, options, id)
 		// Apply document events
 		if(doc) {
 			// Adjust positions of the tooltip on window resize if enabled
-			if(posOptions.adjust.resize || posOptions.adjust.viewport) {
-				$($.event.special.resize ? posOptions.adjust.viewport : window).bind('resize'+namespace, repositionMethod);
+			if(posOptions.adjust.resize || posOptions.viewport) {
+				$($.event.special.resize ? posOptions.viewport : window).bind('resize'+namespace, repositionMethod);
 			}
 
 			// Adjust tooltip position on scroll if screen adjustment is enabled
-			if(posOptions.adjust.viewport || (IE6 && targets.tooltip.css('position') === 'fixed')) {
-				$(posOptions.adjust.viewport).bind('scroll'+namespace, repositionMethod);
+			if(posOptions.viewport || (IE6 && targets.tooltip.css('position') === 'fixed')) {
+				$(posOptions.viewport).bind('scroll'+namespace, repositionMethod);
 			}
 
 			// Hide tooltip on document mousedown if unfocus events are enabled
@@ -971,7 +971,7 @@ function QTip(target, options, id)
 				targetHeight = 0,
 				callback = $.Event('tooltipmove'),
 				fixed = tooltip.css('position') === 'fixed',
-				viewport = adjust.viewport.jquery ? adjust.viewport : FALSE,
+				viewport = posOptions.viewport.jquery ? posOptions.viewport : FALSE,
 				position = { left: 0, top: 0 },
 				readjust = {
 					left: function(posLeft) {
@@ -1500,10 +1500,10 @@ $.fn.qtip.defaults = {
 		at: 'bottom right',
 		target: FALSE,
 		container: FALSE,
+		viewport: FALSE,
 		adjust: {
 			x: 0, y: 0,
 			mouse: TRUE,
-			viewport: FALSE,
 			resize: TRUE
 		},
 		effect: TRUE
