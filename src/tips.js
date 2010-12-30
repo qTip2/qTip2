@@ -32,7 +32,7 @@ function Tip(qTip, command)
 		cache = { 
 			top: 0, 
 			left: 0, 
-			corner: { string: function(){} }
+			corner: ''
 		},
 		size = {
 			width: opts.width,
@@ -82,9 +82,9 @@ function Tip(qTip, command)
 		if(!elems.tip) { return; }
 
 		var newCorner = $.extend({}, self.corner),
-			precedance = newCorner.precedance === 'y' ? ['y', 'top', 'left', 'height', 'x'] : ['x', 'left', 'top', 'width', 'y'],
+			precedance = newCorner.precedance,
 			adjusted = pos.adjusted,
-			offset = [0, 0];
+			offset, offsetPrecedance;
 
 		// Make sure our tip position isn't fixed e.g. doesn't adjust with adjust.screen
 		if(self.corner.fixed !== TRUE) {
@@ -97,23 +97,20 @@ function Tip(qTip, command)
 			}
 
 			// Update and redraw the tip if needed
-			if(newCorner.string() !== cache.corner.string() && (cache.top !== adjusted.top || cache.left !== adjusted.left)) {
-				self.update(newCorner);
+			if(newCorner.string() !== cache.corner && (cache.top !== adjusted.top || cache.left !== adjusted.left)) {
+				self.update(newCorner, FALSE);
 			}
 		}
 
-		// Setup offset adjustments
-		offset[0] = border ? parseInt(tooltip.css('border-' + newCorner[ precedance[0] ] + '-width'), 10) || 0 : (method === 'vml' ? 1 : 0);
-		offset[1] = Math.max(newCorner[ precedance[4] ] === 'center' ? opts.offset : 0, opts.offset);
-
-		// Adjust tooltip position in relation to tip element
-		pos[ precedance[1] ] += (newCorner[ precedance[0] ] === precedance[1] ? 1 : -1) * (size[ precedance[3] ] - offset[0]);
-		pos[ precedance[2] ] -= (newCorner[ precedance[4] ] === precedance[2] || newCorner[ precedance[4] ] === 'center' ? 1 : -1) * offset[1];
+		// Adjust position to accomdoate tip dimensions
+		offset = self.position(newCorner);
+		offsetPrecedance = precedance === 'x' ? 'left' : 'top';
+		pos[ offsetPrecedance ] += (offset[ offsetPrecedance ] ? -1 : 1) * offset[ newCorner[ newCorner.precedance] ];
 
 		// Cache details
 		cache.left = adjusted.left;
 		cache.top = adjusted.top;
-		cache.corner = newCorner;
+		cache.corner = newCorner.string();
 	}
 
 	$.extend(self, {
@@ -177,20 +174,24 @@ function Tip(qTip, command)
 				transparent = 'transparent',
 
 				isTitleTop = elems.titlebar && corner.y === 'top',
-				isWidget = qTip.options.style.widget,
-				elemFill = isWidget ? elems.content : isTitleTop ? elems.titlebar : tooltip,
-				elemBorder = !isWidget ? tooltip : isTitleTop ? elems.titlebar : elems.content;
+				colorElem = isTitleTop ? elems.titlebar : elems.content;
 
 			// Detect tip colours from CSS styles
 			color.fill = tip.css(backgroundColor) || transparent;
-			color.border = tip[0].style[borderSideCamel]; // Make sure we grab the actual border color ad not inherited font color!
+			color.border = tip.css(borderSide) || transparent;
 
 			// Make sure colours are valid
 			if(invalid.test(color.fill)) { 
-				color.fill = border ? elemFill.css(backgroundColor) : elemBorder.css(borderSide);
+				color.fill = colorElem.css(backgroundColor);
+				if(invalid.test(color.fill)) {
+					color.fill = tooltip.css(backgroundColor);
+				}
 			}
-			if(!color.border || invalid.test(color.border)) {
-				color.border = elemBorder.css(borderSide) || color.fill;
+			if(invalid.test(color.border)) {
+				color.border = colorElem.css(borderSide);
+				if(invalid.test(color.border)) { 
+					color.border = tooltip.css(borderSide) || color.fill;
+				}
 			}
 
 			// Reset background and border colours
@@ -237,7 +238,7 @@ function Tip(qTip, command)
 			return self;
 		},
 
-		update: function(corner)
+		update: function(corner, position)
 		{
 			var tip = elems.tip,
 				inner = tip.children(),
@@ -369,14 +370,14 @@ function Tip(qTip, command)
 				inner.eq(1).css({ 'left': translate[0], 'top': translate[1] });
 			}
 
-			// Update position
-			self.reposition(corner);
+			// Update position if enabled
+			if(position !== FALSE) { self.position(corner); }
 
 			return self;
 		},
 
 		// Tip positioning method
-		reposition: function(corner)
+		position: function(corner)
 		{
 			var tip = elems.tip,
 				position = {},
@@ -399,6 +400,14 @@ function Tip(qTip, command)
 			// Reset initial position
 			tip.css({ top: '', bottom: '', left: '', right: '', margin: '' });
 
+			/* border width calculator */
+			function borderWidth(corner, side) {
+				var isTitleTop = elems.titlebar && corner.y === 'top',
+					elem = isTitleTop ? elems.titlebar : elems.content;
+				
+				return parseInt(elem.css('border-' + side + '-width'), 10) || 0;
+			}
+
 			/* Calculate tip position */
 			$.each(
 				precedance === 'y' ? [ corner.x, corner.y ] : [ corner.y, corner.x ],
@@ -411,14 +420,15 @@ function Tip(qTip, command)
 						tip.css('margin-' + other, -Math.floor(dimension / 2) + offset);
 					}
 					else {
-						position[ side ] = offset - (!i || !border ? parseInt(tooltip.css('border-' + side + '-width'), 10) : 0);
+						position[ side ] = offset + (i || !border ? borderWidth(corner, side) : 0);
 					}
 				}
 			);
 			position[ corner[precedance] ] -= dimension;
 			
-			// Set position
+			// Set and return new position
 			tip.css(position);
+			return position;
 		},
 		
 		destroy: function()

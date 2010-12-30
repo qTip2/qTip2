@@ -1,44 +1,36 @@
 /*! Youtube tooltip style */
 .ui-tooltip-youtube{
 	background-color: rgba(0, 0, 0, 0.85);
-	color: white;
 
+	border: 1px solid #CCCCCC;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 	border-radius: 5px;
-
-	border-color: #CCCCCC;
-	border-width: 1px;
 
 	-webkit-box-shadow: 0 0 3px #333;
 	-moz-box-shadow: 0 0 3px #333;
 	box-shadow: 0 0 3px #333;
 }
 
-	div.ui-tooltip-youtube .ui-tooltip-icon{
+	.ui-tooltip-youtube .ui-tooltip-icon{
 		background: black url('images/close-dark.png') no-repeat 50% 50%;
 	}
 
 	.ui-tooltip-youtube .ui-tooltip-titlebar,
 	.ui-tooltip-youtube .ui-tooltip-content{
 		background: transparent;
-		margin: 0;
-	}
+		color: white;
 
-	/* IE6 Fallback */
-	* html div.ui-tooltip-youtube{
-		background-color: black;
+		border: 0px transparent;
 	}
 
 
 /* jQuery TOOLS Tooltip style */
 .ui-tooltip-jtools{
+	border: 2px solid white;
 	-moz-border-radius: 2px;
 	-webkit-border-radius: 2px;
 	border-radius: 2px;
-
-	border-color: white;
-	border-width: 2px;
 
 	-webkit-box-shadow: 0 0 12px #333;
 	-moz-box-shadow: 0 0 12px #333;
@@ -49,13 +41,14 @@
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#717171), to(#232323));
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#717171,endColorstr=#232323);
 	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#717171,endColorstr=#232323)";
-
-	color: white;
 }
 
 	.ui-tooltip-jtools .ui-tooltip-titlebar,
 	.ui-tooltip-jtools .ui-tooltip-content{
 		background: transparent;
+		color: white;
+
+		border: 0px transparent;
 	}
 
 	.ui-tooltip-jtools .ui-tooltip-icon{
@@ -76,10 +69,13 @@
 	.ui-tooltip-cluetip .ui-tooltip-titlebar{
 		background-color: #87876A;
 		color: white;
-		border: 0;
+
+		border: 0px transparent;
 	}
 	.ui-tooltip-cluetip .ui-tooltip-content{
 		color: #111;
+
+		border: 0px transparent;
 	}
 
 
@@ -102,6 +98,9 @@
 	.ui-tooltip-tipsy .ui-tooltip-content{
 		background: transparent;
 		color: white;
+
+		border: 0px transparent;
+
 		font-size: 11px;
 		font-family: 'Lucida Grande', sans-serif;
 		font-weight: bold;

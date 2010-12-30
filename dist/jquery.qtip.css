@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Dec 30 03:35:23 2010 +0000
+* Date: Thu Dec 30 05:18:20 2010 +0000
 */
 
 .ui-tooltip-accessible{
@@ -38,32 +38,35 @@
 
 	max-width: 280px;
 	min-width: 50px;
-	
-	border-width: 3px;
-	border-style: solid;
 }
 
-	.ui-tooltip .ui-tooltip-content{
+	.ui-tooltip-content{
 		position: relative;
 		padding: 5px 9px;
 		overflow: hidden;
+
+		border-width: 0 3px 3px;
+		border-style: solid;
 
 		text-align: left;
 		word-wrap: break-word;
 		overflow: hidden;
 	}
 
-	.ui-tooltip .ui-tooltip-titlebar{
+	.ui-tooltip-titlebar{
 		position: relative;
 		min-height: 19px;
 		padding: 6px 35px 6px 10px;
 		overflow: hidden;
 
+		border-width: 3px 3px 0;
+		border-style: solid;
+
 		font-weight: bold;
 	}
 
 		/*! Default close button class */
-		.ui-tooltip .ui-tooltip-close{
+		.ui-tooltip-close{
 			position: absolute;
 			height: 16px;
 			width: 16px;
@@ -83,6 +86,7 @@
 				-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
 				filter: alpha(opacity=80);
 			}
+
 			.ui-tooltip-close:hover .ui-tooltip-icon{
 				opacity: 1;
 				-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
@@ -94,55 +98,41 @@
 
 	}
 
-
-/*! ThemeRoller compatibility classes */
-.ui-widget{
-	border-width: 0;
+/* Themroller compatibilty classes */
+.ui-widget-header .ui-icon{
+	float: right;
 }
 
-	.ui-widget .ui-tooltip-close .ui-icon{
-		float: right;
-	}
-
-
 /*! Default tooltip style */
-.ui-tooltip{
+.ui-tooltip-titlebar,
+.ui-tooltip-content{
 	border-color: #F9E98E;
-	background-color: #FBF7AA;
 	color: #A27D35;
 }
 
-	.ui-tooltip .ui-tooltip-titlebar{
+	.ui-tooltip-content{
+		background-color: #FBF7AA;
+	}
+
+	.ui-tooltip-titlebar{
 		background-color: #F0DE7D;
 	}
 
-	.ui-tooltip .ui-tooltip-icon{
+	.ui-tooltip-icon{
 		background: #A27D35 url('images/close.png') no-repeat 50% 50%;
 	}
 
-/*! Plain tooltip style */
-.ui-tooltip-plain{
-	border-color: black;
-	border-width: 1px;
-
-	background-color: white;
-	color: black;
-}
-
-	.ui-tooltip-plain .ui-tooltip-titlebar{
-		background-color: white;
-	}
-
-	.ui-tooltip-plain .ui-tooltip-icon{
-		background: black;
-	}
 
 /*! Light tooltip style */
-.ui-tooltip-light{
+.ui-tooltip-light .ui-tooltip-titlebar,
+.ui-tooltip-light .ui-tooltip-content{
 	border-color: #E2E2E2;
-	background-color: white;
 	color: #454545;
 }
+
+	.ui-tooltip-light .ui-tooltip-content{
+		background-color: white;
+	}
 
 	.ui-tooltip-light .ui-tooltip-titlebar{
 		background-color: #f1f1f1;
@@ -154,11 +144,15 @@
 
 
 /*! Dark tooltip style */
-.ui-tooltip-dark{
+.ui-tooltip-dark .ui-tooltip-titlebar,
+.ui-tooltip-dark .ui-tooltip-content{
 	border-color: #303030;
-	background-color: #505050;
 	color: #f3f3f3;
 }
+
+	.ui-tooltip-dark .ui-tooltip-content{
+		background-color: #505050;
+	}
 
 	.ui-tooltip-dark .ui-tooltip-titlebar{
 		background-color: #404040;
@@ -170,11 +164,15 @@
 
 
 /*! Red tooltip style */
-.ui-tooltip-red{
+.ui-tooltip-red .ui-tooltip-titlebar,
+.ui-tooltip-red .ui-tooltip-content{
 	border-color: #D95252;
-	background-color: #F78B83;
 	color: #912323;
 }
+
+	.ui-tooltip-red .ui-tooltip-content{
+		background-color: #F78B83;
+	}
 
 	.ui-tooltip-red .ui-tooltip-titlebar{
 		background-color: #F06D65;
@@ -186,11 +184,15 @@
 
 
 /*! Green tooltip style */
-.ui-tooltip-green{
+.ui-tooltip-green .ui-tooltip-titlebar,
+.ui-tooltip-green .ui-tooltip-content{
 	border-color: #90D93F;
-	background-color: #CAED9E;
 	color: #3F6219;
 }
+
+	.ui-tooltip-green .ui-tooltip-content{
+		background-color: #CAED9E;
+	}
 
 	.ui-tooltip-green .ui-tooltip-titlebar{
 		background-color: #B0DE78;
@@ -202,11 +204,15 @@
 
 
 /*! Blue tooltip style */
-.ui-tooltip-blue{
+.ui-tooltip-blue .ui-tooltip-titlebar,
+.ui-tooltip-blue .ui-tooltip-content{
 	border-color: #ADD9ED;
-	background-color: #E5F6FE;
 	color: #5E99BD;
 }
+
+	.ui-tooltip-blue .ui-tooltip-content{
+		background-color: #E5F6FE;
+	}
 
 	.ui-tooltip-blue .ui-tooltip-titlebar{
 		background-color: #D0E9F5;
@@ -274,44 +280,36 @@ div.ui-tooltip-tip{
 /*! Youtube tooltip style */
 .ui-tooltip-youtube{
 	background-color: rgba(0, 0, 0, 0.85);
-	color: white;
 
+	border: 1px solid #CCCCCC;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 	border-radius: 5px;
-
-	border-color: #CCCCCC;
-	border-width: 1px;
 
 	-webkit-box-shadow: 0 0 3px #333;
 	-moz-box-shadow: 0 0 3px #333;
 	box-shadow: 0 0 3px #333;
 }
 
-	div.ui-tooltip-youtube .ui-tooltip-icon{
+	.ui-tooltip-youtube .ui-tooltip-icon{
 		background: black url('images/close-dark.png') no-repeat 50% 50%;
 	}
 
 	.ui-tooltip-youtube .ui-tooltip-titlebar,
 	.ui-tooltip-youtube .ui-tooltip-content{
 		background: transparent;
-		margin: 0;
-	}
+		color: white;
 
-	/* IE6 Fallback */
-	* html div.ui-tooltip-youtube{
-		background-color: black;
+		border: 0px transparent;
 	}
 
 
 /* jQuery TOOLS Tooltip style */
 .ui-tooltip-jtools{
+	border: 2px solid white;
 	-moz-border-radius: 2px;
 	-webkit-border-radius: 2px;
 	border-radius: 2px;
-
-	border-color: white;
-	border-width: 2px;
 
 	-webkit-box-shadow: 0 0 12px #333;
 	-moz-box-shadow: 0 0 12px #333;
@@ -322,13 +320,14 @@ div.ui-tooltip-tip{
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#717171), to(#232323));
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#717171,endColorstr=#232323);
 	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#717171,endColorstr=#232323)";
-
-	color: white;
 }
 
 	.ui-tooltip-jtools .ui-tooltip-titlebar,
 	.ui-tooltip-jtools .ui-tooltip-content{
 		background: transparent;
+		color: white;
+
+		border: 0px transparent;
 	}
 
 	.ui-tooltip-jtools .ui-tooltip-icon{
@@ -349,10 +348,13 @@ div.ui-tooltip-tip{
 	.ui-tooltip-cluetip .ui-tooltip-titlebar{
 		background-color: #87876A;
 		color: white;
-		border: 0;
+
+		border: 0px transparent;
 	}
 	.ui-tooltip-cluetip .ui-tooltip-content{
 		color: #111;
+
+		border: 0px transparent;
 	}
 
 
@@ -375,6 +377,9 @@ div.ui-tooltip-tip{
 	.ui-tooltip-tipsy .ui-tooltip-content{
 		background: transparent;
 		color: white;
+
+		border: 0px transparent;
+
 		font-size: 11px;
 		font-family: 'Lucida Grande', sans-serif;
 		font-weight: bold;
