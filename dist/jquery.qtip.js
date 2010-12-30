@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Dec 30 05:18:20 2010 +0000
+* Date: Thu Dec 30 07:06:44 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -229,8 +229,7 @@ function QTip(target, options, id)
 		else {
 			elems.button = $('<a />', {
 				'class': 'ui-state-default',
-				'title': 'Close tooltip',
-				'css': { 'text-indent': '-10000em' }
+				'title': 'Close tooltip'
 			})
 			.prepend(
 				$('<span />', { 'class': (options.style.widget ? 'ui' : uitooltip) + '-icon ui-icon-close' })
@@ -1803,16 +1802,16 @@ function Tip(qTip, command)
 
 			// Detect tip colours from CSS styles
 			color.fill = tip.css(backgroundColor) || transparent;
-			color.border = tip.css(borderSide) || transparent;
+			color.border = tip[0].style[ borderSideCamel ];
 
 			// Make sure colours are valid
-			if(invalid.test(color.fill)) { 
+			if(!color.fill || invalid.test(color.fill)) { 
 				color.fill = colorElem.css(backgroundColor);
 				if(invalid.test(color.fill)) {
 					color.fill = tooltip.css(backgroundColor);
 				}
 			}
-			if(invalid.test(color.border)) {
+			if(!color.border || invalid.test(color.border)) {
 				color.border = colorElem.css(borderSide);
 				if(invalid.test(color.border)) { 
 					color.border = tooltip.css(borderSide) || color.fill;

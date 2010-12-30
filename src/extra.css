@@ -12,16 +12,16 @@
 	box-shadow: 0 0 3px #333;
 }
 
-	.ui-tooltip-youtube .ui-tooltip-icon{
-		background: black url('images/close-dark.png') no-repeat 50% 50%;
-	}
-
 	.ui-tooltip-youtube .ui-tooltip-titlebar,
 	.ui-tooltip-youtube .ui-tooltip-content{
 		background: transparent;
 		color: white;
 
 		border: 0px transparent;
+	}
+	
+	.ui-tooltip-youtube .ui-tooltip-icon{
+		background-position: -22px 0;
 	}
 
 
@@ -52,7 +52,7 @@
 	}
 
 	.ui-tooltip-jtools .ui-tooltip-icon{
-		background: black url('images/close-dark.png') no-repeat 50% 50%;
+		background-position: -22px 0;
 	}
 
 
@@ -117,5 +117,5 @@
 	}
 
 	.ui-tooltip-tipsy .ui-tooltip-icon{
-		background: black url('images/close-dark.png') no-repeat 50% 50%;
+		background-position: -22px 0;
 	}

@@ -178,16 +178,16 @@ function Tip(qTip, command)
 
 			// Detect tip colours from CSS styles
 			color.fill = tip.css(backgroundColor) || transparent;
-			color.border = tip.css(borderSide) || transparent;
+			color.border = tip[0].style[ borderSideCamel ];
 
 			// Make sure colours are valid
-			if(invalid.test(color.fill)) { 
+			if(!color.fill || invalid.test(color.fill)) { 
 				color.fill = colorElem.css(backgroundColor);
 				if(invalid.test(color.fill)) {
 					color.fill = tooltip.css(backgroundColor);
 				}
 			}
-			if(invalid.test(color.border)) {
+			if(!color.border || invalid.test(color.border)) {
 				color.border = colorElem.css(borderSide);
 				if(invalid.test(color.border)) { 
 					color.border = tooltip.css(borderSide) || color.fill;

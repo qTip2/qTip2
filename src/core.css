@@ -63,16 +63,22 @@
 			cursor: pointer;
 		}
 
-			.ui-tooltip-close .ui-tooltip-icon{
+			.ui-tooltip-close .ui-tooltip-icon,
+			.ui-tooltip-close .ui-icon{
+				float: right;
 				height: 16px;
 				width: 16px;
 				display: block;
-
+			}
+			
+			.ui-tooltip-close .ui-tooltip-icon{
 				opacity: 0.8;
 				-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
 				filter: alpha(opacity=80);
+				
+				background: transparent url('images/close-icons.png') no-repeat -100em -100em;
 			}
-
+			
 			.ui-tooltip-close:hover .ui-tooltip-icon{
 				opacity: 1;
 				-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
@@ -84,10 +90,6 @@
 
 	}
 
-/* Themroller compatibilty classes */
-.ui-widget-header .ui-icon{
-	float: right;
-}
 
 /*! Default tooltip style */
 .ui-tooltip-titlebar,
@@ -104,8 +106,8 @@
 		background-color: #F0DE7D;
 	}
 
-	.ui-tooltip-icon{
-		background: #A27D35 url('images/close.png') no-repeat 50% 50%;
+	.ui-tooltip-close .ui-tooltip-icon{
+		background-position: -82px 0;
 	}
 
 
@@ -125,7 +127,7 @@
 	}
 
 	.ui-tooltip-light .ui-tooltip-icon{
-		background: #454545 url('images/close-light.png') no-repeat 50% 50%;
+		background-position: -62px 0;
 	}
 
 
@@ -145,7 +147,7 @@
 	}
 
 	.ui-tooltip-dark .ui-tooltip-icon{
-		background: #f3f3f3 url('images/close-dark.png') no-repeat 50% 50%;
+		background-position: -22px 0;
 	}
 
 
@@ -165,7 +167,7 @@
 	}
 
 	.ui-tooltip-red .ui-tooltip-icon{
-		background: #9C2F2F url('images/close-red.png') no-repeat 50% 50%;
+		background-position: -102px 0;
 	}
 
 
@@ -185,7 +187,7 @@
 	}
 
 	.ui-tooltip-green .ui-tooltip-icon{
-		background: #58792E url('images/close-green.png') no-repeat 50% 50%;
+		background-position: -42px 0;
 	}
 
 
@@ -205,7 +207,7 @@
 	}
 
 	.ui-tooltip-blue .ui-tooltip-icon{
-		background: #4D9FBF url('images/close-blue.png') no-repeat 50% 50%;
+		background-position: -2px 0;
 	}
 
 
