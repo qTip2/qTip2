@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Dec 30 08:08:31 2010 +0000
+* Date: Thu Dec 30 17:40:19 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1723,12 +1723,12 @@ function Tip(qTip, command)
 
 			// Update and redraw the tip if needed
 			if(newCorner.string() !== cache.corner && (cache.top !== adjusted.top || cache.left !== adjusted.left)) {
-				self.update(newCorner, FALSE);
+				offset = self.update(newCorner);
 			}
 		}
 
 		// Adjust position to accomodate tip dimensions
-		offset = self.position(newCorner);
+		if(!offset) { offset = self.position(newCorner, 0); }
 		if(offset.right) { offset.left = offset.right; }
 		if(offset.bottom) { offset.top = offset.bottom; }
 		offset.option = Math.max(0, opts.offset);
@@ -1846,7 +1846,7 @@ function Tip(qTip, command)
 			{
 				case 'canvas':
 					// save() as soon as we create the canvas element so FF2 doesn't bork on our first restore()!
-					$('<canvas height="'+height+'" width="'+width+'" />').appendTo(elems.tip)[0].getContext('2d').save(); 
+					$('<canvas height="'+height+'" width="'+width+'" />').appendTo(elems.tip)[0].getContext('2d').save();
 				break;
 
 				case 'vml':
@@ -1862,11 +1862,9 @@ function Tip(qTip, command)
 						.append(border ? '<div class="ui-tooltip-tip-border" />' : '');
 				break;
 			}
-
-			return self;
 		},
 
-		update: function(corner, position)
+		update: function(corner)
 		{
 			var tip = elems.tip,
 				inner = tip.children(),
@@ -1998,14 +1996,12 @@ function Tip(qTip, command)
 				inner.eq(1).css({ 'left': translate[0], 'top': translate[1] });
 			}
 
-			// Update position if enabled
-			if(position !== FALSE) { self.position(corner); }
-
-			return self;
+			// Update position
+			return self.position(corner, 1);
 		},
 
 		// Tip positioning method
-		position: function(corner)
+		position: function(corner, set)
 		{
 			var tip = elems.tip,
 				position = {},
@@ -2021,9 +2017,6 @@ function Tip(qTip, command)
 
 			// Determine which tip dimension to use for adjustment
 			dimension = size[ precedance === 'x' ? 'width' : 'height' ];
-
-			// Reset initial position
-			tip.css({ top: '', bottom: '', left: '', right: '', margin: '' });
 
 			/* border width calculator */
 			function borderWidth(corner, side) {
@@ -2052,7 +2045,7 @@ function Tip(qTip, command)
 			position[ corner[precedance] ] -= dimension;
 			
 			// Set and return new position
-			tip.css(position);
+			if(set) { tip.css({ top: '', bottom: '', left: '', right: '', margin: '' }).css(position); }
 			return position;
 		},
 		
