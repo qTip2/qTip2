@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Dec 30 19:23:12 2010 +0000
+* Date: Thu Dec 30 19:32:39 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -272,7 +272,7 @@ function QTip(target, options, id)
 				'html': options.content.title.text
 			})
 		)
-		.prependTo(elems.tooltip);
+		.insertBefore(elems.content);
 
 		// Create button if enabled
 		if(options.content.title.button) { createButton(); }

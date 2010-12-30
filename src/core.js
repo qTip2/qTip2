@@ -247,7 +247,7 @@ function QTip(target, options, id)
 				'html': options.content.title.text
 			})
 		)
-		.prependTo(elems.tooltip);
+		.insertBefore(elems.content);
 
 		// Create button if enabled
 		if(options.content.title.button) { createButton(); }
