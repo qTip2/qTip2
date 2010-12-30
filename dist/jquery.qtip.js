@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Dec 30 08:05:55 2010 +0000
+* Date: Thu Dec 30 08:08:31 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1708,6 +1708,7 @@ function Tip(qTip, command)
 		var newCorner = $.extend({}, self.corner),
 			precedance = newCorner.precedance,
 			adjusted = pos.adjusted,
+			sides = ['top', 'left'],
 			offset, offsetPrecedance;
 
 		// Make sure our tip position isn't fixed e.g. doesn't adjust with adjust.screen
@@ -1726,14 +1727,17 @@ function Tip(qTip, command)
 			}
 		}
 
-		// Adjust position to accomdoate tip dimensions
+		// Adjust position to accomodate tip dimensions
 		offset = self.position(newCorner);
-		offsetPrecedance = precedance === 'x' ? 'left' : 'top';
-		pos[ offsetPrecedance ] += (offset[ offsetPrecedance ] ? -1 : 1) * offset[ newCorner[ newCorner.precedance] ];
+		if(offset.right) { offset.left = offset.right; }
+		if(offset.bottom) { offset.top = offset.bottom; }
+		offset.option = Math.max(0, opts.offset);
+
+		pos.left -= offset.left.charAt ? offset.option : (offset.right ? -1 : 1) * offset.left;
+		pos.top -= offset.top.charAt ? offset.option : (offset.bottom ? -1 : 1) * offset.top;
 
 		// Cache details
-		cache.left = adjusted.left;
-		cache.top = adjusted.top;
+		cache.left = adjusted.left; cache.top = adjusted.top;
 		cache.corner = newCorner.string();
 	}
 
@@ -2005,7 +2009,7 @@ function Tip(qTip, command)
 		{
 			var tip = elems.tip,
 				position = {},
-				offset = opts.offset,
+				offset = Math.max(0, opts.offset),
 				precedance, dimension;
 
 			// Return if tips are disabled or tip is not yet rendered
@@ -2016,10 +2020,7 @@ function Tip(qTip, command)
 			precedance = corner.precedance;
 
 			// Determine which tip dimension to use for adjustment
-			dimension = size[ (precedance === 'x') ? 'width' : 'height' ];
-
-			// Calculate offset adjustments
-			offset = Math.max(corner[ precedance === 'y' ? 'x' : 'y' ] === 'center' ? offset : 0, offset);
+			dimension = size[ precedance === 'x' ? 'width' : 'height' ];
 
 			// Reset initial position
 			tip.css({ top: '', bottom: '', left: '', right: '', margin: '' });
@@ -2041,10 +2042,10 @@ function Tip(qTip, command)
 						var other = precedance === 'y' ? 'left' : 'top';
 
 						position[ other ] = '50%';
-						tip.css('margin-' + other, -Math.floor(dimension / 2) + offset);
+						position['margin-' + other] = -Math.floor(dimension / 2) + offset;
 					}
 					else {
-						position[ side ] = offset + (i || !border ? borderWidth(corner, side) : 0);
+						position[ side ] = i || !border ? borderWidth(corner, side) : offset;
 					}
 				}
 			);
