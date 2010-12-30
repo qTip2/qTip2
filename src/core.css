@@ -224,10 +224,21 @@
 }
 
 /*! Add rounded corners to your tooltips in: FF3+, Chrome 2+, Opera 10.6+, IE9+, Safari 2+ */
-.ui-tooltip-rounded{
+.ui-tooltip-rounded,
+.ui-tooltip-rounded .ui-tooltip-content{
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
-	-o-border-radius: 5px;
 	border-radius: 5px;
 }
 
+.ui-tooltip-rounded .ui-tooltip-titlebar{
+	-moz-border-radius: 5px 5px 0 0;
+	-webkit-border-radius: 5px 5px 0 0;
+	border-radius: 5px 5px 0 0;
+}
+
+.ui-tooltip-rounded .ui-tooltip-titlebar + .ui-tooltip-content{
+	-moz-border-radius: 0 0 5px 5px;
+	-webkit-border-radius: 0 0 5px 5px;
+	border-radius: 0 0 5px 5px;
+}

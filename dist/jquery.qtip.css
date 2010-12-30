@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Dec 30 07:47:53 2010 +0000
+* Date: Thu Dec 30 07:55:44 2010 +0000
 */
 
 .ui-tooltip-accessible{
@@ -238,14 +238,24 @@
 }
 
 /*! Add rounded corners to your tooltips in: FF3+, Chrome 2+, Opera 10.6+, IE9+, Safari 2+ */
-.ui-tooltip-rounded{
+.ui-tooltip-rounded,
+.ui-tooltip-rounded .ui-tooltip-content{
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
-	-o-border-radius: 5px;
 	border-radius: 5px;
 }
 
-div.ui-tooltip-tip{
+.ui-tooltip-rounded .ui-tooltip-titlebar{
+	-moz-border-radius: 5px 5px 0 0;
+	-webkit-border-radius: 5px 5px 0 0;
+	border-radius: 5px 5px 0 0;
+}
+
+.ui-tooltip-rounded .ui-tooltip-titlebar + .ui-tooltip-content{
+	-moz-border-radius: 0 0 5px 5px;
+	-webkit-border-radius: 0 0 5px 5px;
+	border-radius: 0 0 5px 5px;
+}div.ui-tooltip-tip{
 	position: absolute;
 	margin: 0 auto;
 	overflow: hidden;
