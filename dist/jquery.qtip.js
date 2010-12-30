@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Dec 30 18:27:43 2010 +0000
+* Date: Thu Dec 30 18:29:08 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -969,7 +969,7 @@ function QTip(target, options, id)
 				targetHeight = 0,
 				callback = $.Event('tooltipmove'),
 				fixed = tooltip.css('position') === 'fixed',
-				viewport = posOptions.viewport.jquery ? posOptions.viewport : FALSE,
+				viewport = posOptions.viewport.jquery ? posOptions.viewport : $(window),
 				position = { left: 0, top: 0 },
 				readjust = {
 					left: function(posLeft) {
@@ -1086,7 +1086,7 @@ function QTip(target, options, id)
 			position.top += adjust.y + (my.y === 'bottom' ? -elemHeight : my.y === 'center' ? -elemHeight / 2 : 0);
 
 			// Calculate collision offset values
-			if(viewport && target[0] !== window && target[0] !== document.body) {
+			if(posOptions.viewport.jquery && target[0] !== window && target[0] !== document.body) {
 				position.adjusted = { left: readjust.left(position.left), top: readjust.top(position.top) };
 			}
 			else {
@@ -1694,8 +1694,10 @@ function Tip(qTip, command)
 			qTip.reposition();
 		},
 		'^style.(classes|widget)$': function() {
-			self.detectColours();
-			self.update();
+			if(elems.tip) {
+				self.detectColours();
+				self.update();
+			}
 		}
 	};
 

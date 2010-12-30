@@ -70,8 +70,10 @@ function Tip(qTip, command)
 			qTip.reposition();
 		},
 		'^style.(classes|widget)$': function() {
-			self.detectColours();
-			self.update();
+			if(elems.tip) {
+				self.detectColours();
+				self.update();
+			}
 		}
 	};
 
