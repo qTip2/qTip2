@@ -37,23 +37,9 @@ function sanitizeOptions(opts)
 				at: opts.position
 			};
 		}
-
-		if('object' !== typeof opts.position.adjust) {
-			opts.position.adjust = {};
-		}
-
-		if('undefined' !== typeof opts.position.adjust.screen) {
-			opts.position.adjust.screen = !!opts.position.adjust.screen;
-		}
 	}
 
 	if('show' in opts) {
-		if('object' !== typeof opts.show) {
-			opts.show = {
-				event: opts.show
-			};
-		}
-
 		if('object' !== typeof opts.show) {
 			if(opts.show.jquery) {
 				opts.show = { target: opts.show };
@@ -527,13 +513,13 @@ function QTip(target, options, id)
 		// Apply document events
 		if(doc) {
 			// Adjust positions of the tooltip on window resize if enabled
-			if(posOptions.adjust.resize || posOptions.adjust.screen) {
-				$($.event.special.resize ? targets.container : window).bind('resize'+namespace, repositionMethod);
+			if(posOptions.adjust.resize || posOptions.adjust.viewport) {
+				$($.event.special.resize ? posOptions.adjust.viewport : window).bind('resize'+namespace, repositionMethod);
 			}
 
 			// Adjust tooltip position on scroll if screen adjustment is enabled
-			if(posOptions.adjust.screen || (IE6 && targets.tooltip.css('position') === 'fixed')) {
-				$(targets.container).bind('scroll'+namespace, repositionMethod);
+			if(posOptions.adjust.viewport || (IE6 && targets.tooltip.css('position') === 'fixed')) {
+				$(posOptions.adjust.viewport).bind('scroll'+namespace, repositionMethod);
 			}
 
 			// Hide tooltip on document mousedown if unfocus events are enabled
@@ -960,7 +946,7 @@ function QTip(target, options, id)
 				targetHeight = 0,
 				callback = $.Event('tooltipmove'),
 				fixed = tooltip.css('position') === 'fixed',
-				viewport = posOptions.container[0] !== document.body ? posOptions.container : $(window),
+				viewport = adjust.viewport.jquery ? adjust.viewport : FALSE,
 				position = { left: 0, top: 0 },
 				readjust = {
 					left: function(posLeft) {
@@ -1004,7 +990,7 @@ function QTip(target, options, id)
 				};
 
 			// Cache our viewport details
-			viewport = {
+			viewport = !viewport ? FALSE : {
 				elem: viewport,
 				height: viewport[ (viewport[0] === window ? 'h' : 'outerH') + 'eight' ](),
 				width: viewport[ (viewport[0] === window ? 'w' : 'outerW') + 'idth' ](),
@@ -1077,7 +1063,7 @@ function QTip(target, options, id)
 			position.top += adjust.y + (my.y === 'bottom' ? -elemHeight : my.y === 'center' ? -elemHeight / 2 : 0);
 
 			// Calculate collision offset values
-			if(adjust.screen && target[0] !== window && target[0] !== document.body) {
+			if(viewport && target[0] !== window && target[0] !== document.body) {
 				position.adjusted = { left: readjust.left(position.left), top: readjust.top(position.top) };
 			}
 			else {
@@ -1492,7 +1478,7 @@ $.fn.qtip.defaults = {
 		adjust: {
 			x: 0, y: 0,
 			mouse: TRUE,
-			screen: FALSE,
+			viewport: FALSE,
 			resize: TRUE
 		},
 		effect: TRUE
