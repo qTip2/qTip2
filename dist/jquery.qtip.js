@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Dec 30 02:56:40 2010 +0000
+* Date: Thu Dec 30 03:02:17 2010 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -628,7 +628,7 @@ function QTip(target, options, id)
 				.appendTo(options.position.container);
 
 			// Append to container element
-			elements.wrapper = $('<div />', { 'class': uitooltip + '-wrapper' }).appendTo(elements.tooltip);
+			elements.wrapper = $('<div />', { 'class': uitooltip + '-wrapper ' + options.style.wrapper }).appendTo(elements.tooltip);
 			elements.content = $('<div />', {
 					'class': uitooltip + '-content ' + (options.style.widget ? 'ui-widget-content' : ''),
 					'id': uitooltip + '-' + id + '-content'
@@ -1526,6 +1526,7 @@ $.fn.qtip.defaults = {
 	},
 	style: {
 		classes: '',
+		wrapper: '',
 		widget: FALSE
 	},
 	events: {

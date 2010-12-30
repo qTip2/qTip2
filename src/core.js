@@ -603,7 +603,7 @@ function QTip(target, options, id)
 				.appendTo(options.position.container);
 
 			// Append to container element
-			elements.wrapper = $('<div />', { 'class': uitooltip + '-wrapper' }).appendTo(elements.tooltip);
+			elements.wrapper = $('<div />', { 'class': uitooltip + '-wrapper ' + options.style.wrapper }).appendTo(elements.tooltip);
 			elements.content = $('<div />', {
 					'class': uitooltip + '-content ' + (options.style.widget ? 'ui-widget-content' : ''),
 					'id': uitooltip + '-' + id + '-content'
@@ -1501,6 +1501,7 @@ $.fn.qtip.defaults = {
 	},
 	style: {
 		classes: '',
+		wrapper: '',
 		widget: FALSE
 	},
 	events: {
