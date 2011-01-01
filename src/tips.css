@@ -11,13 +11,13 @@ div.ui-tooltip-tip{
 	z-index: 10;
 }
 
-	div.ui-tooltip-tip *{
-		line-height: 0.1px;
-		font-size: 0.1px;
-	}
+div.ui-tooltip-tip *{
+	line-height: 0.1px;
+	font-size: 0.1px;
+}
 
-	div.ui-tooltip-tip div{
-		background: transparent !important;
-		border: 0px dashed transparent;
-	}
+div.ui-tooltip-tip div{
+	background: transparent !important;
+	border: 0px dashed transparent;
+}
 

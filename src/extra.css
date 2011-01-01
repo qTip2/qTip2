@@ -12,17 +12,17 @@
 	box-shadow: 0 0 3px #333;
 }
 
-	.ui-tooltip-youtube .ui-tooltip-titlebar,
-	.ui-tooltip-youtube .ui-tooltip-content{
-		background: transparent;
-		color: white;
+.ui-tooltip-youtube .ui-tooltip-titlebar,
+.ui-tooltip-youtube .ui-tooltip-content{
+	background: transparent;
+	color: white;
 
-		border: 0px transparent;
-	}
-	
-	.ui-tooltip-youtube .ui-tooltip-icon{
-		background-position: -22px 0;
-	}
+	border: 0px transparent;
+}
+
+.ui-tooltip-youtube .ui-tooltip-icon{
+	background-position: -22px 0;
+}
 
 
 /* jQuery TOOLS Tooltip style */
@@ -43,17 +43,17 @@
 	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#717171,endColorstr=#232323)";
 }
 
-	.ui-tooltip-jtools .ui-tooltip-titlebar,
-	.ui-tooltip-jtools .ui-tooltip-content{
-		background: transparent;
-		color: white;
+.ui-tooltip-jtools .ui-tooltip-titlebar,
+.ui-tooltip-jtools .ui-tooltip-content{
+	background: transparent;
+	color: white;
 
-		border: 0px transparent;
-	}
+	border: 0px transparent;
+}
 
-	.ui-tooltip-jtools .ui-tooltip-icon{
-		background-position: -22px 0;
-	}
+.ui-tooltip-jtools .ui-tooltip-icon{
+	background-position: -22px 0;
+}
 
 
 /* Cluetip style */
@@ -66,17 +66,17 @@
 	box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.4);
 }
 
-	.ui-tooltip-cluetip .ui-tooltip-titlebar{
-		background-color: #87876A;
-		color: white;
+.ui-tooltip-cluetip .ui-tooltip-titlebar{
+	background-color: #87876A;
+	color: white;
 
-		border: 0px transparent;
-	}
-	.ui-tooltip-cluetip .ui-tooltip-content{
-		color: #111;
+	border: 0px transparent;
+}
+.ui-tooltip-cluetip .ui-tooltip-content{
+	color: #111;
 
-		border: 0px transparent;
-	}
+	border: 0px transparent;
+}
 
 
 /* Tipsy style */
@@ -94,28 +94,28 @@
 	border-radius: 4px;
 }
 
-	.ui-tooltip-tipsy .ui-tooltip-titlebar,
-	.ui-tooltip-tipsy .ui-tooltip-content{
-		background: transparent;
-		color: white;
+.ui-tooltip-tipsy .ui-tooltip-titlebar,
+.ui-tooltip-tipsy .ui-tooltip-content{
+	background: transparent;
+	color: white;
 
-		border: 0px transparent;
+	border: 0px transparent;
 
-		font-size: 11px;
-		font-family: 'Lucida Grande', sans-serif;
-		font-weight: bold;
-		line-height: 16px;
-		text-shadow: 0 1px black;
-	}
+	font-size: 11px;
+	font-family: 'Lucida Grande', sans-serif;
+	font-weight: bold;
+	line-height: 16px;
+	text-shadow: 0 1px black;
+}
 
-	.ui-tooltip-tipsy .ui-tooltip-titlebar{
-		padding: 6px 35px 0 10px;
-	}
+.ui-tooltip-tipsy .ui-tooltip-titlebar{
+	padding: 6px 35px 0 10px;
+}
 
-	.ui-tooltip-tipsy .ui-tooltip-content{
-		padding: 6px 10px;
-	}
+.ui-tooltip-tipsy .ui-tooltip-content{
+	padding: 6px 10px;
+}
 
-	.ui-tooltip-tipsy .ui-tooltip-icon{
-		background-position: -22px 0;
-	}
+.ui-tooltip-tipsy .ui-tooltip-icon{
+	background-position: -22px 0;
+}
