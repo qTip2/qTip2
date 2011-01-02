@@ -763,7 +763,7 @@ function QTip(target, options, id)
 						},
 
 						// Update position on ANY style update or position change
-						'^position.(my|at|adjust|target|container)|style': function(){ 
+						'^position.(my|at|adjust|target|container)|style|content': function(){ 
 							self.reposition();
 						}
 					}

@@ -120,9 +120,10 @@ function Tip(qTip, command)
 
 		var isTitleTop = elems.titlebar && corner.y === 'top',
 			elem = isTitleTop ? elems.titlebar : elems.content,
-			css = 'border-' + side + '-width';
+			css = 'border-' + side + '-width',
+			val = parseInt(elem.css(css), 10);
 
-		return parseInt(elem.css(css), 10) || parseInt(backup ? tooltip.css(css) : 0, 10) || 0;
+		return (backup ? val || parseInt(tooltip.css(css), 10) : val) || 0;
 	}
 	
 	

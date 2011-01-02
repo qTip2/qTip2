@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun Jan 2 04:26:53 2011 +0000
+* Date: Sun Jan 2 04:31:23 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -788,7 +788,7 @@ function QTip(target, options, id)
 						},
 
 						// Update position on ANY style update or position change
-						'^position.(my|at|adjust|target|container)|style': function(){ 
+						'^position.(my|at|adjust|target|container)|style|content': function(){ 
 							self.reposition();
 						}
 					}
@@ -1760,9 +1760,10 @@ function Tip(qTip, command)
 
 		var isTitleTop = elems.titlebar && corner.y === 'top',
 			elem = isTitleTop ? elems.titlebar : elems.content,
-			css = 'border-' + side + '-width';
+			css = 'border-' + side + '-width',
+			val = parseInt(elem.css(css), 10);
 
-		return parseInt(elem.css(css), 10) || parseInt(backup ? tooltip.css(css) : 0, 10) || 0;
+		return (backup ? val || parseInt(tooltip.css(css), 10) : val) || 0;
 	}
 	
 	
