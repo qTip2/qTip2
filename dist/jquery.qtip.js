@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun Jan 2 04:31:23 2011 +0000
+* Date: Sun Jan 2 04:44:48 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1709,7 +1709,6 @@ function Tip(qTip, command)
 		},
 		'^content.title.text|style.(classes|widget)$': function() {
 			if(elems.tip) {
-				self.detectColours();
 				self.update();
 			}
 		}
@@ -1792,7 +1791,6 @@ function Tip(qTip, command)
 
 				// Create a new tip and draw it
 				self.create();
-				self.detectColours();
 				self.update();
 
 				// Bind update events
@@ -1838,9 +1836,10 @@ function Tip(qTip, command)
 				backgroundColor = 'background-color',
 				transparent = 'transparent',
 
-				isTitleTop = elems.titlebar && corner.y === 'top',
-				colorElem = isTitleTop ? elems.titlebar : elems.content;
-
+				useTitle = elems.titlebar && 
+					(corner.y === 'top' || (corner.y === 'center' && tip.position().top + (size.height / 2) + opts.offset < elems.titlebar.outerHeight(1))),
+				colorElem = useTitle ? elems.titlebar : elems.content;
+				
 			// Detect tip colours from CSS styles
 			color.fill = tip.css(backgroundColor) || transparent;
 			color.border = tip[0].style[ borderSideCamel ];
@@ -1910,7 +1909,7 @@ function Tip(qTip, command)
 				regular = 'px solid ',
 				transparent = 'px dashed transparent', // Dashed IE6 border-transparency hack. Awesome!
 				mimic = opts.mimic,
-				i, context, coords, center, translate, round;
+				position, i, context, coords, center, translate, round;
 
 			// Re-determine tip if not already set
 			if(!corner) { corner = self.corner; }
@@ -1929,7 +1928,7 @@ function Tip(qTip, command)
 					mimic[ corner.precedance ] = corner[ corner.precedance ];
 				}
 			}
-			
+
 			// Detect border width
 			border = opts.border === TRUE ? borderWidth(corner, NULL, TRUE) : opts.border;
 			i = border > 0 ? 0 : 1;
@@ -1939,6 +1938,12 @@ function Tip(qTip, command)
 
 			// Custom rounding for pixel perfect precision!
 			round = Math[ /b|r/.test(mimic[ mimic.precedance === 'y' ? 'x' : 'y' ]) ? 'ceil' : 'floor' ];
+
+			// Update position first
+			position = self.position(corner, 1);
+
+			// Update our colours
+			self.detectColours();
 
 			// Create tip element
 			switch(method)
@@ -2035,9 +2040,8 @@ function Tip(qTip, command)
 				// Apply the calculated offset
 				inner.eq(1).css({ 'left': translate[0], 'top': translate[1] });
 			}
-
-			// Update position
-			return self.position(corner, 1);
+			
+			return position;
 		},
 
 		// Tip positioning method
