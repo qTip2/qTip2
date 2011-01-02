@@ -85,7 +85,9 @@ function QTip(target, options, id)
 
 	// Shortcut vars
 	uitooltip = 'ui-tooltip',
+	widget = 'ui-widget',
 	selector = '.qtip.'+uitooltip;
+	
 
 	// Setup class attributes
 	self.id = id;
@@ -176,6 +178,21 @@ function QTip(target, options, id)
 		return returned;
 	}
 
+	function setWidget() {
+		var elems = self.elements,
+			on = options.style.widget;
+
+		elems.tooltip.toggleClass(widget, on);
+		elems.content.toggleClass(widget+'-content', on);
+		
+		if(elems.titlebar){
+			elems.titlebar.toggleClass(widget+'-header', on);
+		}
+		if(elems.button){
+			elems.button.children('span').toggleClass(uitooltip+'-icon', !on).toggleClass('ui-icon', on);
+		}
+	}
+
 	function removeTitle()
 	{
 		var elems = self.elements;
@@ -184,6 +201,7 @@ function QTip(target, options, id)
 			elems.titlebar.remove();
 			elems.titlebar = elems.title = elems.button = NULL;
 			elems.tooltip.removeAttr('aria-labelledby');
+			self.reposition();
 		}
 	}
 
@@ -588,30 +606,29 @@ function QTip(target, options, id)
 			// Call API method and set rendered status
 			self.rendered = show ? -2 : -1; // -1: rendering	 -2: rendering and show when done
 
-			// Create initial tooltip elements
+			// Create tooltip element
 			elements.tooltip = $('<div/>')
 				.attr({
 					'id': uitooltip + '-'+id,
 					'role': 'tooltip',
-					'class': uitooltip + ' qtip ui-tooltip-accessible ui-helper-reset ' + options.style.classes
+					'class': uitooltip + ' qtip ui-tooltip-accessible ui-helper-reset ' + options.style.classes,
+					'css': {
+						'z-index': $.fn.qtip.zindex + $(selector).length
+					}
 				})
-				.css('z-index', $.fn.qtip.zindex + $(selector).length)
-				.toggleClass('ui-widget', options.style.widget)
 				.toggleClass('ui-state-disabled', self.cache.disabled)
 				.data('qtip', self)
 				.appendTo(options.position.container);
 
-			// Append to container element
+			// Create content element
 			elements.content = $('<div />', {
-					'class': uitooltip + '-content ' + (options.style.widget ? 'ui-widget-content' : ''),
+					'class': uitooltip + '-content',
 					'id': uitooltip + '-' + id + '-content'
 				})
 				.appendTo(elements.tooltip);
 
-			// Setup content and title (if enabled)
-			if(options.content.title.text) {
-				createTitle();
-			}
+			// Setup title and update content
+			if(options.content.title.text) { createTitle(); }
 			updateContent(options.content.text);
 
 			// Initialize 'render' plugins
@@ -690,7 +707,7 @@ function QTip(target, options, id)
 				checks = {
 					builtin: {
 						// Core checks
-						'id': function(obj, opt, val, prev) {
+						'^id$': function(obj, opt, val, prev) {
 							var id = value === TRUE ? $.fn.qtip.nextid : value,
 								idStr = uitooltip + '-' + id;
 
@@ -702,9 +719,9 @@ function QTip(target, options, id)
 						},
 
 						// Content checks
-						'^content.text': function(){ updateContent(value); },
-						'^content.title.text': function(){ updateTitle(value); },
-						'^content.title.button': function(){ updateButton(value); },
+						'^content.text$': function(){ updateContent(value); },
+						'^content.title.text$': function(){ updateTitle(value); },
+						'^content.title.button$': function(){ updateButton(value); },
 
 						// Position checks
 						'^position.(my|at)$': function(){
@@ -715,16 +732,15 @@ function QTip(target, options, id)
 								options.position[corner] = new $.fn.qtip.plugins.Corner(value);
 							}
 						},
-						'^position.(my|at|adjust|target)': function(){ if(self.rendered) { self.reposition(); } },
+
 						'^position.container$': function(){
 							if(self.rendered === TRUE) { 
 								tooltip.appendTo(value); 
-								self.reposition();
 							}
 						},
 
 						// Show & hide checks
-						'^(show|hide).(event|target|fixed|delay|inactive)': function(obj, opt, val, prev) {
+						'^(show|hide).(event|target|fixed|delay|inactive)$': function(obj, opt, val, prev) {
 							var args = notation.search(/fixed/i) > -1 ? [0, [0,1,1,1]] : [notation.substr(0,3), notation.charAt(0) === 's' ? [1,0,0,0] : [0,1,0,0]];
 
 							if(args[0]) { obj[opt] = prev; }
@@ -736,20 +752,19 @@ function QTip(target, options, id)
 						'^show.ready$': function() { if(self.rendered === FALSE) { self.show(); } },
 
 						// Style checks
-						'^style.classes$': function() { self.elements.tooltip.attr('class', uitooltip + ' qtip ui-helper-reset ' + value); },
-						'^style.widget$': function() {
-							var trigger = !!value;
-							
-							tooltip.toggleClass('ui-widget', trigger);
-							elems.content.toggleClass('ui-widget-content', trigger);
-							
-							if(elems.titlebar){ elems.titlebar.toggleClass('ui-widget-header', trigger); }
-							if(elems.button){ elems.button.children('span').toggleClass(uitooltip+'-icon', !trigger).toggleClass('ui-icon', trigger); }
+						'^style.classes$': function() { 
+							self.elements.tooltip.attr('class', uitooltip + ' qtip ui-helper-reset ' + value);
 						},
+						'^style.widget|content.title': setWidget,
 
 						// Events check
-						'^events.(render|show|move|hide|focus|blur)': function(obj, opt, val, prev) {
+						'^events.(render|show|move|hide|focus|blur)$': function(obj, opt, val, prev) {
 							elems.tooltip[($.isFunction(value) ? '' : 'un') + 'bind']('tooltip'+opt, val);
+						},
+
+						// Update position on ANY style update or position change
+						'^position.(my|at|adjust|target|container)|style': function(){ 
+							self.reposition();
 						}
 					}
 				};

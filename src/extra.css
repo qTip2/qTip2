@@ -58,9 +58,6 @@
 
 /* Cluetip style */
 .ui-tooltip-cluetip{
-	background-color: #D9D9C2;
-	border: 0px solid #D9D9C2;
-
 	-webkit-box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.4);
 	-moz-box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.4);
 	box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.4);
@@ -73,6 +70,7 @@
 		border: 0px transparent;
 	}
 	.ui-tooltip-cluetip .ui-tooltip-content{
+		background-color: #D9D9C2;
 		color: #111;
 
 		border: 0px transparent;
@@ -81,9 +79,7 @@
 
 /* Tipsy style */
 .ui-tooltip-tipsy{
-	border: 0px solid black;
-	border: 0px solid rgba(0,0,0,.9);
-
+	border: 0px transparent;
 	background: black;
 	background: rgba(0,0,0,.9);
 	filter: alpha(opacity=90);
@@ -99,7 +95,7 @@
 		background: transparent;
 		color: white;
 
-		border: 0px transparent;
+		border: 0;
 
 		font-size: 11px;
 		font-family: 'Lucida Grande', sans-serif;
@@ -119,3 +115,39 @@
 	.ui-tooltip-tipsy .ui-tooltip-icon{
 		background-position: -22px 0;
 	}
+
+
+/* Tipped style */
+.ui-tooltip-tipped{
+	border: 3px solid #959FA9;
+	
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+}
+
+	.ui-tooltip-tipped .ui-tooltip-titlebar{
+		border: 0px transparent;
+		
+		font-weight: normal;
+		font-family: serif;
+		
+		background-color: #3A79B8;
+		background-image: -moz-linear-gradient(top, #3A79B8, #2E629D);
+		background-image: -webkit-gradient(linear, left top, left bottom, from(#3A79B8), to(#2E629D));
+		filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#3A79B8,endColorstr=#2E629D);
+		-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#3A79B8,endColorstr=#2E629D)";
+
+		color: white;
+	}
+	
+	.ui-tooltip-tipped .ui-tooltip-content{
+		border: 0px transparent;
+		background-color: #F9F9F9;
+		color: #454545;
+	}
+	
+	.ui-tooltip-tipped .ui-tooltip-icon{
+		background-position: -62px 0;
+	}
+	
