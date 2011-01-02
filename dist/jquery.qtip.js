@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Dec 30 19:35:24 2010 +0000
+* Date: Sun Jan 2 04:26:53 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -2070,7 +2070,7 @@ function Tip(qTip, command)
 						position['margin-' + b] = -Math.floor(dimension / 2) + offset;
 					}
 					else {
-						b = borderWidth(corner, side, true);
+						b = borderWidth(corner, side, TRUE);
 						position[ side ] = i || border === undefined ? 
 							borderWidth(corner, side) : 
 							offset + (!b ? borderRadius(corner) : 0);
@@ -2080,12 +2080,7 @@ function Tip(qTip, command)
 			position[ corner[precedance] ] -= dimension;
 
 			// Set and return new position
-			if(set) { 
-				tip.css({ top: '', bottom: '', left: '', right: '', margin: '' }).css(position);
-			}
-			else {
-				
-			}
+			if(set) { tip.css({ top: '', bottom: '', left: '', right: '', margin: '' }).css(position); }
 			return position;
 		},
 		

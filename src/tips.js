@@ -430,7 +430,7 @@ function Tip(qTip, command)
 						position['margin-' + b] = -Math.floor(dimension / 2) + offset;
 					}
 					else {
-						b = borderWidth(corner, side, true);
+						b = borderWidth(corner, side, TRUE);
 						position[ side ] = i || border === undefined ? 
 							borderWidth(corner, side) : 
 							offset + (!b ? borderRadius(corner) : 0);
@@ -440,12 +440,7 @@ function Tip(qTip, command)
 			position[ corner[precedance] ] -= dimension;
 
 			// Set and return new position
-			if(set) { 
-				tip.css({ top: '', bottom: '', left: '', right: '', margin: '' }).css(position);
-			}
-			else {
-				
-			}
+			if(set) { tip.css({ top: '', bottom: '', left: '', right: '', margin: '' }).css(position); }
 			return position;
 		},
 		
