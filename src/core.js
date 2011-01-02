@@ -598,13 +598,10 @@ function QTip(target, options, id)
 	$.extend(self, {
 		render: function(show)
 		{
-			var elements = self.elements, callback = $.Event('tooltiprender');
+			if(self.rendered) { return FALSE; } // If tooltip has already been rendered, exit
 
-			// If tooltip has already been rendered, exit
-			if(self.rendered) { return FALSE; }
-
-			// Call API method and set rendered status
-			self.rendered = show ? -2 : -1; // -1: rendering	 -2: rendering and show when done
+			var elements = self.elements,
+				callback = $.Event('tooltiprender');
 
 			// Create tooltip element
 			elements.tooltip = $('<div/>')
@@ -615,14 +612,17 @@ function QTip(target, options, id)
 				})
 				.toggleClass('ui-state-disabled', self.cache.disabled)
 				.data('qtip', self)
-				.appendTo(options.position.container);
+				.appendTo(options.position.container)
+				.append(
+					// Create content element
+					elements.content = $('<div />', {
+						'class': uitooltip + '-content',
+						'id': uitooltip + '-' + id + '-content'
+					})
+				);
 
-			// Create content element
-			elements.content = $('<div />', {
-					'class': uitooltip + '-content',
-					'id': uitooltip + '-' + id + '-content'
-				})
-				.appendTo(elements.tooltip);
+			// Set rendered status
+			self.rendered = TRUE;
 
 			// Setup title and update content
 			if(options.content.title.text) { createTitle(); }
@@ -632,9 +632,6 @@ function QTip(target, options, id)
 			$.each($.fn.qtip.plugins, function() {
 				if(this.initialize === 'render') { this(self); }
 			});
-
-			// Set rendered status to TRUE
-			self.rendered = TRUE;
 
 			// Assign events
 			assignEvents(1, 1, 1, 1);
