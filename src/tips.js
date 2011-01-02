@@ -233,9 +233,7 @@ function Tip(qTip, command)
 
 			// Create tip element and prepend to the tooltip
 			elems.tip = $('<div />', { 'class': 'ui-tooltip-tip' })
-				.css(size)
-				.toggleClass('ui-widget-content', qTip.options.style.widget)
-				.prependTo(tooltip);
+				.css(size).prependTo(tooltip);
 
 			// Create tip drawing element(s)
 			switch(method)
@@ -269,7 +267,7 @@ function Tip(qTip, command)
 				regular = 'px solid ',
 				transparent = 'px dashed transparent', // Dashed IE6 border-transparency hack. Awesome!
 				mimic = opts.mimic,
-				position, i, context, coords, center, translate, round;
+				position, i, img, context, coords, center, translate, round;
 
 			// Re-determine tip if not already set
 			if(!corner) { corner = self.corner; }
@@ -333,6 +331,7 @@ function Tip(qTip, command)
 						context.lineTo(coords[1][0], coords[1][1]);
 						context.lineTo(coords[2][0], coords[2][1]);
 						context.closePath();
+
 						context.fillStyle = color[ i ? 'fill' : 'border' ];
 						context.fill();
 					}

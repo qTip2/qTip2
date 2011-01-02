@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun Jan 2 04:44:48 2011 +0000
+* Date: Sun Jan 2 04:58:58 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -636,10 +636,7 @@ function QTip(target, options, id)
 				.attr({
 					'id': uitooltip + '-'+id,
 					'role': 'tooltip',
-					'class': uitooltip + ' qtip ui-tooltip-accessible ui-helper-reset ' + options.style.classes,
-					'css': {
-						'z-index': $.fn.qtip.zindex + $(selector).length
-					}
+					'class': uitooltip + ' qtip ui-tooltip-accessible ui-helper-reset ' + options.style.classes
 				})
 				.toggleClass('ui-state-disabled', self.cache.disabled)
 				.data('qtip', self)
@@ -1873,9 +1870,7 @@ function Tip(qTip, command)
 
 			// Create tip element and prepend to the tooltip
 			elems.tip = $('<div />', { 'class': 'ui-tooltip-tip' })
-				.css(size)
-				.toggleClass('ui-widget-content', qTip.options.style.widget)
-				.prependTo(tooltip);
+				.css(size).prependTo(tooltip);
 
 			// Create tip drawing element(s)
 			switch(method)
@@ -1909,7 +1904,7 @@ function Tip(qTip, command)
 				regular = 'px solid ',
 				transparent = 'px dashed transparent', // Dashed IE6 border-transparency hack. Awesome!
 				mimic = opts.mimic,
-				position, i, context, coords, center, translate, round;
+				position, i, img, context, coords, center, translate, round;
 
 			// Re-determine tip if not already set
 			if(!corner) { corner = self.corner; }
@@ -1973,6 +1968,7 @@ function Tip(qTip, command)
 						context.lineTo(coords[1][0], coords[1][1]);
 						context.lineTo(coords[2][0], coords[2][1]);
 						context.closePath();
+
 						context.fillStyle = color[ i ? 'fill' : 'border' ];
 						context.fill();
 					}

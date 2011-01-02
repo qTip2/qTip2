@@ -611,10 +611,7 @@ function QTip(target, options, id)
 				.attr({
 					'id': uitooltip + '-'+id,
 					'role': 'tooltip',
-					'class': uitooltip + ' qtip ui-tooltip-accessible ui-helper-reset ' + options.style.classes,
-					'css': {
-						'z-index': $.fn.qtip.zindex + $(selector).length
-					}
+					'class': uitooltip + ' qtip ui-tooltip-accessible ui-helper-reset ' + options.style.classes
 				})
 				.toggleClass('ui-state-disabled', self.cache.disabled)
 				.data('qtip', self)
