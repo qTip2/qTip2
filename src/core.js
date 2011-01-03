@@ -81,13 +81,7 @@ function sanitizeOptions(opts)
 function QTip(target, options, id)
 {
 	// Declare this reference
-	var self = this,
-
-	// Shortcut vars
-	uitooltip = 'ui-tooltip',
-	widget = 'ui-widget',
-	selector = '.qtip.'+uitooltip;
-	
+	var self = this;
 
 	// Setup class attributes
 	self.id = id;
@@ -189,7 +183,7 @@ function QTip(target, options, id)
 			elems.titlebar.toggleClass(widget+'-header', on);
 		}
 		if(elems.button){
-			elems.button.children('span').toggleClass(uitooltip+'-icon', !on).toggleClass('ui-icon', on);
+			elems.button.toggleClass(uitooltip+'-icon', !on);
 		}
 	}
 
@@ -216,27 +210,25 @@ function QTip(target, options, id)
 		if(button.jquery) {
 			elems.button = button;
 		}
-		else if('string' === typeof button) {
-			elems.button = $('<a />', { 'html': button });
-		}
 		else {
 			elems.button = $('<a />', {
-				'class': 'ui-state-default',
-				'title': 'Close tooltip'
+				'class': 'ui-state-default ' + (options.style.widget ? '' : uitooltip+'-icon'),
+				'title': 'Close'
 			})
 			.prepend(
-				$('<span />', { 'class': (options.style.widget ? 'ui' : uitooltip) + '-icon ui-icon-close' })
+				$('<span />', { 
+					'class': 'ui-icon ui-icon-close',
+					'html' : '&times;'
+				})
 			);
 		}
 
 		// Create button and setup attributes
-		elems.button
-			.prependTo(elems.titlebar)
+		elems.button.prependTo(elems.titlebar)
 			.attr('role', 'button')
-			.addClass(uitooltip + '-close')
 			.hover(function(event){ $(this).toggleClass('ui-state-hover', event.type === 'mouseenter'); })
 			.click(function() {
-				if(!elems.tooltip.hasClass('ui-state-disabled')) { self.hide(); }
+				if(!elems.tooltip.hasClass(disabled)) { self.hide(); }
 				return FALSE;
 			})
 			.bind('mousedown keydown mouseup keyup mouseout', function(event) {
@@ -400,7 +392,7 @@ function QTip(target, options, id)
 		// Define show event method
 		function showMethod(event)
 		{
-			if(targets.tooltip.hasClass('ui-state-disabled')) { return FALSE; }
+			if(targets.tooltip.hasClass(disabled)) { return FALSE; }
 
 			// If set, hide tooltip when inactive for delay period
 			targets.show.trigger('qtip-'+id+'-inactive');
@@ -420,7 +412,7 @@ function QTip(target, options, id)
 		// Define hide method
 		function hideMethod(event)
 		{
-			if(targets.tooltip.hasClass('ui-state-disabled')) { return FALSE; }
+			if(targets.tooltip.hasClass(disabled)) { return FALSE; }
 
 			// Check if new target was actually the tooltip element
 			var ontoTooltip = $(event.relatedTarget || event.target).parents(selector)[0] === targets.tooltip[0],
@@ -451,7 +443,7 @@ function QTip(target, options, id)
 		// Define inactive method
 		function inactiveMethod(event)
 		{
-			if(targets.tooltip.hasClass('ui-state-disabled')) { return FALSE; }
+			if(targets.tooltip.hasClass(disabled)) { return FALSE; }
 
 			// Clear timer
 			clearTimeout(self.timers.inactive);
@@ -475,7 +467,7 @@ function QTip(target, options, id)
 
 			// Clear hide timer on tooltip hover to prevent it from closing
 			targets.tooltip.bind('mouseover'+namespace, function() {
-				if(!targets.tooltip.hasClass('ui-state-disabled')) {
+				if(!targets.tooltip.hasClass(disabled)) {
 					clearTimeout(self.timers.hide);
 				}
 			});
@@ -545,7 +537,7 @@ function QTip(target, options, id)
 					var tooltip = self.elements.tooltip;
 
 					if($(event.target).parents(selector).length === 0 && $(event.target).add(target).length > 1 &&
-					tooltip.is(':visible') && !tooltip.hasClass('ui-state-disabled')) {
+					tooltip.is(':visible') && !tooltip.hasClass(disabled)) {
 						self.hide(event);
 					}
 				});
@@ -555,7 +547,7 @@ function QTip(target, options, id)
 			if(posOptions.target === 'mouse') {
 				$(document).bind('mousemove'+namespace, function(event) {
 					// Update the tooltip position only if the tooltip is visible and adjustment is enabled
-					if(posOptions.adjust.mouse && !targets.tooltip.hasClass('ui-state-disabled') && targets.tooltip.is(':visible')) {
+					if(posOptions.adjust.mouse && !targets.tooltip.hasClass(disabled) && targets.tooltip.is(':visible')) {
 						self.reposition(event || $.fn.qtip.mouse);
 					}
 				});
@@ -608,9 +600,9 @@ function QTip(target, options, id)
 				.attr({
 					'id': uitooltip + '-'+id,
 					'role': 'tooltip',
-					'class': uitooltip + ' qtip ui-tooltip-accessible ui-helper-reset ' + options.style.classes
+					'class': uitooltip + ' qtip ui-tooltip-accessible ui-tooltip-default ui-helper-reset ' + options.style.classes
 				})
-				.toggleClass('ui-state-disabled', self.cache.disabled)
+				.toggleClass(disabled, self.cache.disabled)
 				.data('qtip', self)
 				.appendTo(options.position.container)
 				.append(
@@ -705,7 +697,7 @@ function QTip(target, options, id)
 							var id = value === TRUE ? $.fn.qtip.nextid : value,
 								idStr = uitooltip + '-' + id;
 
-							if(id !== FALSE && id.length > 0 && !$('#ui-tooltip-'+id).length) {
+							if(id !== FALSE && id.length > 0 && !$('#'+idStr).length) {
 								tooltip[0].id = idStr;
 								elems.content[0].id = idStr + '-content';
 								elems.title[0].id = idStr + '-title';
@@ -1139,7 +1131,7 @@ function QTip(target, options, id)
 		disable: function(state)
 		{
 			var tooltip = self.elements.tooltip,
-				c = 'ui-state-disabled';
+				c = disabled;
 			
 			if('boolean' !== typeof state) {
 				state = !(tooltip.hasClass(c) || self.cache.disabled);
@@ -1333,7 +1325,7 @@ $.fn.qtip.bind = function(opts, event)
 		var options, targets, events,
 			
 		// Find next available ID, or use custom ID if provided
-		id = opts.id = (!opts.id || opts.id === FALSE || opts.id.length < 1 || $('#ui-tooltip-'+opts.id).length) ? $.fn.qtip.nextid++ : opts.id,
+		id = opts.id = (!opts.id || opts.id === FALSE || opts.id.length < 1 || $('#'+uitooltip+'-'+opts.id).length) ? $.fn.qtip.nextid++ : opts.id,
 		
 		// Setup events namespace
 		namespace = '.qtip-'+id+'-create',

@@ -5,7 +5,14 @@
 // Munge the primitives - Paul Irish tip
 var TRUE = true,
 	FALSE = false,
-	NULL = null;
+	NULL = null,
+	
+	// Shortcut vars
+	uitooltip = 'ui-tooltip',
+	widget = 'ui-widget',
+	disabled = 'ui-state-disabled',
+	selector = '.qtip.'+uitooltip;
+	
 
 (function($, window, undefined) {
 
