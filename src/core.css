@@ -69,7 +69,7 @@
 		.ui-tooltip-titlebar .ui-icon,
 		.ui-tooltip-icon .ui-icon{
 			display: block;
-			text-indent: 100em;
+			text-indent: -1000em;
 		}
 
 		.ui-tooltip-icon, .ui-tooltip-icon .ui-icon{
@@ -82,6 +82,7 @@
 				width: 18px;
 				height: 14px;
 
+				text-align: center;
 				text-indent: 0;
 				font: normal bold 10px/13px Tahoma,sans-serif;
 
