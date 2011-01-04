@@ -131,6 +131,7 @@
 	}
 
 	.ui-tooltip-tipsy .ui-tooltip-icon{
+		margin-top: -7px;
 		border-color: #444;
 		text-shadow: none;
 	}
