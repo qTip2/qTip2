@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Jan 4 04:56:03 2011 +0000
+* Date: Tue Jan 4 16:49:15 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -847,7 +847,7 @@ function QTip(target, options, id)
 				self.reposition(event, 0); // Update tooltip position
 
 				// Hide other tooltips if tooltip is solo
-				if(opts.solo) { $(selector).qtip('hide'); }
+				if(opts.solo) { $(selector).not(tooltip).qtip('hide'); }
 			}
 
 			// Clear show timer if we're hiding 

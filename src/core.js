@@ -814,7 +814,7 @@ function QTip(target, options, id)
 				self.reposition(event, 0); // Update tooltip position
 
 				// Hide other tooltips if tooltip is solo
-				if(opts.solo) { $(selector).qtip('hide'); }
+				if(opts.solo) { $(selector).not(tooltip).qtip('hide'); }
 			}
 
 			// Clear show timer if we're hiding 
