@@ -61,10 +61,12 @@ function sanitizeOptions(opts)
 		}
 	}
 
-	if('style' in opts && 'object' !== typeof opts.style) {
-		opts.style = {
-			classes: opts.style
-		};
+	if('style' in opts) {
+		if('object' !== typeof opts.style) {
+			opts.style = {
+				classes: opts.style
+			};
+		}
 	}
 
 	// Sanitize plugin options
