@@ -1,5 +1,5 @@
 /*
-* qTip2 - Pretty pwoerful tooltips
+* qTip2 - Pretty powerful tooltips
 * http://craigsworks.com/projects/qtip2/
 *
 * Version: @VERSION

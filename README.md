@@ -18,7 +18,7 @@ How to build qTip2 (using MAKE)
 ------------------------
 
 In the main directory of the distribution (the one that this file is in), type
-the following to build qTip2 and its accompanying CSS and images:
+the following to build qTip2 and its accompanying CSS:
 
 	make
 
@@ -28,7 +28,6 @@ You can also create each individually using these commands:
 	make min 		# Build minified qTip2 source
 	make pack		# Build minified and packed qTip2 source (Smallest filesize!)
 	make css 		# Build CSS files
-	make images		# Build images
 
 To build and test the source code against JSLint type this:
 
