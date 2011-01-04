@@ -144,37 +144,6 @@ function QTip(target, options, id)
 		return pos;
 	}
 
-	function calculate(detail, fluid)
-	{
-		var tooltip = self.elements.tooltip,
-			accessible = uitooltip + '-accessible ' + (fluid ? uitooltip + '-accessible-fluid' : ''),
-			show = !tooltip.is(':visible'),
-			returned = FALSE;
-
-		// Make sure tooltip is rendered and if not, return
-		if(!self.rendered) { return FALSE; }
-
-		// Show and hide tooltip to make sure properties are returned correctly
-		if(show) { tooltip.addClass(accessible); }
-		switch(detail)
-		{
-			case 'dimensions':
-				// Find initial dimensions
-				returned = {
-					height: tooltip.outerHeight(),
-					width: tooltip.outerWidth()
-				};
-			break;
-
-			case 'position':
-				returned = offset(tooltip[0], options.position.container);
-			break;
-		}
-		if(show) { tooltip.removeClass(accessible); }
-
-		return returned;
-	}
-
 	function setWidget() {
 		var elems = self.elements,
 			on = options.style.widget;
@@ -603,7 +572,7 @@ function QTip(target, options, id)
 				.attr({
 					'id': uitooltip + '-'+id,
 					'role': 'tooltip',
-					'class': uitooltip + ' qtip ui-tooltip-accessible ui-tooltip-default ui-helper-reset ' + options.style.classes
+					'class': uitooltip + ' qtip ui-helper-reset ' + options.style.classes
 				})
 				.toggleClass(disabled, self.cache.disabled)
 				.data('qtip', self)
@@ -643,9 +612,6 @@ function QTip(target, options, id)
 			 * See: updateContent method
 			*/
 			elements.tooltip.queue('fx', function(next) {
-				// Remove accessible class
-				elements.tooltip.removeClass('ui-tooltip-accessible');
-
 				// Trigger tooltiprender event and pass original triggering event as original
 				callback.originalEvent = self.cache.event;
 				elements.tooltip.trigger(callback, [self]);
@@ -664,16 +630,21 @@ function QTip(target, options, id)
 
 		get: function(notation)
 		{
-			var result, o;
+			var tooltip = self.elements.tooltip,
+				result, o;
 
 			switch(notation.toLowerCase())
 			{
-				case 'offset':
-					result = calculate('position');
+				case 'dimensions':
+					// Find initial dimensions
+					result = {
+						height: tooltip.outerHeight(),
+						width: tooltip.outerWidth()
+					};
 				break;
 
-				case 'dimensions':
-					result = calculate('dimensions');
+				case 'offset':
+					result = offset(tooltip[0], options.position.container);
 				break;
 
 				default:
@@ -791,11 +762,12 @@ function QTip(target, options, id)
 			var type = state ? 'show' : 'hide',
 				tooltip = self.elements.tooltip,
 				opts = options[type],
-				visible = tooltip.is(':visible'),
+				offset = '-31000px',
+				visible = tooltip.css('left') !== offset,
 				callback;
 
 			// Detect state if valid one isn't provided
-			if((typeof state).search('boolean|number')) { state = !tooltip.is(':visible'); }
+			if((typeof state).search('boolean|number')) { state = !visible; }
 
 			// Return if element is already in correct state
 			if((!visible && !state) || tooltip.is(':animated')) { return self; }
@@ -815,24 +787,19 @@ function QTip(target, options, id)
 			function after()
 			{
 				var elem = $(this),
-					attr = state ? 'attr' : 'removeAttr',
-					opacity = (/^1|0$/).test(elem.css('opacity')),
+					opacity = parseInt(elem.css('opacity'), 10) || 0,
 					ieStyle = this.style;
 
-				// Apply ARIA attributes when tooltip is shown
-				if(self.elements.title){ target[attr]('aria-labelledby', uitooltip + '-'+id+'-title'); }
-				target[attr]('aria-describedby', uitooltip + '-'+id+'-content');
-
 				// Prevent antialias from disappearing in IE7 by removing filter and opacity attribute
-				if(state) {
-					if($.browser.msie && ieStyle && opacity) {
-						ieStyle.removeAttribute('filter');
-						ieStyle.removeAttribute('opacity');
-					}
+				if(state && $.browser.msie && ieStyle && (opacity === 1 || !opacity)) {
+					ieStyle.removeAttribute('filter');
+					ieStyle.removeAttribute('opacity');
 				}
 
-				// Otherwise just hide
-				else if(opacity) { elem.hide(); }
+				// Hide the tooltip
+				if(!state) {
+					$(this).css({ display: 'block', left: offset, top: offset });
+				}
 			}
 
 			// Call API methods
@@ -844,7 +811,7 @@ function QTip(target, options, id)
 			// Execute state specific properties
 			if(state) {
 				self.focus(); // Focus the tooltip before show to prevent visual stacking
-				self.reposition(event); // Update tooltip position
+				self.reposition(event, 0); // Update tooltip position
 
 				// Hide other tooltips if tooltip is solo
 				if(opts.solo) { $(selector).qtip('hide'); }
@@ -862,7 +829,7 @@ function QTip(target, options, id)
 			// Use custom function if provided
 			if($.isFunction(opts.effect)) {
 				opts.effect.call(tooltip, self);
-				tooltip.queue(function(){ after.call(this); $(this).dequeue(); });
+				tooltip.queue(function(next){ after.call(this); next(); });
 			}
 
 			// If no effect type is supplied, use a simple toggle
@@ -933,7 +900,7 @@ function QTip(target, options, id)
 			return self;
 		},
 
-		reposition: function(event)
+		reposition: function(event, effect)
 		{
 			if(self.rendered === FALSE) { return FALSE; }
 
@@ -991,6 +958,7 @@ function QTip(target, options, id)
 						return position.top - posTop;
 					}
 				};
+				effect = effect === undefined || !!effect || FALSE;
 
 			// Cache our viewport details
 			viewport = !viewport ? FALSE : {
@@ -1085,19 +1053,22 @@ function QTip(target, options, id)
 			if(callback.isDefaultPrevented()){ return self; }
 			delete position.adjusted;
 
+			// If effect is disabled or positioning gives NaN out, set CSS directly
+			if(!effect || !isNaN(position.left, position.top)) {
+				tooltip.css(position);
+			}
+			
 			// Use custom function if provided
-			if(tooltip.is(':visible') && $.isFunction(posOptions.effect)) {
+			else if(tooltip.is(':visible') && $.isFunction(posOptions.effect)) {
 				posOptions.effect.call(tooltip, self, position);
-				tooltip.queue(function() {
+				tooltip.queue(function(next) {
 					var elem = $(this);
 					// Reset attributes to avoid cross-browser rendering bugs
 					elem.css({ opacity: '', height: '' });
 					if($.browser.msie && this.style) { this.style.removeAttribute('filter'); }
-					elem.dequeue();
+
+					next();
 				});
-			}
-			else if(!isNaN(position.left, position.top)) {
-				tooltip.css(position);
 			}
 
 			return self;
@@ -1110,13 +1081,19 @@ function QTip(target, options, id)
 			if(!self.rendered || !($.browser.msie && parseInt($.browser.version.charAt(0), 10) < 9)) { return FALSE; }
 
 			var tooltip = self.elements.tooltip, 
+				fluid = uitooltip + '-fluid',
 				style = tooltip.attr('style'),
 				dimensions;
 
-			// Determine actual dimensions using our calculate function
-			tooltip.css({ width: 'auto', height: 'auto' });
-			dimensions = calculate('dimensions', 1);
+			// Reset the height and width and add the fluid class to reset max/min widths
+			tooltip.css({ width: 'auto', height: 'auto' }).addClass(fluid);
 
+			// Grab our tooltip dimensions
+			dimensions = {
+				height: tooltip.outerHeight(),
+				width: tooltip.outerWidth()
+			};
+			
 			// Determine actual width
 			$.each(['width', 'height'], function(i, prop) {
 				// Parse our max/min properties
@@ -1127,8 +1104,8 @@ function QTip(target, options, id)
 				dimensions[prop] = max + min ? Math.min( Math.max( dimensions[prop], min ), max ) : dimensions[prop];
 			});
 
-			// Set the newly calculated dimensions
-			tooltip.css(dimensions);
+			// Set the newly calculated dimensions and remvoe fluid class
+			tooltip.css(dimensions).removeClass(fluid);
 		},
 
 		disable: function(state)

@@ -1,26 +1,19 @@
-.ui-tooltip-accessible{
-	left: -31000px;
+/* Fluid class for determining actual width in IE */
+.ui-tooltip-fluid{
 	display: block;
 	visibility: hidden;
+	position: static !important;
+	float: left !important;
+	max-width: none !important;
+	min-width: 0px !important;
+	max-height: none !important;
+	min-height: 0px !important;
 }
-
-	/* IE6 ONLY - Width detection fix */
-	* html .ui-tooltip-accessible{
-		position: static !important;
-		float: left !important;
-	}
-
-	/* Accessible fluid class for determining actual width */
-	.ui-tooltip-accessible-fluid{
-		max-width: none !important;
-		min-width: 0px !important;
-		max-height: none !important;
-		min-height: 0px !important;
-	}
 
 .ui-tooltip, .qtip{
 	position: absolute;
-	display: none;
+	left: -31000px;
+	top: -31000px;
 
 	max-width: 280px;
 	min-width: 50px;
