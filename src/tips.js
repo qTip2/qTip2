@@ -231,11 +231,10 @@ function Tip(qTip, command)
 				vml;
 
 			// Remove previous tip element if present
-			if(elems.tip){ elems.tip.remove(); }
+			if(elems.tip) { elems.tip.remove(); }
 
 			// Create tip element and prepend to the tooltip
-			elems.tip = $('<div />', { 'class': 'ui-tooltip-tip' })
-				.css(size).prependTo(tooltip);
+			elems.tip = $('<div />', { 'class': 'ui-tooltip-tip' }).css(size).prependTo(tooltip);
 
 			// Create tip drawing element(s)
 			switch(method)

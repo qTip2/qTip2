@@ -9,11 +9,12 @@
 	var TRUE = true,
 		FALSE = false,
 		NULL = null,
-		docBody = $(document.body),
-	
-	// Shortcut vars
-	uitooltip = 'ui-tooltip',
-	widget = 'ui-widget',
-	disabled = 'ui-state-disabled',
-	selector = '.qtip.'+uitooltip;
-	
+		docBody = document.body,
+		
+		// Shortcut vars
+		uitooltip = 'ui-tooltip',
+		widget = 'ui-widget',
+		disabled = 'ui-state-disabled',
+		selector = '.qtip.'+uitooltip;
+
+

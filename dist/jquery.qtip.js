@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Jan 3 23:27:54 2011 +0000
+* Date: Tue Jan 4 01:07:45 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -23,14 +23,15 @@
 	var TRUE = true,
 		FALSE = false,
 		NULL = null,
-		docBody = $(document.body),
-	
-	// Shortcut vars
-	uitooltip = 'ui-tooltip',
-	widget = 'ui-widget',
-	disabled = 'ui-state-disabled',
-	selector = '.qtip.'+uitooltip;
-	
+		docBody = document.body,
+		
+		// Shortcut vars
+		uitooltip = 'ui-tooltip',
+		widget = 'ui-widget',
+		disabled = 'ui-state-disabled',
+		selector = '.qtip.'+uitooltip;
+
+
 // Option object sanitizer
 function sanitizeOptions(opts)
 {
@@ -1864,11 +1865,10 @@ function Tip(qTip, command)
 				vml;
 
 			// Remove previous tip element if present
-			if(elems.tip){ elems.tip.remove(); }
+			if(elems.tip) { elems.tip.remove(); }
 
 			// Create tip element and prepend to the tooltip
-			elems.tip = $('<div />', { 'class': 'ui-tooltip-tip' })
-				.css(size).prependTo(tooltip);
+			elems.tip = $('<div />', { 'class': 'ui-tooltip-tip' }).css(size).prependTo(tooltip);
 
 			// Create tip drawing element(s)
 			switch(method)
