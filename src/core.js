@@ -600,7 +600,7 @@ function QTip(target, options, id)
 				.attr({
 					'id': uitooltip + '-'+id,
 					'role': 'tooltip',
-					'class': uitooltip + ' qtip ui-tooltip-accessible ui-tooltip-default ui-helper-reset ' + options.style.classes
+					'class': uitooltip + ' qtip ui-tooltip-accessible ui-helper-reset ' + options.style.classes
 				})
 				.toggleClass(disabled, self.cache.disabled)
 				.data('qtip', self)

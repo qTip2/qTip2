@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Jan 4 01:07:45 2011 +0000
+* Date: Tue Jan 4 01:18:47 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -634,7 +634,7 @@ function QTip(target, options, id)
 				.attr({
 					'id': uitooltip + '-'+id,
 					'role': 'tooltip',
-					'class': uitooltip + ' qtip ui-tooltip-accessible ui-tooltip-default ui-helper-reset ' + options.style.classes
+					'class': uitooltip + ' qtip ui-tooltip-accessible ui-helper-reset ' + options.style.classes
 				})
 				.toggleClass(disabled, self.cache.disabled)
 				.data('qtip', self)
