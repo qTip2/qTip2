@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Jan 4 01:18:47 2011 +0000
+* Date: Tue Jan 4 01:19:36 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -23,7 +23,6 @@
 	var TRUE = true,
 		FALSE = false,
 		NULL = null,
-		docBody = document.body,
 		
 		// Shortcut vars
 		uitooltip = 'ui-tooltip',
@@ -115,7 +114,8 @@ function sanitizeOptions(opts)
 function QTip(target, options, id)
 {
 	// Declare this reference
-	var self = this;
+	var self = this,
+		docBody = document.body;
 
 	// Setup class attributes
 	self.id = id;
@@ -634,7 +634,7 @@ function QTip(target, options, id)
 				.attr({
 					'id': uitooltip + '-'+id,
 					'role': 'tooltip',
-					'class': uitooltip + ' qtip ui-tooltip-accessible ui-helper-reset ' + options.style.classes
+					'class': uitooltip + ' qtip ui-tooltip-accessible ui-tooltip-default ui-helper-reset ' + options.style.classes
 				})
 				.toggleClass(disabled, self.cache.disabled)
 				.data('qtip', self)
@@ -1221,9 +1221,10 @@ function init(id, opts)
 
 	// Setup element references
 	elem = $(this),
+	docBody = $(document.body),
 
 	// Use document body instead of document element if needed
-	newTarget = this === document ? $(docBody) : elem,
+	newTarget = this === document ? docBody : elem,
 
 	// Grab metadata from element if plugin is present
 	metadata = (elem.metadata) ? elem.metadata(opts.metadata) : NULL,
@@ -1253,7 +1254,7 @@ function init(id, opts)
 	}
 
 	// Setup target options
-	if(posOptions.container === FALSE) { posOptions.container = $(docBody); }
+	if(posOptions.container === FALSE) { posOptions.container = docBody; }
 	if(posOptions.target === FALSE) { posOptions.target = newTarget; }
 	if(config.show.target === FALSE) { config.show.target = newTarget; }
 	if(config.hide.target === FALSE) { config.hide.target = newTarget; }
@@ -1452,7 +1453,7 @@ function(name, func) {
 * Add ARIA role attribute to document body if not already present
 * http://wiki.jqueryui.com/Tooltip - 4.3 Accessibility recommendation
 */
-$(docBody).attr('role', function(i, val) { return !val ? 'application' : val; });
+$(document.body).attr('role', function(i, val) { return !val ? 'application' : val; });
 
 // Cache mousemove events for positioning purposes
 $(document).bind('mousemove.qtip', function(event) {
@@ -1849,7 +1850,7 @@ function Tip(qTip, command)
 
 			if(!color.border || invalid.test(color.border)) {
 				color.border = tooltip.css(borderSide);
-				if(invalid.test(color.border) || color.border === $(docBody).css('color')) { 
+				if(invalid.test(color.border) || color.border === $(document.body).css('color')) { 
 					color.border = colorElem.css(borderSide) || color.fill;
 				}
 			}

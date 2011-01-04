@@ -215,7 +215,7 @@ function Tip(qTip, command)
 
 			if(!color.border || invalid.test(color.border)) {
 				color.border = tooltip.css(borderSide);
-				if(invalid.test(color.border) || color.border === $(docBody).css('color')) { 
+				if(invalid.test(color.border) || color.border === $(document.body).css('color')) { 
 					color.border = colorElem.css(borderSide) || color.fill;
 				}
 			}
