@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Jan 4 01:19:36 2011 +0000
+* Date: Tue Jan 4 01:40:18 2011 +0000
 */
 
 .ui-tooltip-accessible{
@@ -71,7 +71,8 @@
 		.ui-tooltip-titlebar .ui-state-default{
 			position: absolute;
 			right: 5px;
-			top: 5px;
+			top: 50%;
+			margin-top: -9px;
 
 			cursor: pointer;
 			outline: medium none;
@@ -500,8 +501,6 @@
 	}
 
 	.ui-tooltip-tipped .ui-tooltip-icon{
-		margin-top: -1px;
-
 		border: 2px solid #285589;
 		background: #285589;
 	}

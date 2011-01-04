@@ -57,7 +57,8 @@
 		.ui-tooltip-titlebar .ui-state-default{
 			position: absolute;
 			right: 5px;
-			top: 5px;
+			top: 50%;
+			margin-top: -9px;
 
 			cursor: pointer;
 			outline: medium none;
