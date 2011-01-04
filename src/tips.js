@@ -204,6 +204,7 @@ function Tip(qTip, command)
 			color.fill = tip.css(backgroundColor) || transparent;
 			color.border = tip[0].style[ borderSideCamel ];
 
+
 			// Make sure colours are valid
 			if(!color.fill || invalid.test(color.fill)) { 
 				color.fill = colorElem.css(backgroundColor);
@@ -211,9 +212,10 @@ function Tip(qTip, command)
 					color.fill = tooltip.css(backgroundColor);
 				}
 			}
+
 			if(!color.border || invalid.test(color.border)) {
 				color.border = tooltip.css(borderSide);
-				if(invalid.test(color.border)) { 
+				if(invalid.test(color.border) || color.border === $(docBody).css('color')) { 
 					color.border = colorElem.css(borderSide) || color.fill;
 				}
 			}

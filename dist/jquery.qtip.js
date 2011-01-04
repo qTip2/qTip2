@@ -9,17 +9,21 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Jan 3 22:49:14 2011 +0000
+* Date: Mon Jan 3 23:27:54 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
 /*global window: false, jQuery: false */
 
-// Munge the primitives - Paul Irish tip
-var TRUE = true,
-	FALSE = false,
-	NULL = null,
+
+(function($, window, undefined) {
+
+	// Munge the primitives - Paul Irish tip
+	var TRUE = true,
+		FALSE = false,
+		NULL = null,
+		docBody = $(document.body),
 	
 	// Shortcut vars
 	uitooltip = 'ui-tooltip',
@@ -27,9 +31,6 @@ var TRUE = true,
 	disabled = 'ui-state-disabled',
 	selector = '.qtip.'+uitooltip;
 	
-
-(function($, window, undefined) {
-
 // Option object sanitizer
 function sanitizeOptions(opts)
 {
@@ -416,7 +417,7 @@ function QTip(target, options, id)
 				show: options.show.target,
 				hide: options.hide.target,
 				tooltip: self.elements.tooltip,
-				container: posOptions.container[0] === document.body ? document : posOptions.container
+				container: posOptions.container[0] === docBody ? document : posOptions.container
 			},
 			events = { show: String(options.show.event).split(' '), hide: String(options.hide.event).split(' ') },
 			IE6 = $.browser.msie && parseInt($.browser.version, 10) === 6;
@@ -596,7 +597,7 @@ function QTip(target, options, id)
 				hide: hide ? options.hide.target : NULL,
 				tooltip: tooltip ? self.elements.tooltip : NULL,
 				content: tooltip ? self.elements.content : NULL,
-				container: doc ? options.position.container[0] === document.body ? document : options.position.container : NULL,
+				container: doc ? options.position.container[0] === docBody ? document : options.position.container : NULL,
 				window: doc ? window : NULL
 			};
 
@@ -1095,7 +1096,7 @@ function QTip(target, options, id)
 			position.top += adjust.y + (my.y === 'bottom' ? -elemHeight : my.y === 'center' ? -elemHeight / 2 : 0);
 
 			// Calculate collision offset values
-			if(posOptions.viewport.jquery && target[0] !== window && target[0] !== document.body) {
+			if(posOptions.viewport.jquery && target[0] !== window && target[0] !== docBody) {
 				position.adjusted = { left: readjust.left(position.left), top: readjust.top(position.top) };
 			}
 			else {
@@ -1219,10 +1220,9 @@ function init(id, opts)
 
 	// Setup element references
 	elem = $(this),
-	docBody = $(document.body),
 
 	// Use document body instead of document element if needed
-	newTarget = this === document ? docBody : elem,
+	newTarget = this === document ? $(docBody) : elem,
 
 	// Grab metadata from element if plugin is present
 	metadata = (elem.metadata) ? elem.metadata(opts.metadata) : NULL,
@@ -1252,7 +1252,7 @@ function init(id, opts)
 	}
 
 	// Setup target options
-	if(posOptions.container === FALSE) { posOptions.container = docBody; }
+	if(posOptions.container === FALSE) { posOptions.container = $(docBody); }
 	if(posOptions.target === FALSE) { posOptions.target = newTarget; }
 	if(config.show.target === FALSE) { config.show.target = newTarget; }
 	if(config.hide.target === FALSE) { config.hide.target = newTarget; }
@@ -1451,7 +1451,7 @@ function(name, func) {
 * Add ARIA role attribute to document body if not already present
 * http://wiki.jqueryui.com/Tooltip - 4.3 Accessibility recommendation
 */
-$(document.body).attr('role', function(i, val) { return !val ? 'application' : val; });
+$(docBody).attr('role', function(i, val) { return !val ? 'application' : val; });
 
 // Cache mousemove events for positioning purposes
 $(document).bind('mousemove.qtip', function(event) {
@@ -1837,6 +1837,7 @@ function Tip(qTip, command)
 			color.fill = tip.css(backgroundColor) || transparent;
 			color.border = tip[0].style[ borderSideCamel ];
 
+
 			// Make sure colours are valid
 			if(!color.fill || invalid.test(color.fill)) { 
 				color.fill = colorElem.css(backgroundColor);
@@ -1844,9 +1845,10 @@ function Tip(qTip, command)
 					color.fill = tooltip.css(backgroundColor);
 				}
 			}
+
 			if(!color.border || invalid.test(color.border)) {
 				color.border = tooltip.css(borderSide);
-				if(invalid.test(color.border)) { 
+				if(invalid.test(color.border) || color.border === $(docBody).css('color')) { 
 					color.border = colorElem.css(borderSide) || color.fill;
 				}
 			}

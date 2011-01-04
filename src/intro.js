@@ -2,10 +2,14 @@
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
 /*global window: false, jQuery: false */
 
-// Munge the primitives - Paul Irish tip
-var TRUE = true,
-	FALSE = false,
-	NULL = null,
+
+(function($, window, undefined) {
+
+	// Munge the primitives - Paul Irish tip
+	var TRUE = true,
+		FALSE = false,
+		NULL = null,
+		docBody = $(document.body),
 	
 	// Shortcut vars
 	uitooltip = 'ui-tooltip',
@@ -13,6 +17,3 @@ var TRUE = true,
 	disabled = 'ui-state-disabled',
 	selector = '.qtip.'+uitooltip;
 	
-
-(function($, window, undefined) {
-
