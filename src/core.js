@@ -217,7 +217,8 @@ function QTip(target, options, id)
 
 	function createTitle()
 	{
-		var elems = self.elements;
+		var elems = self.elements,
+			id = uitooltip + '-'+id+'-title';
 
 		// Destroy previous title element, if present
 		if(elems.titlebar) { removeTitle(); }
@@ -228,12 +229,15 @@ function QTip(target, options, id)
 		})
 		.append(
 			elems.title = $('<div />', {
-				'id': uitooltip + '-'+id+'-title',
+				'id': id,
 				'class': uitooltip + '-title',
 				'html': options.content.title.text
 			})
 		)
 		.insertBefore(elems.content);
+
+		// Add ARIA attribute
+		elems.tooltip.attr('aria-labelledby', id);
 
 		// Create button if enabled
 		if(options.content.title.button) { createButton(); }
@@ -576,7 +580,8 @@ function QTip(target, options, id)
 				.attr({
 					'id': uitooltip + '-'+id,
 					'role': 'tooltip',
-					'class': uitooltip + ' qtip ui-helper-reset ' + options.style.classes
+					'class': uitooltip + ' qtip ui-helper-reset ' + options.style.classes,
+					'aria-describedby': uitooltip + '-' + id + '-content'
 				})
 				.toggleClass(disabled, self.cache.disabled)
 				.data('qtip', self)

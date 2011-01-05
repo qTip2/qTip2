@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Jan 5 16:43:09 2011 +0000
+* Date: Wed Jan 5 17:15:04 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -251,7 +251,8 @@ function QTip(target, options, id)
 
 	function createTitle()
 	{
-		var elems = self.elements;
+		var elems = self.elements,
+			id = uitooltip + '-'+id+'-title';
 
 		// Destroy previous title element, if present
 		if(elems.titlebar) { removeTitle(); }
@@ -262,12 +263,15 @@ function QTip(target, options, id)
 		})
 		.append(
 			elems.title = $('<div />', {
-				'id': uitooltip + '-'+id+'-title',
+				'id': id,
 				'class': uitooltip + '-title',
 				'html': options.content.title.text
 			})
 		)
 		.insertBefore(elems.content);
+
+		// Add ARIA attribute
+		elems.tooltip.attr('aria-labelledby', id);
 
 		// Create button if enabled
 		if(options.content.title.button) { createButton(); }
@@ -610,7 +614,8 @@ function QTip(target, options, id)
 				.attr({
 					'id': uitooltip + '-'+id,
 					'role': 'tooltip',
-					'class': uitooltip + ' qtip ui-helper-reset ' + options.style.classes
+					'class': uitooltip + ' qtip ui-helper-reset ' + options.style.classes,
+					'aria-describedby': uitooltip + '-' + id + '-content'
 				})
 				.toggleClass(disabled, self.cache.disabled)
 				.data('qtip', self)
