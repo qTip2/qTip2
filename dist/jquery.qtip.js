@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Jan 5 20:11:22 2011 +0000
+* Date: Wed Jan 5 20:25:06 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -237,8 +237,8 @@ function QTip(target, options, id)
 		elems.button.prependTo(elems.titlebar)
 			.attr('role', 'button')
 			.hover(function(event){ $(this).toggleClass('ui-state-hover', event.type === 'mouseenter'); })
-			.click(function() {
-				if(!elems.tooltip.hasClass(disabled)) { self.hide(); }
+			.click(function(event) {
+				if(!elems.tooltip.hasClass(disabled)) { self.hide(event); }
 				return FALSE;
 			})
 			.bind('mousedown keydown mouseup keyup mouseout', function(event) {
