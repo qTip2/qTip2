@@ -218,7 +218,7 @@ function QTip(target, options, id)
 	function createTitle()
 	{
 		var elems = self.elements,
-			id = uitooltip + '-'+id+'-title';
+			id = uitooltip+'-'+self.id+'-title';
 
 		// Destroy previous title element, if present
 		if(elems.titlebar) { removeTitle(); }
@@ -581,7 +581,7 @@ function QTip(target, options, id)
 					'id': uitooltip + '-'+id,
 					'role': 'alert', // Apparently "tooltip" doesn't work too well... so we'll use alert
 					'class': uitooltip + ' qtip ui-helper-reset ' + options.style.classes,
-					'aria-describedby': uitooltip + '-' + id + '-content'
+					'aria-describedby': uitooltip + '-' + self.id + '-content'
 				})
 				.toggleClass(disabled, self.cache.disabled)
 				.data('qtip', self)

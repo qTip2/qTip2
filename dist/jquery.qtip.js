@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Jan 5 19:39:49 2011 +0000
+* Date: Wed Jan 5 20:02:12 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -252,7 +252,7 @@ function QTip(target, options, id)
 	function createTitle()
 	{
 		var elems = self.elements,
-			id = uitooltip + '-'+id+'-title';
+			id = uitooltip+'-'+self.id+'-title';
 
 		// Destroy previous title element, if present
 		if(elems.titlebar) { removeTitle(); }
@@ -615,7 +615,7 @@ function QTip(target, options, id)
 					'id': uitooltip + '-'+id,
 					'role': 'alert', // Apparently "tooltip" doesn't work too well... so we'll use alert
 					'class': uitooltip + ' qtip ui-helper-reset ' + options.style.classes,
-					'aria-describedby': uitooltip + '-' + id + '-content'
+					'aria-describedby': uitooltip + '-' + self.id + '-content'
 				})
 				.toggleClass(disabled, self.cache.disabled)
 				.data('qtip', self)
