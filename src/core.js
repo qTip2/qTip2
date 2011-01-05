@@ -143,6 +143,10 @@ function QTip(target, options, id)
 		
 		return pos;
 	}
+	
+	function isVisible() {
+		return self.elements.tooltip.css('left') !== hideOffset;
+	}
 
 	function setWidget() {
 		var elems = self.elements,
@@ -427,7 +431,7 @@ function QTip(target, options, id)
 
 			// Only update position if tooltip is visible
 			self.cache.processing = 1;
-			if(self.elements.tooltip.is(':visible')) { self.reposition(event); }
+			if(isVisible()) { self.reposition(event); }
 			self.cache.processing = 0;
 		}
 
@@ -468,7 +472,7 @@ function QTip(target, options, id)
 				{
 					targets.show.bind(type+namespace, function(event)
 					{
-						if(targets.tooltip.is(':visible')) { hideMethod(event); }
+						if(isVisible()) { hideMethod(event); }
 						else{ showMethod(event); }
 					});
 
@@ -509,7 +513,7 @@ function QTip(target, options, id)
 					var tooltip = self.elements.tooltip;
 
 					if($(event.target).parents(selector).length === 0 && $(event.target).add(target).length > 1 &&
-					tooltip.is(':visible') && !tooltip.hasClass(disabled)) {
+					isVisible() && !tooltip.hasClass(disabled)) {
 						self.hide(event);
 					}
 				});
@@ -519,7 +523,7 @@ function QTip(target, options, id)
 			if(posOptions.target === 'mouse') {
 				$(document).bind('mousemove'+namespace, function(event) {
 					// Update the tooltip position only if the tooltip is visible and adjustment is enabled
-					if(posOptions.adjust.mouse && !targets.tooltip.hasClass(disabled) && targets.tooltip.is(':visible')) {
+					if(posOptions.adjust.mouse && !targets.tooltip.hasClass(disabled) && isVisible()) {
 						self.reposition(event || $.fn.qtip.mouse);
 					}
 				});
@@ -762,8 +766,7 @@ function QTip(target, options, id)
 			var type = state ? 'show' : 'hide',
 				tooltip = self.elements.tooltip,
 				opts = options[type],
-				offset = '-31000px',
-				visible = tooltip.css('left') !== offset,
+				visible = isVisible(),
 				callback;
 
 			// Detect state if valid one isn't provided
@@ -798,7 +801,7 @@ function QTip(target, options, id)
 
 				// Hide the tooltip
 				if(!state) {
-					$(this).css({ display: 'block', left: offset, top: offset });
+					$(this).css({ display: 'block', left: hideOffset, top: hideOffset });
 				}
 			}
 
@@ -812,6 +815,7 @@ function QTip(target, options, id)
 			if(state) {
 				self.focus(); // Focus the tooltip before show to prevent visual stacking
 				self.reposition(event, 0); // Update tooltip position
+				tooltip.hide(); // Hide it first so effects aren't skipped
 
 				// Hide other tooltips if tooltip is solo
 				if(opts.solo) { $(selector).not(tooltip).qtip('hide'); }
@@ -829,7 +833,7 @@ function QTip(target, options, id)
 			// Use custom function if provided
 			if($.isFunction(opts.effect)) {
 				opts.effect.call(tooltip, self);
-				tooltip.queue(function(next){ after.call(this); next(); });
+				tooltip.queue(function(next){ after.call(this, next); next(); });
 			}
 
 			// If no effect type is supplied, use a simple toggle
@@ -1059,7 +1063,7 @@ function QTip(target, options, id)
 			}
 			
 			// Use custom function if provided
-			else if(tooltip.is(':visible') && $.isFunction(posOptions.effect)) {
+			else if(isVisible() && $.isFunction(posOptions.effect)) {
 				posOptions.effect.call(tooltip, self, position);
 				tooltip.queue(function(next) {
 					var elem = $(this);
@@ -1082,7 +1086,6 @@ function QTip(target, options, id)
 
 			var tooltip = self.elements.tooltip, 
 				fluid = uitooltip + '-fluid',
-				style = tooltip.attr('style'),
 				dimensions;
 
 			// Reset the height and width and add the fluid class to reset max/min widths

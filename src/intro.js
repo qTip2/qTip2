@@ -14,6 +14,7 @@
 		uitooltip = 'ui-tooltip',
 		widget = 'ui-widget',
 		disabled = 'ui-state-disabled',
-		selector = '.qtip.'+uitooltip;
+		selector = '.qtip.'+uitooltip,
+		hideOffset = '-31000px';
 
 

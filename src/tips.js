@@ -78,10 +78,8 @@ function Tip(qTip, command)
 		if(!elems.tip) { return; }
 
 		var newCorner = $.extend({}, self.corner),
-			precedance = newCorner.precedance,
 			adjusted = pos.adjusted,
-			sides = ['top', 'left'],
-			offset, offsetPrecedance;
+			offset;
 
 		// Make sure our tip position isn't fixed e.g. doesn't adjust with adjust.screen
 		if(self.corner.fixed !== TRUE) {
@@ -268,7 +266,7 @@ function Tip(qTip, command)
 				regular = 'px solid ',
 				transparent = 'px dashed transparent', // Dashed IE6 border-transparency hack. Awesome!
 				mimic = opts.mimic,
-				position, i, img, context, coords, center, translate, round;
+				position, i, context, coords, center, translate, round;
 
 			// Re-determine tip if not already set
 			if(!corner) { corner = self.corner; }
