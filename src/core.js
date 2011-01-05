@@ -794,15 +794,20 @@ function QTip(target, options, id)
 			// Define after callback
 			function after()
 			{
-				var style = tooltip[0].style;
-
 				// Prevent antialias from disappearing in IE by removing filter
 				if(state) {
-					if($.browser.msie && style) { style.removeAttribute('filter'); }
+					if($.browser.msie) { tooltip[0].style.removeAttribute('filter'); }
+					tooltip.css('visibility', ''); // Remove set visibility css
 				}
 				// Hide the tooltip using negative offset and reset opacity
 				else {
-					tooltip.css({ display: 'block', opacity: '', left: hideOffset, top: hideOffset });
+					tooltip.css({
+						display: 'block',
+						visibility: 'hidden',
+						opacity: '',
+						left: hideOffset,
+						top: hideOffset
+					});
 				}
 			}
 
@@ -897,10 +902,14 @@ function QTip(target, options, id)
 				callback.originalEvent = cachedEvent;
 				tooltip.trigger(callback, [self, newIndex]);
 
-				// Set the new z-index and set focus status to TRUE if callback wasn't FALSE
+				// If callback wasn't FALSE
 				if(!callback.isDefaultPrevented()) {
+					// Set the new z-index
 					tooltip.addClass(focusClass)[0].style.zIndex = newIndex;
+
+					// Focus the tooltip by giving it a negative tabindex and calling focus()
 					tooltip[0].tabIndex = -1;
+					tooltip[0].focus();
 				}
 			}
 
