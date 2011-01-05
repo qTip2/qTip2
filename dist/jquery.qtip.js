@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Jan 4 22:29:58 2011 +0000
+* Date: Wed Jan 5 16:43:09 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -823,19 +823,15 @@ function QTip(target, options, id)
 			// Define after callback
 			function after()
 			{
-				var elem = $(this),
-					opacity = parseInt(elem.css('opacity'), 10) || 0,
-					ieStyle = this.style;
+				var style = tooltip[0].style;
 
-				// Prevent antialias from disappearing in IE7 by removing filter and opacity attribute
-				if(state && $.browser.msie && ieStyle && (opacity === 1 || !opacity)) {
-					ieStyle.removeAttribute('filter');
-					ieStyle.removeAttribute('opacity');
+				// Prevent antialias from disappearing in IE by removing filter
+				if(state) {
+					if($.browser.msie && style) { style.removeAttribute('filter'); }
 				}
-
-				// Hide the tooltip
-				if(!state) {
-					$(this).css({ display: 'block', left: hideOffset, top: hideOffset });
+				// Hide the tooltip using negative offset and reset opacity
+				else {
+					tooltip.css({ display: 'block', opacity: '', left: hideOffset, top: hideOffset });
 				}
 			}
 
@@ -867,7 +863,7 @@ function QTip(target, options, id)
 			// Use custom function if provided
 			if($.isFunction(opts.effect)) {
 				opts.effect.call(tooltip, self);
-				tooltip.queue(function(next){ after.call(this, next); next(); });
+				tooltip.queue('fx', function(next){ after.call(this, next); next(); });
 			}
 
 			// If no effect type is supplied, use a simple toggle
