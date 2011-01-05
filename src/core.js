@@ -1208,6 +1208,7 @@ function init(id, opts)
 	if(posOptions.target === FALSE) { posOptions.target = newTarget; }
 	if(config.show.target === FALSE) { config.show.target = newTarget; }
 	if(config.hide.target === FALSE) { config.hide.target = newTarget; }
+	if(config.position.viewport === TRUE) { config.position.viewport = posOptions.container; }
 
 	// Convert position corner values into x and y strings
 	posOptions.at = new $.fn.qtip.plugins.Corner(posOptions.at);
