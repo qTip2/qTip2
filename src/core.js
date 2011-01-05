@@ -579,7 +579,7 @@ function QTip(target, options, id)
 			elements.tooltip = $('<div/>')
 				.attr({
 					'id': uitooltip + '-'+id,
-					'role': 'tooltip',
+					'role': 'alert', // Apparently "tooltip" doesn't work too well... so we'll use alert
 					'class': uitooltip + ' qtip ui-helper-reset ' + options.style.classes,
 					'aria-describedby': uitooltip + '-' + id + '-content'
 				})
@@ -874,6 +874,7 @@ function QTip(target, options, id)
 				// Reduce our z-index's and keep them properly ordered
 				qtips.each(function() {
 					this.style.zIndex = this.style.zIndex - 1;
+					this.removeAttribute('tabIndex');
 				});
 
 				// Fire blur event for focussed tooltip
@@ -899,6 +900,7 @@ function QTip(target, options, id)
 				// Set the new z-index and set focus status to TRUE if callback wasn't FALSE
 				if(!callback.isDefaultPrevented()) {
 					tooltip.addClass(focusClass)[0].style.zIndex = newIndex;
+					tooltip[0].tabIndex = -1;
 				}
 			}
 
