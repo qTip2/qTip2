@@ -400,7 +400,7 @@ function QTip(target, options, id)
 			if(tooltip.hasClass(disabled)) { return FALSE; }
 
 			// Check if new target was actually the tooltip element
-			var ontoTooltip = $(event.relatedTarget || event.target).parents(selector)[0] === targets.tooltip[0],
+			var ontoTooltip = $(event.relatedTarget || event.target).parents(selector)[0] === tooltip[0],
 				ontoTarget = $(event.relatedTarget || event.target)[0] === targets.show[0];
 
 			// Clear timers and stop animation queue
@@ -449,7 +449,7 @@ function QTip(target, options, id)
 			// Enable hide.fixed
 			if(options.hide.fixed) {
 				// Add tooltip as a hide target
-				targets.hide = targets.hide.add(targets.tooltip);
+				targets.hide = targets.hide.add(tooltip);
 
 				// Clear hide timer on tooltip hover to prevent it from closing
 				tooltip.bind('mouseover'+namespace, function() {

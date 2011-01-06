@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Jan 6 21:46:53 2011 +0000
+* Date: Thu Jan 6 21:48:02 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -435,7 +435,7 @@ function QTip(target, options, id)
 			if(tooltip.hasClass(disabled)) { return FALSE; }
 
 			// Check if new target was actually the tooltip element
-			var ontoTooltip = $(event.relatedTarget || event.target).parents(selector)[0] === targets.tooltip[0],
+			var ontoTooltip = $(event.relatedTarget || event.target).parents(selector)[0] === tooltip[0],
 				ontoTarget = $(event.relatedTarget || event.target)[0] === targets.show[0];
 
 			// Clear timers and stop animation queue
@@ -484,7 +484,7 @@ function QTip(target, options, id)
 			// Enable hide.fixed
 			if(options.hide.fixed) {
 				// Add tooltip as a hide target
-				targets.hide = targets.hide.add(targets.tooltip);
+				targets.hide = targets.hide.add(tooltip);
 
 				// Clear hide timer on tooltip hover to prevent it from closing
 				tooltip.bind('mouseover'+namespace, function() {
@@ -1585,7 +1585,8 @@ $.fn.qtip.defaults = {
 {
 	var self = this,
 		tooltip = qTip.elements.tooltip,
-		opts = qTip.options.content.ajax;
+		opts = qTip.options.content.ajax,
+		namespace = '.qtip-ajax';
 
 	self.checks = {
 		'^content.ajax': function(obj, name) {
@@ -1603,7 +1604,8 @@ $.fn.qtip.defaults = {
 		{
 			// Make sure ajax options are enabled before proceeding
 			if(opts && opts.url) {
-				self[ opts.once ? 'once' : 'load' ]();
+				self.load();
+				tooltip.one('tooltiprender', self.once);
 			}
 		},
 
@@ -1613,7 +1615,7 @@ $.fn.qtip.defaults = {
 				self.destroy();
 			}
 			else {
-				tooltip.bind('tooltipshow.ajax', function() { self.load(); });
+				tooltip.bind('tooltipshow'+namespace, self.load);
 			}
 		},
 
@@ -1632,7 +1634,7 @@ $.fn.qtip.defaults = {
 		destroy: function()
 		{
 			// Remove bound events
-			tooltip.unbind('.ajax');
+			tooltip.unbind(namespace);
 		}
 	});
 

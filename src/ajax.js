@@ -2,7 +2,8 @@ function Ajax(qTip)
 {
 	var self = this,
 		tooltip = qTip.elements.tooltip,
-		opts = qTip.options.content.ajax;
+		opts = qTip.options.content.ajax,
+		namespace = '.qtip-ajax';
 
 	self.checks = {
 		'^content.ajax': function(obj, name) {
@@ -20,7 +21,8 @@ function Ajax(qTip)
 		{
 			// Make sure ajax options are enabled before proceeding
 			if(opts && opts.url) {
-				self[ opts.once ? 'once' : 'load' ]();
+				self.load();
+				tooltip.one('tooltiprender', self.once);
 			}
 		},
 
@@ -30,7 +32,7 @@ function Ajax(qTip)
 				self.destroy();
 			}
 			else {
-				tooltip.bind('tooltipshow.ajax', function() { self.load(); });
+				tooltip.bind('tooltipshow'+namespace, self.load);
 			}
 		},
 
@@ -49,7 +51,7 @@ function Ajax(qTip)
 		destroy: function()
 		{
 			// Remove bound events
-			tooltip.unbind('.ajax');
+			tooltip.unbind(namespace);
 		}
 	});
 
