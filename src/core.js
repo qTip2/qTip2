@@ -1183,11 +1183,13 @@ function QTip(target, options, id)
 			// Remove api object
 			target.removeData('qtip');
 
-			// Reset old title attribute if removed and reset describedby attribute
+			// Reset old title attribute if removed 
 			if(oldtitle) {
 				target.attr('title', oldtitle);
 			}
-			target.removeAttr('aria-describedby');
+
+			// Remove ARIA attributse
+			target.removeAttr('aria-describedby').removeAttr('aria-labelledby');
 
 			return target;
 		}

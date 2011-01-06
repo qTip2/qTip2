@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Jan 6 04:21:55 2011 +0000
+* Date: Thu Jan 6 21:41:21 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1218,11 +1218,13 @@ function QTip(target, options, id)
 			// Remove api object
 			target.removeData('qtip');
 
-			// Reset old title attribute if removed and reset describedby attribute
+			// Reset old title attribute if removed 
 			if(oldtitle) {
 				target.attr('title', oldtitle);
 			}
-			target.removeAttr('aria-describedby');
+
+			// Remove ARIA attributse
+			target.removeAttr('aria-describedby').removeAttr('aria-labelledby');
 
 			return target;
 		}
