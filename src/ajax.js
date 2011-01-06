@@ -20,7 +20,7 @@ function Ajax(qTip)
 		{
 			// Make sure ajax options are enabled before proceeding
 			if(opts && opts.url) {
-				self.load[ opts.once ? 'once' : 'load' ]();
+				self[ opts.once ? 'once' : 'load' ]();
 			}
 		},
 
