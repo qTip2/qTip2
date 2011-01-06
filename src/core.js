@@ -804,6 +804,7 @@ function QTip(target, options, id)
 					tooltip.css({
 						display: 'block',
 						visibility: 'hidden',
+						width: '',
 						opacity: '',
 						left: hideOffset,
 						top: hideOffset
@@ -826,9 +827,10 @@ function QTip(target, options, id)
 				// Hide other tooltips if tooltip is solo
 				if(opts.solo) { $(selector).not(tooltip).qtip('hide'); }
 			}
-
-			// Clear show timer if we're hiding 
-			else { clearTimeout(self.timers.show); }
+			else {
+				// Clear show timer if we're hiding 
+				clearTimeout(self.timers.show);
+			}
 
 			// Set ARIA hidden status attribute
 			tooltip.attr('aria-hidden', Boolean(!state));
@@ -866,10 +868,9 @@ function QTip(target, options, id)
 			if(self.rendered === FALSE) { return FALSE; }
 
 			var tooltip = self.elements.tooltip,
-				qtips = $(selector),
+				qtips = $(selector+':visible'),
 				curIndex = parseInt(tooltip[0].style.zIndex, 10),
 				newIndex = $.fn.qtip.zindex + qtips.length,
-				focusClass = uitooltip + '-focus',
 				cachedEvent = $.extend({}, event),
 				callback;
 
@@ -878,23 +879,17 @@ function QTip(target, options, id)
 			{
 				// Reduce our z-index's and keep them properly ordered
 				qtips.each(function() {
-					this.style.zIndex = this.style.zIndex - 1;
+					if(this.style.zIndex > curIndex) {
+						this.style.zIndex = this.style.zIndex - 1;
+					}
+					
 					this.removeAttribute('tabIndex');
 				});
 
 				// Fire blur event for focussed tooltip
 				$(selector + '.' + focusClass).each(function() {
-					var self = $(this), api = self.qtip(), blur;
-
-					if(!api || api.rendered === FALSE) { return TRUE; }
-
-					// Set focused status to FALSE
-					self.removeClass(focusClass);
-
-					// Trigger blur event
-					blur = $.Event('tooltipblur');
-					blur.originalEvent = cachedEvent;
-					self.trigger(blur, [api, newIndex]);
+					var self = $(this), api = self.qtip();
+					if(api && api.rendered) { api.blur(cachedEvent); }
 				});
 
 				// Call API method
@@ -914,6 +909,19 @@ function QTip(target, options, id)
 			}
 
 			return self;
+		},
+
+		blur: function(event) {
+			var tooltip = self.elements.tooltip,
+				cachedEvent = $.extend({}, event),
+				callback = $.Event('tooltipblur');
+
+			// Set focused status to FALSE
+			tooltip.removeClass(focusClass);
+			
+			// Trigger blur event
+			callback.originalEvent = cachedEvent;
+			tooltip.trigger(callback, [self]);
 		},
 
 		reposition: function(event, effect)

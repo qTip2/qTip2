@@ -15,6 +15,7 @@
 		widget = 'ui-widget',
 		disabled = 'ui-state-disabled',
 		selector = '.qtip.'+uitooltip,
+		focusClass = uitooltip + '-focus',
 		hideOffset = '-31000px';
 
 
