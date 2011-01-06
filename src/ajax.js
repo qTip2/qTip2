@@ -20,14 +20,13 @@ function Ajax(qTip)
 		{
 			// Make sure ajax options are enabled before proceeding
 			if(opts && opts.url) {
-				self.load(); 
-				self.once();
+				self.load[ opts.once ? 'once' : 'load' ]();
 			}
 		},
 
 		once: function()
 		{
-			if(opts.once) { 
+			if(opts.once) {
 				self.destroy();
 			}
 			else {

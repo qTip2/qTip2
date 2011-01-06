@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Jan 6 21:41:21 2011 +0000
+* Date: Thu Jan 6 21:43:23 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1603,14 +1603,13 @@ $.fn.qtip.defaults = {
 		{
 			// Make sure ajax options are enabled before proceeding
 			if(opts && opts.url) {
-				self.load(); 
-				self.once();
+				self.load[ opts.once ? 'once' : 'load' ]();
 			}
 		},
 
 		once: function()
 		{
-			if(opts.once) { 
+			if(opts.once) {
 				self.destroy();
 			}
 			else {
