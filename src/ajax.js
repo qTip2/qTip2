@@ -22,7 +22,7 @@ function Ajax(qTip)
 			// Make sure ajax options are enabled before proceeding
 			if(opts && opts.url) {
 				self.load();
-				tooltip.one('tooltiprender', self.once);
+				tooltip.one('tooltipshow', self.once);
 			}
 		},
 
