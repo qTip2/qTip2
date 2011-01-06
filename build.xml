@@ -8,17 +8,16 @@
 	<property name="BUILD_DIR" value="./build" description="Build folder" />
 	<property name="SRC_DIR" value="./src" description="Source folder" />
 	<property name="DIST_DIR" value="./dist" description="Compiled qTip folder" />
-	<property name="IMG_DIR" value="./images" description="Images folder" />
 
 	<property name="QTIP" value="${DIST_DIR}/jquery.qtip.js" />
 	<property name="QTIP_MIN" value="${DIST_DIR}/jquery.qtip.min.js" />
 	<property name="QTIP_PACK" value="${DIST_DIR}/jquery.qtip.pack.js" />
 	<property name="QTIP_CSS" value="${DIST_DIR}/jquery.qtip.css" />
-	<property name="QTIP_IMG" value="${DIST_DIR}/images" />
+	<property name="QTIP_CSS_MIN" value="${DIST_DIR}/jquery.qtip.min.css" />
 	
 	<property name="PLUGINS" value="${SRC_DIR}/ajax.js ${SRC_DIR}/tips.js ${SRC_DIR}/imagemap.js ${SRC_DIR}/modal.js ${SRC_DIR}/bgiframe.js" />
 
-	<target name="all" depends="clean,qtip,lint,css,images,min,pack" description="Builds qTip including minified, packed JS files, as well as images and CSS" />
+	<target name="all" depends="clean,qtip,lint,css,min,pack" description="Builds qTip including minified, packed JS files, as well as CSS" />
 
 	<target name="dir" description="Builds distribution directory">
 		<mkdir dir="${DIST_DIR}" />
@@ -41,12 +40,12 @@
 		<echo message="${QTIP} built." />
 	</target>
 
-	<target name="min" depends="qtip" description="Remove all comments and whitespace, no compression, great in combination with GZip">
+	<target name="min" depends="qtip,css" description="Remove all comments and whitespace, no compression, great in combination with GZip">
 		<echo message="Building ${QTIP_MIN}" />
 
 		<apply executable="java" parallel="false" verbose="true" dest="${DIST_DIR}">
 			<fileset dir="${DIST_DIR}">
-				<include name="jquery.qtip2.js" />
+				<include name="jquery.qtip.js" />
 			</fileset>
 			
 			<arg line="-jar" />
@@ -56,7 +55,7 @@
 			<arg value="--js_output_file" />
 			<targetfile />
 			<arg value="--js" />
-			<mapper type="glob" from="jquery.qtip2.js" to="tmpmin" />
+			<mapper type="glob" from="jquery.qtip.js" to="tmpmin" />
 		</apply>
 
 		<concat destfile="${QTIP_MIN}">
@@ -72,6 +71,23 @@
 		<delete file="dist/tmpmin"/>
 
 		<echo message="${QTIP_MIN} built." />
+		
+		<apply executable="java" parallel="false" verbose="true">
+			<fileset dir="${DIST_DIR}">
+				<include name="jquery.qtip.css" />
+			</fileset>
+			
+			<arg value="-Xmx96m" />
+			<arg line="-jar" />
+			<arg path="${BUILD_DIR}/yuicompressor.jar" />
+			<arg path="${QTIP_CSS}" />
+			<arg value="--type" />
+			<arg value="css" />
+			<arg value="-o" />
+			<arg path="${QTIP_CSS_MIN}" />
+		</apply>
+
+		<echo message="${QTIP_CSS_MIN} built." />
 	</target>
 
 	<target name="pack" depends="min" description="Compresses minified qTip source for even smaller file-sizes">
@@ -79,7 +95,7 @@
 
 		<apply executable="java" parallel="false" verbose="true">
 			<fileset dir="${DIST_DIR}">
-				<include name="jquery.qtip2.js" />
+				<include name="jquery.qtip.js" />
 			</fileset>
 			
 			<arg line="-jar" />
@@ -119,19 +135,6 @@
 		<replaceregexp match="Date: " replace="Date: ${date}" file="${QTIP_CSS}" />
 
 		<echo message="${QTIP_CSS} built." />
-	</target>
-
-	<target name="images" depends="dir" description="Builds images directory">
-		<echo message="Building ${QTIP_IMG}" />
-
-		<mkdir dir="${QTIP_IMG}" />
-		<copy todir="${QTIP_IMG}">
-			<fileset dir="${IMG_DIR}">
-				<include name="**/*.png"/>
-			</fileset>
-		</copy>
-
-		<echo message="${QTIP_IMG} built." />
 	</target>
 
 	<target name="lint" description="Builds and checks the qTip source with JSLint">
