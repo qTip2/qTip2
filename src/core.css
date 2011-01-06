@@ -243,34 +243,3 @@
 	.ui-tooltip-blue .ui-state-default .ui-tooltip-icon{
 		background-position: -2px 0;
 	}
-
-
-/*! Add shadows to your tooltips in: FF3+, Chrome 2+, Opera 10.6+, IE6+, Safari 2+ */
-.ui-tooltip-shadow{
-	-webkit-box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.15);
-  -moz-box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.15);
-  box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.15);
-
-  filter: progid:DXImageTransform.Microsoft.Shadow(Color='gray', Direction=135, Strength=3);
-  -ms-filter:"progid:DXImageTransform.Microsoft.Shadow(Color='gray', Direction=135, Strength=3)";
-}
-
-/*! Add rounded corners to your tooltips in: FF3+, Chrome 2+, Opera 10.6+, IE9+, Safari 2+ */
-.ui-tooltip-rounded,
-.ui-tooltip-rounded .ui-tooltip-content{
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border-radius: 5px;
-}
-
-	.ui-tooltip-rounded .ui-tooltip-titlebar{
-		-moz-border-radius: 5px 5px 0 0;
-		-webkit-border-radius: 5px 5px 0 0;
-		border-radius: 5px 5px 0 0;
-	}
-
-	.ui-tooltip-rounded .ui-tooltip-titlebar + .ui-tooltip-content{
-		-moz-border-radius: 0 0 5px 5px;
-		-webkit-border-radius: 0 0 5px 5px;
-		border-radius: 0 0 5px 5px;
-	}

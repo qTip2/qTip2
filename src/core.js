@@ -1114,7 +1114,7 @@ function QTip(target, options, id)
 		redraw: function()
 		{
 			// Make sure tooltip is rendered and the browser needs the redraw
-			if(!self.rendered || !($.browser.msie && parseInt($.browser.version.charAt(0), 10) < 9)) { return FALSE; }
+			if(!self.rendered || !($.browser.msie && $.browser.version < 8)) { return FALSE; }
 
 			var fluid = uitooltip + '-fluid',
 				dimensions;

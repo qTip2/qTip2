@@ -435,8 +435,8 @@ function Tip(qTip, command)
 					else {
 						b = borderWidth(corner, side, TRUE);
 						position[ side ] = i || border === undefined ? 
-							borderWidth(corner, side) : 
-							offset + (!b ? borderRadius(corner) : 0);
+							borderWidth(corner, side) :
+							offset + borderRadius(corner);
 					}
 				}
 			);

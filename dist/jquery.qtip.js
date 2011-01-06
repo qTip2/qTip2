@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Jan 6 21:54:50 2011 +0000
+* Date: Thu Jan 6 22:14:48 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1149,7 +1149,7 @@ function QTip(target, options, id)
 		redraw: function()
 		{
 			// Make sure tooltip is rendered and the browser needs the redraw
-			if(!self.rendered || !($.browser.msie && parseInt($.browser.version.charAt(0), 10) < 9)) { return FALSE; }
+			if(!self.rendered || !($.browser.msie && $.browser.version < 8)) { return FALSE; }
 
 			var fluid = uitooltip + '-fluid',
 				dimensions;
@@ -2104,8 +2104,8 @@ function Tip(qTip, command)
 					else {
 						b = borderWidth(corner, side, TRUE);
 						position[ side ] = i || border === undefined ? 
-							borderWidth(corner, side) : 
-							offset + (!b ? borderRadius(corner) : 0);
+							borderWidth(corner, side) :
+							offset + borderRadius(corner);
 					}
 				}
 			);
