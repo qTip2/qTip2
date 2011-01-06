@@ -1420,15 +1420,28 @@ function(name, func) {
 });
 
 /* 
-* Add ARIA role attribute to document body if not already present
-* http://wiki.jqueryui.com/Tooltip - 4.3 Accessibility recommendation
-*/
+ * Add ARIA role attribute to document body if not already present
+ * http://wiki.jqueryui.com/Tooltip - 4.3 Accessibility recommendation
+ */
 $(document.body).attr('role', function(i, val) { return !val ? 'application' : val; });
 
 // Cache mousemove events for positioning purposes
 $(document).bind('mousemove.qtip', function(event) {
 	$.fn.qtip.mouse = { pageX: event.pageX, pageY: event.pageY };
 });
+
+/* 
+ * If document.activeElement isn't available, we'll use our own implementation to record focus
+ * http://ajaxandxml.blogspot.com/2007/11/emulating-activeelement-property-with.html
+ */
+if(document.activeElement === undefined) {
+	document.addEventListener("focus", function(event) {
+		if(event && event.target) {
+			document.activeElement = event.target === document ? NULL : event.target;
+		}
+	},
+	true);
+}
 
 // Set global qTip properties
 $.fn.qtip.version = '@VERSION';
