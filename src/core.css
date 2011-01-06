@@ -17,6 +17,8 @@
 
 	max-width: 280px;
 	min-width: 50px;
+	
+	outline: none;
 }
 
 	.ui-tooltip-content{

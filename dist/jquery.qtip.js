@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Jan 6 00:42:51 2011 +0000
+* Date: Thu Jan 6 01:36:06 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -132,7 +132,7 @@ function QTip(target, options, id)
 		event: {},
 		target: NULL,
 		disabled: FALSE,
-		lastFocus: document.activeElement
+		lastFocus: docBody
 	};
 
 	/*
@@ -479,17 +479,24 @@ function QTip(target, options, id)
 			self.cache.processing = 0;
 		}
 
-		// Check if the tooltip is 'fixed'
-		if(tooltip && options.hide.fixed)
-		{
-			// Add tooltip as a hide target
-			targets.hide = targets.hide.add(targets.tooltip);
+		// Assign tooltip events
+		if(tooltip) {
+			// Enable hide.fixed
+			if(options.hide.fixed) {
+				// Add tooltip as a hide target
+				targets.hide = targets.hide.add(targets.tooltip);
 
-			// Clear hide timer on tooltip hover to prevent it from closing
-			targets.tooltip.bind('mouseover'+namespace, function() {
-				if(!targets.tooltip.hasClass(disabled)) {
-					clearTimeout(self.timers.hide);
-				}
+				// Clear hide timer on tooltip hover to prevent it from closing
+				targets.tooltip.bind('mouseover'+namespace, function() {
+					if(!targets.tooltip.hasClass(disabled)) {
+						clearTimeout(self.timers.hide);
+					}
+				});
+			}
+
+			// Focus/blur the tooltip
+			targets.tooltip.bind('mouseenter'+namespace+' mouseleave'+namespace, function(event) {
+				self[ event.type === 'mouseenter' ? 'focus' : 'blur' ](event);
 			});
 		}
 
@@ -534,9 +541,6 @@ function QTip(target, options, id)
 			$.each(events.show, function(index, type) {
 				targets.show.bind(type+namespace, showMethod);
 			});
-
-			// Focus the tooltip on mouseover
-			targets.tooltip.bind('mouseover'+namespace, function(){ self.focus(); });
 		}
 
 		// Apply document events
@@ -621,7 +625,8 @@ function QTip(target, options, id)
 					'id': uitooltip + '-'+id,
 					'role': 'alert', // Apparently "tooltip" doesn't work too well... so we'll use alert
 					'class': uitooltip + ' qtip ui-helper-reset ' + options.style.classes,
-					'aria-describedby': uitooltip + '-' + self.id + '-content'
+					'aria-describedby': uitooltip + '-' + self.id + '-content',
+					'tabindex': -1
 				})
 				.toggleClass(disabled, self.cache.disabled)
 				.data('qtip', self)
@@ -837,7 +842,6 @@ function QTip(target, options, id)
 				// Prevent antialias from disappearing in IE by removing filter
 				if(state) {
 					if($.browser.msie) { tooltip[0].style.removeAttribute('filter'); }
-					tooltip.css('visibility', ''); // Remove set visibility css
 				}
 				// Hide the tooltip using negative offset and reset opacity
 				else {
@@ -860,9 +864,15 @@ function QTip(target, options, id)
 
 			// Execute state specific properties
 			if(state) {
-				self.focus(); // Focus the tooltip before show to prevent visual stacking
-				self.reposition(event, 0); // Update tooltip position
-				tooltip.hide(); // Hide it first so effects aren't skipped
+				tooltip.hide().css({ visibility: '' }); // Hide it first so effects aren't skipped
+				
+				// Focus the tooltip and momentarily focus it via the DOM so screenreaders can read it
+				self.focus(event);
+				tooltip[0].focus();
+				self.cache.lastFocus.focus();
+
+				// Update tooltip position (without animation)
+				self.reposition(event, 0); 
 
 				// Hide other tooltips if tooltip is solo
 				if(opts.solo) { $(selector).not(tooltip).qtip('hide'); }
@@ -870,6 +880,9 @@ function QTip(target, options, id)
 			else {
 				// Clear show timer if we're hiding 
 				clearTimeout(self.timers.show);
+
+				// Blur the tooltip
+				self.blur(event);
 			}
 
 			// Set ARIA hidden status attribute
@@ -903,7 +916,7 @@ function QTip(target, options, id)
 
 		hide: function(event){ self.toggle(FALSE, event); },
 
-		focus: function(event, core)
+		focus: function(event)
 		{
 			if(self.rendered === FALSE) { return FALSE; }
 
@@ -912,25 +925,29 @@ function QTip(target, options, id)
 				curIndex = parseInt(tooltip[0].style.zIndex, 10),
 				newIndex = $.fn.qtip.zindex + qtips.length,
 				cachedEvent = $.extend({}, event),
-				callback;
+				focusedElem, callback;
 
 			// Only update the z-index if it has changed and tooltip is not already focused
-			if(!tooltip.hasClass(focusClass) && curIndex !== newIndex)
+			if(!tooltip.hasClass(focusClass))
 			{
-				// Reduce our z-index's and keep them properly ordered
-				qtips.each(function() {
-					if(this.style.zIndex > curIndex) {
-						this.style.zIndex = this.style.zIndex - 1;
-					}
-				});
+				// Only update z-index's if they've changed'
+				if(curIndex !== newIndex) {
+					// Reduce our z-index's and keep them properly ordered
+					qtips.each(function() {
+						if(this.style.zIndex > curIndex) {
+							this.style.zIndex = this.style.zIndex - 1;
+						}
+					});
 
-				// Fire blur event for focused tooltip
-				if(core !== TRUE) {
-					self.cache.lastFocus = $(selector + '.' + focusClass).qtip('blur', cachedEvent, TRUE);
+					// Fire blur event for focused tooltip
+					$(selector + '.' + focusClass).qtip('blur', cachedEvent);
 				}
 
+				// Store currently focused element
+				self.cache.lastFocus = document.activeElement;
+
 				// Call API method
-				callback = $.Event('tooltipfocus'); 
+				callback = $.Event('tooltipfocus');
 				callback.originalEvent = cachedEvent;
 				tooltip.trigger(callback, [self, newIndex]);
 
@@ -938,36 +955,28 @@ function QTip(target, options, id)
 				if(!callback.isDefaultPrevented()) {
 					// Set the new z-index
 					tooltip.addClass(focusClass)[0].style.zIndex = newIndex;
-
-					// Focus the tooltip by giving it a negative tabindex and calling focus()
-					tooltip[0].tabIndex = -1;
-					tooltip[0].focus();
 				}
 			}
 
 			return self;
 		},
 
-		blur: function(event, core) {
+		blur: function(event) {
+
 			var tooltip = self.elements.tooltip,
-				qtips = $(selector),
 				cachedEvent = $.extend({}, event),
-				maxIndex = $.fn.qtip.zindex + qtips.length - 1,
-				toFocus,
 				callback;
 
 			// Set focused status to FALSE
 			tooltip.removeClass(focusClass);
-			
+
 			// Trigger blur event
 			callback = $.Event('tooltipblur');
 			callback.originalEvent = cachedEvent;
 			tooltip.trigger(callback, [self]);
-			
+
 			// Find the previously focused qTip and focus it
-			if(core !== TRUE) {
-				self.cache.lastFocus.qtip('focus', cachedEvent, TRUE);
-			}
+			self.cache.lastFocus.focus();
 		},
 
 		reposition: function(event, effect)
@@ -1465,29 +1474,33 @@ function(name, func) {
 	};
 });
 
-/* 
- * Add ARIA role attribute to document body if not already present
- * http://wiki.jqueryui.com/Tooltip - 4.3 Accessibility recommendation
- */
-$(document.body).attr('role', function(i, val) { return !val ? 'application' : val; });
+$(document).ready(function() {
+	var docBody = document.body;
 
-// Cache mousemove events for positioning purposes
-$(document).bind('mousemove.qtip', function(event) {
-	$.fn.qtip.mouse = { pageX: event.pageX, pageY: event.pageY };
+	/* 
+	* Add ARIA role attribute to document body if not already present
+	* http://wiki.jqueryui.com/Tooltip - 4.3 Accessibility recommendation
+	*/
+	$(docBody).attr('role', function(i, val) { return !val ? 'application' : val; });
+
+	// Cache mousemove events for positioning purposes
+	$(document).bind('mousemove.qtip', function(event) {
+		$.fn.qtip.mouse = { pageX: event.pageX, pageY: event.pageY };
+	});
+
+	/* 
+	* If document.activeElement isn't available, we'll use our own implementation to record focus
+	* http://ajaxandxml.blogspot.com/2007/11/emulating-activeelement-property-with.html
+	*/
+	if(document.activeElement === undefined) {
+		document.addEventListener("focus", function(event) {
+			if(event && event.target) {
+				document.activeElement = event.target === document ? docBody : event.target;
+			}
+		},
+		true);
+	}
 });
-
-/* 
- * If document.activeElement isn't available, we'll use our own implementation to record focus
- * http://ajaxandxml.blogspot.com/2007/11/emulating-activeelement-property-with.html
- */
-if(document.activeElement === undefined) {
-	document.addEventListener("focus", function(event) {
-		if(event && event.target) {
-			document.activeElement = event.target === document ? NULL : event.target;
-		}
-	},
-	true);
-}
 
 // Set global qTip properties
 $.fn.qtip.version = '2.0.0pre';
