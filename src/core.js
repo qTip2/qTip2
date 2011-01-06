@@ -830,8 +830,6 @@ function QTip(target, options, id)
 				
 				// Focus the tooltip and momentarily focus it via the DOM so screenreaders can read it
 				self.focus(event);
-				tooltip[0].focus();
-				self.cache.lastFocus.focus();
 
 				// Update tooltip position (without animation)
 				self.reposition(event, 0); 
