@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Jan 6 00:41:06 2011 +0000
+* Date: Thu Jan 6 00:42:51 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -125,10 +125,15 @@ function QTip(target, options, id)
 	self.id = id;
 	self.rendered = FALSE;
 	self.elements = { target: target };
-	self.cache = { event: {}, target: NULL, disabled: FALSE, position: NULL };
 	self.timers = { img: [] };
 	self.options = options;
 	self.plugins = {};
+	self.cache = {
+		event: {},
+		target: NULL,
+		disabled: FALSE,
+		lastFocus: document.activeElement
+	};
 
 	/*
 	* Private core functions
@@ -898,12 +903,12 @@ function QTip(target, options, id)
 
 		hide: function(event){ self.toggle(FALSE, event); },
 
-		focus: function(event)
+		focus: function(event, core)
 		{
 			if(self.rendered === FALSE) { return FALSE; }
 
 			var tooltip = self.elements.tooltip,
-				qtips = $(selector+':visible'),
+				qtips = $(selector),
 				curIndex = parseInt(tooltip[0].style.zIndex, 10),
 				newIndex = $.fn.qtip.zindex + qtips.length,
 				cachedEvent = $.extend({}, event),
@@ -917,15 +922,12 @@ function QTip(target, options, id)
 					if(this.style.zIndex > curIndex) {
 						this.style.zIndex = this.style.zIndex - 1;
 					}
-					
-					this.removeAttribute('tabIndex');
 				});
 
-				// Fire blur event for focussed tooltip
-				$(selector + '.' + focusClass).each(function() {
-					var self = $(this), api = self.qtip();
-					if(api && api.rendered) { api.blur(cachedEvent); }
-				});
+				// Fire blur event for focused tooltip
+				if(core !== TRUE) {
+					self.cache.lastFocus = $(selector + '.' + focusClass).qtip('blur', cachedEvent, TRUE);
+				}
 
 				// Call API method
 				callback = $.Event('tooltipfocus'); 
@@ -946,17 +948,26 @@ function QTip(target, options, id)
 			return self;
 		},
 
-		blur: function(event) {
+		blur: function(event, core) {
 			var tooltip = self.elements.tooltip,
+				qtips = $(selector),
 				cachedEvent = $.extend({}, event),
-				callback = $.Event('tooltipblur');
+				maxIndex = $.fn.qtip.zindex + qtips.length - 1,
+				toFocus,
+				callback;
 
 			// Set focused status to FALSE
 			tooltip.removeClass(focusClass);
 			
 			// Trigger blur event
+			callback = $.Event('tooltipblur');
 			callback.originalEvent = cachedEvent;
 			tooltip.trigger(callback, [self]);
+			
+			// Find the previously focused qTip and focus it
+			if(core !== TRUE) {
+				self.cache.lastFocus.qtip('focus', cachedEvent, TRUE);
+			}
 		},
 
 		reposition: function(event, effect)
