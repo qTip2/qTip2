@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Jan 12 21:13:05 2011 +0000
+* Date: Wed Jan 12 21:55:39 2011 +0000
 */
 
 /* Fluid class for determining actual width in IE */
@@ -309,30 +309,35 @@
 
 /*! Add rounded corners to your tooltips in: FF3+, Chrome 2+, Opera 10.6+, IE9+, Safari 2+ */
 .ui-tooltip-rounded,
-.ui-tooltip-rounded .ui-tooltip-content{
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border-radius: 5px;
+.ui-tooltip-rounded .ui-tooltip-content,
+.ui-tooltip-tipsy,
+.ui-tooltip-tipsy .ui-tooltip-content,
+.ui-tooltip-youtube,
+.ui-tooltip-youtube .ui-tooltip-content{
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
 }
 
-.ui-tooltip-rounded .ui-tooltip-titlebar{
+.ui-tooltip-rounded .ui-tooltip-titlebar,
+.ui-tooltip-tipsy .ui-tooltip-titlebar,
+.ui-tooltip-youtube .ui-tooltip-titlebar{
 	-moz-border-radius: 5px 5px 0 0;
 	-webkit-border-radius: 5px 5px 0 0;
 	border-radius: 5px 5px 0 0;
 }
 
-.ui-tooltip-rounded .ui-tooltip-titlebar + .ui-tooltip-content{
+.ui-tooltip-rounded .ui-tooltip-titlebar + .ui-tooltip-content,
+.ui-tooltip-tipsy .ui-tooltip-titlebar + .ui-tooltip-content,
+.ui-tooltip-youtube .ui-tooltip-titlebar + .ui-tooltip-content{
 	-moz-border-radius: 0 0 5px 5px;
 	-webkit-border-radius: 0 0 5px 5px;
 	border-radius: 0 0 5px 5px;
 }
 
+
 /*! Youtube tooltip style */
 .ui-tooltip-youtube{
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border-radius: 5px;
-
 	-webkit-box-shadow: 0 0 3px #333;
 	-moz-box-shadow: 0 0 3px #333;
 	box-shadow: 0 0 3px #333;
@@ -348,19 +353,6 @@
 		color: white;
 
 		border: 1px solid #CCCCCC;
-	}
-	
-	.ui-tooltip-youtube .ui-tooltip-titlebar{
-		border-bottom-width: 0;
-		-moz-border-radius: 3px 3px 0 0;
-		-webkit-border-radius: 3px 3px 0 0;
-		border-radius: 3px 3px 0 0;
-	}
-	
-	.ui-tooltip-youtube .ui-tooltip-content{
-		-moz-border-radius: 0 0 3px 3px;
-		-webkit-border-radius: 0 0 3px 3px;
-		border-radius: 0 0 3px 3px;
 	}
 
 	.ui-tooltip-youtube .ui-tooltip-icon{
@@ -452,11 +444,6 @@
 .ui-tooltip-tipsy{
 	border: 0px solid #000;
 	border: 0px solid rgba(0,0,0,.87);
-
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
-	-o-border-radius: 4px;
-	border-radius: 4px;
 }
 
 	.ui-tooltip-tipsy .ui-tooltip-titlebar,
@@ -478,19 +465,10 @@
 
 	.ui-tooltip-tipsy .ui-tooltip-titlebar{
 		padding: 6px 35px 0 10px;
-		
-		border-bottom-width: 0;
-		-moz-border-radius: 3px 3px 0 0;
-		-webkit-border-radius: 3px 3px 0 0;
-		border-radius: 3px 3px 0 0;
 	}
 
 	.ui-tooltip-tipsy .ui-tooltip-content{
 		padding: 6px 10px;
-
-		-moz-border-radius: 0 0 3px 3px;
-		-webkit-border-radius: 0 0 3px 3px;
-		border-radius: 0 0 3px 3px;
 	}
 	
 	.ui-tooltip-tipsy .ui-tooltip-icon{
