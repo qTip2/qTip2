@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Jan 6 23:20:28 2011 +0000
+* Date: Wed Jan 12 13:59:03 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -166,12 +166,12 @@ function QTip(target, options, id)
 		var pos = { left: 0, top: 0 },
 			addScroll = !$.fn.qtip.plugins.iOS,
 			offsetParent, parentIsContainer;
-		
-		if(container) {
+
+		if(container && $(container).css('position') !== 'static') {
 			pos = offset(container);
 			pos.left *= -1; pos.top *= -1;
 		}
-		
+
 		if(elem.offsetParent) {
 			do {
 				offsetParent = elem.offsetParent;
@@ -622,7 +622,7 @@ function QTip(target, options, id)
 				'aria-controls': tooltipID,
 				'aria-haspopup': TRUE,
 				'aria-describedby': tooltipID
-			});
+			})
 
 			// Create tooltip element
 			tooltip = elements.tooltip = $('<div/>')
@@ -707,7 +707,7 @@ function QTip(target, options, id)
 				break;
 
 				case 'offset':
-					result = offset(tooltip[0], options.position.container);
+					result = offset(tooltip[0], options.position.container[0]);
 				break;
 
 				default:
@@ -969,7 +969,6 @@ function QTip(target, options, id)
 		},
 
 		blur: function(event) {
-
 			var cachedEvent = $.extend({}, event),
 				callback;
 
@@ -980,9 +979,6 @@ function QTip(target, options, id)
 			callback = $.Event('tooltipblur');
 			callback.originalEvent = cachedEvent;
 			tooltip.trigger(callback, [self]);
-
-			// Find the previously focused qTip and focus it
-			self.cache.lastFocus.focus();
 		},
 
 		reposition: function(event, effect)
