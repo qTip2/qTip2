@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Jan 12 21:12:16 2011 +0000
+* Date: Wed Jan 12 21:13:05 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -165,11 +165,18 @@ function QTip(target, options, id)
 	function offset(elem, container) {
 		var pos = { left: 0, top: 0 },
 			addScroll = !$.fn.qtip.plugins.iOS,
+			$container = $(container),
 			offsetParent, parentIsContainer;
 
-		if(container && $(container).css('position') !== 'static') {
-			pos = offset(container);
-			pos.left *= -1; pos.top *= -1;
+		if(container) {
+			if($container.css('position') !== 'static') {
+				pos = offset(container);
+				pos.left *= -1; pos.top *= -1;
+			}
+			else if($container.css('overflow') !== 'visible') {
+				pos.left -= container.scrollLeft;
+				pos.top -= container.scrollTop;
+			}
 		}
 
 		if(elem.offsetParent) {
@@ -182,7 +189,7 @@ function QTip(target, options, id)
 			}
 			while(elem = offsetParent);
 		}
-		
+
 		return pos;
 	}
 	
