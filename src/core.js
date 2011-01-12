@@ -587,7 +587,7 @@ function QTip(target, options, id)
 				'aria-controls': tooltipID,
 				'aria-haspopup': TRUE,
 				'aria-describedby': tooltipID
-			})
+			});
 
 			// Create tooltip element
 			tooltip = elements.tooltip = $('<div/>')
