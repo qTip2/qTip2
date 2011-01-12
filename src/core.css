@@ -10,10 +10,11 @@
 	min-height: 0px !important;
 }
 
-.ui-tooltip, .qtip{
+.ui-tooltip, .qtip, .ui-tooltip-hidden{
 	position: absolute;
 	left: -31000px;
 	top: -31000px;
+	display: block;
 
 	max-width: 280px;
 	min-width: 50px;

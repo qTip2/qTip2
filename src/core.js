@@ -85,6 +85,7 @@ function QTip(target, options, id)
 	// Declare this reference
 	var self = this,
 		docBody = document.body,
+		tooltipID = uitooltip + '-' + id,
 		tooltip;
 
 	// Setup class attributes
@@ -176,7 +177,6 @@ function QTip(target, options, id)
 		if(elems.title) {
 			elems.titlebar.remove();
 			elems.titlebar = elems.title = elems.button = NULL;
-			target.removeAttr('aria-labelledby');
 			self.reposition();
 		}
 	}
@@ -195,18 +195,19 @@ function QTip(target, options, id)
 		else {
 			elems.button = $('<a />', {
 				'class': 'ui-state-default ' + (options.style.widget ? '' : uitooltip+'-icon'),
-				'title': 'Close'
+				'title': 'Close tooltip',
+				'aria-label': 'Close tooltip'
 			})
 			.prepend(
-				$('<span />', { 
+				$('<span />', {
 					'class': 'ui-icon ui-icon-close',
-					'html' : '&times;'
+					'html': '&times;'
 				})
 			);
 		}
 
 		// Create button and setup attributes
-		elems.button.prependTo(elems.titlebar)
+		elems.button.appendTo(elems.titlebar)
 			.attr('role', 'button')
 			.hover(function(event){ $(this).toggleClass('ui-state-hover', event.type === 'mouseenter'); })
 			.click(function(event) {
@@ -214,7 +215,7 @@ function QTip(target, options, id)
 				return FALSE;
 			})
 			.bind('mousedown keydown mouseup keyup mouseout', function(event) {
-				$(this).toggleClass('ui-state-active ui-state-focus', (/down$/i).test(event.type));
+				$(this).toggleClass('ui-state-active ui-state-focus', event.type.substr(-4) === 'down');
 			});
 
 		// Redraw the tooltip when we're done
@@ -224,7 +225,7 @@ function QTip(target, options, id)
 	function createTitle()
 	{
 		var elems = self.elements,
-			id = uitooltip+'-'+self.id+'-title';
+			id = tooltipID+'-title';
 
 		// Destroy previous title element, if present
 		if(elems.titlebar) { removeTitle(); }
@@ -237,13 +238,11 @@ function QTip(target, options, id)
 			elems.title = $('<div />', {
 				'id': id,
 				'class': uitooltip + '-title',
-				'html': options.content.title.text
+				'html': options.content.title.text,
+				'aria-atomic': TRUE
 			})
 		)
 		.insertBefore(elems.content);
-
-		// Add ARIA attribute
-		target.attr('aria-labelledby', id);
 
 		// Create button if enabled
 		if(options.content.title.button) { createButton(); }
@@ -582,16 +581,26 @@ function QTip(target, options, id)
 			var elements = self.elements,
 				callback = $.Event('tooltiprender');
 
-			// Add ARIA properties to target
-			target.attr('aria-describedby', uitooltip + '-' + id + '-content');
+			// Add ARIA attributes to target
+			target.attr({
+				'aria-owns': tooltipID,
+				'aria-controls': tooltipID,
+				'aria-haspopup': TRUE,
+				'aria-describedby': tooltipID
+			});
 
 			// Create tooltip element
 			tooltip = elements.tooltip = $('<div/>')
 				.attr({
-					'id': uitooltip + '-'+id,
-					'role': 'alert', // Apparently "tooltip" doesn't work too well... so we'll use alert
+					'id': tooltipID,
 					'class': uitooltip + ' qtip ui-helper-reset ' + options.style.classes,
-					'tabindex': -1
+					
+					/* ARIA specific attributes */
+					'role': 'alert',
+					'aria-live': 'polite',
+					'aria-atomic': FALSE,
+					'aria-describedby': tooltipID + '-content',
+					'aria-hidden': TRUE
 				})
 				.toggleClass(disabled, self.cache.disabled)
 				.data('qtip', self)
@@ -600,7 +609,8 @@ function QTip(target, options, id)
 					// Create content element
 					elements.content = $('<div />', {
 						'class': uitooltip + '-content',
-						'id': uitooltip + '-' + id + '-content'
+						'id': tooltipID + '-content',
+						'aria-atomic': TRUE
 					})
 				);
 
@@ -624,7 +634,7 @@ function QTip(target, options, id)
 					tooltip.bind(events, callback);
 				}
 			});
-
+			
 			/* Queue this part of the render process in our fx queue so we can
 			 * load images before the tooltip renders fully.
 			 *
@@ -686,12 +696,12 @@ function QTip(target, options, id)
 						// Core checks
 						'^id$': function(obj, opt, val, prev) {
 							var id = value === TRUE ? $.fn.qtip.nextid : value,
-								idStr = uitooltip + '-' + id;
+								tooltipID = uitooltip + '-' + id;
 
-							if(id !== FALSE && id.length > 0 && !$('#'+idStr).length) {
-								tooltip[0].id = idStr;
-								elems.content[0].id = idStr + '-content';
-								elems.title[0].id = idStr + '-title';
+							if(id !== FALSE && id.length > 0 && !$('#'+tooltipID).length) {
+								tooltip[0].id = tooltipID;
+								elems.content[0].id = tooltipID + '-content';
+								elems.title[0].id = tooltipID + '-title';
 							}
 						},
 
@@ -808,21 +818,25 @@ function QTip(target, options, id)
 				// Hide the tooltip using negative offset and reset opacity
 				else {
 					tooltip.css({
-						display: 'block',
+						display: '',
 						visibility: 'hidden',
 						width: '',
 						opacity: '',
-						left: hideOffset,
-						top: hideOffset
+						left: '',
+						top: ''
 					});
 				}
 			}
 
+	
 			// Call API methods
 			callback = $.Event('tooltip'+type); 
 			callback.originalEvent = event ? self.cache.event : NULL;
 			tooltip.trigger(callback, [self, 90]);
 			if(callback.isDefaultPrevented()){ return self; }
+
+			// Set ARIA hidden status attribute
+			tooltip.attr('aria-hidden', !!!state);
 
 			// Execute state specific properties
 			if(state) {
@@ -845,9 +859,6 @@ function QTip(target, options, id)
 				self.blur(event);
 			}
 
-			// Set ARIA hidden status attribute
-			tooltip.attr('aria-hidden', Boolean(!state));
-
 			// Clear animation queue
 			tooltip.stop(1, 1);
 
@@ -868,6 +879,8 @@ function QTip(target, options, id)
 
 			// If inactive hide method is set, active it
 			if(state) { opts.target.trigger('qtip-'+id+'-inactive'); }
+
+			$.fn.qtip.lastShown = self;
 
 			return self;
 		},
@@ -1152,6 +1165,7 @@ function QTip(target, options, id)
 			 
 			if(self.rendered) {
 				tooltip.toggleClass(c, state);
+				tooltip.attr('aria-disabled', state);
 			}
 			else {
 				self.cache.disabled = !!state;
@@ -1187,7 +1201,7 @@ function QTip(target, options, id)
 			}
 
 			// Remove ARIA attributse
-			target.removeAttr('aria-describedby').removeAttr('aria-labelledby');
+			target.removeAttr('aria-describedby');
 
 			return target;
 		}
@@ -1431,16 +1445,11 @@ function(name, func) {
 });
 
 $(document).ready(function() {
-	var docBody = document.body;
-
-	/* 
-	* Add ARIA role attribute to document body if not already present
-	* http://wiki.jqueryui.com/Tooltip - 4.3 Accessibility recommendation
-	*/
-	$(docBody).attr('role', function(i, val) { return !val ? 'application' : val; });
+	var doc = document,
+		docBody = doc.body;
 
 	// Cache mousemove events for positioning purposes
-	$(document).bind('mousemove.qtip', function(event) {
+	$(doc).bind('mousemove.qtip', function(event) {
 		$.fn.qtip.mouse = { pageX: event.pageX, pageY: event.pageY };
 	});
 
@@ -1448,10 +1457,10 @@ $(document).ready(function() {
 	* If document.activeElement isn't available, we'll use our own implementation to record focus
 	* http://ajaxandxml.blogspot.com/2007/11/emulating-activeelement-property-with.html
 	*/
-	if(document.activeElement === undefined) {
-		document.addEventListener("focus", function(event) {
+	if(doc.activeElement === undefined) {
+		doc.addEventListener("focus", function(event) {
 			if(event && event.target) {
-				document.activeElement = event.target === document ? docBody : event.target;
+				doc.activeElement = event.target === doc ? docBody : event.target;
 			}
 		},
 		true);

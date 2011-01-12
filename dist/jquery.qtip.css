@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Jan 6 22:14:48 2011 +0000
+* Date: Thu Jan 6 23:20:28 2011 +0000
 */
 
 /* Fluid class for determining actual width in IE */
@@ -24,10 +24,11 @@
 	min-height: 0px !important;
 }
 
-.ui-tooltip, .qtip{
+.ui-tooltip, .qtip, .ui-tooltip-hidden{
 	position: absolute;
 	left: -31000px;
 	top: -31000px;
+	display: block;
 
 	max-width: 280px;
 	min-width: 50px;
