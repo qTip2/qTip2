@@ -20,13 +20,20 @@ function sanitizeOptions(opts)
 
 		content = opts.content.text || FALSE;
 		if(!$.isFunction(content) && ((!content && !content.attr) || content.length < 1 || ('object' === typeof content && !content.jquery))) {
-			content = opts.content.text = FALSE;
+			opts.content.text = FALSE;
 		}
 
-		if('title' in opts.content && 'object' !== typeof opts.content.title) {
-			opts.content.title = {
-				text: opts.content.title
-			};
+		if('title' in opts.content) {
+			if('object' !== typeof opts.content.title) {
+				opts.content.title = {
+					text: opts.content.title
+				};
+			}
+
+			content = opts.content.title.text || FALSE;
+			if(!$.isFunction(content) && ((!content && !content.attr) || content.length < 1 || ('object' === typeof content && !content.jquery))) {
+				opts.content.text = FALSE;
+			}
 		}
 	}
 
@@ -159,7 +166,7 @@ function QTip(target, options, id)
 	}
 	
 	function isVisible() {
-		return tooltip.css('left') !== hideOffset;
+		return tooltip[0].offsetLeft !== hideOffset;
 	}
 
 	function setWidget() {

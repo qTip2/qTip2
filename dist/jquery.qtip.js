@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Jan 13 09:18:01 2011 +0000
+* Date: Thu Jan 13 10:09:14 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -55,13 +55,20 @@ function sanitizeOptions(opts)
 
 		content = opts.content.text || FALSE;
 		if(!$.isFunction(content) && ((!content && !content.attr) || content.length < 1 || ('object' === typeof content && !content.jquery))) {
-			content = opts.content.text = FALSE;
+			opts.content.text = FALSE;
 		}
 
-		if('title' in opts.content && 'object' !== typeof opts.content.title) {
-			opts.content.title = {
-				text: opts.content.title
-			};
+		if('title' in opts.content) {
+			if('object' !== typeof opts.content.title) {
+				opts.content.title = {
+					text: opts.content.title
+				};
+			}
+
+			content = opts.content.title.text || FALSE;
+			if(!$.isFunction(content) && ((!content && !content.attr) || content.length < 1 || ('object' === typeof content && !content.jquery))) {
+				opts.content.text = FALSE;
+			}
 		}
 	}
 
@@ -194,7 +201,7 @@ function QTip(target, options, id)
 	}
 	
 	function isVisible() {
-		return tooltip.css('left') !== hideOffset;
+		return tooltip[0].offsetLeft !== hideOffset;
 	}
 
 	function setWidget() {
