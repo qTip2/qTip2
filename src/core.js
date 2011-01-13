@@ -305,7 +305,7 @@ function QTip(target, options, id)
 
 		// Use function to parse content
 		if($.isFunction(content)) {
-			content = content.call(target);
+			content = content.call(target, self);
 		}
 
 		// Append new content if its a DOM array and show it if hidden
