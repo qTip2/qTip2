@@ -245,7 +245,6 @@ function QTip(target, options, id)
 			elems.title = $('<div />', {
 				'id': id,
 				'class': uitooltip + '-title',
-				'html': options.content.title.text,
 				'aria-atomic': TRUE
 			})
 		)
@@ -279,49 +278,55 @@ function QTip(target, options, id)
 
 	function updateTitle(content)
 	{
-		// Make sure tooltip is rendered and if not, return
-		if(!self.rendered) { return FALSE; }
+		var elem = self.elements.title;
 
-		// If title isn't already created, create it now
-		if(!self.elements.title && content) {
-			createTitle();
-			self.reposition();
+		// Make sure tooltip is rendered and if not, return
+		if(!self.rendered || !content) { return FALSE; }
+
+		// Use function to parse content
+		if($.isFunction(content)) {
+			content = content.call(target, self) || '';
 		}
-		else if(!content) {
-			removeTitle();
+
+		// Append new content if its a DOM array and show it if hidden
+		if(content.jquery && content.length > 0) {
+			elem.empty().append(content.css({ display: 'block' }));
 		}
-		else {
-			// Set the new content
-			self.elements.title.html(content);
+
+		// Content is a regular string, insert the new content
+		else { elem.html(content); }
+
+		// Redraw and reposition
+		self.redraw();
+		if(self.rendered === TRUE) {
+			self.reposition(self.cache.event);
 		}
 	}
 
 	function updateContent(content)
 	{
-		var elements = self.elements;
+		var elem = self.elements.content;
 
 		// Make sure tooltip is rendered and content is defined. If not return
 		if(!self.rendered || !content) { return FALSE; }
 
 		// Use function to parse content
 		if($.isFunction(content)) {
-			content = content.call(target, self);
+			content = content.call(target, self) || '';
 		}
 
 		// Append new content if its a DOM array and show it if hidden
 		if(content.jquery && content.length > 0) {
-			elements.content.empty().append(content.css({ display: 'block' }));
+			elem.empty().append(content.css({ display: 'block' }));
 		}
 
 		// Content is a regular string, insert the new content
-		else {
-			elements.content.html(content);
-		}
+		else { elem.html(content); }
 
 		// Insert into 'fx' queue our image dimension checker which will halt the showing of the tooltip until image dimensions can be detected
 		tooltip.queue('fx', function(next) {
 			// Find all content images without dimensions
-			var images = $('img:not([height]):not([width])', self.elements.content);
+			var images = $('img:not([height]):not([width])', elem);
 
 			// Update tooltip width and position when all images are loaded
 			function imageLoad(img) {
@@ -586,6 +591,8 @@ function QTip(target, options, id)
 			if(self.rendered) { return FALSE; } // If tooltip has already been rendered, exit
 
 			var elements = self.elements,
+				content = options.content.text,
+				title = options.content.title.text,
 				callback = $.Event('tooltiprender');
 
 			// Add ARIA attributes to target
@@ -624,9 +631,12 @@ function QTip(target, options, id)
 			// Set rendered status
 			self.rendered = TRUE;
 
-			// Setup title and update content
-			if(options.content.title.text) { createTitle(); }
-			updateContent(options.content.text);
+			// Update title and content
+			if(title) { 
+				createTitle();
+				updateTitle(title);
+			}
+			updateContent(content);
 
 			// Initialize 'render' plugins
 			$.each($.fn.qtip.plugins, function() {
@@ -714,7 +724,15 @@ function QTip(target, options, id)
 
 						// Content checks
 						'^content.text$': function(){ updateContent(value); },
-						'^content.title.text$': function(){ updateTitle(value); },
+						'^content.title.text$': function() {
+							// Remove title if content is null
+							if(!value) { return removeTitle(); }
+
+							// If title isn't already created, create it now
+							if(!self.elements.title && value) { createTitle(); }
+
+							updateTitle(value);
+						},
 						'^content.title.button$': function(){ updateButton(value); },
 
 						// Position checks
