@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Jan 13 10:09:14 2011 +0000
+* Date: Thu Jan 13 10:18:52 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -67,7 +67,7 @@ function sanitizeOptions(opts)
 
 			content = opts.content.title.text || FALSE;
 			if(!$.isFunction(content) && ((!content && !content.attr) || content.length < 1 || ('object' === typeof content && !content.jquery))) {
-				opts.content.text = FALSE;
+				opts.content.title.text = FALSE;
 			}
 		}
 	}

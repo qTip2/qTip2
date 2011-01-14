@@ -32,7 +32,7 @@ function sanitizeOptions(opts)
 
 			content = opts.content.title.text || FALSE;
 			if(!$.isFunction(content) && ((!content && !content.attr) || content.length < 1 || ('object' === typeof content && !content.jquery))) {
-				opts.content.text = FALSE;
+				opts.content.title.text = FALSE;
 			}
 		}
 	}
