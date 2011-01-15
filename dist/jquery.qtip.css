@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Jan 13 10:18:52 2011 +0000
+* Date: Fri Jan 14 17:03:56 2011 +0000
 */
 
 /* Fluid class for determining actual width in IE */
@@ -351,8 +351,7 @@
 		-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#D9000000,endColorstr=#D9000000)";
 
 		color: white;
-
-		border: 1px solid #CCCCCC;
+		border-color: #CCCCCC;
 	}
 
 	.ui-tooltip-youtube .ui-tooltip-icon{

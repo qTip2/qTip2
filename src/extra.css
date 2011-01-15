@@ -56,8 +56,7 @@
 		-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#D9000000,endColorstr=#D9000000)";
 
 		color: white;
-
-		border: 1px solid #CCCCCC;
+		border-color: #CCCCCC;
 	}
 
 	.ui-tooltip-youtube .ui-tooltip-icon{
