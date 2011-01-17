@@ -62,6 +62,10 @@
 			border-width: 1px;
 			border-style: solid;
 		}
+		
+		* html .ui-tooltip-titlebar .ui-state-default{
+			top: 16px;
+		}
 
 		.ui-tooltip-titlebar .ui-icon,
 		.ui-tooltip-icon .ui-icon{

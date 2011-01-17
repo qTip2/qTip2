@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Fri Jan 14 17:03:56 2011 +0000
+* Date: Sat Jan 15 15:15:02 2011 +0000
 */
 
 /* Fluid class for determining actual width in IE */
@@ -75,6 +75,10 @@
 
 			border-width: 1px;
 			border-style: solid;
+		}
+		
+		* html .ui-tooltip-titlebar .ui-state-default{
+			top: 16px;
 		}
 
 		.ui-tooltip-titlebar .ui-icon,
@@ -262,21 +266,18 @@
 	margin: 0 auto;
 	overflow: hidden;
 
-	line-height: 0.1px;
-	font-size: 1px;
-
 	background: transparent !important;
-	border: 0px !important;
+	border: 0px dashed transparent !important;
 	z-index: 10;
 }
 
+	div.ui-tooltip-tip,
 	div.ui-tooltip-tip *{
 		line-height: 0.1px;
 		font-size: 0.1px;
-	}
+		color: #123456;
 
-	div.ui-tooltip-tip div{
-		background: transparent !important;
+		background: transparent;
 		border: 0px dashed transparent;
 	}
 
@@ -396,7 +397,7 @@
 	.ui-tooltip-jtools .ui-tooltip-content{
 		background: transparent;
 		color: white;
-		border: 0px transparent;
+		border: 0px dashed transparent;
 	}
 
 	.ui-tooltip-jtools .ui-tooltip-icon{
@@ -418,15 +419,13 @@
 	.ui-tooltip-cluetip .ui-tooltip-titlebar{
 		background-color: #87876A;
 		color: white;
-
-		border: 0px transparent;
+		border: 0 dashed transparent;
 	}
 
 	.ui-tooltip-cluetip .ui-tooltip-content{
 		background-color: #D9D9C2;
 		color: #111;
-
-		border: 0px transparent;
+		border: 0 dashed transparent;
 	}
 	
 	.ui-tooltip-cluetip .ui-tooltip-icon{

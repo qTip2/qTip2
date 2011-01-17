@@ -860,7 +860,6 @@ function QTip(target, options, id)
 				}
 			}
 
-	
 			// Call API methods
 			callback = $.Event('tooltip'+type); 
 			callback.originalEvent = event ? self.cache.event : NULL;

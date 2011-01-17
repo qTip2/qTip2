@@ -101,7 +101,7 @@
 	.ui-tooltip-jtools .ui-tooltip-content{
 		background: transparent;
 		color: white;
-		border: 0px transparent;
+		border: 0px dashed transparent;
 	}
 
 	.ui-tooltip-jtools .ui-tooltip-icon{
@@ -123,15 +123,13 @@
 	.ui-tooltip-cluetip .ui-tooltip-titlebar{
 		background-color: #87876A;
 		color: white;
-
-		border: 0px transparent;
+		border: 0 dashed transparent;
 	}
 
 	.ui-tooltip-cluetip .ui-tooltip-content{
 		background-color: #D9D9C2;
 		color: #111;
-
-		border: 0px transparent;
+		border: 0 dashed transparent;
 	}
 	
 	.ui-tooltip-cluetip .ui-tooltip-icon{

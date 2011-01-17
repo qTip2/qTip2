@@ -40,13 +40,12 @@ function Tip(qTip, command)
 		},
 		color = { },
 		border = opts.border || 0,
-		method = opts.method || FALSE,
 		namespace = '.qtip-tip';
 
 	self.corner = NULL;
 	self.mimic = NULL;
 	self.checks = {
-		'^position.my|style.tip.(corner|mimic|method|border)$': function() {
+		'^position.my|style.tip.(corner|mimic|border)$': function() {
 			// Make sure a tip can be drawn
 			if(!self.init()) {
 				self.destroy();
@@ -122,8 +121,7 @@ function Tip(qTip, command)
 
 		return (backup ? val || parseInt(tooltip.css(css), 10) : val) || 0;
 	}
-	
-	
+
 	function borderRadius(corner) {
 		var isTitleTop = elems.titlebar && corner.y === 'top',
 			elem = isTitleTop ? elems.titlebar : elems.content,
@@ -135,18 +133,37 @@ function Tip(qTip, command)
 		return parseInt(elem.css(css), 10) || parseInt(tooltip.css(css), 10) || 0;
 	}
 
+	function calculateSize(corner) {
+		var y = corner.precedance === 'y',
+			width = size [ y ? 'width' : 'height' ],
+			height = size [ y ? 'height' : 'width' ],
+			isCenter = corner.string().indexOf('center') > -1,
+			base = width * (isCenter ? 0.5 : 1),
+			pow = Math.pow,
+			bigHyp, ratio, result,
+
+		smallHyp = Math.sqrt( pow(base, 2) + pow(height, 2) ),
+		
+		hyp = [
+			(border / base) * smallHyp, (border / height) * smallHyp
+		];
+		hyp[2] = Math.sqrt( pow(hyp[0], 2) - pow(border, 2) );
+		hyp[3] = Math.sqrt( pow(hyp[1], 2) - pow(border, 2) );
+
+		bigHyp = smallHyp + hyp[2] + hyp[3] + (isCenter ? 0 : hyp[0]);
+		ratio = bigHyp / smallHyp;
+
+		result = [ ratio * height, ratio * width ];
+		return { height: result[ y ? 0 : 1 ], width: result[ y ? 1 : 0 ] };
+	}
+
 	$.extend(self, {
 		init: function()
 		{
-			var enabled = self.detectCorner();
+			var enabled = self.detectCorner() && ($('<canvas/>')[0].getContext || $.browser.msie);
 
 			// Determine tip corner and type
 			if(enabled) {
-				// Check if rendering method is possible and if not fall back
-				if(method !== 'polygon') {
-					method = $('<canvas />')[0].getContext ? 'canvas' : $.browser.msie ? 'vml' : 'polygon';
-				}
-
 				// Create a new tip and draw it
 				self.create();
 				self.update();
@@ -202,7 +219,6 @@ function Tip(qTip, command)
 			color.fill = tip.css(backgroundColor) || transparent;
 			color.border = tip[0].style[ borderSideCamel ];
 
-
 			// Make sure colours are valid
 			if(!color.fill || invalid.test(color.fill)) { 
 				color.fill = colorElem.css(backgroundColor);
@@ -210,16 +226,16 @@ function Tip(qTip, command)
 					color.fill = tooltip.css(backgroundColor);
 				}
 			}
-
 			if(!color.border || invalid.test(color.border)) {
 				color.border = tooltip.css(borderSide);
 				if(invalid.test(color.border) || color.border === $(document.body).css('color')) { 
-					color.border = colorElem.css(borderSide) || color.fill;
+					color.border = (colorElem.css(borderSide) !== $(qTip.elements.content).css('color') ? 
+						colorElem.css(borderSide) : transparent);
 				}
 			}
 
 			// Reset background and border colours
-			$('*', tip).add(tip).css(backgroundColor, transparent).css('border', 0);
+			$('*', tip).add(tip).css(backgroundColor, transparent).css('border', '0px dashed transparent');
 		},
 
 		create: function()
@@ -232,28 +248,17 @@ function Tip(qTip, command)
 			if(elems.tip) { elems.tip.remove(); }
 
 			// Create tip element and prepend to the tooltip
-			elems.tip = $('<div />', { 'class': 'ui-tooltip-tip' }).css(size).prependTo(tooltip);
+			elems.tip = $('<div />', { 'class': 'ui-tooltip-tip' }).css({ width: width, height: height }).prependTo(tooltip);
 
 			// Create tip drawing element(s)
-			switch(method)
-			{
-				case 'canvas':
-					// save() as soon as we create the canvas element so FF2 doesn't bork on our first restore()!
-					$('<canvas height="'+height+'" width="'+width+'" />').appendTo(elems.tip)[0].getContext('2d').save();
-				break;
-
-				case 'vml':
-					vml = '<vml:shape coordorigin="0,0" coordsize="'+width+' '+height+'" stroked="false" ' +
-							' style="behavior:url(#default#VML); display:inline-block; position:absolute; antialias:false;' +
-							' left: 0; top: 0; width:'+width+'px; height:'+height+'px;"></vml:shape>';
-
-					elems.tip.html( border ? vml += vml : vml );
-				break;
-
-				case 'polygon':
-					elems.tip.append('<div class="ui-tooltip-tip-inner" />')
-						.append(border ? '<div class="ui-tooltip-tip-border" />' : '');
-				break;
+			if($.browser.msie) {
+				vml = '<vml:shape coordorigin="0,0" stroked="false" style="behavior:url(#default#VML); ' +
+						' display:inline-block; position:absolute; antialias:true;"></vml:shape>';
+				elems.tip.html( border ? vml += vml : vml );
+			}
+			else {
+				// save() as soon as we create the canvas element so FF2 doesn't bork on our first restore()!
+				$('<canvas />').appendTo(elems.tip)[0].getContext('2d').save();
 			}
 		},
 
@@ -266,7 +271,7 @@ function Tip(qTip, command)
 				regular = 'px solid ',
 				transparent = 'px dashed transparent', // Dashed IE6 border-transparency hack. Awesome!
 				mimic = opts.mimic,
-				position, i, context, coords, center, translate, round;
+				precedance, context, coords, translate, newSize;
 
 			// Re-determine tip if not already set
 			if(!corner) { corner = self.corner; }
@@ -285,121 +290,96 @@ function Tip(qTip, command)
 					mimic[ corner.precedance ] = corner[ corner.precedance ];
 				}
 			}
-
-			// Detect border width
-			border = opts.border === TRUE ? borderWidth(corner, NULL, TRUE) : opts.border;
-			i = border > 0 ? 0 : 1;
-
-			// Determine if tip is a "center" based one
-			center = mimic.string().indexOf('center') > -1;
-
-			// Custom rounding for pixel perfect precision!
-			round = Math[ /b|r/.test(mimic[ mimic.precedance === 'y' ? 'x' : 'y' ]) ? 'ceil' : 'floor' ];
-
-			// Update position first
-			position = self.position(corner, 1);
+			precedance = mimic.precedance;
 
 			// Update our colours
 			self.detectColours();
 
+			// Detect border width, taking into account colours
+			border = color.border === 'transparent' || color.border === '#123456' ? 0 :
+				opts.border === TRUE ? borderWidth(corner, NULL, TRUE) : opts.border;
+
+			// Calculate coordinates
+			coords = calculateTip(mimic, width , height);
+
+			// Determine tip size
+			newSize = calculateSize(corner);
+			tip.css(newSize);
+
+			// Calculate tip translation
+			if(corner.precedance === 'y') {
+				translate = [
+					Math.round(mimic.x === 'left' ? border : mimic.x === 'right' ? newSize.width - width - border : (newSize.width - width) / 2),
+					Math.ceil(mimic.y === 'top' ?  newSize.height - height : 0)
+				];
+			}
+			else {
+				translate = [
+					Math.ceil(mimic.x === 'left' ? newSize.width - width : 0),
+					Math.round(mimic.y === 'top' ? border : mimic.y === 'bottom' ? newSize.height - height - border : (newSize.height - height) / 2)
+				];
+			}
+
 			// Create tip element
-			switch(method)
-			{
-				case 'canvas':
-					// Grab canvas context and clear it
-					context = inner[0].getContext('2d');
-					if(context.restore) { context.restore(); }
-					context.clearRect(0,0,3000,3000);
+			if($.browser.msie) {
+				// Setup coordinates string
+				coords = 'm' + coords[0][0] + ',' + coords[0][1] + ' l' + coords[1][0] +
+					',' + coords[1][1] + ' ' + coords[2][0] + ',' + coords[2][1] + ' xe';
 
-					// Grab tip coordinates
-					coords = calculateTip(mimic, width, height);
+				// Set the translation offset
+				inner.attr({
+					coordsize: (width+border) + ' ' + (height+border),
+					fillcolor: color.fill,
+					path: coords
+				})
+				.css({
+					antialias: ''+(mimic.string().indexOf('center') > -1),
+					left: translate[0] - Number(precedance === 'x'),
+					top: translate[1] - Number(precedance === 'y'),
+					width: width + border,
+					height: height + border
+				});
 
-					// Draw the canvas tip (Delayed til after DOM creation)
-					for(i; i < 2; i++) {
-						// Save and translate canvas origin
-						if(i) {
-							context.save();
-							context.translate(
-								round((mimic.x === 'left' ? 1 : mimic.x === 'right' ? -1 : 0) * (border + 1) * (mimic.precedance === 'y' ? 0.5 : 1)),
-								round((mimic.y === 'top' ? 1 : mimic.y === 'bottom' ? -1 : 0) * (border + 1) * (mimic.precedance === 'x' ? 0.5 : 1))
-							);
-						}
-
-						context.beginPath();
-						context.moveTo(coords[0][0], coords[0][1]);
-						context.lineTo(coords[1][0], coords[1][1]);
-						context.lineTo(coords[2][0], coords[2][1]);
-						context.closePath();
-
-						context.fillStyle = color[ i ? 'fill' : 'border' ];
-						context.fill();
+				// Check if border is enabled and format it
+				if(border > 0) {
+					inner = inner.eq(0);
+					inner.css({ left: translate[0], top: translate[1] })
+						.attr({ filled: FALSE, stroked: TRUE });
+					
+					if(inner.html() === '') {
+						inner.html('<vml:stroke weight="'+(border*2)+'px" color="'+color.border+'" miterlimit="1000" joinstyle="miter" ' +
+							' style="behavior:url(#default#VML); display:inline-block;" />');
 					}
-				break;
-
-				case 'vml':
-					// Determine tip coordinates based on dimensions and setup path string
-					coords = calculateTip(mimic, width , height);
-					coords = 'm' + coords[0][0] + ',' + coords[0][1] + ' l' + coords[1][0] +
-						',' + coords[1][1] + ' ' + coords[2][0] + ',' + coords[2][1] + ' xe';
-
-					// Apply the calculated path to the child VML elements, and apply border/fill colour
-					inner.each(function(i) {
-						$(this).attr({
-							'path': coords,
-							'fillcolor': color[ i || !border ? 'fill' : 'border' ]
-						})
-						.css('antialias', ''+center);
-					});
-				break;
-
-				case 'polygon':
-					inner.removeAttr('style')
-						.css({ 'position': 'absolute', 'left': 0, 'top' : 0 })
-						.each(function(i) {
-							// Determine what border corners/colors to set
-							var toSet = {
-									x: mimic.precedance === 'x' ? (mimic.x === 'left' ? 'right' : 'left') : mimic.x,
-									y: mimic.precedance === 'y' ? (mimic.y === 'top' ? 'bottom' : 'top') : mimic.y
-								},
-								path = mimic.x === 'center' ? ['left', 'right', toSet.y, height, width] : ['top', 'bottom', toSet.x, width, height],
-								col = color[!i && border ? 'border' : 'fill'];
-
-							// Setup borders based on corner values
-							if(mimic.x === 'center' || mimic.y === 'center') {
-								$(this).css('border-' + path[2], path[3] + regular + col)
-									.css('border-' + path[0], round(path[4] / 2) + transparent)
-									.css('border-' + path[1], round(path[4] / 2) + transparent);
-							}
-							else {
-								$(this).css('border-width', round(height / 2) + 'px ' + round(width / 2) + 'px')
-									.css('border-' + toSet.x, round(width / 2) + regular + col)
-									.css('border-' + toSet.y, round(height / 2) + regular + col);
-							}
-						});
-				break;
-			}
-			
-			// Position inner border element if VML or polygon rendering was used and border is enabled
-			if(method !== 'canvas' && border) {
-				translate = [ border * 2.75, border ];
-				if(mimic.precedance === 'y') {
-					translate = [
-						mimic.x === 'left' ? translate[1] : mimic.x === 'right' ? -translate[1] : 0,
-						mimic.y === 'bottom' ? -translate[0] : translate[0]
-					];
 				}
-				else {
-					translate = [
-						mimic.x === 'left' ? translate[0] : -translate[0],
-						mimic.y === 'bottom' ? -translate[1] : mimic.y === 'top' ? translate[1] : 0
-					];
-				}
-
-				// Apply the calculated offset
-				inner.eq(1).css({ 'left': translate[0], 'top': translate[1] });
 			}
-			
-			return position;
+			else {
+				// Set the canvas size using calculated size
+				inner.attr(newSize);
+
+				// Grab canvas context and clear/save it
+				context = inner[0].getContext('2d');
+				context.restore(); context.save();
+				context.clearRect(0,0,3000,3000);
+
+				// Translate origin
+				context.translate(translate[0], translate[1]);
+
+				// Draw the tip
+				context.beginPath();
+				context.moveTo(coords[0][0], coords[0][1]);
+				context.lineTo(coords[1][0], coords[1][1]);
+				context.lineTo(coords[2][0], coords[2][1]);
+				context.closePath();
+				context.fillStyle = color.fill;
+				context.strokeStyle = color.border;
+				context.lineWidth = border * 2;
+				context.lineJoin = 'miter';
+				context.miterLimit = 100;
+				context.stroke();
+				context.fill();
+			}
+
+			return self.position(corner, 1);
 		},
 
 		// Tip positioning method
@@ -408,8 +388,10 @@ function Tip(qTip, command)
 			var tip = elems.tip,
 				position = {},
 				offset = Math.max(0, opts.offset),
-				precedance, dimension;
-
+				precedance, dimension,
+				adjust = corner.string().charAt(0);
+				adjust = border && (adjust === 'b' || adjust === 'r') ? Number($.browser.msie) : 0;
+				
 			// Return if tips are disabled or tip is not yet rendered
 			if(opts.corner === FALSE || !tip) { return FALSE; }
 
@@ -418,14 +400,14 @@ function Tip(qTip, command)
 			precedance = corner.precedance;
 
 			// Determine which tip dimension to use for adjustment
-			dimension = size[ precedance === 'x' ? 'width' : 'height' ];
+			dimension = calculateSize(corner)[ precedance === 'x' ? 'width' : 'height' ];
 
 			/* Calculate tip position */
 			$.each(
 				precedance === 'y' ? [ corner.x, corner.y ] : [ corner.y, corner.x ],
 				function(i, side)
 				{
-					var b;
+					var b, br;
 
 					if(side === 'center') {
 						b = precedance === 'y' ? 'left' : 'top';
@@ -434,13 +416,15 @@ function Tip(qTip, command)
 					}
 					else {
 						b = borderWidth(corner, side, TRUE);
+						br = borderRadius(corner);
+
 						position[ side ] = i || border === undefined ? 
 							borderWidth(corner, side) :
-							offset + borderRadius(corner);
+							offset + (br > b ? br : 0);
 					}
 				}
 			);
-			position[ corner[precedance] ] -= dimension;
+			position[ corner[precedance] ] -= dimension + (adjust || 0);
 
 			// Set and return new position
 			if(set) { tip.css({ top: '', bottom: '', left: '', right: '', margin: '' }).css(position); }
@@ -476,8 +460,6 @@ $.fn.qtip.plugins.tip.sanitize = function(options)
 		opts = options.style.tip;
 		if(typeof opts !== 'object'){ options.style.tip = { corner: opts }; }
 		if(!(/string|boolean/i).test(typeof opts.corner)) { opts.corner = TRUE; }
-		if(typeof opts.method !== 'string'){ opts.method = TRUE; }
-		if(!(/canvas|polygon/i).test(opts.method)){ opts.method = TRUE; }
 		if(typeof opts.width !== 'number'){ delete opts.width; }
 		if(typeof opts.height !== 'number'){ delete opts.height; }
 		if(typeof opts.border !== 'number' && opts.border !== TRUE){ delete opts.border; }
@@ -491,7 +473,6 @@ $.extend(TRUE, $.fn.qtip.defaults, {
 		tip: {
 			corner: TRUE,
 			mimic: FALSE,
-			method: TRUE,
 			width: 8,
 			height: 8,
 			border: TRUE,
