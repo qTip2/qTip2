@@ -166,7 +166,7 @@ function QTip(target, options, id)
 	}
 	
 	function isVisible() {
-		return tooltip[0].offsetLeft !== hideOffset;
+		return tooltip.css('left') !== hideOffset;
 	}
 
 	function setWidget() {
@@ -840,9 +840,38 @@ function QTip(target, options, id)
 				self.cache.event = $.extend({}, event);
 			}
 
-			// Define after callback
-			function after()
-			{
+			// Call API methods
+			callback = $.Event('tooltip'+type); 
+			callback.originalEvent = event ? self.cache.event : NULL;
+			tooltip.trigger(callback, [self, 90]);
+			if(callback.isDefaultPrevented()){ return self; }
+
+			// Set ARIA hidden status attribute
+			tooltip.attr('aria-hidden', !!!state);
+
+			// Execute state specific properties
+			if(state) {
+				tooltip.hide().css({ visibility: '' }); // Hide it first so effects aren't skipped
+				
+				// Focus the tooltip
+				self.focus(event);
+
+				// Update tooltip position (without animation)
+				self.reposition(event, 0); 
+
+				// Hide other tooltips if tooltip is solo
+				if(opts.solo) { $(selector).not(tooltip).qtip('hide'); }
+			}
+			else {
+				// Clear show timer if we're hiding 
+				clearTimeout(self.timers.show);
+
+				// Blur the tooltip
+				self.blur(event);
+			}
+
+			// Define post-animation state specific properties
+			function after() {
 				// Prevent antialias from disappearing in IE by removing filter
 				if(state) {
 					if($.browser.msie) { tooltip[0].style.removeAttribute('filter'); }
@@ -858,36 +887,6 @@ function QTip(target, options, id)
 						top: ''
 					});
 				}
-			}
-
-			// Call API methods
-			callback = $.Event('tooltip'+type); 
-			callback.originalEvent = event ? self.cache.event : NULL;
-			tooltip.trigger(callback, [self, 90]);
-			if(callback.isDefaultPrevented()){ return self; }
-
-			// Set ARIA hidden status attribute
-			tooltip.attr('aria-hidden', !!!state);
-
-			// Execute state specific properties
-			if(state) {
-				tooltip.hide().css({ visibility: '' }); // Hide it first so effects aren't skipped
-				
-				// Focus the tooltip and momentarily focus it via the DOM so screenreaders can read it
-				self.focus(event);
-
-				// Update tooltip position (without animation)
-				self.reposition(event, 0); 
-
-				// Hide other tooltips if tooltip is solo
-				if(opts.solo) { $(selector).not(tooltip).qtip('hide'); }
-			}
-			else {
-				// Clear show timer if we're hiding 
-				clearTimeout(self.timers.show);
-
-				// Blur the tooltip
-				self.blur(event);
 			}
 
 			// Clear animation queue

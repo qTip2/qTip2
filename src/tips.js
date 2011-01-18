@@ -343,7 +343,7 @@ function Tip(qTip, command)
 				// Check if border is enabled and format it
 				if(border > 0) {
 					inner = inner.eq(0);
-					inner.css({ left: translate[0], top: translate[1] })
+					inner.css({ left: Math.floor(translate[0]), top: Math.floor(translate[1]) })
 						.attr({ filled: FALSE, stroked: TRUE });
 					
 					if(inner.html() === '') {
