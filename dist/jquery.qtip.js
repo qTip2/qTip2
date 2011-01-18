@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Jan 18 16:18:05 2011 +0000
+* Date: Tue Jan 18 16:29:50 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -638,12 +638,7 @@ function QTip(target, options, id)
 				callback = $.Event('tooltiprender');
 
 			// Add ARIA attributes to target
-			target.attr({
-				'aria-owns': tooltipID,
-				'aria-controls': tooltipID,
-				'aria-haspopup': TRUE,
-				'aria-describedby': tooltipID
-			});
+			target.attr({ 'aria-describedby': tooltipID });
 
 			// Create tooltip element
 			tooltip = elements.tooltip = $('<div/>')

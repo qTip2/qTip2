@@ -603,12 +603,7 @@ function QTip(target, options, id)
 				callback = $.Event('tooltiprender');
 
 			// Add ARIA attributes to target
-			target.attr({
-				'aria-owns': tooltipID,
-				'aria-controls': tooltipID,
-				'aria-haspopup': TRUE,
-				'aria-describedby': tooltipID
-			});
+			target.attr({ 'aria-describedby': tooltipID });
 
 			// Create tooltip element
 			tooltip = elements.tooltip = $('<div/>')
