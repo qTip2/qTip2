@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Jan 18 13:02:16 2011 +0000
+* Date: Tue Jan 18 13:03:31 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1975,6 +1975,7 @@ function Tip(qTip, command)
 				regular = 'px solid ',
 				transparent = 'px dashed transparent', // Dashed IE6 border-transparency hack. Awesome!
 				mimic = opts.mimic,
+				round = Math.round,
 				precedance, context, coords, translate, newSize;
 
 			// Re-determine tip if not already set
@@ -2008,6 +2009,7 @@ function Tip(qTip, command)
 
 			// Determine tip size
 			newSize = calculateSize(corner);
+			newSize = { width: round(newSize.width), height: round(newSize.height) };
 			tip.css(newSize);
 
 			// Calculate tip translation
@@ -2040,14 +2042,14 @@ function Tip(qTip, command)
 					antialias: ''+(mimic.string().indexOf('center') > -1),
 					left: translate[0] - Number(precedance === 'x'),
 					top: translate[1] - Number(precedance === 'y'),
-					width: width + border,
-					height: height + border
+					width: round(width + border),
+					height: round(height + border)
 				});
 
 				// Check if border is enabled and format it
 				if(border > 0) {
 					inner = inner.eq(0);
-					inner.css({ left: Math.floor(translate[0]), top: Math.floor(translate[1]) })
+					inner.css({ left: round(translate[0]), top: round(translate[1]) })
 						.attr({ filled: FALSE, stroked: TRUE });
 					
 					if(inner.html() === '') {
@@ -2093,9 +2095,9 @@ function Tip(qTip, command)
 				position = {},
 				offset = Math.max(0, opts.offset),
 				precedance, dimension,
-				adjust = corner.string().charAt(0);
-				adjust = border && (adjust === 'b' || adjust === 'r') ? Number($.browser.msie) : 0;
-				
+				adjust = corner.string().charAt(0),
+				round = Math.round;
+
 			// Return if tips are disabled or tip is not yet rendered
 			if(opts.corner === FALSE || !tip) { return FALSE; }
 
@@ -2106,7 +2108,10 @@ function Tip(qTip, command)
 			// Determine which tip dimension to use for adjustment
 			dimension = calculateSize(corner)[ precedance === 'x' ? 'width' : 'height' ];
 
-			/* Calculate tip position */
+			// Setup IE specific dimension adjustment
+			adjust = $.browser.msie && border && (adjust === 'b' || adjust === 'r') ? 1 : 0;
+
+			// Calculate tip position
 			$.each(
 				precedance === 'y' ? [ corner.x, corner.y ] : [ corner.y, corner.x ],
 				function(i, side)
@@ -2116,19 +2121,19 @@ function Tip(qTip, command)
 					if(side === 'center') {
 						b = precedance === 'y' ? 'left' : 'top';
 						position[ b ] = '50%';
-						position['margin-' + b] = -Math.floor(dimension / 2) + offset;
+						position['margin-' + b] = -round(dimension / 2) + offset;
 					}
 					else {
 						b = borderWidth(corner, side, TRUE);
 						br = borderRadius(corner);
 
-						position[ side ] = i || border === undefined ? 
+						position[ side ] = i || !border ? 
 							borderWidth(corner, side) :
 							offset + (br > b ? br : 0);
 					}
 				}
 			);
-			position[ corner[precedance] ] -= dimension + (adjust || 0);
+			position[ corner[precedance] ] -= round(dimension) + adjust;
 
 			// Set and return new position
 			if(set) { tip.css({ top: '', bottom: '', left: '', right: '', margin: '' }).css(position); }
