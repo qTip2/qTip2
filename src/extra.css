@@ -101,7 +101,7 @@
 	.ui-tooltip-jtools .ui-tooltip-content{
 		background: transparent;
 		color: white;
-		border: 0px dashed transparent;
+		border: 0 dashed transparent;
 	}
 
 	.ui-tooltip-jtools .ui-tooltip-icon{
@@ -144,8 +144,8 @@
 
 /* Tipsy style */
 .ui-tooltip-tipsy{
-	border: 0px solid #000;
-	border: 0px solid rgba(0,0,0,.87);
+	border: 0 solid #000;
+	border: 0 solid rgba(0,0,0,.87);
 }
 
 	.ui-tooltip-tipsy .ui-tooltip-titlebar,
@@ -156,7 +156,7 @@
 		-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#D9000000,endColorstr=#D9000000)";
 		
 		color: white;
-		border: 0;
+		border: 0 dashed transparent;
 
 		font-size: 11px;
 		font-family: 'Lucida Grande', sans-serif;
@@ -166,11 +166,11 @@
 	}
 
 	.ui-tooltip-tipsy .ui-tooltip-titlebar{
-		padding: 6px 35px 0 10px;
+		padding: 6px 35px 0 10;
 	}
 
 	.ui-tooltip-tipsy .ui-tooltip-content{
-		padding: 6px 10px;
+		padding: 6px 10;
 	}
 	
 	.ui-tooltip-tipsy .ui-tooltip-icon{

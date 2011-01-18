@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Jan 18 13:03:31 2011 +0000
+* Date: Tue Jan 18 13:28:42 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1844,6 +1844,7 @@ function Tip(qTip, command)
 			isCenter = corner.string().indexOf('center') > -1,
 			base = width * (isCenter ? 0.5 : 1),
 			pow = Math.pow,
+			round = Math.round,
 			bigHyp, ratio, result,
 
 		smallHyp = Math.sqrt( pow(base, 2) + pow(height, 2) ),
@@ -1857,7 +1858,7 @@ function Tip(qTip, command)
 		bigHyp = smallHyp + hyp[2] + hyp[3] + (isCenter ? 0 : hyp[0]);
 		ratio = bigHyp / smallHyp;
 
-		result = [ ratio * height, ratio * width ];
+		result = [ round(ratio * height), round(ratio * width) ];
 		return { height: result[ y ? 0 : 1 ], width: result[ y ? 1 : 0 ] };
 	}
 
@@ -1956,8 +1957,7 @@ function Tip(qTip, command)
 
 			// Create tip drawing element(s)
 			if($.browser.msie) {
-				vml = '<vml:shape coordorigin="0,0" stroked="false" style="behavior:url(#default#VML); ' +
-						' display:inline-block; position:absolute; antialias:true;"></vml:shape>';
+				vml = '<vml:shape coordorigin="0,0" style="display:block; position:absolute; behavior:url(#default#VML);"></vml:shape>';
 				elems.tip.html( border ? vml += vml : vml );
 			}
 			else {
@@ -2009,20 +2009,19 @@ function Tip(qTip, command)
 
 			// Determine tip size
 			newSize = calculateSize(corner);
-			newSize = { width: round(newSize.width), height: round(newSize.height) };
 			tip.css(newSize);
 
 			// Calculate tip translation
 			if(corner.precedance === 'y') {
 				translate = [
-					Math.round(mimic.x === 'left' ? border : mimic.x === 'right' ? newSize.width - width - border : (newSize.width - width) / 2),
-					Math.ceil(mimic.y === 'top' ?  newSize.height - height : 0)
+					round(mimic.x === 'left' ? border : mimic.x === 'right' ? newSize.width - width - border : (newSize.width - width) / 2),
+					round(mimic.y === 'top' ?  newSize.height - height : 0)
 				];
 			}
 			else {
 				translate = [
-					Math.ceil(mimic.x === 'left' ? newSize.width - width : 0),
-					Math.round(mimic.y === 'top' ? border : mimic.y === 'bottom' ? newSize.height - height - border : (newSize.height - height) / 2)
+					round(mimic.x === 'left' ? newSize.width - width : 0),
+					round(mimic.y === 'top' ? border : mimic.y === 'bottom' ? newSize.height - height - border : (newSize.height - height) / 2)
 				];
 			}
 
@@ -2032,31 +2031,37 @@ function Tip(qTip, command)
 				coords = 'm' + coords[0][0] + ',' + coords[0][1] + ' l' + coords[1][0] +
 					',' + coords[1][1] + ' ' + coords[2][0] + ',' + coords[2][1] + ' xe';
 
-				// Set the translation offset
-				inner.attr({
-					coordsize: (width+border) + ' ' + (height+border),
-					fillcolor: color.fill,
-					path: coords
-				})
-				.css({
-					antialias: ''+(mimic.string().indexOf('center') > -1),
-					left: translate[0] - Number(precedance === 'x'),
-					top: translate[1] - Number(precedance === 'y'),
-					width: round(width + border),
-					height: round(height + border)
-				});
+				translate[2] = /^(r|b)/i.test(corner.string()) ? 1 : 0;
 
-				// Check if border is enabled and format it
-				if(border > 0) {
-					inner = inner.eq(0);
-					inner.css({ left: round(translate[0]), top: round(translate[1]) })
-						.attr({ filled: FALSE, stroked: TRUE });
-					
-					if(inner.html() === '') {
-						inner.html('<vml:stroke weight="'+(border*2)+'px" color="'+color.border+'" miterlimit="1000" joinstyle="miter" ' +
-							' style="behavior:url(#default#VML); display:inline-block;" />');
+				// Set initial CSS
+				inner.css({
+					antialias: ''+(mimic.string().indexOf('center') > -1),
+					left: translate[0] - (translate[2] * Number(precedance === 'x')),
+					top: translate[1] - (translate[2] * Number(precedance === 'y')),
+					width: width + border,
+					height: height + border
+				})
+				.each(function(i) {
+					var $this = $(this);
+
+					// Set shape specific attributes
+					$this.attr({
+						coordsize: (width+border) + ' ' + (height+border),
+						path: coords,
+						fillcolor: color.fill,
+						filled: !!i,
+						stroked: !!!i
+					})
+					.css({ display: border > 0 || i ? 'block' : 'none' });
+
+					// Check if border is enabled and add stroke element
+					if(!i && border > 0 && $this.html() === '') {
+						$this.html(
+							'<vml:stroke weight="'+(border*2)+'px" color="'+color.border+'" miterlimit="1000" joinstyle="miter" ' +
+							' style="behavior:url(#default#VML); display:block;" />'
+						);
 					}
-				}
+				});
 			}
 			else {
 				// Set the canvas size using calculated size
@@ -2133,7 +2138,7 @@ function Tip(qTip, command)
 					}
 				}
 			);
-			position[ corner[precedance] ] -= round(dimension) + adjust;
+			position[ corner[precedance] ] -= dimension + adjust;
 
 			// Set and return new position
 			if(set) { tip.css({ top: '', bottom: '', left: '', right: '', margin: '' }).css(position); }
