@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Jan 18 13:28:42 2011 +0000
+* Date: Tue Jan 18 16:18:05 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1744,7 +1744,8 @@ function Tip(qTip, command)
 		},
 		color = { },
 		border = opts.border || 0,
-		namespace = '.qtip-tip';
+		namespace = '.qtip-tip',
+		hasCanvas = $('<canvas />')[0].getContext;
 
 	self.corner = NULL;
 	self.mimic = NULL;
@@ -1865,7 +1866,7 @@ function Tip(qTip, command)
 	$.extend(self, {
 		init: function()
 		{
-			var enabled = self.detectCorner() && ($('<canvas/>')[0].getContext || $.browser.msie);
+			var enabled = self.detectCorner() && (hasCanvas || $.browser.msie);
 
 			// Determine tip corner and type
 			if(enabled) {
@@ -1956,13 +1957,13 @@ function Tip(qTip, command)
 			elems.tip = $('<div />', { 'class': 'ui-tooltip-tip' }).css({ width: width, height: height }).prependTo(tooltip);
 
 			// Create tip drawing element(s)
-			if($.browser.msie) {
-				vml = '<vml:shape coordorigin="0,0" style="display:block; position:absolute; behavior:url(#default#VML);"></vml:shape>';
-				elems.tip.html( border ? vml += vml : vml );
-			}
-			else {
+			if(hasCanvas) {
 				// save() as soon as we create the canvas element so FF2 doesn't bork on our first restore()!
 				$('<canvas />').appendTo(elems.tip)[0].getContext('2d').save();
+			}
+			else {
+				vml = '<vml:shape coordorigin="0,0" style="display:block; position:absolute; behavior:url(#default#VML);"></vml:shape>';
+				elems.tip.html( border ? vml += vml : vml );
 			}
 		},
 
@@ -2025,13 +2026,42 @@ function Tip(qTip, command)
 				];
 			}
 
-			// Create tip element
-			if($.browser.msie) {
+			// Canvas drawing implementation
+			if(hasCanvas) {
+				// Set the canvas size using calculated size
+				inner.attr(newSize);
+				
+				// Grab canvas context and clear/save it
+				context = inner[0].getContext('2d');
+				context.restore(); context.save();
+				context.clearRect(0,0,3000,3000);
+				
+				// Translate origin
+				context.translate(translate[0], translate[1]);
+				
+				// Draw the tip
+				context.beginPath();
+				context.moveTo(coords[0][0], coords[0][1]);
+				context.lineTo(coords[1][0], coords[1][1]);
+				context.lineTo(coords[2][0], coords[2][1]);
+				context.closePath();
+				context.fillStyle = color.fill;
+				context.strokeStyle = color.border;
+				context.lineWidth = border * 2;
+				context.lineJoin = 'miter';
+				context.miterLimit = 100;
+				context.stroke();
+				context.fill();
+			}
+
+			// VML (IE Proprietary implementation)
+			else {
 				// Setup coordinates string
 				coords = 'm' + coords[0][0] + ',' + coords[0][1] + ' l' + coords[1][0] +
 					',' + coords[1][1] + ' ' + coords[2][0] + ',' + coords[2][1] + ' xe';
 
-				translate[2] = /^(r|b)/i.test(corner.string()) ? 1 : 0;
+				// Setup VML-specific offset for pixel-perfection
+				translate[2] = border && /^(r|b)/i.test(corner.string()) ? 1 : 0;
 
 				// Set initial CSS
 				inner.css({
@@ -2052,7 +2082,7 @@ function Tip(qTip, command)
 						filled: !!i,
 						stroked: !!!i
 					})
-					.css({ display: border > 0 || i ? 'block' : 'none' });
+					.css({ display: border || i ? 'block' : 'none' });
 
 					// Check if border is enabled and add stroke element
 					if(!i && border > 0 && $this.html() === '') {
@@ -2062,32 +2092,6 @@ function Tip(qTip, command)
 						);
 					}
 				});
-			}
-			else {
-				// Set the canvas size using calculated size
-				inner.attr(newSize);
-
-				// Grab canvas context and clear/save it
-				context = inner[0].getContext('2d');
-				context.restore(); context.save();
-				context.clearRect(0,0,3000,3000);
-
-				// Translate origin
-				context.translate(translate[0], translate[1]);
-
-				// Draw the tip
-				context.beginPath();
-				context.moveTo(coords[0][0], coords[0][1]);
-				context.lineTo(coords[1][0], coords[1][1]);
-				context.lineTo(coords[2][0], coords[2][1]);
-				context.closePath();
-				context.fillStyle = color.fill;
-				context.strokeStyle = color.border;
-				context.lineWidth = border * 2;
-				context.lineJoin = 'miter';
-				context.miterLimit = 100;
-				context.stroke();
-				context.fill();
 			}
 
 			return self.position(corner, 1);
@@ -2100,8 +2104,7 @@ function Tip(qTip, command)
 				position = {},
 				offset = Math.max(0, opts.offset),
 				precedance, dimension,
-				adjust = corner.string().charAt(0),
-				round = Math.round;
+				adjust;
 
 			// Return if tips are disabled or tip is not yet rendered
 			if(opts.corner === FALSE || !tip) { return FALSE; }
@@ -2114,7 +2117,7 @@ function Tip(qTip, command)
 			dimension = calculateSize(corner)[ precedance === 'x' ? 'width' : 'height' ];
 
 			// Setup IE specific dimension adjustment
-			adjust = $.browser.msie && border && (adjust === 'b' || adjust === 'r') ? 1 : 0;
+			adjust = $.browser.msie && border && /^(b|r)/i.test(corner.string()) ? 1 : 0;
 
 			// Calculate tip position
 			$.each(
@@ -2126,7 +2129,7 @@ function Tip(qTip, command)
 					if(side === 'center') {
 						b = precedance === 'y' ? 'left' : 'top';
 						position[ b ] = '50%';
-						position['margin-' + b] = -round(dimension / 2) + offset;
+						position['margin-' + b] = -Math.round(dimension / 2) + offset;
 					}
 					else {
 						b = borderWidth(corner, side, TRUE);
