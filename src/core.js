@@ -1469,7 +1469,7 @@ function(name, func) {
 	};
 });
 
-$(document).ready(function() {
+$(window).load(function() {
 	var doc = document,
 		docBody = doc.body;
 

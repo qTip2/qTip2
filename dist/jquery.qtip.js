@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Jan 18 17:28:31 2011 +0000
+* Date: Wed Jan 19 13:03:40 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -28,7 +28,7 @@
 		uitooltip = 'ui-tooltip',
 		widget = 'ui-widget',
 		disabled = 'ui-state-disabled',
-		selector = '.qtip.'+uitooltip,
+		selector = 'div.qtip.'+uitooltip,
 		focusClass = uitooltip + '-focus',
 		hideOffset = '-31000px';
 
@@ -1504,7 +1504,7 @@ function(name, func) {
 	};
 });
 
-$(document).ready(function() {
+$(window).load(function() {
 	var doc = document,
 		docBody = doc.body;
 
