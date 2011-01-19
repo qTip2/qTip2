@@ -1238,7 +1238,7 @@ function QTip(target, options, id, attr)
 // Initialization method
 function init(id, opts)
 {
-	var obj, posOptions, attr, usedAttr,
+	var obj, posOptions, attr,
 
 	// Setup element references
 	elem = $(this),
@@ -1262,18 +1262,13 @@ function init(id, opts)
 
 	// Setup missing content if none is detected
 	if('boolean' === typeof config.content.text) {
-		var attr = $.attr(this, config.content.attr);
+		attr = $.attr(this, config.content.attr);
 		
 		// Grab from supplied attribute if available
-		if(config.content.attr !== FALSE && attr) {
-			config.content.text = attr;
-			usedAttr = config.content.attr;
-		}
+		if(config.content.attr !== FALSE && attr) { config.content.text = attr; }
 
 		// No valid content was found, abort render
-		else {
-			return FALSE;
-		}
+		else { return FALSE; }
 	}
 
 	// Setup target options
@@ -1304,7 +1299,7 @@ function init(id, opts)
 	}
 
 	// Initialize the tooltip and add API reference
-	obj = new QTip(elem, config, id, usedAttr);
+	obj = new QTip(elem, config, id, !!attr);
 	$.data(this, 'qtip', obj);
 
 	// Catch remove events on target element to destroy redundant tooltip
