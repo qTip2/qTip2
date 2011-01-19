@@ -333,7 +333,7 @@ function QTip(target, options, id)
 		// Insert into 'fx' queue our image dimension checker which will halt the showing of the tooltip until image dimensions can be detected
 		tooltip.queue('fx', function(next) {
 			// Find all content images without dimensions
-			var images = $('img:not([height]):not([width])', elem);
+			var images = elem.find('img:not([height]):not([width])');
 
 			// Update tooltip width and position when all images are loaded
 			function imageLoad(img) {
@@ -390,6 +390,7 @@ function QTip(target, options, id)
 				container: posOptions.container[0] === docBody ? document : posOptions.container
 			},
 			events = { show: String(options.show.event).split(' '), hide: String(options.hide.event).split(' ') },
+			$doc = $(document),
 			IE6 = $.browser.msie && parseInt($.browser.version, 10) === 6;
 
 		// Define show event method
@@ -418,8 +419,9 @@ function QTip(target, options, id)
 			if(tooltip.hasClass(disabled)) { return FALSE; }
 
 			// Check if new target was actually the tooltip element
-			var ontoTooltip = $(event.relatedTarget || event.target).parents(selector)[0] === tooltip[0],
-				ontoTarget = $(event.relatedTarget || event.target)[0] === targets.show[0];
+			var relatedTarget = $(event.relatedTarget || event.target),
+				ontoTooltip = relatedTarget.parents(selector)[0] === tooltip[0],
+				ontoTarget = relatedTarget[0] === targets.show[0];
 
 			// Clear timers and stop animation queue
 			clearTimeout(self.timers.show);
@@ -499,10 +501,11 @@ function QTip(target, options, id)
 
 			// Apply hide events
 			$.each(events.hide, function(index, type) {
-				var showIndex = $.inArray(type, events.show);
+				var showIndex = $.inArray(type, events.show),
+					 targetHide = $(targets.hide);
 
 				// Both events and targets are identical, apply events using a toggle
-				if((showIndex > -1 && $(targets.hide).add(targets.show).length === $(targets.hide).length) || type === 'unfocus')
+				if((showIndex > -1 && targetHide.add(targets.show).length === targetHide.length) || type === 'unfocus')
 				{
 					targets.show.bind(type+namespace, function(event)
 					{
@@ -540,9 +543,10 @@ function QTip(target, options, id)
 
 			// Hide tooltip on document mousedown if unfocus events are enabled
 			if((/unfocus/i).test(options.hide.event)) {
-				$(document).bind('mousedown'+namespace, function(event) {
-					if($(event.target).parents(selector).length === 0 && $(event.target).add(target).length > 1 &&
-					isVisible() && !tooltip.hasClass(disabled)) {
+				$doc.bind('mousedown'+namespace, function(event) {
+					var $target = $(event.target);
+					
+					if($target.parents(selector).length === 0 && $target.add(target).length > 1 && isVisible() && !tooltip.hasClass(disabled)) {
 						self.hide(event);
 					}
 				});
@@ -550,7 +554,7 @@ function QTip(target, options, id)
 
 			// If mouse is the target, update tooltip position on document mousemove
 			if(posOptions.target === 'mouse') {
-				$(document).bind('mousemove'+namespace, function(event) {
+				$doc.bind('mousemove'+namespace, function(event) {
 					// Update the tooltip position only if the tooltip is visible and adjustment is enabled
 					if(posOptions.adjust.mouse && !tooltip.hasClass(disabled) && isVisible()) {
 						self.reposition(event || $.fn.qtip.mouse);
@@ -937,7 +941,7 @@ function QTip(target, options, id)
 					});
 
 					// Fire blur event for focused tooltip
-					$(selector + '.' + focusClass).qtip('blur', cachedEvent);
+					qtips.filter('.' + focusClass).qtip('blur', cachedEvent);
 				}
 
 				// Store currently focused element
@@ -1197,7 +1201,7 @@ function QTip(target, options, id)
 
 		destroy: function()
 		{
-			var oldtitle = target.data('oldtitle');
+			var oldtitle = $.data(target[0], 'oldtitle');
 
 			// Destroy tooltip and  any associated plugins if rendered
 			if(self.rendered) {
@@ -1280,7 +1284,7 @@ function init(id, opts)
 	posOptions.my = new $.fn.qtip.plugins.Corner(posOptions.my);
 
 	// Destroy previous tooltip if overwrite is enabled, or skip element if not
-	if(elem.data('qtip')) {
+	if($.data(this, 'qtip')) {
 		if(config.overwrite) {
 			elem.qtip('destroy');
 		}
@@ -1291,12 +1295,13 @@ function init(id, opts)
 
 	// Remove title attribute and store it if present
 	if(elem.attr('title')) {
-		elem.data('oldtitle', elem.attr('title')).removeAttr('title');
+		$.data(this, 'oldtitle', elem.attr('title'));
+		elem.removeAttr('title');
 	}
 
 	// Initialize the tooltip and add API reference
 	obj = new QTip(elem, config, id);
-	elem.data('qtip', obj);
+	$.data(this, 'qtip', obj);
 
 	// Catch remove events on target element to destroy redundant tooltip
 	elem.bind('remove.qtip', function(){ obj.destroy(); });
@@ -1311,12 +1316,11 @@ $.fn.qtip = function(options, notation, newValue)
 		returned = NULL,
 		args = command === 'disable' ? [TRUE] : $.makeArray(arguments).slice(1, 10),
 		event = args[args.length - 1],
-		opts;
+		opts = this[0] ? $.data(this[0], 'qtip') : NULL;
 
 	// Check for API request
-	if((!arguments.length && this.data('qtip')) || command === 'api') {
-		opts = this.data('qtip');
-		return opts ? opts : undefined;
+	if((!arguments.length && opts) || command === 'api') {
+		return opts;
 	}
 
 	// Execute API command if present
@@ -1324,7 +1328,7 @@ $.fn.qtip = function(options, notation, newValue)
 	{
 		this.each(function()
 		{
-			var api = $(this).data('qtip');
+			var api = $.data(this, 'qtip');
 			if(!api) { return TRUE; }
 
 			// Call APIcommand
@@ -1437,8 +1441,8 @@ $.fn.qtip.bind = function(opts, event)
 $.each({
 	/* Allow other plugins to successfully retrieve the title of an element with a qTip applied */
 	attr: function(attr) {
-		var self = $(this), api = self.data('qtip');
-		return (arguments.length === 1 && attr === 'title' && api && api.rendered === TRUE) ? self.data('oldtitle') : NULL;
+		var api = $.data(this, 'qtip');
+		return (arguments.length === 1 && attr === 'title' && api && api.rendered === TRUE) ? $.data(this, 'oldtitle') : NULL;
 	},
 
 	/* 
