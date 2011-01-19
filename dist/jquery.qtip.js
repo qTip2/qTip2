@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Jan 19 14:45:32 2011 +0000
+* Date: Wed Jan 19 14:48:58 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1478,18 +1478,23 @@ $.each({
 	/* Allow other plugins to successfully retrieve the title of an element with a qTip applied */
 	attr: function(attr, val) {
 		var self = this[0],
+			title = 'title',
 			api = $.data(self, 'qtip');
 		
-		if(attr === 'title') {
+		if(attr === title) {
 			if(arguments.length === 1) {
 				return $.data(self, oldtitle);
 			}
 			else {
 				// If qTip is rendered and title was originally used as content, update it
-				if(api && api.rendered && api.options.content.attr === 'title' && api.cache.attr) {
+				if(api && api.rendered && api.options.content.attr === title && api.cache.attr) {
 					api.set('content.text', val);
 				}
-				return $.data(self, oldtitle, val);
+
+				// Use the regular attr method to set, then cache the result
+				$.fn['attr'+replaceSuffix].apply(this, arguments);
+				$.data(self, oldtitle, $.attr(self, title));
+				return this.removeAttr('title');
 			}
 		}
 	},
