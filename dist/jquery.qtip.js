@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Jan 19 15:05:40 2011 +0000
+* Date: Wed Jan 19 15:23:37 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1504,10 +1504,10 @@ $.each({
 		var titles = $([]), elem;
 
 		// Re-add cached titles before we clone
-		$('*', this).each(function() {
-			var oldtitle = $.data(this, oldtitle);
-			if(oldtitle) {
-				$.attr(this, 'title', oldtitle);
+		$('*', this).add(this).each(function() {
+			var title = $.data(this, oldtitle);
+			if(title) {
+				$.attr(this, 'title', title);
 				titles = titles.add(this);
 			}
 		});

@@ -1467,10 +1467,10 @@ $.each({
 		var titles = $([]), elem;
 
 		// Re-add cached titles before we clone
-		$('*', this).each(function() {
-			var oldtitle = $.data(this, oldtitle);
-			if(oldtitle) {
-				$.attr(this, 'title', oldtitle);
+		$('*', this).add(this).each(function() {
+			var title = $.data(this, oldtitle);
+			if(title) {
+				$.attr(this, 'title', title);
 				titles = titles.add(this);
 			}
 		});
