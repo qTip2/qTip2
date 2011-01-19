@@ -87,7 +87,7 @@ function sanitizeOptions(opts)
 /*
 * Core plugin implementation
 */
-function QTip(target, options, id)
+function QTip(target, options, id, attr)
 {
 	// Declare this reference
 	var self = this,
@@ -106,7 +106,8 @@ function QTip(target, options, id)
 		event: {},
 		target: NULL,
 		disabled: FALSE,
-		lastFocus: docBody
+		lastFocus: docBody,
+		attr: attr
 	};
 
 	/*
@@ -1236,7 +1237,7 @@ function QTip(target, options, id)
 // Initialization method
 function init(id, opts)
 {
-	var obj, posOptions,
+	var obj, posOptions, usedAttr,
 
 	// Setup element references
 	elem = $(this),
@@ -1264,6 +1265,7 @@ function init(id, opts)
 		// Grab from supplied attribute if available
 		if(config.content.attr !== FALSE && elem.attr(config.content.attr)) {
 			config.content.text = elem.attr(config.content.attr);
+			usedAttr = config.content.attr;
 		}
 
 		// No valid content was found, abort render
@@ -1300,7 +1302,7 @@ function init(id, opts)
 	}
 
 	// Initialize the tooltip and add API reference
-	obj = new QTip(elem, config, id);
+	obj = new QTip(elem, config, id, usedAttr);
 	$.data(this, 'qtip', obj);
 
 	// Catch remove events on target element to destroy redundant tooltip
@@ -1440,9 +1442,44 @@ $.fn.qtip.bind = function(opts, event)
 // Override some of the core jQuery methods for library-specific purposes
 $.each({
 	/* Allow other plugins to successfully retrieve the title of an element with a qTip applied */
-	attr: function(attr) {
-		var api = $.data(this, 'qtip');
-		return (arguments.length === 1 && attr === 'title' && api && api.rendered === TRUE) ? $.data(this, 'oldtitle') : NULL;
+	attr: function(attr, val) {
+		var self = this[0],
+			api = $.data(self, 'qtip');
+		
+		if(attr === 'title') {
+			if(arguments.length === 1) {
+				return $.data(self, 'oldtitle');
+			}
+			else {
+				// If qTip is rendered and title was originally used as content, update it
+				if(api && api.rendered && api.options.content.attr === 'title' && api.cache.attr) {
+					api.set('content.text', val);
+				}
+				return $.data(self, 'oldtitle', val);
+			}
+		}
+	},
+	
+	/* Allow clone to correctly retrieve cached title attributes */
+	clone: function(keepData) {
+		var titles = $([]), elem;
+
+		// Re-add cached titles before we clone
+		$('*', this).each(function() {
+			var oldtitle = $.data(this, 'oldtitle');
+			if(oldtitle) {
+				$.attr(this, 'title', oldtitle);
+				titles = titles.add(this);
+			}
+		});
+
+		// Clone our element using the real clone method
+		elem = $.fn.Oldclone.apply(this, arguments);
+
+		// Remove the old titles again
+		titles.removeAttr('title');
+
+		return elem;
 	},
 
 	/* 
