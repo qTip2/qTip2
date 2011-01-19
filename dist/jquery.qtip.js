@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Jan 19 14:48:58 2011 +0000
+* Date: Wed Jan 19 15:05:40 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1299,8 +1299,8 @@ function init(id, opts)
 
 	// Setup missing content if none is detected
 	if('boolean' === typeof config.content.text) {
-		attr = $.attr(this, config.content.attr);
-		
+		attr = elem.attr(config.content.attr);
+
 		// Grab from supplied attribute if available
 		if(config.content.attr !== FALSE && attr) { config.content.text = attr; }
 

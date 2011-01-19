@@ -1262,8 +1262,8 @@ function init(id, opts)
 
 	// Setup missing content if none is detected
 	if('boolean' === typeof config.content.text) {
-		attr = $.attr(this, config.content.attr);
-		
+		attr = elem.attr(config.content.attr);
+
 		// Grab from supplied attribute if available
 		if(config.content.attr !== FALSE && attr) { config.content.text = attr; }
 
