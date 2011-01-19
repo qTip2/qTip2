@@ -608,7 +608,7 @@ function QTip(target, options, id, attr)
 				callback = $.Event('tooltiprender');
 
 			// Add ARIA attributes to target
-			target.attr({ 'aria-describedby': tooltipID });
+			$.attr(target[0], 'aria-describedby', tooltipID);
 
 			// Create tooltip element
 			tooltip = elements.tooltip = $('<div/>')
@@ -772,7 +772,7 @@ function QTip(target, options, id, attr)
 
 						// Style checks
 						'^style.classes$': function() { 
-							tooltip.attr('class', uitooltip + ' qtip ui-helper-reset ' + value);
+							$.attr(tooltip[0], 'class', uitooltip + ' qtip ui-helper-reset ' + value);
 						},
 						'^style.widget|content.title': setWidget,
 
@@ -847,7 +847,7 @@ function QTip(target, options, id, attr)
 			if(callback.isDefaultPrevented()){ return self; }
 
 			// Set ARIA hidden status attribute
-			tooltip.attr('aria-hidden', !!!state);
+			$.attr(tooltip[0], 'aria-hidden', !!!state);
 
 			// Execute state specific properties
 			if(state) {
@@ -1118,7 +1118,7 @@ function QTip(target, options, id, attr)
 
 			// Set tooltip position class
 			tooltip.attr('class', function(i, val) {
-				return $(this).attr('class').replace(/ui-tooltip-pos-\w+/i, '');
+				return $.attr(this, 'class').replace(/ui-tooltip-pos-\w+/i, '');
 			})
 			.addClass(uitooltip + '-pos-' + my.abbreviation());
 
@@ -1191,7 +1191,7 @@ function QTip(target, options, id, attr)
 			 
 			if(self.rendered) {
 				tooltip.toggleClass(c, state);
-				tooltip.attr('aria-disabled', state);
+				$.attr(tooltip[0], 'aria-disabled', state);
 			}
 			else {
 				self.cache.disabled = !!state;
@@ -1202,7 +1202,8 @@ function QTip(target, options, id, attr)
 
 		destroy: function()
 		{
-			var oldtitle = $.data(target[0], 'oldtitle');
+			var t = target[0],
+				oldtitle = $.data(t, oldtitle);
 
 			// Destroy tooltip and  any associated plugins if rendered
 			if(self.rendered) {
@@ -1219,11 +1220,11 @@ function QTip(target, options, id, attr)
 			unassignEvents(1, 1, 1, 1);
 
 			// Remove api object
-			target.removeData('qtip');
+			$.removeData(t, 'qtip');
 
 			// Reset old title attribute if removed 
 			if(oldtitle) {
-				target.attr('title', oldtitle);
+				$.attr(t, 'title', oldtitle);
 			}
 
 			// Remove ARIA attributse
@@ -1237,7 +1238,7 @@ function QTip(target, options, id, attr)
 // Initialization method
 function init(id, opts)
 {
-	var obj, posOptions, usedAttr,
+	var obj, posOptions, attr, usedAttr,
 
 	// Setup element references
 	elem = $(this),
@@ -1254,17 +1255,18 @@ function init(id, opts)
 
 	// Merge in our sanitized metadata and remove metadata object so we don't interfere with other metadata calls
 	config = $.extend(TRUE, {}, $.fn.qtip.defaults, opts, sanitizeOptions(metadata5 || metadata));
-	elem.removeData('metadata');
+	$.removeData(this, 'metadata');
 
 	// Re-grab our positioning options now we've merged our metadata
 	posOptions = config.position;
 
 	// Setup missing content if none is detected
 	if('boolean' === typeof config.content.text) {
-
+		var attr = $.attr(this, config.content.attr);
+		
 		// Grab from supplied attribute if available
-		if(config.content.attr !== FALSE && elem.attr(config.content.attr)) {
-			config.content.text = elem.attr(config.content.attr);
+		if(config.content.attr !== FALSE && attr) {
+			config.content.text = attr;
 			usedAttr = config.content.attr;
 		}
 
@@ -1296,8 +1298,8 @@ function init(id, opts)
 	}
 
 	// Remove title attribute and store it if present
-	if(elem.attr('title')) {
-		$.data(this, 'oldtitle', elem.attr('title'));
+	if($.attr(this, 'title')) {
+		$.data(this, oldtitle, $.attr(this, 'title'));
 		elem.removeAttr('title');
 	}
 
@@ -1448,14 +1450,14 @@ $.each({
 		
 		if(attr === 'title') {
 			if(arguments.length === 1) {
-				return $.data(self, 'oldtitle');
+				return $.data(self, oldtitle);
 			}
 			else {
 				// If qTip is rendered and title was originally used as content, update it
 				if(api && api.rendered && api.options.content.attr === 'title' && api.cache.attr) {
 					api.set('content.text', val);
 				}
-				return $.data(self, 'oldtitle', val);
+				return $.data(self, oldtitle, val);
 			}
 		}
 	},
@@ -1466,7 +1468,7 @@ $.each({
 
 		// Re-add cached titles before we clone
 		$('*', this).each(function() {
-			var oldtitle = $.data(this, 'oldtitle');
+			var oldtitle = $.data(this, oldtitle);
 			if(oldtitle) {
 				$.attr(this, 'title', oldtitle);
 				titles = titles.add(this);
@@ -1474,7 +1476,7 @@ $.each({
 		});
 
 		// Clone our element using the real clone method
-		elem = $.fn.Oldclone.apply(this, arguments);
+		elem = $.fn['clone'+replaceSuffix].apply(this, arguments);
 
 		// Remove the old titles again
 		titles.removeAttr('title');
@@ -1500,9 +1502,10 @@ $.each({
 },
 function(name, func) {
 	if(!func) { return TRUE; }
-	$.fn['Old'+name] = $.fn[name];
+
+	var old = $.fn[name+replaceSuffix] = $.fn[name];
 	$.fn[name] = function() {
-		return func.apply(this, arguments) || $.fn['Old'+name].apply(this, arguments);
+		return func.apply(this, arguments) || old.apply(this, arguments);
 	};
 });
 
