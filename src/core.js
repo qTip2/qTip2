@@ -1453,10 +1453,12 @@ $.fn.qtip.bind = function(opts, event)
 $.each({
 	/* Allow other plugins to successfully retrieve the title of an element with a qTip applied */
 	attr: function(attr, val) {
+		if(!this.length) { return; }
+
 		var self = this[0],
 			title = 'title',
 			api = $.data(self, 'qtip');
-		
+
 		if(attr === title) {
 			if(arguments.length === 1) {
 				return $.data(self, oldtitle);

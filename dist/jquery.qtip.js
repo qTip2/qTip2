@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Jan 20 15:37:41 2011 +0000
+* Date: Thu Jan 20 16:23:36 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1490,10 +1490,12 @@ $.fn.qtip.bind = function(opts, event)
 $.each({
 	/* Allow other plugins to successfully retrieve the title of an element with a qTip applied */
 	attr: function(attr, val) {
+		if(!this.length) { return; }
+
 		var self = this[0],
 			title = 'title',
 			api = $.data(self, 'qtip');
-		
+
 		if(attr === title) {
 			if(arguments.length === 1) {
 				return $.data(self, oldtitle);
