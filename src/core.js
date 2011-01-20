@@ -3,7 +3,7 @@ function sanitizeOptions(opts)
 {
 	var content;
 
-	if(!opts) { return FALSE; }
+	if(!opts || 'object' !== typeof opts) { return FALSE; }
 
 	if('object' !== typeof opts.metadata) {
 		opts.metadata = {
@@ -1250,16 +1250,21 @@ function init(id, opts)
 	// Grab metadata from element if plugin is present
 	metadata = (elem.metadata) ? elem.metadata(opts.metadata) : NULL,
 
-	// Check if the metadata returned is in HTML5 form and grab 'name' from the object instead
-	metadata5 = metadata && opts.metadata.type === 'html5' ? metadata[opts.metadata.name] : NULL,
+	// If metadata type if HTML5, grab 'name' from the object instead, or use the regular data object otherwise
+	metadata5 = opts.metadata.type === 'html5' && metadata ? metadata[opts.metadata.name] : NULL,
 
-	// Merge in our sanitized metadata and remove metadata object so we don't interfere with other metadata calls
-	config = $.extend(TRUE, {}, $.fn.qtip.defaults, opts, sanitizeOptions(metadata5 || metadata));
-	$.removeData(this, 'metadata');
+	// Grab data from metadata.name (or data-qtipopts as fallback) using .data() method,
+	html5 = elem.data(opts.metadata.name || 'qtipopts'),
+
+	// Merge in and sanitize metadata
+	config = $.extend(TRUE, {}, $.fn.qtip.defaults, opts, sanitizeOptions(html5), sanitizeOptions(metadata5 || metadata));
+
+	// Remove metadata object so we don't interfere with other metadata calls
+	if(metadata) { $.removeData(this, 'metadata'); }
 
 	// Re-grab our positioning options now we've merged our metadata
 	posOptions = config.position;
-
+	
 	// Setup missing content if none is detected
 	if('boolean' === typeof config.content.text) {
 		attr = elem.attr(config.content.attr);
@@ -1565,9 +1570,6 @@ $.fn.qtip.defaults = {
 	prerender: FALSE,
 	id: FALSE,
 	overwrite: TRUE,
-	metadata: {
-		type: 'class'
-	},
 	content: {
 		text: TRUE,
 		attr: 'title',
