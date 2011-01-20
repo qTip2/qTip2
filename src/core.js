@@ -1460,12 +1460,12 @@ $.each({
 			api = $.data(self, 'qtip');
 
 		if(attr === title) {
-			if(arguments.length === 1) {
+			if(arguments.length < 2) {
 				return $.data(self, oldtitle);
 			}
-			else if(api) {
+			else if(typeof api === 'object') {
 				// If qTip is rendered and title was originally used as content, update it
-				if(api.rendered && api.options.content.attr === title && api.cache.attr) {
+				if(api && api.rendered && api.options.content.attr === title && api.cache.attr) {
 					api.set('content.text', val);
 				}
 

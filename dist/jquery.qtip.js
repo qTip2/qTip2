@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Jan 20 22:22:50 2011 +0000
+* Date: Thu Jan 20 23:38:37 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1497,12 +1497,12 @@ $.each({
 			api = $.data(self, 'qtip');
 
 		if(attr === title) {
-			if(arguments.length === 1) {
+			if(arguments.length < 2) {
 				return $.data(self, oldtitle);
 			}
-			else if(api) {
+			else if(typeof api === 'object') {
 				// If qTip is rendered and title was originally used as content, update it
-				if(api.rendered && api.options.content.attr === title && api.cache.attr) {
+				if(api && api.rendered && api.options.content.attr === title && api.cache.attr) {
 					api.set('content.text', val);
 				}
 
