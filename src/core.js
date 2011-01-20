@@ -1253,6 +1253,9 @@ function init(id, opts)
 	// Check if the metadata returned is in HTML5 form and grab 'name' from the object instead
 	metadata5 = metadata && opts.metadata.type === 'html5' ? metadata[opts.metadata.name] : NULL,
 
+	// If metadata plugin is not present, try to use jquery default data-method
+	metadata5 = !metadata5 && opts.metadata.type === 'html5' && elem.data(opts.metadata.name) ? eval("(" + elem.data(opts.metadata.name) + ")") : metadata5,
+
 	// Merge in our sanitized metadata and remove metadata object so we don't interfere with other metadata calls
 	config = $.extend(TRUE, {}, $.fn.qtip.defaults, opts, sanitizeOptions(metadata5 || metadata));
 	$.removeData(this, 'metadata');
