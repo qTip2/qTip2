@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Jan 19 15:51:20 2011 +0000
+* Date: Thu Jan 20 14:04:50 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -681,6 +681,9 @@ function QTip(target, options, id, attr)
 				updateTitle(title);
 			}
 			updateContent(content);
+
+			// Setup widget classes
+			setWidget();
 
 			// Initialize 'render' plugins
 			$.each($.fn.qtip.plugins, function() {

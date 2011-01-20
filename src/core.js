@@ -645,6 +645,9 @@ function QTip(target, options, id, attr)
 			}
 			updateContent(content);
 
+			// Setup widget classes
+			setWidget();
+
 			// Initialize 'render' plugins
 			$.each($.fn.qtip.plugins, function() {
 				if(this.initialize === 'render') { this(self); }
