@@ -137,16 +137,18 @@ function QTip(target, options, id, attr)
 
 	function offset(elem, container) {
 		var pos = { left: 0, top: 0 },
+			type,
 			addScroll = !$.fn.qtip.plugins.iOS,
-			$container = $(container),
 			offsetParent, parentIsContainer;
 
 		if(container) {
-			if($container.css('position') !== 'static') {
+			type = $.css(container, 'position');
+			
+			if(type !== 'static') {
 				pos = offset(container);
 				pos.left *= -1; pos.top *= -1;
 			}
-			else if($container.css('overflow') !== 'visible') {
+			else if($.css(container, 'overflow') !== 'visible') {
 				pos.left -= container.scrollLeft;
 				pos.top -= container.scrollTop;
 			}
@@ -156,6 +158,9 @@ function QTip(target, options, id, attr)
 			do {
 				offsetParent = elem.offsetParent;
 				parentIsContainer = offsetParent === container;
+
+				// Account for fixed containers
+				if(offsetParent === docBody && type === 'fixed') { addScroll = TRUE; }
 
 				pos.left += elem.offsetLeft - (addScroll && offsetParent && !parentIsContainer ? offsetParent.scrollLeft : 0);
 				pos.top += elem.offsetTop - (addScroll &&  offsetParent && !parentIsContainer ? offsetParent.scrollTop : 0);

@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Jan 20 14:04:50 2011 +0000
+* Date: Thu Jan 20 15:37:41 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -174,16 +174,18 @@ function QTip(target, options, id, attr)
 
 	function offset(elem, container) {
 		var pos = { left: 0, top: 0 },
+			type,
 			addScroll = !$.fn.qtip.plugins.iOS,
-			$container = $(container),
 			offsetParent, parentIsContainer;
 
 		if(container) {
-			if($container.css('position') !== 'static') {
+			type = $.css(container, 'position');
+			
+			if(type !== 'static') {
 				pos = offset(container);
 				pos.left *= -1; pos.top *= -1;
 			}
-			else if($container.css('overflow') !== 'visible') {
+			else if($.css(container, 'overflow') !== 'visible') {
 				pos.left -= container.scrollLeft;
 				pos.top -= container.scrollTop;
 			}
@@ -193,6 +195,9 @@ function QTip(target, options, id, attr)
 			do {
 				offsetParent = elem.offsetParent;
 				parentIsContainer = offsetParent === container;
+
+				// Account for fixed containers
+				if(offsetParent === docBody && type === 'fixed') { addScroll = TRUE; }
 
 				pos.left += elem.offsetLeft - (addScroll && offsetParent && !parentIsContainer ? offsetParent.scrollLeft : 0);
 				pos.top += elem.offsetTop - (addScroll &&  offsetParent && !parentIsContainer ? offsetParent.scrollTop : 0);
