@@ -399,7 +399,7 @@ function Tip(qTip, command)
 			var tip = elems.tip,
 				position = {},
 				offset = Math.max(0, opts.offset),
-				precedance, dimension,
+				precedance, dimensions, 
 				adjust;
 
 			// Return if tips are disabled or tip is not yet rendered
@@ -410,7 +410,7 @@ function Tip(qTip, command)
 			precedance = corner.precedance;
 
 			// Determine which tip dimension to use for adjustment
-			dimension = calculateSize(corner)[ precedance === 'x' ? 'width' : 'height' ];
+			dimensions = calculateSize(corner);
 
 			// Setup IE specific dimension adjustment
 			adjust = $.browser.msie && border && /^(b|r)/i.test(corner.string()) ? 1 : 0;
@@ -425,7 +425,7 @@ function Tip(qTip, command)
 					if(side === 'center') {
 						b = precedance === 'y' ? 'left' : 'top';
 						position[ b ] = '50%';
-						position['margin-' + b] = -Math.round(dimension / 2) + offset;
+						position['margin-' + b] = -Math.round(dimensions[ precedance === 'y' ? 'width' : 'height' ] / 2) + offset;
 					}
 					else {
 						b = borderWidth(corner, side, TRUE);
@@ -437,7 +437,7 @@ function Tip(qTip, command)
 					}
 				}
 			);
-			position[ corner[precedance] ] -= dimension + adjust;
+			position[ corner[precedance] ] -= dimensions[ precedance === 'x' ? 'width' : 'height' ] + adjust;
 
 			// Set and return new position
 			if(set) { tip.css({ top: '', bottom: '', left: '', right: '', margin: '' }).css(position); }
