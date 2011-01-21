@@ -1213,7 +1213,7 @@ function QTip(target, options, id, attr)
 		destroy: function()
 		{
 			var t = target[0],
-				oldtitle = $.data(t, oldtitle);
+				title = $.data(t, oldtitle);
 
 			// Destroy tooltip and  any associated plugins if rendered
 			if(self.rendered) {
@@ -1233,8 +1233,8 @@ function QTip(target, options, id, attr)
 			$.removeData(t, 'qtip');
 
 			// Reset old title attribute if removed 
-			if(oldtitle) {
-				$.attr(t, 'title', oldtitle);
+			if(title) {
+				$.attr(t, 'title', title);
 			}
 
 			// Remove ARIA attributse
