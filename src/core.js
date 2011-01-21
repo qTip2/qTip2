@@ -172,7 +172,8 @@ function QTip(target, options, id, attr)
 	}
 	
 	function isVisible() {
-		return tooltip.css('left') !== hideOffset;
+		var t = tooltip[0];
+		return t && $.css(t, 'left') !== hideOffset && $.css(t, 'visibility') !== 'hidden';
 	}
 
 	function setWidget() {
@@ -837,7 +838,7 @@ function QTip(target, options, id, attr)
 			if((typeof state).search('boolean|number')) { state = !visible; }
 
 			// Return if element is already in correct state
-			if(!visible && !state) { return self; }
+			if(visible === state) { return self; }
 
 			// Try to prevent flickering when tooltip overlaps show element
 			if(event) {
