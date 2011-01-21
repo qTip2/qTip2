@@ -172,8 +172,7 @@ function QTip(target, options, id, attr)
 	}
 	
 	function isVisible() {
-		var t = tooltip[0];
-		return t && $.css(t, 'left') !== hideOffset && $.css(t, 'visibility') !== 'hidden';
+		return tooltip.css('left') !== hideOffset && tooltip.css('visibility') !== 'hidden';
 	}
 
 	function setWidget() {

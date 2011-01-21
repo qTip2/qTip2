@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Fri Jan 21 13:30:19 2011 +0000
+* Date: Fri Jan 21 13:36:44 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -209,8 +209,7 @@ function QTip(target, options, id, attr)
 	}
 	
 	function isVisible() {
-		var t = tooltip[0];
-		return t && $.css(t, 'left') !== hideOffset && $.css(t, 'visibility') !== 'hidden';
+		return tooltip.css('left') !== hideOffset && tooltip.css('visibility') !== 'hidden';
 	}
 
 	function setWidget() {
