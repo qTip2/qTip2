@@ -434,7 +434,7 @@ function QTip(target, options, id, attr)
 			clearTimeout(self.timers.hide);
 
 			// Prevent hiding if tooltip is fixed and event target is the tooltip. Or if mouse positioning is enabled and cursor momentarily overlaps
-			if(options.hide.fixed && ((posOptions.target === 'mouse' && ontoTooltip) || ((/mouse(out|leave|move)/).test(event.type) && (ontoTooltip || ontoTarget))))
+			if((posOptions.target === 'mouse' && ontoTooltip) || (options.hide.fixed && ((/mouse(out|leave|move)/).test(event.type) && (ontoTooltip || ontoTarget))))
 			{
 				// Prevent default and popagation
 				event.stopPropagation();
