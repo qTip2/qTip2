@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Fri Jan 21 13:48:22 2011 +0000
+* Date: Fri Jan 21 14:08:05 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -665,7 +665,6 @@ function QTip(target, options, id, attr)
 					'aria-describedby': tooltipID + '-content',
 					'aria-hidden': TRUE
 				})
-				.css('visibility', 'hidden')
 				.toggleClass(disabled, self.cache.disabled)
 				.data('qtip', self)
 				.appendTo(options.position.container)
@@ -704,20 +703,22 @@ function QTip(target, options, id, attr)
 					tooltip.bind(events, callback);
 				}
 			});
-			
+
+			// Set visibility AFTER plugin initialization to prevent issues in IE
+			tooltip.css('visibility', 'hidden')
+
 			/* Queue this part of the render process in our fx queue so we can
 			 * load images before the tooltip renders fully.
 			 *
 			 * See: updateContent method
 			*/
-			tooltip.queue('fx', function(next) {
+			.queue('fx', function(next) {
 				// Trigger tooltiprender event and pass original triggering event as original
 				callback.originalEvent = self.cache.event;
 				tooltip.trigger(callback, [self]);
 
 				// Update tooltip position and show tooltip if needed
 				if(options.show.ready || show) {
-					tooltip.hide();
 					self.show(self.cache.event);
 				}
 
