@@ -628,6 +628,7 @@ function QTip(target, options, id, attr)
 					'aria-describedby': tooltipID + '-content',
 					'aria-hidden': TRUE
 				})
+				.css('visibility', 'hidden')
 				.toggleClass(disabled, self.cache.disabled)
 				.data('qtip', self)
 				.appendTo(options.position.container)
@@ -824,6 +825,7 @@ function QTip(target, options, id, attr)
 
 		toggle: function(state, event)
 		{
+			
 			if(self.rendered === FALSE) { return FALSE; }
 
 			var type = state ? 'show' : 'hide',
@@ -835,7 +837,7 @@ function QTip(target, options, id, attr)
 			if((typeof state).search('boolean|number')) { state = !visible; }
 
 			// Return if element is already in correct state
-			if((!visible && !state) || tooltip.is(':animated')) { return self; }
+			if(!visible && !state) { return self; }
 
 			// Try to prevent flickering when tooltip overlaps show element
 			if(event) {
