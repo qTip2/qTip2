@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Jan 19 15:23:37 2011 +0000
+* Date: Fri Jan 21 13:30:19 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -40,7 +40,7 @@ function sanitizeOptions(opts)
 {
 	var content;
 
-	if(!opts) { return FALSE; }
+	if(!opts || 'object' !== typeof opts) { return FALSE; }
 
 	if('object' !== typeof opts.metadata) {
 		opts.metadata = {
@@ -174,16 +174,18 @@ function QTip(target, options, id, attr)
 
 	function offset(elem, container) {
 		var pos = { left: 0, top: 0 },
+			type,
 			addScroll = !$.fn.qtip.plugins.iOS,
-			$container = $(container),
 			offsetParent, parentIsContainer;
 
 		if(container) {
-			if($container.css('position') !== 'static') {
+			type = $.css(container, 'position');
+			
+			if(type !== 'static') {
 				pos = offset(container);
 				pos.left *= -1; pos.top *= -1;
 			}
-			else if($container.css('overflow') !== 'visible') {
+			else if($.css(container, 'overflow') !== 'visible') {
 				pos.left -= container.scrollLeft;
 				pos.top -= container.scrollTop;
 			}
@@ -193,6 +195,9 @@ function QTip(target, options, id, attr)
 			do {
 				offsetParent = elem.offsetParent;
 				parentIsContainer = offsetParent === container;
+
+				// Account for fixed containers
+				if(offsetParent === docBody && type === 'fixed') { addScroll = TRUE; }
 
 				pos.left += elem.offsetLeft - (addScroll && offsetParent && !parentIsContainer ? offsetParent.scrollLeft : 0);
 				pos.top += elem.offsetTop - (addScroll &&  offsetParent && !parentIsContainer ? offsetParent.scrollTop : 0);
@@ -204,7 +209,8 @@ function QTip(target, options, id, attr)
 	}
 	
 	function isVisible() {
-		return tooltip.css('left') !== hideOffset;
+		var t = tooltip[0];
+		return t && $.css(t, 'left') !== hideOffset && $.css(t, 'visibility') !== 'hidden';
 	}
 
 	function setWidget() {
@@ -466,7 +472,7 @@ function QTip(target, options, id, attr)
 			clearTimeout(self.timers.hide);
 
 			// Prevent hiding if tooltip is fixed and event target is the tooltip. Or if mouse positioning is enabled and cursor momentarily overlaps
-			if(options.hide.fixed && ((posOptions.target === 'mouse' && ontoTooltip) || ((/mouse(out|leave|move)/).test(event.type) && (ontoTooltip || ontoTarget))))
+			if((posOptions.target === 'mouse' && ontoTooltip) || (options.hide.fixed && ((/mouse(out|leave|move)/).test(event.type) && (ontoTooltip || ontoTarget))))
 			{
 				// Prevent default and popagation
 				event.stopPropagation();
@@ -660,6 +666,7 @@ function QTip(target, options, id, attr)
 					'aria-describedby': tooltipID + '-content',
 					'aria-hidden': TRUE
 				})
+				.css('visibility', 'hidden')
 				.toggleClass(disabled, self.cache.disabled)
 				.data('qtip', self)
 				.appendTo(options.position.container)
@@ -681,6 +688,9 @@ function QTip(target, options, id, attr)
 				updateTitle(title);
 			}
 			updateContent(content);
+
+			// Setup widget classes
+			setWidget();
 
 			// Initialize 'render' plugins
 			$.each($.fn.qtip.plugins, function() {
@@ -853,6 +863,7 @@ function QTip(target, options, id, attr)
 
 		toggle: function(state, event)
 		{
+			
 			if(self.rendered === FALSE) { return FALSE; }
 
 			var type = state ? 'show' : 'hide',
@@ -864,7 +875,7 @@ function QTip(target, options, id, attr)
 			if((typeof state).search('boolean|number')) { state = !visible; }
 
 			// Return if element is already in correct state
-			if((!visible && !state) || tooltip.is(':animated')) { return self; }
+			if(visible === state) { return self; }
 
 			// Try to prevent flickering when tooltip overlaps show element
 			if(event) {
@@ -1287,16 +1298,21 @@ function init(id, opts)
 	// Grab metadata from element if plugin is present
 	metadata = (elem.metadata) ? elem.metadata(opts.metadata) : NULL,
 
-	// Check if the metadata returned is in HTML5 form and grab 'name' from the object instead
-	metadata5 = metadata && opts.metadata.type === 'html5' ? metadata[opts.metadata.name] : NULL,
+	// If metadata type if HTML5, grab 'name' from the object instead, or use the regular data object otherwise
+	metadata5 = opts.metadata.type === 'html5' && metadata ? metadata[opts.metadata.name] : NULL,
 
-	// Merge in our sanitized metadata and remove metadata object so we don't interfere with other metadata calls
-	config = $.extend(TRUE, {}, $.fn.qtip.defaults, opts, sanitizeOptions(metadata5 || metadata));
-	$.removeData(this, 'metadata');
+	// Grab data from metadata.name (or data-qtipopts as fallback) using .data() method,
+	html5 = elem.data(opts.metadata.name || 'qtipopts'),
+
+	// Merge in and sanitize metadata
+	config = $.extend(TRUE, {}, $.fn.qtip.defaults, opts, sanitizeOptions(html5), sanitizeOptions(metadata5 || metadata));
+
+	// Remove metadata object so we don't interfere with other metadata calls
+	if(metadata) { $.removeData(this, 'metadata'); }
 
 	// Re-grab our positioning options now we've merged our metadata
 	posOptions = config.position;
-
+	
 	// Setup missing content if none is detected
 	if('boolean' === typeof config.content.text) {
 		attr = elem.attr(config.content.attr);
@@ -1477,15 +1493,17 @@ $.fn.qtip.bind = function(opts, event)
 $.each({
 	/* Allow other plugins to successfully retrieve the title of an element with a qTip applied */
 	attr: function(attr, val) {
+		if(!this.length) { return; }
+
 		var self = this[0],
 			title = 'title',
 			api = $.data(self, 'qtip');
-		
+
 		if(attr === title) {
-			if(arguments.length === 1) {
+			if(arguments.length < 2) {
 				return $.data(self, oldtitle);
 			}
-			else {
+			else if(typeof api === 'object') {
 				// If qTip is rendered and title was originally used as content, update it
 				if(api && api.rendered && api.options.content.attr === title && api.cache.attr) {
 					api.set('content.text', val);
@@ -1602,9 +1620,6 @@ $.fn.qtip.defaults = {
 	prerender: FALSE,
 	id: FALSE,
 	overwrite: TRUE,
-	metadata: {
-		type: 'class'
-	},
 	content: {
 		text: TRUE,
 		attr: 'title',
@@ -2144,7 +2159,7 @@ function Tip(qTip, command)
 			var tip = elems.tip,
 				position = {},
 				offset = Math.max(0, opts.offset),
-				precedance, dimension,
+				precedance, dimensions, 
 				adjust;
 
 			// Return if tips are disabled or tip is not yet rendered
@@ -2155,7 +2170,7 @@ function Tip(qTip, command)
 			precedance = corner.precedance;
 
 			// Determine which tip dimension to use for adjustment
-			dimension = calculateSize(corner)[ precedance === 'x' ? 'width' : 'height' ];
+			dimensions = calculateSize(corner);
 
 			// Setup IE specific dimension adjustment
 			adjust = $.browser.msie && border && /^(b|r)/i.test(corner.string()) ? 1 : 0;
@@ -2170,7 +2185,7 @@ function Tip(qTip, command)
 					if(side === 'center') {
 						b = precedance === 'y' ? 'left' : 'top';
 						position[ b ] = '50%';
-						position['margin-' + b] = -Math.round(dimension / 2) + offset;
+						position['margin-' + b] = -Math.round(dimensions[ precedance === 'y' ? 'width' : 'height' ] / 2) + offset;
 					}
 					else {
 						b = borderWidth(corner, side, TRUE);
@@ -2182,7 +2197,7 @@ function Tip(qTip, command)
 					}
 				}
 			);
-			position[ corner[precedance] ] -= dimension + adjust;
+			position[ corner[precedance] ] -= dimensions[ precedance === 'x' ? 'width' : 'height' ] + adjust;
 
 			// Set and return new position
 			if(set) { tip.css({ top: '', bottom: '', left: '', right: '', margin: '' }).css(position); }
