@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Fri Jan 21 14:08:05 2011 +0000
+* Date: Fri Jan 21 14:18:34 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -34,7 +34,11 @@
 		replaceSuffix = '_replacedByqTip',
 		oldtitle = 'oldtitle';
 
-
+	// Simple console.error wrapper
+	function debug() {
+		var c = window.console;
+		return c && (c.error || c.log || $.noop).apply(c, arguments);
+	}
 // Option object sanitizer
 function sanitizeOptions(opts)
 {
@@ -1286,7 +1290,7 @@ function QTip(target, options, id, attr)
 // Initialization method
 function init(id, opts)
 {
-	var obj, posOptions, attr,
+	var obj, posOptions, attr, config,
 
 	// Setup element references
 	elem = $(this),
@@ -1302,10 +1306,16 @@ function init(id, opts)
 	metadata5 = opts.metadata.type === 'html5' && metadata ? metadata[opts.metadata.name] : NULL,
 
 	// Grab data from metadata.name (or data-qtipopts as fallback) using .data() method,
-	html5 = elem.data(opts.metadata.name || 'qtipopts'),
+	html5 = elem.data(opts.metadata.name || 'qtipopts');
+
+	// If we don't get an object returned attempt to parse it manualyl without parseJSON
+	try { html5 = typeof html5 === 'string' ? (new Function("return " + html5))() : html5; }
+	catch(e) { debug('Unable to parse HTML5 attribute data: ' + html5); }
 
 	// Merge in and sanitize metadata
-	config = $.extend(TRUE, {}, $.fn.qtip.defaults, opts, sanitizeOptions(html5), sanitizeOptions(metadata5 || metadata));
+	config = $.extend(TRUE, {}, $.fn.qtip.defaults, opts, 
+		typeof html5 === 'object' ? sanitizeOptions(html5) : NULL,
+		sanitizeOptions(metadata5 || metadata));
 
 	// Remove metadata object so we don't interfere with other metadata calls
 	if(metadata) { $.removeData(this, 'metadata'); }
