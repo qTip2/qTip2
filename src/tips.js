@@ -486,8 +486,8 @@ $.extend(TRUE, $.fn.qtip.defaults, {
 		tip: {
 			corner: TRUE,
 			mimic: FALSE,
-			width: 8,
-			height: 8,
+			width: 6,
+			height: 6,
 			border: TRUE,
 			offset: 0
 		}

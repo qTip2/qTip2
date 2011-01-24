@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Jan 24 17:58:48 2011 +0000
+* Date: Mon Jan 24 18:31:50 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -2291,8 +2291,8 @@ $.extend(TRUE, $.fn.qtip.defaults, {
 		tip: {
 			corner: TRUE,
 			mimic: FALSE,
-			width: 8,
-			height: 8,
+			width: 6,
+			height: 6,
 			border: TRUE,
 			offset: 0
 		}
