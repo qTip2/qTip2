@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Jan 24 13:12:07 2011 +0000
+* Date: Mon Jan 24 13:13:33 2011 +0000
 */
 
 /* Fluid class for determining actual width in IE */
@@ -32,8 +32,6 @@
 
 	max-width: 280px;
 	min-width: 50px;
-	
-	outline: none;
 }
 
 	.ui-tooltip-content{
@@ -61,7 +59,7 @@
 		font-weight: bold;
 	}
 
-	div.ui-tooltip-titlebar + div.ui-tooltip-content{ border-top-width: 0px; }
+	.ui-tooltip-titlebar + .ui-tooltip-content{ border-top-width: 0px; }
 
 		/*! Default close button class */
 		.ui-tooltip-titlebar .ui-state-default{
