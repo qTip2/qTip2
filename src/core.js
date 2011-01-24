@@ -426,7 +426,7 @@ function QTip(target, options, id, attr)
 
 			// Check if new target was actually the tooltip element
 			var relatedTarget = $(event.relatedTarget || event.target),
-				ontoTooltip = relatedTarget.parents(selector)[0] === tooltip[0],
+				ontoTooltip = relatedTarget.closest(selector)[0] === tooltip[0],
 				ontoTarget = relatedTarget[0] === targets.show[0];
 
 			// Clear timers and stop animation queue

@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Fri Jan 21 14:18:34 2011 +0000
+* Date: Fri Jan 21 14:44:09 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -467,7 +467,7 @@ function QTip(target, options, id, attr)
 
 			// Check if new target was actually the tooltip element
 			var relatedTarget = $(event.relatedTarget || event.target),
-				ontoTooltip = relatedTarget.parents(selector)[0] === tooltip[0],
+				ontoTooltip = relatedTarget.closest(selector)[0] === tooltip[0],
 				ontoTarget = relatedTarget[0] === targets.show[0];
 
 			// Clear timers and stop animation queue
