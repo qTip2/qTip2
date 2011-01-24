@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Jan 24 13:13:33 2011 +0000
+* Date: Mon Jan 24 14:02:30 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -2414,19 +2414,20 @@ $.fn.qtip.plugins.svg = function(svg, corner)
 		// Return if no method is found
 		if(!root.createSVGPoint) { return result; }
 
-		// Create our point variables
+		// Create our point var
 		point = root.createSVGPoint();
-		tPoint = point.matrixTransform(mtx);
 
 		// Adjust top and left
 		point.x = box.x;
 		point.y = box.y;
+		tPoint = point.matrixTransform(mtx);
 		result.offset.left = tPoint.x;
 		result.offset.top = tPoint.y;
 
 		// Adjust width and height
 		point.x += box.width;
 		point.y += box.height;
+		tPoint = point.matrixTransform(mtx);
 		result.width = tPoint.x - result.offset.left;
 		result.height = tPoint.y - result.offset.top;
 	}
