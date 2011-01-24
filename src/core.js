@@ -1103,6 +1103,14 @@ function QTip(target, options, id, attr)
 					position = position.offset;
 				}
 
+				// If it's an SVG use the SVG plugin
+				else if(target[0].namespaceURI == 'http://www.w3.org/2000/svg' && $.fn.qtip.plugins.svg) {
+					position = $.fn.qtip.plugins.svg(target, at);
+					targetWidth = position.width;
+					targetHeight = position.height;
+					position = position.offset;
+				}
+
 				else {
 					targetWidth = target.outerWidth();
 					targetHeight = target.outerHeight();

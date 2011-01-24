@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Fri Jan 21 14:44:09 2011 +0000
+* Date: Mon Jan 24 12:53:32 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1139,6 +1139,14 @@ function QTip(target, options, id, attr)
 				// Use Imagemap plugin if target is an AREA element
 				else if(target.is('area') && $.fn.qtip.plugins.imagemap) {
 					position = $.fn.qtip.plugins.imagemap(target, at);
+					targetWidth = position.width;
+					targetHeight = position.height;
+					position = position.offset;
+				}
+
+				// If it's an SVG use the SVG plugin
+				else if(target[0].namespaceURI == 'http://www.w3.org/2000/svg' && $.fn.qtip.plugins.svg) {
+					position = $.fn.qtip.plugins.svg(target, at);
 					targetWidth = position.width;
 					targetHeight = position.height;
 					position = position.offset;
@@ -2385,6 +2393,43 @@ $.extend(TRUE, $.fn.qtip.defaults, {
 	// Add image position to offset coordinates
 	result.offset.left += imageOffset.left;
 	result.offset.top += imageOffset.top;
+
+	return result;
+};
+
+$.fn.qtip.plugins.svg = function(svg, corner)
+{
+	var elem = svg[0],
+		result = {
+			width: 0, height: 0,
+			offset: { top: 1e10, left: 1e10 }
+		},
+		box, mtx, root, point, tPoint;
+
+	if (elem.getBBox) {
+		box = elem.getBBox();
+		mtx = elem.getScreenCTM();
+		root = elem.farthestViewportElement || elem;
+
+		// Return if no method is found
+		if(!root.createSVGPoint) { return result; }
+
+		// Create our point variables
+		point = root.createSVGPoint();
+		tPoint = point.matrixTransform(mtx);
+
+		// Adjust top and left
+		point.x = box.x;
+		point.y = box.y;
+		result.offset.left = tPoint.x;
+		result.offset.top = tPoint.y;
+
+		// Adjust width and height
+		point.x += box.width;
+		point.y += box.height;
+		result.width = tPoint.x - result.offset.left;
+		result.height = tPoint.y - result.offset.top;
+	}
 
 	return result;
 };

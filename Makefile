@@ -7,6 +7,7 @@ DIST_DIR = ${PREFIX}/dist
 PLUGINS = ${SRC_DIR}/ajax.js\
 	${SRC_DIR}/tips.js\
 	${SRC_DIR}/imagemap.js\
+	${SRC_DIR}/svg.js\
 	${SRC_DIR}/modal.js\
 	${SRC_DIR}/bgiframe.js
 

@@ -15,7 +15,7 @@
 	<property name="QTIP_CSS" value="${DIST_DIR}/jquery.qtip.css" />
 	<property name="QTIP_CSS_MIN" value="${DIST_DIR}/jquery.qtip.min.css" />
 	
-	<property name="PLUGINS" value="${SRC_DIR}/ajax.js ${SRC_DIR}/tips.js ${SRC_DIR}/imagemap.js ${SRC_DIR}/modal.js ${SRC_DIR}/bgiframe.js" />
+	<property name="PLUGINS" value="${SRC_DIR}/ajax.js ${SRC_DIR}/tips.js ${SRC_DIR}/imagemap.js ${SRC_DIR}/svg.js ${SRC_DIR}/modal.js ${SRC_DIR}/bgiframe.js" />
 
 	<target name="all" depends="clean,qtip,lint,css,min,pack" description="Builds qTip including minified, packed JS files, as well as CSS" />
 
