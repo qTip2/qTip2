@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Jan 24 14:02:30 2011 +0000
+* Date: Mon Jan 24 14:27:09 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1693,7 +1693,8 @@ $.fn.qtip.defaults = {
 	var self = this,
 		tooltip = qTip.elements.tooltip,
 		opts = qTip.options.content.ajax,
-		namespace = '.qtip-ajax';
+		namespace = '.qtip-ajax',
+		rscript = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
 
 	self.checks = {
 		'^content.ajax': function(obj, name) {
@@ -1728,12 +1729,38 @@ $.fn.qtip.defaults = {
 
 		load: function()
 		{
-			// Define success and error handlers
-			function successHandler(content){ qTip.set('content.text', content); }
+			var hasSelector = opts.url.indexOf(' '), 
+				url = opts.url,
+				selector;
+
+			// Check if user delcared a content selector like in .load()
+			if(hasSelector > -1) {
+				selector = url.substr(hasSelector);
+				url = url.substr(0, hasSelector);
+			}
+
+			// Define success handler
+			function successHandler(content) { 
+				if(selector) {
+					// Create a dummy div to hold the results and grab the selector element
+					content = $('<div/>')
+						// inject the contents of the document in, removing the scripts
+						// to avoid any 'Permission Denied' errors in IE
+						.append(content.replace(rscript, ""))
+						
+						// Locate the specified elements
+						.find(selector);
+				}
+
+				// Set the content
+				qTip.set('content.text', content);
+			}
+
+			// Error handler
 			function errorHandler(xh, status, error){ qTip.set('content.text', status + ': ' + error); }
 
 			// Setup $.ajax option object and process the request
-			$.ajax( $.extend({ success: successHandler, error: errorHandler, context: qTip }, opts) );
+			$.ajax( $.extend({ success: successHandler, error: errorHandler, context: qTip }, opts, { url: url }) );
 
 			return self;
 		},
