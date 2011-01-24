@@ -25,9 +25,9 @@ the following to build qTip2 and its accompanying CSS:
 You can also create each individually using these commands:
 
 	make qtip		# Build non-minified qTip2 source
-	make min 		# Build minified qTip2 source
-	make pack		# Build minified and packed qTip2 source (Smallest filesize!)
 	make css 		# Build CSS files
+	make min 		# Build minified source and css
+	make pack		# Build minified and packed qTip2 source (Smallest filesize!)
 
 To build and test the source code against JSLint type this:
 
@@ -77,7 +77,7 @@ plugins by separating them wit a space:
 	
 By default all plugins are included in the build, so the regular `[make all]` command is actually equivilent to:
 
-	make PLUGINS="src/ajax.js src/tips.js src/imagemap.js src/modal.js src/bgiframe.js" all
+	make PLUGINS="src/ajax.js src/tips.js src/imagemap.js src/svg.js src/modal.js src/bgiframe.js" all
 
 * Note: The above was correct at the time of writing. Subsequent revisions may change file names or add new plugins, so checkout the Makefile for a full up-to-date list of all plugins*
 
