@@ -60,7 +60,7 @@
 	}
 
 	.ui-tooltip-youtube .ui-tooltip-icon{
-		border-color: #444;
+		border-color: #222;
 	}
 
 	.ui-tooltip-youtube .ui-tooltip-titlebar .ui-state-hover{
@@ -174,8 +174,7 @@
 	}
 	
 	.ui-tooltip-tipsy .ui-tooltip-icon{
-		margin-top: -7px;
-		border-color: #444;
+		border-color: #222;
 		text-shadow: none;
 	}
 

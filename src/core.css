@@ -18,6 +18,9 @@
 
 	max-width: 280px;
 	min-width: 50px;
+	
+	font-size: 10.5px;
+	line-height: 12px;
 }
 
 	.ui-tooltip-content{
@@ -35,8 +38,8 @@
 
 	.ui-tooltip-titlebar{
 		position: relative;
-		min-height: 19px;
-		padding: 5px 35px 4px 10px;
+		min-height: 14px;
+		padding: 5px 35px 5px 10px;
 		overflow: hidden;
 		
 		border-width: 1px 1px 0;
@@ -45,12 +48,12 @@
 		font-weight: bold;
 	}
 
-	.ui-tooltip-titlebar + .ui-tooltip-content{ border-top-width: 0px; }
+	.ui-tooltip-titlebar + .ui-tooltip-content{ border-top-width: 0px !important; }
 
 		/*! Default close button class */
 		.ui-tooltip-titlebar .ui-state-default{
 			position: absolute;
-			right: 5px;
+			right: 4px;
 			top: 50%;
 			margin-top: -9px;
 

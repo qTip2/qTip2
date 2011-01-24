@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Jan 24 14:27:09 2011 +0000
+* Date: Mon Jan 24 17:58:48 2011 +0000
 */
 
 /* Fluid class for determining actual width in IE */
@@ -32,6 +32,9 @@
 
 	max-width: 280px;
 	min-width: 50px;
+	
+	font-size: 10.5px;
+	line-height: 12px;
 }
 
 	.ui-tooltip-content{
@@ -49,8 +52,8 @@
 
 	.ui-tooltip-titlebar{
 		position: relative;
-		min-height: 19px;
-		padding: 5px 35px 4px 10px;
+		min-height: 14px;
+		padding: 5px 35px 5px 10px;
 		overflow: hidden;
 		
 		border-width: 1px 1px 0;
@@ -59,12 +62,12 @@
 		font-weight: bold;
 	}
 
-	.ui-tooltip-titlebar + .ui-tooltip-content{ border-top-width: 0px; }
+	.ui-tooltip-titlebar + .ui-tooltip-content{ border-top-width: 0px !important; }
 
 		/*! Default close button class */
 		.ui-tooltip-titlebar .ui-state-default{
 			position: absolute;
-			right: 5px;
+			right: 4px;
 			top: 50%;
 			margin-top: -9px;
 
@@ -354,7 +357,7 @@
 	}
 
 	.ui-tooltip-youtube .ui-tooltip-icon{
-		border-color: #444;
+		border-color: #222;
 	}
 
 	.ui-tooltip-youtube .ui-tooltip-titlebar .ui-state-hover{
@@ -468,8 +471,7 @@
 	}
 	
 	.ui-tooltip-tipsy .ui-tooltip-icon{
-		margin-top: -7px;
-		border-color: #444;
+		border-color: #222;
 		text-shadow: none;
 	}
 
