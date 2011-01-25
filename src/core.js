@@ -148,7 +148,7 @@ function QTip(target, options, id, attr)
 				pos = offset(container);
 				pos.left *= -1; pos.top *= -1;
 			}
-			else if($.css(container, 'overflow') !== 'visible') {
+			else if(container !== docBody && $.css(container, 'overflow') !== 'visible') {
 				pos.left -= container.scrollLeft;
 				pos.top -= container.scrollTop;
 			}
