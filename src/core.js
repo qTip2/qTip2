@@ -145,6 +145,9 @@ function QTip(target, options, id, attr)
 			if(container.offsetParent !== docBody) {
 				pos = offset(container);
 				pos.left *= -1; pos.top *= -1;
+
+				pos.left += parseInt( $.css(container, 'margin-left'), 10 );
+				pos.top += parseInt( $.css(container, 'margin-top'), 10 );
 			}
 			else {
 				pos.left += docBody.scrollLeft;

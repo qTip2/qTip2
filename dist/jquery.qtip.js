@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Jan 27 14:54:01 2011 +0000
+* Date: Thu Jan 27 18:32:54 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -186,6 +186,9 @@ function QTip(target, options, id, attr)
 			if(container.offsetParent !== docBody) {
 				pos = offset(container);
 				pos.left *= -1; pos.top *= -1;
+
+				pos.left += parseInt( $.css(container, 'margin-left'), 10 );
+				pos.top += parseInt( $.css(container, 'margin-top'), 10 );
 			}
 			else {
 				pos.left += docBody.scrollLeft;
