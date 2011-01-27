@@ -1,6 +1,7 @@
 $.fn.qtip.plugins.svg = function(svg, corner)
 {
-	var elem = svg[0],
+	var doc = $(document),
+		elem = svg[0],
 		result = {
 			width: 0, height: 0,
 			offset: { top: 1e10, left: 1e10 }
@@ -31,6 +32,10 @@ $.fn.qtip.plugins.svg = function(svg, corner)
 		tPoint = point.matrixTransform(mtx);
 		result.width = tPoint.x - result.offset.left;
 		result.height = tPoint.y - result.offset.top;
+
+		// Adjust by scroll offset
+		result.offset.left += doc.scrollLeft();
+		result.offset.top += doc.scrollTop();
 	}
 
 	return result;

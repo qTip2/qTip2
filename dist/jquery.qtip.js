@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Jan 24 19:29:04 2011 +0000
+* Date: Tue Jan 25 21:09:57 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -2426,7 +2426,8 @@ $.extend(TRUE, $.fn.qtip.defaults, {
 
 $.fn.qtip.plugins.svg = function(svg, corner)
 {
-	var elem = svg[0],
+	var doc = $(document),
+		elem = svg[0],
 		result = {
 			width: 0, height: 0,
 			offset: { top: 1e10, left: 1e10 }
@@ -2457,6 +2458,10 @@ $.fn.qtip.plugins.svg = function(svg, corner)
 		tPoint = point.matrixTransform(mtx);
 		result.width = tPoint.x - result.offset.left;
 		result.height = tPoint.y - result.offset.top;
+
+		// Adjust by scroll offset
+		result.offset.left += doc.scrollLeft();
+		result.offset.top += doc.scrollTop();
 	}
 
 	return result;
