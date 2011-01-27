@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Jan 25 21:09:57 2011 +0000
+* Date: Thu Jan 27 14:54:01 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -183,15 +183,20 @@ function QTip(target, options, id, attr)
 			offsetParent, parentIsContainer;
 
 		if(container) {
-			type = $.css(container, 'position');
-			
-			if(type !== 'static') {
+			if(container.offsetParent !== docBody) {
 				pos = offset(container);
 				pos.left *= -1; pos.top *= -1;
 			}
-			else if(container !== docBody && $.css(container, 'overflow') !== 'visible') {
-				pos.left -= container.scrollLeft;
-				pos.top -= container.scrollTop;
+			else {
+				pos.left += docBody.scrollLeft;
+				pos.top += docBody.scrollTop;
+			}
+
+			if(container !== docBody) {
+				if($.css(container, 'overflow') !== 'visible') {
+					pos.left -= container.scrollLeft;
+					pos.top -= container.scrollTop;
+				}
 			}
 		}
 

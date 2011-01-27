@@ -142,15 +142,20 @@ function QTip(target, options, id, attr)
 			offsetParent, parentIsContainer;
 
 		if(container) {
-			type = $.css(container, 'position');
-			
-			if(type !== 'static') {
+			if(container.offsetParent !== docBody) {
 				pos = offset(container);
 				pos.left *= -1; pos.top *= -1;
 			}
-			else if(container !== docBody && $.css(container, 'overflow') !== 'visible') {
-				pos.left -= container.scrollLeft;
-				pos.top -= container.scrollTop;
+			else {
+				pos.left += docBody.scrollLeft;
+				pos.top += docBody.scrollTop;
+			}
+
+			if(container !== docBody) {
+				if($.css(container, 'overflow') !== 'visible') {
+					pos.left -= container.scrollLeft;
+					pos.top -= container.scrollTop;
+				}
 			}
 		}
 
