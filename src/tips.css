@@ -1,4 +1,4 @@
-div.ui-tooltip-tip{
+.ui-tooltip .ui-tooltip-tip{
 	position: absolute;
 	margin: 0 auto;
 	overflow: hidden;
@@ -8,8 +8,9 @@ div.ui-tooltip-tip{
 	z-index: 10;
 }
 
-	div.ui-tooltip-tip,
-	div.ui-tooltip-tip *{
+	.ui-tooltip .ui-tooltip-tip,
+	.ui-tooltip .ui-tooltip-tip vml\:*,
+	.ui-tooltip .ui-tooltip-tip canvas{
 		line-height: 0.1px;
 		font-size: 0.1px;
 		color: #123456;
