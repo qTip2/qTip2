@@ -146,8 +146,8 @@ function QTip(target, options, id, attr)
 				pos = offset(container);
 				pos.left *= -1; pos.top *= -1;
 
-				pos.left += parseInt( $.css(container, 'margin-left'), 10 );
-				pos.top += parseInt( $.css(container, 'margin-top'), 10 );
+				pos.left += parseInt( $.css(container, 'margin-left'), 10 ) || 0;
+				pos.top += parseInt( $.css(container, 'margin-top'), 10 ) || 0;
 			}
 			else {
 				pos.left += docBody.scrollLeft;
