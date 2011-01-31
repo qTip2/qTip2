@@ -166,7 +166,7 @@ function QTip(target, options, id, attr)
 				parentIsContainer = offsetParent === container;
 
 				// Account for fixed containers
-				addScroll = offsetParent === docBody && type === 'fixed' ? addScroll = TRUE : !$.fn.qtip.plugins.iOS;
+				addScroll = offsetParent === docBody && type === 'fixed' ? TRUE : !$.fn.qtip.plugins.iOS;
 
 				pos.left += elem.offsetLeft - (addScroll && offsetParent && !parentIsContainer ? offsetParent.scrollLeft : 0);
 				pos.top += elem.offsetTop - (addScroll &&  offsetParent && !parentIsContainer ? offsetParent.scrollTop : 0);
