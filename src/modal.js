@@ -48,41 +48,56 @@ function Modal(qTip)
 
 		create: function()
 		{
+			var elem = $(selector), overlay;
+
 			// Return if overlay is already rendered
-			var elem = $(selector);
-			if(elem.length) { elems.overlay = elem; return; }
+			if(elem.length) { return elems.overlay = elem; }
 
 			// Create document overlay
-			elems.overlay = $('<div />', {
+			overlay = elems.overlay = $('<div />', {
 				id: selector.substr(1),
 				css: {
 					position: 'absolute',
 					top: 0,
 					left: 0,
-					display: 'none',
-					zIndex: parseInt( tooltip.css('z-index'), 10 ) - 1 // Use the current tooltips z-index as a base
+					display: 'none'
 				}
 			})
 			.appendTo(document.body);
 
 			// Update position on window resize or scroll
 			$(window).bind('resize'+namespace, function() {
-				elems.overlay.css({
+				overlay.css({
 					height: Math.max( $(window).height(), $(document).height() ),
 					width: Math.max( $(window).width(), $(document).width() )
 				});
 			})
 			.trigger('resize');
+
+			return overlay;
 		},
 
 		toggle: function(state)
 		{
 			var overlay = elems.overlay,
 				effect = qTip.options.show.modal.effect,
-				type = state ? 'show': 'hide';
+				type = state ? 'show': 'hide',
+				zindex;
+
+			// Create our overlay if it isn't present already
+			if(!overlay) { overlay = self.create(); }
+
+			// Prevent modal from conflicting with show.solo
+			if(overlay.is(':animated') && !state) { return; }
 
 			// Setop all animations
 			overlay.stop(TRUE, FALSE);
+
+			// Set z-indx if we're showing it
+			if(state) {
+				zindex = parseInt( $.css(tooltip[0], 'z-index'), 10);
+				overlay.css('z-index', (zindex || $.fn.qtip.zindex) - 1);
+			}
 
 			// Use custom function if provided
 			if($.isFunction(effect)) {

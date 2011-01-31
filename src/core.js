@@ -1293,8 +1293,9 @@ function init(id, opts)
 	// Remove metadata object so we don't interfere with other metadata calls
 	if(metadata) { $.removeData(this, 'metadata'); }
 
-	// Re-grab our positioning options now we've merged our metadata
+	// Re-grab our positioning options now we've merged our metadata and set id to passed value
 	posOptions = config.position;
+	config.id = id;
 	
 	// Setup missing content if none is detected
 	if('boolean' === typeof config.content.text) {
@@ -1414,7 +1415,7 @@ $.fn.qtip.bind = function(opts, event)
 		var options, targets, events,
 			
 		// Find next available ID, or use custom ID if provided
-		id = opts.id = (!opts.id || opts.id === FALSE || opts.id.length < 1 || $('#'+uitooltip+'-'+opts.id).length) ? $.fn.qtip.nextid++ : opts.id,
+		id = (!opts.id || opts.id === FALSE || opts.id.length < 1 || $('#'+uitooltip+'-'+opts.id).length) ? $.fn.qtip.nextid++ : opts.id,
 		
 		// Setup events namespace
 		namespace = '.qtip-'+id+'-create',
