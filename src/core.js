@@ -137,7 +137,7 @@ function QTip(target, options, id, attr)
 
 	function offset(elem, container) {
 		var pos = { left: 0, top: 0 },
-			type, addScroll, offsetParent, parentIsContainer;
+			type, addScroll = !$.fn.qtip.plugins.iOS, offsetParent, parentIsContainer;
 
 		if(container) {
 			if(container.offsetParent !== docBody) {
@@ -166,7 +166,7 @@ function QTip(target, options, id, attr)
 				parentIsContainer = offsetParent === container;
 
 				// Account for fixed containers
-				addScroll = offsetParent === docBody && type === 'fixed' ? TRUE : !$.fn.qtip.plugins.iOS;
+				if(offsetParent === docBody && type === 'fixed') { addScroll = TRUE; }
 
 				pos.left += elem.offsetLeft - (addScroll && offsetParent && !parentIsContainer ? offsetParent.scrollLeft : 0);
 				pos.top += elem.offsetTop - (addScroll &&  offsetParent && !parentIsContainer ? offsetParent.scrollTop : 0);
@@ -877,7 +877,7 @@ function QTip(target, options, id, attr)
 				self.reposition(event, 0); 
 
 				// Hide other tooltips if tooltip is solo
-				if(opts.solo) { $(selector).not(tooltip).qtip('hide'); }
+				if(opts.solo) { $(selector).not(tooltip).qtip('hide', callback); }
 			}
 			else {
 				// Clear show timer if we're hiding 

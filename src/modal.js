@@ -51,7 +51,7 @@ function Modal(qTip)
 			var elem = $(selector), overlay;
 
 			// Return if overlay is already rendered
-			if(elem.length) { return elems.overlay = elem; }
+			if(elem.length) { elems.overlay = elem; return elem; }
 
 			// Create document overlay
 			overlay = elems.overlay = $('<div />', {
