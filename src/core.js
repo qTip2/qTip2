@@ -108,7 +108,6 @@ function QTip(target, options, id, attr)
 		event: {},
 		target: NULL,
 		disabled: FALSE,
-		lastFocus: docBody,
 		attr: attr
 	};
 
@@ -922,9 +921,6 @@ function QTip(target, options, id, attr)
 					// Fire blur event for focused tooltip
 					qtips.filter('.' + focusClass).qtip('blur', cachedEvent);
 				}
-
-				// Store currently focused element
-				self.cache.lastFocus = document.activeElement;
 
 				// Call API method
 				callback = $.Event('tooltipfocus');

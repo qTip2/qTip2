@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Feb 1 21:56:54 2011 +0000
+* Date: Tue Feb 1 22:02:37 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -149,7 +149,6 @@ function QTip(target, options, id, attr)
 		event: {},
 		target: NULL,
 		disabled: FALSE,
-		lastFocus: docBody,
 		attr: attr
 	};
 
@@ -963,9 +962,6 @@ function QTip(target, options, id, attr)
 					// Fire blur event for focused tooltip
 					qtips.filter('.' + focusClass).qtip('blur', cachedEvent);
 				}
-
-				// Store currently focused element
-				self.cache.lastFocus = document.activeElement;
 
 				// Call API method
 				callback = $.Event('tooltipfocus');
