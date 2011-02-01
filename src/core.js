@@ -273,7 +273,7 @@ function QTip(target, options, id, attr)
 		if(options.content.title.button) { createButton(); }
 
 		// Redraw the tooltip dimensions if it's rendered
-		else if(self.rendered === TRUE){ self.redraw(); } 
+		else if(self.rendered){ self.redraw(); } 
 	}
 
 	function updateButton(button)
@@ -317,7 +317,7 @@ function QTip(target, options, id, attr)
 
 		// Redraw and reposition
 		self.redraw();
-		if(self.rendered === TRUE) {
+		if(self.rendered && isVisible()) {
 			self.reposition(self.cache.event);
 		}
 	}
@@ -355,7 +355,7 @@ function QTip(target, options, id, attr)
 				// If queue is empty, update tooltip and continue the queue
 				if(images.length === 0) {
 					self.redraw();
-					if(self.rendered === TRUE) {
+					if(self.rendered && isVisible()) {
 						self.reposition(self.cache.event);
 					}
 
@@ -769,7 +769,7 @@ function QTip(target, options, id, attr)
 						},
 
 						'^position.container$': function(){
-							if(self.rendered === TRUE) { 
+							if(self.rendered) { 
 								tooltip.appendTo(value); 
 							}
 						},
@@ -784,7 +784,7 @@ function QTip(target, options, id, attr)
 							if(args[0]) { obj[opt] = val; }
 							assignEvents.apply(self, args[1]);
 						},
-						'^show.ready$': function() { if(self.rendered === FALSE) { self.show(); } },
+						'^show.ready$': function() { if(!self.rendered) { self.show(); } },
 
 						// Style checks
 						'^style.classes$': function() { 
@@ -797,9 +797,9 @@ function QTip(target, options, id, attr)
 							elems.tooltip[($.isFunction(value) ? '' : 'un') + 'bind']('tooltip'+opt, val);
 						},
 
-						// Update position on ANY style update or position change
+						// Update position on ANY style/position/content change if shown and rendered
 						'^position.(my|at|adjust|target|container)|style|content': function(){ 
-							self.reposition();
+							if(isVisible() && self.rendered) { self.reposition(); }
 						}
 					}
 				};
@@ -833,7 +833,7 @@ function QTip(target, options, id, attr)
 		toggle: function(state, event)
 		{
 			
-			if(self.rendered === FALSE) { return FALSE; }
+			if(!self.rendered) { return FALSE; }
 
 			var type = state ? 'show' : 'hide',
 				opts = options[type],
@@ -874,7 +874,7 @@ function QTip(target, options, id, attr)
 				self.focus(event);
 
 				// Update tooltip position (without animation)
-				self.reposition(event, 0); 
+				self.reposition(event, 0);
 
 				// Hide other tooltips if tooltip is solo
 				if(opts.solo) { $(selector).not(tooltip).qtip('hide', callback); }
@@ -927,8 +927,6 @@ function QTip(target, options, id, attr)
 			// If inactive hide method is set, active it
 			if(state) { opts.target.trigger('qtip-'+id+'-inactive'); }
 
-			$.fn.qtip.lastShown = self;
-
 			return self;
 		},
 
@@ -938,7 +936,7 @@ function QTip(target, options, id, attr)
 
 		focus: function(event)
 		{
-			if(self.rendered === FALSE) { return FALSE; }
+			if(!self.rendered) { return FALSE; }
 
 			var qtips = $(selector),
 				curIndex = parseInt(tooltip[0].style.zIndex, 10),
@@ -995,7 +993,7 @@ function QTip(target, options, id, attr)
 
 		reposition: function(event, effect)
 		{
-			if(self.rendered === FALSE) { return FALSE; }
+			if(!self.rendered) { return FALSE; }
 
 			var target = options.position.target,
 				posOptions = options.position,
