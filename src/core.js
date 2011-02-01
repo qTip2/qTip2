@@ -136,38 +136,6 @@ function QTip(target, options, id, attr)
 
 		return actual[i] !== undefined ? [option, actual[i] ] : [options, actual[0]];
 	}
-
-	function offset(elem, container) {
-		var pos = elem.offset(),
-			parent = container,
-			deep = 0,
-			addScroll = !$.fn.qtip.plugins.iOS,
-			coffset;
-
-		if(parent) {
-			// Compensate for non-static containers offset
-			do {
-				if(parent[0] === docBody) { break; }
-				else if(parent.css('position') !== 'static') {
-					coffset = parent.position();
-					pos.left -= coffset.left;
-					pos.top -= coffset.top;
-					
-					deep++;
-				}
-			}
-			while(parent = parent.offsetParent());
-
-			// Compensate for containers scroll if it also has an offsetParent
-			if(!addScroll || deep > 1) {
-				coffset = addScroll ? 1 : -1;
-				pos.left += coffset * container.scrollLeft();
-				pos.top += coffset * container.scrollTop();
-			}
-		}
-
-		return pos;
-	}
 	
 	function isVisible() {
 		return tooltip.css('left') !== hideOffset && tooltip.css('visibility') !== 'hidden';
@@ -761,7 +729,7 @@ function QTip(target, options, id, attr)
 				break;
 
 				case 'offset':
-					result = offset(tooltip, options.position.container);
+					result = $.fn.qtip.plugins.offset(tooltip, options.position.container);
 				break;
 
 				default:
@@ -1117,7 +1085,7 @@ function QTip(target, options, id, attr)
 					targetWidth = target.outerWidth();
 					targetHeight = target.outerHeight();
 
-					position = offset(target, posOptions.container);
+					position = $.fn.qtip.plugins.offset(target, posOptions.container);
 				}
 
 				// Adjust position relative to target
@@ -1590,6 +1558,39 @@ $.fn.qtip.plugins = {
 			var x = this.x.substr(0,1), y = this.y.substr(0,1);
 			return x === y ? x : (x === 'c' || (x !== 'c' && y !== 'c')) ? y + x : x + y;
 		};
+	},
+
+	// Custom (more correct for qTip!) offset calculator
+	offset: function(elem, container) {
+		var pos = elem.offset(),
+			parent = container,
+			deep = 0,
+			addScroll = !$.fn.qtip.plugins.iOS,
+			coffset;
+
+		if(parent) {
+			// Compensate for non-static containers offset
+			do {
+				if(parent[0] === document.body) { break; }
+				else if(parent.css('position') !== 'static') {
+					coffset = parent.position();
+					pos.left -= coffset.left;
+					pos.top -= coffset.top;
+					
+					deep++;
+				}
+			}
+			while(parent = parent.offsetParent());
+
+			// Compensate for containers scroll if it also has an offsetParent
+			if(!addScroll || deep > 1) {
+				coffset = addScroll ? 1 : -1;
+				pos.left += coffset * container.scrollLeft();
+				pos.top += coffset * container.scrollTop();
+			}
+		}
+
+		return pos;
 	},
 	
 	/*
