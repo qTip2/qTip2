@@ -138,42 +138,29 @@ function QTip(target, options, id, attr)
 	}
 
 	function offset(elem, container) {
-		var pos = { left: 0, top: 0 },
-			type, addScroll = !$.fn.qtip.plugins.iOS, offsetParent, parentIsContainer;
+		var pos = elem.offset(),
+			parent = container,
+			deep = 0, coffset;
 
-		if(container) {
-			if(container.offsetParent !== docBody) {
-				pos = offset(container);
-				pos.left *= -1; pos.top *= -1;
-
-				pos.left += parseInt( $.css(container, 'margin-left'), 10 ) || 0;
-				pos.top += parseInt( $.css(container, 'margin-top'), 10 ) || 0;
-			}
-			else {
-				pos.left += docBody.scrollLeft;
-				pos.top += docBody.scrollTop;
-			}
-
-			if(container !== docBody) {
-				if($.css(container, 'overflow') !== 'visible') {
-					pos.left -= container.scrollLeft;
-					pos.top -= container.scrollTop;
+			if(parent) {
+			// Compensate for non-static containers offset
+			do {
+				if(parent[0] === docBody) { break; }
+				else if(parent.css('position') !== 'static') {
+					coffset = parent.position();
+					pos.left -= coffset.left;
+					pos.top -= coffset.top;
+					
+					deep++;
 				}
 			}
-		}
+			while(parent = parent.offsetParent());
 
-		if(elem.offsetParent) {
-			do {
-				offsetParent = elem.offsetParent;
-				parentIsContainer = offsetParent === container;
-
-				// Account for fixed containers
-				if(offsetParent === docBody && type === 'fixed') { addScroll = TRUE; }
-
-				pos.left += elem.offsetLeft - (addScroll && offsetParent && !parentIsContainer ? offsetParent.scrollLeft : 0);
-				pos.top += elem.offsetTop - (addScroll &&  offsetParent && !parentIsContainer ? offsetParent.scrollTop : 0);
+			// Compensate for containers scroll if it also has an offsetParent
+			if(deep > 1) {
+				pos.left += container.scrollLeft();
+				pos.top += container.scrollTop();
 			}
-			while(elem = offsetParent);
 		}
 
 		return pos;
@@ -771,7 +758,7 @@ function QTip(target, options, id, attr)
 				break;
 
 				case 'offset':
-					result = offset(tooltip[0], options.position.container[0]);
+					result = offset(tooltip, options.position.container);
 				break;
 
 				default:
@@ -1127,7 +1114,7 @@ function QTip(target, options, id, attr)
 					targetWidth = target.outerWidth();
 					targetHeight = target.outerHeight();
 
-					position = offset(target[0], posOptions.container[0]);
+					position = offset(target, posOptions.container);
 				}
 
 				// Adjust position relative to target
