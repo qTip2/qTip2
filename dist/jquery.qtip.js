@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Feb 1 12:29:24 2011 +0000
+* Date: Tue Feb 1 18:54:31 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -134,6 +134,7 @@ function QTip(target, options, id, attr)
 	var self = this,
 		docBody = document.body,
 		tooltipID = uitooltip + '-' + id,
+		isPositioning = 0,
 		tooltip;
 
 	// Setup class attributes
@@ -363,7 +364,7 @@ function QTip(target, options, id, attr)
 		}
 	}
 
-	function updateContent(content)
+	function updateContent(content, reposition)
 	{
 		var elem = self.elements.content;
 
@@ -509,12 +510,7 @@ function QTip(target, options, id, attr)
 		}
 
 		function repositionMethod(event) {
-			if(self.cache.processing) { return; }
-
-			// Only update position if tooltip is visible
-			self.cache.processing = 1;
 			if(isVisible()) { self.reposition(event); }
-			self.cache.processing = 0;
 		}
 
 		// Assign tooltip events
@@ -865,11 +861,16 @@ function QTip(target, options, id, attr)
 				name = option; option = {}; option[name] = value;
 			}
 
-			// Set each option/value pair in the object
+			/* 
+			 * Set each option/value pair in the object.
+			 * Also set isPositioning so we don't get laods of repositioning calls
+			 */
+			isPositioning = 1;
 			for(name in option) {
 				set(name, option[name]);
 				reposition = rmove.test(name) || reposition;
 			}
+			isPositioning = 0;
 
 			// Update position on ANY style/position/content change if shown and rendered
 			if(reposition && isVisible() && self.rendered) { self.reposition(); }
@@ -1043,8 +1044,11 @@ function QTip(target, options, id, attr)
 
 		reposition: function(event, effect)
 		{
-			if(!self.rendered) { return FALSE; }
+			if(!self.rendered || isPositioning) { return FALSE; }
 
+			// Set positioning flag
+			isPositioning = TRUE;
+	
 			var target = options.position.target,
 				posOptions = options.position,
 				my = posOptions.my, 
@@ -1218,6 +1222,9 @@ function QTip(target, options, id, attr)
 					next();
 				});
 			}
+
+			// Set positioning flag
+			isPositioning = FALSE;
 
 			return self;
 		},
