@@ -8,7 +8,7 @@ $.fn.qtip.plugins.svg = function(svg, corner)
 		},
 		box, mtx, root, point, tPoint;
 
-	if (elem.getBBox) {
+	if (elem.getBBox && elem.parentNode) {
 		box = elem.getBBox();
 		mtx = elem.getScreenCTM();
 		root = elem.farthestViewportElement || elem;

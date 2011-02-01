@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Jan 31 18:01:29 2011 +0000
+* Date: Tue Feb 1 12:28:32 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -2439,7 +2439,7 @@ $.fn.qtip.plugins.svg = function(svg, corner)
 		},
 		box, mtx, root, point, tPoint;
 
-	if (elem.getBBox) {
+	if (elem.getBBox && elem.parentNode) {
 		box = elem.getBBox();
 		mtx = elem.getScreenCTM();
 		root = elem.farthestViewportElement || elem;
