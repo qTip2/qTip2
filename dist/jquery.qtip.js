@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Feb 1 19:49:40 2011 +0000
+* Date: Tue Feb 1 21:51:06 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -181,9 +181,11 @@ function QTip(target, options, id, attr)
 	function offset(elem, container) {
 		var pos = elem.offset(),
 			parent = container,
-			deep = 0, coffset;
+			deep = 0,
+			addScroll = !$.fn.qtip.plugins.iOS,
+			coffset;
 
-			if(parent) {
+		if(parent) {
 			// Compensate for non-static containers offset
 			do {
 				if(parent[0] === docBody) { break; }
@@ -198,9 +200,10 @@ function QTip(target, options, id, attr)
 			while(parent = parent.offsetParent());
 
 			// Compensate for containers scroll if it also has an offsetParent
-			if(deep > 1) {
-				pos.left += container.scrollLeft();
-				pos.top += container.scrollTop();
+			if(!addScroll || deep > 1) {
+				coffset = addScroll ? 1 : -1;
+				pos.left += coffset * container.scrollLeft();
+				pos.top += coffset * container.scrollTop();
 			}
 		}
 
