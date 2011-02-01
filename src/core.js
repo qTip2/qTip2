@@ -102,6 +102,7 @@ function QTip(target, options, id, attr)
 	self.elements = { target: target };
 	self.timers = { img: [] };
 	self.options = options;
+	self.checks = {};
 	self.plugins = {};
 	self.cache = {
 		event: {},
@@ -602,7 +603,7 @@ function QTip(target, options, id, attr)
 	}
 
 	// Setup builtin .set() option checks
-	$.fn.qtip.checks.builtin = {
+	self.checks.builtin = {
 		// Core checks
 		'^id$': function(obj, o, v) {
 			var id = v === TRUE ? $.fn.qtip.nextid : v,
@@ -787,7 +788,7 @@ function QTip(target, options, id, attr)
 			var elems = self.elements,
 				rmove = /^position.(my|at|adjust|target|container)|style|content/i,
 				reposition = FALSE,
-				checks = $.fn.qtip.checks,
+				checks = self.checks,
 				name;
 
 			function set(notation, value) {
@@ -1584,7 +1585,6 @@ $.fn.qtip.version = '@VERSION';
 $.fn.qtip.nextid = 0;
 $.fn.qtip.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleave mouseenter'.split(' ');
 $.fn.qtip.zindex = 15000;
-$.fn.qtip.checks = {};
 
 // Setup base plugins
 $.fn.qtip.plugins = {
@@ -1607,8 +1607,6 @@ $.fn.qtip.plugins = {
 	 */
 	iOS: parseFloat(((/CPU.+OS ([0-9_]{3}).*AppleWebkit.*Mobile/i.exec(navigator.userAgent)) || [0,'4_2'])[1].replace('_','.')) < 4.1
 };
-
-
 
 // Define configuration defaults
 $.fn.qtip.defaults = {

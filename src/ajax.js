@@ -6,7 +6,7 @@ function Ajax(qTip)
 		namespace = '.qtip-ajax',
 		rscript = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
 
-	$.fn.qtip.checks.ajax = {
+	qTip.checks.ajax = {
 		'^content.ajax': function(obj, name) {
 			if(name === 'once') {
 				self.once();

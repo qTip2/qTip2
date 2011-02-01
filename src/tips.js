@@ -47,7 +47,7 @@ function Tip(qTip, command)
 	self.mimic = NULL;
 
 	// Add new option checks for the plugin
-	$.fn.qtip.checks.tip = {
+	qTip.checks.tip = {
 		'^position.my|style.tip.(corner|mimic|border)$': function() {
 			// Make sure a tip can be drawn
 			if(!self.init()) {

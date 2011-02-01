@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Feb 1 19:20:50 2011 +0000
+* Date: Tue Feb 1 19:43:41 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -143,6 +143,7 @@ function QTip(target, options, id, attr)
 	self.elements = { target: target };
 	self.timers = { img: [] };
 	self.options = options;
+	self.checks = {};
 	self.plugins = {};
 	self.cache = {
 		event: {},
@@ -643,7 +644,7 @@ function QTip(target, options, id, attr)
 	}
 
 	// Setup builtin .set() option checks
-	$.fn.qtip.checks.builtin = {
+	self.checks.builtin = {
 		// Core checks
 		'^id$': function(obj, o, v) {
 			var id = v === TRUE ? $.fn.qtip.nextid : v,
@@ -828,7 +829,7 @@ function QTip(target, options, id, attr)
 			var elems = self.elements,
 				rmove = /^position.(my|at|adjust|target|container)|style|content/i,
 				reposition = FALSE,
-				checks = $.fn.qtip.checks,
+				checks = self.checks,
 				name;
 
 			function set(notation, value) {
@@ -1625,7 +1626,6 @@ $.fn.qtip.version = '2.0.0pre';
 $.fn.qtip.nextid = 0;
 $.fn.qtip.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleave mouseenter'.split(' ');
 $.fn.qtip.zindex = 15000;
-$.fn.qtip.checks = {};
 
 // Setup base plugins
 $.fn.qtip.plugins = {
@@ -1648,8 +1648,6 @@ $.fn.qtip.plugins = {
 	 */
 	iOS: parseFloat(((/CPU.+OS ([0-9_]{3}).*AppleWebkit.*Mobile/i.exec(navigator.userAgent)) || [0,'4_2'])[1].replace('_','.')) < 4.1
 };
-
-
 
 // Define configuration defaults
 $.fn.qtip.defaults = {
@@ -1714,7 +1712,7 @@ $.fn.qtip.defaults = {
 		namespace = '.qtip-ajax',
 		rscript = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
 
-	$.fn.qtip.checks.ajax = {
+	qTip.checks.ajax = {
 		'^content.ajax': function(obj, name) {
 			if(name === 'once') {
 				self.once();
@@ -1870,7 +1868,7 @@ function Tip(qTip, command)
 	self.mimic = NULL;
 
 	// Add new option checks for the plugin
-	$.fn.qtip.checks.tip = {
+	qTip.checks.tip = {
 		'^position.my|style.tip.(corner|mimic|border)$': function() {
 			// Make sure a tip can be drawn
 			if(!self.init()) {
@@ -2499,7 +2497,7 @@ function Modal(qTip)
 		events = 'tooltipshow'+namespace+' tooltiphide'+namespace;
 
 	// Setup option set checks
-	$.fn.qtip.checks.modal = {
+	qTip.checks.modal = {
 		'^show.modal.(on|blur)$': function() {
 			// Initialise
 			self.init();
