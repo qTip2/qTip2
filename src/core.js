@@ -724,18 +724,17 @@ function QTip(target, options, id, attr)
 			return result;
 		},
 
-		set: function(notation, value)
+		set: function(option, value)
 		{
-			notation = notation.toLowerCase();
-			var option = convertNotation(notation),
-				elems = self.elements,
-				previous,
-				category, rule,
+			var elems = self.elements,
+				rmove = /^position.(my|at|adjust|target|container)|style|content/i,
+				reposition = FALSE,
+				name,
 				checks = {
 					builtin: {
 						// Core checks
-						'^id$': function(obj, opt, val, prev) {
-							var id = value === TRUE ? $.fn.qtip.nextid : value,
+						'^id$': function(obj, o, v) {
+							var id = v === TRUE ? $.fn.qtip.nextid : v,
 								tooltipID = uitooltip + '-' + id;
 
 							if(id !== FALSE && id.length > 0 && !$('#'+tooltipID).length) {
@@ -746,60 +745,50 @@ function QTip(target, options, id, attr)
 						},
 
 						// Content checks
-						'^content.text$': function(){ updateContent(value); },
-						'^content.title.text$': function() {
+						'^content.text$': function(obj, o, v){ updateContent(v); },
+						'^content.title.text$': function(obj, o, v) {
 							// Remove title if content is null
-							if(!value) { return removeTitle(); }
+							if(!v) { return removeTitle(); }
 
-							// If title isn't already created, create it now
-							if(!self.elements.title && value) { createTitle(); }
-
-							updateTitle(value);
+							// If title isn't already created, create it now and update
+							if(!elems.title && v) { createTitle(); }
+							updateTitle(v);
 						},
-						'^content.title.button$': function(){ updateButton(value); },
+						'^content.title.button$': function(obj, o, v){ updateButton(v); },
 
 						// Position checks
-						'^position.(my|at)$': function(){
+						'^position.(my|at)$': function(obj, o, v){
 							// Parse new corner value into Corner objecct
-							var corner = (/my$/i).test(notation) ? 'my' : 'at';
-
-							if('string' === typeof value) {
-								options.position[corner] = new $.fn.qtip.plugins.Corner(value);
+							if('string' === typeof v) {
+								obj[ o.substr(-2) ] = new $.fn.qtip.plugins.Corner(v);
 							}
 						},
 
-						'^position.container$': function(){
-							if(self.rendered) { 
-								tooltip.appendTo(value); 
-							}
+						'^position.container$': function(obj, o, v){
+							if(self.rendered) { tooltip.appendTo(v); }
 						},
 
 						// Show & hide checks
-						'^(show|hide).(event|target|fixed|delay|inactive)$': function(obj, opt, val, prev) {
-							var args = notation.search(/fixed/i) > -1 ? [0, [0,1,1,1]] : [notation.substr(0,3), notation.charAt(0) === 's' ? [1,0,0,0] : [0,1,0,0]];
+						'^(show|hide).(event|target|fixed|delay|inactive)$': function(obj, o, v, p) {
+							var args = o.search(/fixed/i) > -1 ? [0, [0,1,1,1]] : [o.substr(0,3), o.charAt(0) === 's' ? [1,0,0,0] : [0,1,0,0]];
 
-							if(args[0]) { obj[opt] = prev; }
+							if(args[0]) { obj[o] = p; }
 							unassignEvents.apply(self, args[1]);
 
-							if(args[0]) { obj[opt] = val; }
+							if(args[0]) { obj[o] = v; }
 							assignEvents.apply(self, args[1]);
 						},
 						'^show.ready$': function() { if(!self.rendered) { self.show(); } },
 
 						// Style checks
-						'^style.classes$': function() { 
-							$.attr(tooltip[0], 'class', uitooltip + ' qtip ui-helper-reset ' + value);
+						'^style.classes$': function(obj, o, v) { 
+							$.attr(tooltip[0], 'class', uitooltip + ' qtip ui-helper-reset ' + v);
 						},
 						'^style.widget|content.title': setWidget,
 
 						// Events check
-						'^events.(render|show|move|hide|focus|blur)$': function(obj, opt, val, prev) {
-							elems.tooltip[($.isFunction(value) ? '' : 'un') + 'bind']('tooltip'+opt, val);
-						},
-
-						// Update position on ANY style/position/content change if shown and rendered
-						'^position.(my|at|adjust|target|container)|style|content': function(){ 
-							if(isVisible() && self.rendered) { self.reposition(); }
+						'^events.(render|show|move|hide|focus|blur)$': function(obj, o, v) {
+							elems.tooltip[($.isFunction(v) ? '' : 'un') + 'bind']('tooltip'+o, v);
 						}
 					}
 				};
@@ -811,21 +800,41 @@ function QTip(target, options, id, attr)
 				}
 			});
 
-			// Set new option value
-			previous = option[0][ option[1] ];
-			option[0][ option[1] ] = value.nodeType ? $(value) : value;
+			function set(notation, value) {
+				notation = notation.toLowerCase();
 
-			// Re-sanitize options
-			sanitizeOptions(options);
+				var option = convertNotation(notation), previous, category, rule;
 
-			// Execute any valid callbacks
-			for(category in checks) {
-				for(rule in checks[category]) {
-					if((new RegExp(rule, 'i')).test(notation)) {
-						checks[category][rule].call(self, option[0], option[1], value, previous);
+				// Set new option value
+				previous = option[0][ option[1] ];
+				option[0][ option[1] ] = value.nodeType ? $(value) : value;
+				
+				// Execute any valid callbacks
+				for(category in checks) {
+					for(rule in checks[category]) {
+						if((new RegExp(rule, 'i')).test(notation)) {
+							checks[category][rule].call(self, option[0], option[1], value, previous);
+						}
 					}
 				}
 			}
+
+			// Convert singular option/value pair into object form
+			if('string' === typeof option) {
+				name = option; option = {}; option[name] = value;
+			}
+
+			// Set each option/value pair in the object
+			for(name in option) {
+				set(name, option[name]);
+				reposition = rmove.test(name) || reposition;
+			}
+
+			// Update position on ANY style/position/content change if shown and rendered
+			if(reposition && isVisible() && self.rendered) { self.reposition(); }
+
+			// Re-sanitize options
+			sanitizeOptions(options);
 
 			return self;
 		},
@@ -1367,7 +1376,7 @@ $.fn.qtip = function(options, notation, newValue)
 
 			// Call APIcommand
 			if((/option|set/).test(command) && notation) {
-				if(newValue !== undefined) {
+				if($.isPlainObject(notation) || newValue !== undefined) {
 					api.set(notation, newValue);
 				}
 				else {
