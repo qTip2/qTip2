@@ -25,26 +25,26 @@
 // uplift shell args
 var argv = new Array()
 for (i in arguments) {
-   argv.push(arguments[i]);
+	argv.push(arguments[i]);
 }
 
 // get the input file, toss it into the big ugly black box,
 // and save the output
 
 function main() {
-
-  if (argv.length < 2) {
-    print("usage: infile.js outfile.js");
-  } else {
-    inpath = argv[0];
-    outpath = argv[1];
-
-    codeRaw = readFile(inpath);
-    codeComp = pack(codeRaw, 62, 1, 0);
-    writer = java.io.FileWriter(outpath);
-    writer.write(codeComp);
-    writer.close();
-  }
+	
+	if (argv.length < 2) {
+		print("usage: infile.js outfile.js");
+	} else {
+		inpath = argv[0];
+		outpath = argv[1];
+		
+		codeRaw = readFile(inpath);
+		codeComp = pack(codeRaw, 62, 1, 0);
+		writer = java.io.FileWriter(outpath);
+		writer.write(codeComp);
+		writer.close();
+	}
 }
 
 // what follows is Dean Edward's compressed/obfuscated implementation
@@ -73,27 +73,27 @@ var AUTHOR  = 'Rob Seiler'; /* seiler@elr.com.au */
 
 /* Show help if needed - eg 0 command line arguments */
 function JS_Help () {
-  WScript.Echo ('Compress and encode a Javascript source file using Dean Edwards "Packer"');
-  WScript.Echo ('  Version : ' + VERSION);
-  WScript.Echo ('  Syntax  : program sourcefile [_encoding] [_fastDecode] [_specialChars]\n');
- }
+	WScript.Echo ('Compress and encode a Javascript source file using Dean Edwards "Packer"');
+	WScript.Echo ('  Version : ' + VERSION);
+	WScript.Echo ('  Syntax  : program sourcefile [_encoding] [_fastDecode] [_specialChars]\n');
+}
 
 /* Main program: Get arguments; read input file; output packed string */
 function oldmain() {
-  var params = [];
-  params = JS_getArgs();
-  params[1] = (typeof(params[1]) == 'undefined') ? 62 : params[1]; // -dean : changed defaults
-  params[2] = (typeof(params[2]) == 'undefined') ? 1  : params[2];
-  params[3] = (typeof(params[3]) == 'undefined') ? 0  : params[3];
-  if (params[0] > '') {
-    var $script = JS_readFile(params[0]);
-    if ($script > '') {
-      $script = pack($script, params[1], params[2], params[3]); /* Returns the Dean Edwards "packed" string */
-      WScript.Echo ($script);
-    }
-    else {JS_Help();}
-  }
-  else {JS_Help();}
+	var params = [];
+	params = JS_getArgs();
+	params[1] = (typeof(params[1]) == 'undefined') ? 62 : params[1]; // -dean : changed defaults
+	params[2] = (typeof(params[2]) == 'undefined') ? 1  : params[2];
+	params[3] = (typeof(params[3]) == 'undefined') ? 0  : params[3];
+	if (params[0] > '') {
+		var $script = JS_readFile(params[0]);
+		if ($script > '') {
+			$script = pack($script, params[1], params[2], params[3]); /* Returns the Dean Edwards "packed" string */
+			WScript.Echo ($script);
+		}
+		else {JS_Help();}
+	}
+	else {JS_Help();}
 }
 
 main()

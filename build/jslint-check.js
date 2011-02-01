@@ -1,6 +1,6 @@
-load("build/jslint.js");
-
-var src = readFile("dist/jquery.qtip.js");
+var JSLINT = require("./lib/jslint").JSLINT,
+	print = require("sys").print,
+	src = require("fs").readFileSync("dist/jquery.qtip.js", "utf8");
 
 JSLINT(src, { evil: true, forin: true, maxerr: 100 });
 
@@ -12,14 +12,13 @@ var ok = {
 	"Expected a conditional expression and instead saw an assignment.": true,
 	"Insecure '.'.": true,
 	"Insecure '^'.": true
-	
 };
 
 var e = JSLINT.errors, found = 0, w;
 
 for ( var i = 0; i < e.length; i++ ) {
 	w = e[i];
-
+	
 	if ( !ok[ w.reason ] ) {
 		found++;
 		print( "\n" + w.evidence + "\n" );
@@ -28,8 +27,8 @@ for ( var i = 0; i < e.length; i++ ) {
 }
 
 if ( found > 0 ) {
-	print( "\n" + found + " Error(s) found." );
-
+	print( "\n" + found + " Error(s) found.\n" );
+	
 } else {
-	print( "JSLint check passed." );
+	print( "JSLint check passed.\n" );
 }
