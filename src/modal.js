@@ -10,7 +10,7 @@ function Modal(qTip)
 		events = 'tooltipshow'+namespace+' tooltiphide'+namespace;
 
 	// Setup option set checks
-	self.checks = {
+	$.fn.qtip.checks.modal = {
 		'^show.modal.(on|blur)$': function() {
 			// Initialise
 			self.init();

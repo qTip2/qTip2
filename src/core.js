@@ -601,6 +601,68 @@ function QTip(target, options, id, attr)
 		else if(show) { targets.show.unbind(namespace+'-create'); }
 	}
 
+	// Setup builtin .set() option checks
+	$.fn.qtip.checks.builtin = {
+		// Core checks
+		'^id$': function(obj, o, v) {
+			var id = v === TRUE ? $.fn.qtip.nextid : v,
+				tooltipID = uitooltip + '-' + id;
+
+			if(id !== FALSE && id.length > 0 && !$('#'+tooltipID).length) {
+				tooltip[0].id = tooltipID;
+				self.elements.content[0].id = tooltipID + '-content';
+				self.elements.title[0].id = tooltipID + '-title';
+			}
+		},
+
+		// Content checks
+		'^content.text$': function(obj, o, v){ updateContent(v); },
+		'^content.title.text$': function(obj, o, v) {
+			// Remove title if content is null
+			if(!v) { return removeTitle(); }
+
+			// If title isn't already created, create it now and update
+			if(!self.elements.title && v) { createTitle(); }
+			updateTitle(v);
+		},
+		'^content.title.button$': function(obj, o, v){ updateButton(v); },
+
+		// Position checks
+		'^position.(my|at)$': function(obj, o, v){
+			// Parse new corner value into Corner objecct
+			if('string' === typeof v) {
+				obj[o] = new $.fn.qtip.plugins.Corner(v);
+			}
+		},
+
+		'^position.container$': function(obj, o, v){
+			if(self.rendered) { tooltip.appendTo(v); }
+		},
+
+		// Show & hide checks
+		'^(show|hide).(event|target|fixed|delay|inactive)$': function(obj, o, v, p) {
+			var args = o.search(/fixed/i) > -1 ? [0, [0,1,1,1]] : [o.substr(0,3), o.charAt(0) === 's' ? [1,0,0,0] : [0,1,0,0]];
+
+			if(args[0]) { obj[o] = p; }
+			unassignEvents.apply(self, args[1]);
+
+			if(args[0]) { obj[o] = v; }
+			assignEvents.apply(self, args[1]);
+		},
+		'^show.ready$': function() { if(!self.rendered) { self.show(); } },
+
+		// Style checks
+		'^style.classes$': function(obj, o, v) { 
+			$.attr(tooltip[0], 'class', uitooltip + ' qtip ui-helper-reset ' + v);
+		},
+		'^style.widget|content.title': setWidget,
+
+		// Events check
+		'^events.(render|show|move|hide|focus|blur)$': function(obj, o, v) {
+			tooltip[($.isFunction(v) ? '' : 'un') + 'bind']('tooltip'+o, v);
+		}
+	};
+
 	/*
 	* Public API methods
 	*/
@@ -725,76 +787,8 @@ function QTip(target, options, id, attr)
 			var elems = self.elements,
 				rmove = /^position.(my|at|adjust|target|container)|style|content/i,
 				reposition = FALSE,
-				name,
-				checks = {
-					builtin: {
-						// Core checks
-						'^id$': function(obj, o, v) {
-							var id = v === TRUE ? $.fn.qtip.nextid : v,
-								tooltipID = uitooltip + '-' + id;
-
-							if(id !== FALSE && id.length > 0 && !$('#'+tooltipID).length) {
-								tooltip[0].id = tooltipID;
-								elems.content[0].id = tooltipID + '-content';
-								elems.title[0].id = tooltipID + '-title';
-							}
-						},
-
-						// Content checks
-						'^content.text$': function(obj, o, v){ updateContent(v); },
-						'^content.title.text$': function(obj, o, v) {
-							// Remove title if content is null
-							if(!v) { return removeTitle(); }
-
-							// If title isn't already created, create it now and update
-							if(!elems.title && v) { createTitle(); }
-							updateTitle(v);
-						},
-						'^content.title.button$': function(obj, o, v){ updateButton(v); },
-
-						// Position checks
-						'^position.(my|at)$': function(obj, o, v){
-							// Parse new corner value into Corner objecct
-							if('string' === typeof v) {
-								obj[ o.substr(-2) ] = new $.fn.qtip.plugins.Corner(v);
-							}
-						},
-
-						'^position.container$': function(obj, o, v){
-							if(self.rendered) { tooltip.appendTo(v); }
-						},
-
-						// Show & hide checks
-						'^(show|hide).(event|target|fixed|delay|inactive)$': function(obj, o, v, p) {
-							var args = o.search(/fixed/i) > -1 ? [0, [0,1,1,1]] : [o.substr(0,3), o.charAt(0) === 's' ? [1,0,0,0] : [0,1,0,0]];
-
-							if(args[0]) { obj[o] = p; }
-							unassignEvents.apply(self, args[1]);
-
-							if(args[0]) { obj[o] = v; }
-							assignEvents.apply(self, args[1]);
-						},
-						'^show.ready$': function() { if(!self.rendered) { self.show(); } },
-
-						// Style checks
-						'^style.classes$': function(obj, o, v) { 
-							$.attr(tooltip[0], 'class', uitooltip + ' qtip ui-helper-reset ' + v);
-						},
-						'^style.widget|content.title': setWidget,
-
-						// Events check
-						'^events.(render|show|move|hide|focus|blur)$': function(obj, o, v) {
-							elems.tooltip[($.isFunction(v) ? '' : 'un') + 'bind']('tooltip'+o, v);
-						}
-					}
-				};
-
-			// Merge active plugin checks
-			$.each(self.plugins, function(name) {
-				if('object' === typeof this.checks) {
-					checks[name] = this.checks;
-				}
-			});
+				checks = $.fn.qtip.checks,
+				name;
 
 			function set(notation, value) {
 				notation = notation.toLowerCase();
@@ -822,7 +816,7 @@ function QTip(target, options, id, attr)
 
 			/* 
 			 * Set each option/value pair in the object.
-			 * Also set isPositioning so we don't get laods of repositioning calls
+			 * Also set isPositioning so we don't get loads of redundant repositioning calls
 			 */
 			isPositioning = 1;
 			for(name in option) {
@@ -1590,6 +1584,7 @@ $.fn.qtip.version = '@VERSION';
 $.fn.qtip.nextid = 0;
 $.fn.qtip.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleave mouseenter'.split(' ');
 $.fn.qtip.zindex = 15000;
+$.fn.qtip.checks = {};
 
 // Setup base plugins
 $.fn.qtip.plugins = {
@@ -1612,6 +1607,8 @@ $.fn.qtip.plugins = {
 	 */
 	iOS: parseFloat(((/CPU.+OS ([0-9_]{3}).*AppleWebkit.*Mobile/i.exec(navigator.userAgent)) || [0,'4_2'])[1].replace('_','.')) < 4.1
 };
+
+
 
 // Define configuration defaults
 $.fn.qtip.defaults = {
