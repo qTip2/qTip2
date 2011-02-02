@@ -2,93 +2,84 @@
 ================================
 
 Pre-compiled scripts
----------------------------------------
+--------------------
 If you're not interested in compiling your own version of qTip2, you can grab the pre-compiled scripts from the 
 [dist](http://github.com/Craga89/qTip2/tree/master/dist/) directory and get started quickly. If you want more options
 over what plugins are included in your build, take a look below.
 
 
 What you need to build qTip2
----------------------------------------
-* *nix make or [Apache Ant](http://ant.apache.org/bindownload.cgi)
-* [Java Runtime Environment](http://java.sun.com/javase/downloads/index.jsp) (If you wish to build minified sources or use JSLint check)
+----------------------------
+In order to build qTip, you need to have GNU make 3.8 or later, Node.js 0.2 or later, and git 1.7 or later.
+(Earlier versions might work OK, but are not tested.)
+
+Windows users have two options:
+
+1. Install [msysgit](https://code.google.com/p/msysgit/) (Full installer for official Git),
+   [GNU make for Windows](http://gnuwin32.sourceforge.net/packages/make.htm), and a
+   [binary version of Node.js](http://node-js.prcn.co.cc/). Make sure all three packages are installed to the same
+   location (by default, this is C:\Program Files\Git).
+2. Install [Cygwin](http://cygwin.com/) (make sure you install the git, make, and which packages), then either follow
+   the [Node.js build instructions](https://github.com/ry/node/wiki/Building-node.js-on-Cygwin-%28Windows%29) or install
+   the [binary version of Node.js](http://node-js.prcn.co.cc/).
+
+Linux/BSD users should use their appropriate package managers to install make, git, and node, or build from source
+if you swing that way. Easy-peasy.
+
+Mac OS users should install Xcode (comes on your Mac OS install DVD, or downloadable from
+[Apple's Xcode site](http://developer.apple.com/technologies/xcode.html)) and
+[http://mxcl.github.com/homebrew/](Homebrew). Once Homebrew is installed, run `brew install git` to install git,
+and `brew install node` to install Node.js.
 
 
-How to build qTip2 (using MAKE)
-------------------------
+How to build qTip2
+------------------
+First, clone a copy of the main qTip2 git repo by running `git clone git://github.com/Craga89/qTip2.git`.
 
-In the main directory of the distribution (the one that this file is in), type
-the following to build qTip2 and its accompanying CSS:
+Then, to get a complete, minified, jslinted version of qTip, simply `cd` to the `qtip` directory and type
+`make`. If you don't have Node installed and/or want to make a basic, uncompressed, unlinted version of qTip, use
+`make qtip` instead of `make`.
 
-	make
+The built version of qTip2 will be put in the `dist/` subdirectory.
 
-You can also create each individually using these commands:
-
-	make qtip		# Build non-minified qTip2 source
-	make css 		# Build CSS files
-	make min 		# Build minified source and css
-	make pack		# Build minified and packed qTip2 source (Smallest filesize!)
-
-To build and test the source code against JSLint type this:
-
-	make lint
-
-Finally, you can remove all the built files using the command:
-
-	make clean
+To remove all built files, run `make clean`.
 
 
-How to build qTip2 (Using ANT)
-------------------------
+Building to a different directory
+---------------------------------
+If you want to build qTip2 to a directory that is different from the default location, you can specify the PREFIX
+directory: `make PREFIX=/home/craig/qtip/ [command]`
 
-For those of you without access to *nix make, an ANT build file is also included in the repository. Build instructions are identical to
-those above, but replace _make_ with _ant_ e.g.
-
-	ant [command]
-	
-*`[command]` is optional and can be any of the above i.e. qtip, min, pack etc.*
+With this example, the output files would end up in `/home/craig/qtip/dist/`.
 
 
-Building to a different directory (MAKE only)
-----------------------------------
-
-If you want to build qTip2 to a directory that is different from the default location, you can...
-
-	make PREFIX=/home/craig/qtip2/ [command]
-	
-With this, the output files would be contained in `/home/craig/qtip2/dist/`
-
-*`[command]` is optional.*
-
-
-Choosing which features are included in your build (MAKE only)
-----------------------------------
+Choosing which features are included in your qTip2 build
+--------------------------------------------------------
 By default qTip2 is built with all plugins built into the file. You can see an example of this in the [dist](http://github.com/Craga89/qTip2/tree/master/dist/)
 directory files. If you want more control over what plugins are included, you can do so by adding some extra parameters to your build commands.
 
 For example, if you plan on using only the tips plugin, you'd specify the plugins variable as so:
 
-	make PLUGINS="src/tips.js" all
+	make PLUGINS="src/tips.js" [command]
 	
 Notice the only thing that was added was the PLUGINS parameter. This tells the compiler which files to include in the final qTip2 build. You can specify multiple
 plugins by separating them wit a space:
 
-	make PLUGINS="src/tips.js src/ajax.js src/modal.js" all
+	make PLUGINS="src/tips.js src/ajax.js src/modal.js" [command]
 	
 By default all plugins are included in the build, so the regular `[make all]` command is actually equivilent to:
 
-	make PLUGINS="src/ajax.js src/tips.js src/imagemap.js src/svg.js src/modal.js src/bgiframe.js" all
+	make PLUGINS="src/ajax.js src/tips.js src/imagemap.js src/svg.js src/modal.js src/bgiframe.js" [command]
 
 * Note: The above was correct at the time of writing. Subsequent revisions may change file names or add new plugins, so checkout the Makefile for a full up-to-date list of all plugins*
 
 
 Questions or problems?
 ----------------------
-
 If you have any questions, please feel free to post on the support forums:
 [http://craigsworks.com/projects/forums](http://craigsworks.com/projects/forums)
 
 
 Special thanks
 --------------
-Big shout-out to the jQuery team for providing the directory structure and base files for the git repo!
+Big shout-out to the jQuery team for providing the directory structure and base files for the git repo, as well as the base-files for the new NodeJS build system!
