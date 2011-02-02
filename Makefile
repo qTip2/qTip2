@@ -34,7 +34,7 @@ QTIP_CSS_MIN = ${DIST_DIR}/jquery.qtip.min.css
 QTIP_VER = `cat version.txt`
 VER = sed s/@VERSION/${QTIP_VER}/
 
-JS_ENGINE ?= `which nodejs`
+JS_ENGINE ?= `which node nodejs`
 COMPILER = ${JS_ENGINE} ${BUILD_DIR}/uglify.js --unsafe
 MINIFIER = java -Xmx96m -jar ${BUILD_DIR}/yuicompressor.jar
 PACKER = java -jar ${BUILD_DIR}/js.jar ${BUILD_DIR}/packer.js
