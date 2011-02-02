@@ -36,13 +36,25 @@ How to build qTip2
 ------------------
 First, clone a copy of the main qTip2 git repo by running `git clone git://github.com/Craga89/qTip2.git`.
 
-Then, to get a complete, minified, jslinted version of qTip, simply `cd` to the `qtip` directory and type
-`make`. If you don't have Node installed and/or want to make a basic, uncompressed, unlinted version of qTip, use
-`make qtip` instead of `make`.
+Then, in the main directory of the distribution (the one that this file is in), type
+the following to build qTip2 and its accompanying CSS:
 
-The built version of qTip2 will be put in the `dist/` subdirectory.
+	make
 
-To remove all built files, run `make clean`.
+You can also create each individually using these commands:
+
+	make qtip		# Build non-minified qTip2 source
+	make css 		# Build CSS files
+	make min 		# Build minified JS and CSS
+	make pack		# Build minified and packed qTip2 JS (smallest filesize!)
+
+To build and test the source code against JSLint type this:
+
+	make lint
+
+Finally, you can remove all the built files using the command:
+
+	make clean
 
 
 Building to a different directory
