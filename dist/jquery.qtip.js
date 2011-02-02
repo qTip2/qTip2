@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Feb 2 15:29:18 2011 +0000
+* Date: Wed Feb 2 15:55:41 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -2241,8 +2241,8 @@ function Tip(qTip, command)
 						b = borderWidth(corner, side, TRUE);
 						br = borderRadius(corner);
 
-						position[ side ] = i || !border ? 
-							borderWidth(corner, side) :
+						position[ side ] = i || !border ?
+							borderWidth(corner, side) + (!i ? br : 0) :
 							offset + (br > b ? br : 0);
 					}
 				}
