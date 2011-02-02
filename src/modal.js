@@ -61,7 +61,8 @@ function Modal(qTip)
 					top: 0,
 					left: 0,
 					display: 'none'
-				}
+				},
+				mousedown: function() { return FALSE; }
 			})
 			.appendTo(document.body);
 

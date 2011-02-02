@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Feb 2 16:35:14 2011 +0000
+* Date: Wed Feb 2 23:45:08 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -2535,7 +2535,8 @@ function Modal(qTip)
 					top: 0,
 					left: 0,
 					display: 'none'
-				}
+				},
+				mousedown: function() { return FALSE; }
 			})
 			.appendTo(document.body);
 
