@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Feb 2 15:55:41 2011 +0000
+* Date: Wed Feb 2 16:35:14 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1313,7 +1313,7 @@ function init(id, opts)
 	}
 
 	// Setup target options
-	if(posOptions.container === FALSE) { posOptions.container = docBody; }
+	if(posOptions.container === FALSE) { posOptions.container = elem.offsetParent(); }
 	if(posOptions.target === FALSE) { posOptions.target = newTarget; }
 	if(config.show.target === FALSE) { config.show.target = newTarget; }
 	if(config.hide.target === FALSE) { config.hide.target = newTarget; }
