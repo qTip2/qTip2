@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Feb 2 00:07:15 2011 +0000
+* Date: Wed Feb 2 15:29:18 2011 +0000
 */
 
 /* Fluid class for determining actual width in IE */
@@ -273,10 +273,9 @@
 }
 
 	.ui-tooltip .ui-tooltip-tip,
-	.ui-tooltip .ui-tooltip-tip vml\:*,
-	.ui-tooltip .ui-tooltip-tip canvas{
-		line-height: 0.1px;
-		font-size: 0.1px;
+	.ui-tooltip .ui-tooltip-tip *{
+		line-height: 0.1px !important;
+		font-size: 0.1px !important;
 		color: #123456;
 
 		background: transparent;

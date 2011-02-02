@@ -9,10 +9,9 @@
 }
 
 	.ui-tooltip .ui-tooltip-tip,
-	.ui-tooltip .ui-tooltip-tip vml\:*,
-	.ui-tooltip .ui-tooltip-tip canvas{
-		line-height: 0.1px;
-		font-size: 0.1px;
+	.ui-tooltip .ui-tooltip-tip *{
+		line-height: 0.1px !important;
+		font-size: 0.1px !important;
 		color: #123456;
 
 		background: transparent;
