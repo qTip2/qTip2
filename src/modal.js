@@ -39,10 +39,11 @@ function Modal(qTip)
 				// Create the overlay if needed
 				self.create();
 
-				// Hide tooltip on overlay click if enabled
+				// Hide tooltip on overlay click if enabled and toggle cursor style
 				if(options.blur === TRUE) {
 					elems.overlay.unbind(namespace+qTip.id).bind('click'+namespace+qTip.id, function(){ qTip.hide.call(qTip); });
 				}
+				elems.overlay.css('cursor', options.blur ? 'pointer' : '');
 			}
 		},
 

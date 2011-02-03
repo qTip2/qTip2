@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Feb 2 23:45:08 2011 +0000
+* Date: Wed Feb 2 23:58:52 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -2513,10 +2513,11 @@ function Modal(qTip)
 				// Create the overlay if needed
 				self.create();
 
-				// Hide tooltip on overlay click if enabled
+				// Hide tooltip on overlay click if enabled and toggle cursor style
 				if(options.blur === TRUE) {
 					elems.overlay.unbind(namespace+qTip.id).bind('click'+namespace+qTip.id, function(){ qTip.hide.call(qTip); });
 				}
+				elems.overlay.css('cursor', options.blur ? 'pointer' : '');
 			}
 		},
 
