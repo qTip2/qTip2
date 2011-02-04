@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Feb 3 14:05:05 2011 +0000
+* Date: Fri Feb 4 22:50:03 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -797,15 +797,20 @@ function QTip(target, options, id, attr)
 				// Set new option value
 				previous = option[0][ option[1] ];
 				option[0][ option[1] ] = value.nodeType ? $(value) : value;
-				
-				// Execute any valid callbacks
-				for(category in checks) {
-					for(rule in checks[category]) {
-						if((new RegExp(rule, 'i')).test(notation)) {
-							checks[category][rule].call(self, option[0], option[1], value, previous);
+
+				// Execute any valid callbacks (if rendered)
+				if(self.rendered) {
+					for(category in checks) {
+						for(rule in checks[category]) {
+							if((new RegExp(rule, 'i')).test(notation)) {
+								checks[category][rule].call(self, option[0], option[1], value, previous);
+							}
 						}
 					}
 				}
+
+				// If we're not rendered and show.ready was set, render it
+				else if(notation === 'show.ready') { self.render(TRUE); }
 			}
 
 			// Convert singular option/value pair into object form

@@ -756,15 +756,20 @@ function QTip(target, options, id, attr)
 				// Set new option value
 				previous = option[0][ option[1] ];
 				option[0][ option[1] ] = value.nodeType ? $(value) : value;
-				
-				// Execute any valid callbacks
-				for(category in checks) {
-					for(rule in checks[category]) {
-						if((new RegExp(rule, 'i')).test(notation)) {
-							checks[category][rule].call(self, option[0], option[1], value, previous);
+
+				// Execute any valid callbacks (if rendered)
+				if(self.rendered) {
+					for(category in checks) {
+						for(rule in checks[category]) {
+							if((new RegExp(rule, 'i')).test(notation)) {
+								checks[category][rule].call(self, option[0], option[1], value, previous);
+							}
 						}
 					}
 				}
+
+				// If we're not rendered and show.ready was set, render it
+				else if(notation === 'show.ready') { self.render(TRUE); }
 			}
 
 			// Convert singular option/value pair into object form
