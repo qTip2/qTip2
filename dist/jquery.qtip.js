@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Feb 3 13:48:54 2011 +0000
+* Date: Thu Feb 3 14:05:05 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -375,7 +375,7 @@ function QTip(target, options, id, attr)
 				// Apply a recursive method that polls the image for dimensions every 20ms
 				(function timer(){
 					// When the dimensions are found, remove the image from the queue
-					if(elem.height) {
+					if(elem.height && elem.width) {
 						return imageLoad(elem);
 					}
 
@@ -835,8 +835,11 @@ function QTip(target, options, id, attr)
 
 		toggle: function(state, event)
 		{
-			
-			if(!self.rendered) { return FALSE; }
+			// Make sure tooltip is rendered
+			if(!self.rendered) {
+				if(state) { self.render(1); } // Render the tooltip if showing and it isn't already
+				else { return FALSE; }
+			}
 
 			var type = state ? 'show' : 'hide',
 				opts = options[type],
@@ -1210,6 +1213,7 @@ function QTip(target, options, id, attr)
 			tooltip.css(dimensions).removeClass(fluid);
 		},
 
+		enable: function() { self.disable(TRUE); },
 		disable: function(state)
 		{
 			var c = disabled;
@@ -1371,6 +1375,9 @@ $.fn.qtip = function(options, notation, newValue)
 			var api = $.data(this, 'qtip');
 			if(!api) { return TRUE; }
 
+			// Cache the event if possible
+			if(event && event.timeStamp) { api.cache.event = event; }
+
 			// Call APIcommand
 			if((/option|set/).test(command) && notation) {
 				if($.isPlainObject(notation) || newValue !== undefined) {
@@ -1380,22 +1387,10 @@ $.fn.qtip = function(options, notation, newValue)
 					returned = api.get(notation);
 				}
 			}
-			else {
-				// Render tooltip if not already rendered when tooltip is to be shown
-				if(!api.rendered && (command === 'show' || command === 'toggle')) {
-					if(event && event.timeStamp) { api.cache.event = event; }
-					api.render(1);
-				}
 
-				// Check for disable/enable commands
-				else if(command === 'enable') {
-					command = 'disable'; args = [FALSE];
-				}
-
-				// Execute API command
-				if(api[command]) {
-					api[command].apply(api[command], args);
-				}
+			// Execute API command
+			else if(api[command]) {
+				api[command].apply(api[command], args);
 			}
 		});
 
