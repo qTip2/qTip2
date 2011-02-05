@@ -137,7 +137,7 @@ function QTip(target, options, id, attr)
 	}
 	
 	function isVisible() {
-		return tooltip.css('left') !== hideOffset && tooltip.css('visibility') !== 'hidden';
+		return tooltip && tooltip.css('left') !== hideOffset && tooltip.css('visibility') !== 'hidden';
 	}
 
 	function setWidget() {
@@ -636,6 +636,7 @@ function QTip(target, options, id, attr)
 
 			// Add ARIA attributes to target
 			$.attr(target[0], 'aria-describedby', tooltipID);
+
 
 			// Create tooltip element
 			tooltip = elements.tooltip = $('<div/>')
