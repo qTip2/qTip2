@@ -1080,7 +1080,7 @@ function QTip(target, options, id, attr)
 				}
 
 				// Parse returned plugin values into proper variables
-				if(position.width) {
+				if(position.offset) {
 					targetWidth = position.width;
 					targetHeight = position.height;
 					position = position.offset;
