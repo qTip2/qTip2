@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sat Feb 5 22:44:43 2011 +0000
+* Date: Sat Feb 5 22:59:34 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -2588,23 +2588,25 @@ function Modal(api)
 		{
 			var delBlanket = elems.overlay;
 
-			// Check if any other modal tooltips are present
-			$(selector).each(function() {
-				var api = $(this).data('qtip');
-
-				// If another modal tooltip is present, leave overlay
-				if(api && api.id !== api.id && api.options.show.modal) {
-					return (delBlanket = FALSE);
-				}
-			});
-
-			// Remove overlay if needed
 			if(delBlanket) {
-				elems.overlay.remove();
-				$(window).unbind(namespace);
-			}
-			else {
-				elems.overlay.unbind(namespace+api.id);
+				// Check if any other modal tooltips are present
+				$(selector).each(function() {
+					var api = $(this).data('qtip');
+
+					// If another modal tooltip is present, leave overlay
+					if(api && api.id !== api.id && api.options.show.modal) {
+						return (delBlanket = FALSE);
+					}
+				});
+
+				// Remove overlay if needed
+				if(delBlanket) {
+					elems.overlay.remove();
+					$(window).unbind(namespace);
+				}
+				else {
+					elems.overlay.unbind(namespace+api.id);
+				}
 			}
 
 			// Remove bound events
