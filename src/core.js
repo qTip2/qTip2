@@ -94,7 +94,7 @@ function QTip(target, options, id, attr)
 		docBody = document.body,
 		tooltipID = uitooltip + '-' + id,
 		isPositioning = 0,
-		tooltip, elements;
+		tooltip, elements, cache;
 
 	// Setup class attributes
 	self.id = id;
@@ -104,7 +104,7 @@ function QTip(target, options, id, attr)
 	self.options = options;
 	self.checks = {};
 	self.plugins = {};
-	self.cache = {
+	self.cache = cache = {
 		event: {},
 		target: NULL,
 		disabled: FALSE,
@@ -272,7 +272,7 @@ function QTip(target, options, id, attr)
 		// Redraw and reposition
 		self.redraw();
 		if(self.rendered && isVisible()) {
-			self.reposition(self.cache.event);
+			self.reposition(cache.event);
 		}
 	}
 
@@ -310,7 +310,7 @@ function QTip(target, options, id, attr)
 				if(images.length === 0) {
 					self.redraw();
 					if(self.rendered && isVisible()) {
-						self.reposition(self.cache.event);
+						self.reposition(cache.event);
 					}
 
 					next();
@@ -518,7 +518,7 @@ function QTip(target, options, id, attr)
 				$doc.bind('mousemove'+namespace, function(event) {
 					// Update the tooltip position only if the tooltip is visible and adjustment is enabled
 					if(posOptions.adjust.mouse && !tooltip.hasClass(disabled) && isVisible()) {
-						self.reposition(event || QTIP.mouse);
+						self.reposition(event || MOUSE);
 					}
 				});
 			}
@@ -644,7 +644,7 @@ function QTip(target, options, id, attr)
 					'aria-describedby': tooltipID + '-content',
 					'aria-hidden': TRUE
 				})
-				.toggleClass(disabled, self.cache.disabled)
+				.toggleClass(disabled, cache.disabled)
 				.data('qtip', self)
 				.appendTo(options.position.container)
 				.append(
@@ -693,12 +693,12 @@ function QTip(target, options, id, attr)
 			*/
 			.queue('fx', function(next) {
 				// Trigger tooltiprender event and pass original triggering event as original
-				callback.originalEvent = self.cache.event;
+				callback.originalEvent = cache.event;
 				tooltip.trigger(callback, [self]);
 
 				// Update tooltip position and show tooltip if needed
 				if(options.show.ready || show) {
-					self.show(self.cache.event);
+					self.show(cache.event);
 				}
 
 				next(); // Move on
@@ -811,18 +811,18 @@ function QTip(target, options, id, attr)
 
 			// Try to prevent flickering when tooltip overlaps show element
 			if(event) {
-				if((/over|enter/).test(event.type) && (/out|leave/).test(self.cache.event.type) &&
+				if((/over|enter/).test(event.type) && (/out|leave/).test(cache.event.type) &&
 					event.target === options.show.target[0] && tooltip.has(event.relatedTarget).length){
 					return self;
 					}
 
 				// Cache event
-				self.cache.event = $.extend({}, event);
+				cache.event = $.extend({}, event);
 			}
 
 			// Call API methods
 			callback = $.Event('tooltip'+type); 
-			callback.originalEvent = event ? self.cache.event : NULL;
+			callback.originalEvent = event ? cache.event : NULL;
 			tooltip.trigger(callback, [self, 90]);
 			if(callback.isDefaultPrevented()){ return self; }
 
@@ -973,6 +973,7 @@ function QTip(target, options, id, attr)
 				fixed = tooltip.css('position') === 'fixed',
 				viewport = posOptions.viewport.jquery ? posOptions.viewport : $(window),
 				position = { left: 0, top: 0 },
+				tip = QTIP.defaults.style.tip,
 				readjust = {
 					left: function(posLeft) {
 						var viewportScroll = viewport.scrollLeft,
@@ -1030,8 +1031,8 @@ function QTip(target, options, id, attr)
 				at = { x: 'left', y: 'top' };
 
 				// Use cached event if one isn't available for positioning
-				event = event && (event.type === 'resize' || event.type === 'scroll') ? self.cache.event :
-					adjust.mouse || !event || !event.pageX ? $.extend({}, QTIP.mouse) : event;
+				event = event && (event.type === 'resize' || event.type === 'scroll') ? cache.event :
+					adjust.mouse || !event || !event.pageX ? $.extend({}, MOUSE) : event;
 
 				// Use event coordinates for position
 				position = { top: event.pageY, left: event.pageX };
@@ -1040,10 +1041,10 @@ function QTip(target, options, id, attr)
 				// Check if event targetting is being used
 				if(target === 'event') {
 					if(event && event.target && event.type !== 'scroll' && event.type !== 'resize') {
-						target = self.cache.target = $(event.target);
+						target = cache.target = $(event.target);
 					}
 					else {
-						target = self.cache.target;
+						target = cache.target;
 					}
 				}
 
@@ -1089,6 +1090,12 @@ function QTip(target, options, id, attr)
 				// Adjust position relative to target
 				position.left += at.x === 'right' ? targetWidth : at.x === 'center' ? targetWidth / 2 : 0;
 				position.top += at.y === 'bottom' ? targetHeight : at.y === 'center' ? targetHeight / 2 : 0;
+			}
+
+			// Add tip dimensions if enabled
+			if(self.plugins.tip) {
+				if(self.plugins.tip.corner.precedance === 'x') { elemWidth += tip.width; }
+				else { elemHeight += tip.height; }
 			}
 
 			// Adjust position relative to tooltip
@@ -1178,7 +1185,7 @@ function QTip(target, options, id, attr)
 			var c = disabled;
 			
 			if('boolean' !== typeof state) {
-				state = !(tooltip.hasClass(c) || self.cache.disabled);
+				state = !(tooltip.hasClass(c) || cache.disabled);
 			}
 			 
 			if(self.rendered) {
@@ -1186,7 +1193,7 @@ function QTip(target, options, id, attr)
 				$.attr(tooltip[0], 'aria-disabled', state);
 			}
 			else {
-				self.cache.disabled = !!state;
+				cache.disabled = !!state;
 			}
 
 			return self;
@@ -1379,13 +1386,13 @@ QTIP.bind = function(opts, event)
 		namespace = '.qtip-'+id+'-create',
 
 		// Initialize the qTip and re-grab newly sanitized options
-		self = init.call(this, id, opts);
-		if(self === FALSE) { return TRUE; }
-		options = self.options;
+		api = init.call(this, id, opts);
+		if(api === FALSE) { return TRUE; }
+		options = api.options;
 
 		// Initialize plugins
 		$.each(PLUGINS, function() {
-			if(this.initialize === 'initialize') { this(self); }
+			if(this.initialize === 'initialize') { this(api); }
 		});
 
 		// Determine hide and show targets
@@ -1399,7 +1406,7 @@ QTIP.bind = function(opts, event)
 		function hoverIntent(event) {
 			function render() {
 				// Cache mouse coords,render and render the tooltip
-				self.render(typeof event === 'object' || options.show.ready);
+				api.render(typeof event === 'object' || options.show.ready);
 
 				// Unbind show and hide event
 				targets.show.unbind(events.show);
@@ -1407,17 +1414,17 @@ QTIP.bind = function(opts, event)
 			}
 
 			// Only continue if tooltip isn't disabled
-			if(self.cache.disabled) { return FALSE; }
+			if(api.cache.disabled) { return FALSE; }
 
 			// Cache the event data
-			self.cache.event = $.extend({}, event);
+			api.cache.event = $.extend({}, event);
 
 			// Start the event sequence
 			if(options.show.delay > 0) {
-				clearTimeout(self.timers.show);
-				self.timers.show = setTimeout(render, options.show.delay);
+				clearTimeout(api.timers.show);
+				api.timers.show = setTimeout(render, options.show.delay);
 				if(events.show !== events.hide) {
-					targets.hide.bind(events.hide, function() { clearTimeout(self.timers.show); });
+					targets.hide.bind(events.hide, function() { clearTimeout(api.timers.show); });
 				}
 			}
 			else { render(); }
@@ -1430,110 +1437,6 @@ QTIP.bind = function(opts, event)
 		if(options.show.ready || options.prerender) { hoverIntent(event); }
 	});
 };
-
-// Override some of the core jQuery methods for library-specific purposes
-$.each({
-	/* Allow other plugins to successfully retrieve the title of an element with a qTip applied */
-	attr: function(attr, val) {
-		if(!this.length) { return; }
-
-		var self = this[0],
-			title = 'title',
-			api = $.data(self, 'qtip');
-
-		if(attr === title) {
-			if(arguments.length < 2) {
-				return $.data(self, oldtitle);
-			}
-			else if(typeof api === 'object') {
-				// If qTip is rendered and title was originally used as content, update it
-				if(api && api.rendered && api.options.content.attr === title && api.cache.attr) {
-					api.set('content.text', val);
-				}
-
-				// Use the regular attr method to set, then cache the result
-				$.fn['attr'+replaceSuffix].apply(this, arguments);
-				$.data(self, oldtitle, $.attr(self, title));
-				return this.removeAttr('title');
-			}
-		}
-	},
-	
-	/* Allow clone to correctly retrieve cached title attributes */
-	clone: function(keepData) {
-		var titles = $([]), elem;
-
-		// Re-add cached titles before we clone
-		$('*', this).add(this).each(function() {
-			var title = $.data(this, oldtitle);
-			if(title) {
-				$.attr(this, 'title', title);
-				titles = titles.add(this);
-			}
-		});
-
-		// Clone our element using the real clone method
-		elem = $.fn['clone'+replaceSuffix].apply(this, arguments);
-
-		// Remove the old titles again
-		titles.removeAttr('title');
-
-		return elem;
-	},
-
-	/* 
-	* Taken directly from jQuery 1.8.2 widget source code
-	* Trigger 'remove' event on all elements on removal if jQuery UI isn't present 
-	*/
-	remove: $.ui ? NULL : function( selector, keepData ) {
-		$(this).each(function() {
-			if (!keepData) {
-				if (!selector || $.filter( selector, [ this ] ).length) {
-					$('*', this).add(this).each(function() {
-						$(this).triggerHandler('remove');
-					});
-				}
-			}
-		});
-	}
-},
-function(name, func) {
-	if(!func) { return TRUE; }
-
-	var old = $.fn[name+replaceSuffix] = $.fn[name];
-	$.fn[name] = function() {
-		return func.apply(this, arguments) || old.apply(this, arguments);
-	};
-});
-
-$(window).load(function() {
-	var doc = document,
-		docBody = doc.body;
-
-	// Cache mousemove events for positioning purposes
-	$(doc).bind('mousemove.qtip', function(event) {
-		QTIP.mouse = { pageX: event.pageX, pageY: event.pageY };
-	});
-
-	/* 
-	* If document.activeElement isn't available, we'll use our own implementation to record focus
-	* http://ajaxandxml.blogspot.com/2007/11/emulating-activeelement-property-with.html
-	*/
-	if(doc.activeElement === undefined) {
-		doc.addEventListener("focus", function(event) {
-			if(event && event.target) {
-				doc.activeElement = event.target === doc ? docBody : event.target;
-			}
-		},
-		true);
-	}
-});
-
-// Set global qTip properties
-QTIP.version = '@VERSION';
-QTIP.nextid = 0;
-QTIP.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleave mouseenter'.split(' ');
-QTIP.zindex = 15000;
 
 // Setup base plugins
 PLUGINS = QTIP.plugins = {
@@ -1587,8 +1490,101 @@ PLUGINS = QTIP.plugins = {
 	/*
 	 * iOS 4.0 and below scroll fix detection used in offset() function.
 	 */
-	iOS: parseFloat(((/CPU.+OS ([0-9_]{3}).*AppleWebkit.*Mobile/i.exec(navigator.userAgent)) || [0,'4_2'])[1].replace('_','.')) < 4.1
+	iOS: parseFloat(((/CPU.+OS ([0-9_]{3}).*AppleWebkit.*Mobile/i.exec(navigator.userAgent)) || [0,'4_2'])[1].replace('_','.')) < 4.1,
+	
+	/*
+	 * jQuery-secpfic $.fn overrides 
+	 */
+	fn: {
+		/* Allow other plugins to successfully retrieve the title of an element with a qTip applied */
+		attr: function(attr, val) {
+			if(!this.length) { return; }
+			
+			var self = this[0],
+			title = 'title',
+			api = $.data(self, 'qtip');
+			
+			if(attr === title) {
+				if(arguments.length < 2) {
+					return $.data(self, oldtitle);
+				}
+				else if(typeof api === 'object') {
+					// If qTip is rendered and title was originally used as content, update it
+					if(api && api.rendered && api.options.content.attr === title && api.cache.attr) {
+						api.set('content.text', val);
+					}
+					
+					// Use the regular attr method to set, then cache the result
+					$.fn['attr'+replaceSuffix].apply(this, arguments);
+					$.data(self, oldtitle, $.attr(self, title));
+					return this.removeAttr('title');
+				}
+			}
+		},
+		
+		/* Allow clone to correctly retrieve cached title attributes */
+		clone: function(keepData) {
+			var titles = $([]), elem;
+			
+			// Re-add cached titles before we clone
+			$('*', this).add(this).each(function() {
+				var title = $.data(this, oldtitle);
+				if(title) {
+					$.attr(this, 'title', title);
+					titles = titles.add(this);
+				}
+			});
+			
+			// Clone our element using the real clone method
+			elem = $.fn['clone'+replaceSuffix].apply(this, arguments);
+			
+			// Remove the old titles again
+			titles.removeAttr('title');
+			
+			return elem;
+		},
+		
+		/* 
+		 * Taken directly from jQuery 1.8.2 widget source code
+		 * Trigger 'remove' event on all elements on removal if jQuery UI isn't present 
+		 */
+		remove: $.ui ? NULL : function( selector, keepData ) {
+			$(this).each(function() {
+				if (!keepData) {
+					if (!selector || $.filter( selector, [ this ] ).length) {
+						$('*', this).add(this).each(function() {
+							$(this).triggerHandler('remove');
+						});
+					}
+				}
+			});
+		}
+	}
 };
+
+// Apply the fn overrides above
+$.each(PLUGINS.fn, function(name, func) {
+	if(!func) { return TRUE; }
+	
+	var old = $.fn[name+replaceSuffix] = $.fn[name];
+	$.fn[name] = function() {
+		return func.apply(this, arguments) || old.apply(this, arguments);
+	};
+});
+
+// Cache mousemove events for positioning purposes
+$(window).bind('load.qtip', function() {
+	var type = 'mousemove';
+	$(document).bind(type+'.qtip', function(event) {
+		MOUSE = { pageX: event.pageX, pageY: event.pageY, type: type };
+	});
+});
+
+// Set global qTip properties
+QTIP.version = '@VERSION';
+QTIP.nextid = 0;
+QTIP.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleave mouseenter'.split(' ');
+QTIP.zindex = 15000;
 
 // Define configuration defaults
 QTIP.defaults = {

@@ -11,7 +11,7 @@
 		NULL = null,
 		
 		// Shortcut vars
-		QTIP, PLUGINS,
+		QTIP, PLUGINS, MOUSE,
 		uitooltip = 'ui-tooltip',
 		widget = 'ui-widget',
 		disabled = 'ui-state-disabled',
