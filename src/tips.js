@@ -192,10 +192,10 @@ function Tip(qTip, command)
 			}
 			else {
 				if(corner === TRUE) {
-					self.corner = new $.fn.qtip.plugins.Corner(my);
+					self.corner = new PLUGINS.Corner(my);
 				}
 				else if(!corner.string) {
-					self.corner = new $.fn.qtip.plugins.Corner(corner);
+					self.corner = new PLUGINS.Corner(corner);
 					self.corner.fixed = TRUE;
 				}
 			}
@@ -285,7 +285,7 @@ function Tip(qTip, command)
 
 			// Otherwise inherit mimic properties from the corner object as necessary
 			else {
-				mimic = new $.fn.qtip.plugins.Corner(mimic);
+				mimic = new PLUGINS.Corner(mimic);
 				mimic.precedance = corner.precedance;
 
 				if(mimic.x === 'inherit') { mimic.x = corner.x; }
@@ -457,18 +457,18 @@ function Tip(qTip, command)
 	self.init();
 }
 
-$.fn.qtip.plugins.tip = function(qTip)
+PLUGINS.tip = function(api)
 {
-	var api = qTip.plugins.tip;
-
-	return 'object' === typeof api ? api : (qTip.plugins.tip = new Tip(qTip));
+	var self = api.plugins.tip;
+	
+	return 'object' === typeof self ? self : (api.plugins.tip = new Tip(api));
 };
 
 // Initialize tip on render
-$.fn.qtip.plugins.tip.initialize = 'render';
+PLUGINS.tip.initialize = 'render';
 
 // Setup plugin sanitization options
-$.fn.qtip.plugins.tip.sanitize = function(options)
+PLUGINS.tip.sanitize = function(options)
 {
 	var style = options.style, opts;
 	if(style && 'tip' in style) {
@@ -483,7 +483,7 @@ $.fn.qtip.plugins.tip.sanitize = function(options)
 };
 
 // Extend original qTip defaults
-$.extend(TRUE, $.fn.qtip.defaults, {
+$.extend(TRUE, QTIP.defaults, {
 	style: {
 		tip: {
 			corner: TRUE,

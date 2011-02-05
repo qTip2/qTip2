@@ -1,8 +1,8 @@
-function Modal(qTip)
+function Modal(api)
 {
 	var self = this,
-		options = qTip.options.show.modal,
-		elems = qTip.elements,
+		options = api.options.show.modal,
+		elems = api.elements,
 		tooltip = elems.tooltip,
 		
 		selector = '#qtip-overlay',
@@ -10,7 +10,7 @@ function Modal(qTip)
 		events = 'tooltipshow'+namespace+' tooltiphide'+namespace;
 
 	// Setup option set checks
-	qTip.checks.modal = {
+	api.checks.modal = {
 		'^show.modal.(on|blur)$': function() {
 			// Initialise
 			self.init();
@@ -41,7 +41,7 @@ function Modal(qTip)
 
 				// Hide tooltip on overlay click if enabled and toggle cursor style
 				if(options.blur === TRUE) {
-					elems.overlay.unbind(namespace+qTip.id).bind('click'+namespace+qTip.id, function(){ qTip.hide.call(qTip); });
+					elems.overlay.unbind(namespace+api.id).bind('click'+namespace+api.id, function(){ api.hide.call(api); });
 				}
 				elems.overlay.css('cursor', options.blur ? 'pointer' : '');
 			}
@@ -82,7 +82,7 @@ function Modal(qTip)
 		toggle: function(state)
 		{
 			var overlay = elems.overlay,
-				effect = qTip.options.show.modal.effect,
+				effect = api.options.show.modal.effect,
 				type = state ? 'show': 'hide',
 				zindex;
 
@@ -98,7 +98,7 @@ function Modal(qTip)
 			// Set z-indx if we're showing it
 			if(state) {
 				zindex = parseInt( $.css(tooltip[0], 'z-index'), 10);
-				overlay.css('z-index', (zindex || $.fn.qtip.zindex) - 1);
+				overlay.css('z-index', (zindex || QTIP.zindex) - 1);
 			}
 
 			// Use custom function if provided
@@ -131,7 +131,7 @@ function Modal(qTip)
 				var api = $(this).data('qtip');
 
 				// If another modal tooltip is present, leave overlay
-				if(api && api.id !== qTip.id && api.options.show.modal) {
+				if(api && api.id !== api.id && api.options.show.modal) {
 					return (delBlanket = FALSE);
 				}
 			});
@@ -142,7 +142,7 @@ function Modal(qTip)
 				$(window).unbind(namespace);
 			}
 			else {
-				elems.overlay.unbind(namespace+qTip.id);
+				elems.overlay.unbind(namespace+api.id);
 			}
 
 			// Remove bound events
@@ -153,26 +153,26 @@ function Modal(qTip)
 	self.init();
 }
 
-$.fn.qtip.plugins.modal = function(qTip)
+PLUGINS.modal = function(api)
 {
-	var api = qTip.plugins.modal;
+	var self = api.plugins.modal;
 
-	return 'object' === typeof api ? api : (qTip.plugins.modal = new Modal(qTip));
+	return 'object' === typeof self ? self : (api.plugins.modal = new Modal(api));
 };
 
 // Plugin needs to be initialized on render
-$.fn.qtip.plugins.modal.initialize = 'render';
+PLUGINS.modal.initialize = 'render';
 
 // Setup sanitiztion rules
-$.fn.qtip.plugins.modal.sanitize = function(opts) {
+PLUGINS.modal.sanitize = function(opts) {
 	if(opts.show) { 
 		if(typeof opts.show.modal !== 'object') { opts.show.modal = { on: !!opts.show.modal }; }
 		else if(typeof opts.show.modal.on === 'undefined') { opts.show.modal.on = TRUE; }
 	}
 };
 
-// Extend original qTip defaults
-$.extend(TRUE, $.fn.qtip.defaults, {
+// Extend original api defaults
+$.extend(TRUE, QTIP.defaults, {
 	show: {
 		modal: {
 			on: FALSE,

@@ -1,4 +1,4 @@
-$.fn.qtip.plugins.imagemap = function(area, corner)
+PLUGINS.imagemap = function(area, corner)
 {
 	var shape = area.attr('shape').toLowerCase(),
 		baseCoords = area.attr('coords').split(','),

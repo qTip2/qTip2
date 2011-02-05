@@ -1,10 +1,13 @@
-/* BGIFrame adaption (http://plugins.jquery.com/project/bgiframe) - Special thanks to Brandon Aaron */
-function BGIFrame(qTip)
+/* 
+ * BGIFrame adaption (http://plugins.jquery.com/project/bgiframe)
+ * Special thanks to Brandon Aaron
+ */
+function BGIFrame(api)
 {
 	var self = this,
-		elems = qTip.elements,
+		elems = api.elements,
 		tooltip = elems.tooltip,
-		namespace = '.bgiframe-' + qTip.id,
+		namespace = '.bgiframe-' + api.id,
 		events = 'tooltipmove'+namespace+' tooltipshow'+namespace;
 
 	$.extend(self, {
@@ -23,9 +26,9 @@ function BGIFrame(qTip)
 
 		adjust: function()
 		{
-			var dimensions = qTip.get('dimensions'), // Determine current tooltip dimensions
-				plugin = qTip.plugins.tip,
-				tip = qTip.elements.tip,
+			var dimensions = api.get('dimensions'), // Determine current tooltip dimensions
+				plugin = api.plugins.tip,
+				tip = api.elements.tip,
 				tipAdjust, offset;
 
 			// Adjust border offset
@@ -55,27 +58,20 @@ function BGIFrame(qTip)
 	self.init();
 }
 
-$.fn.qtip.plugins.bgiframe = function(qTip)
+PLUGINS.bgiframe = function(api)
 {
+	var browser = $.browser,
+		self = api.plugins.bgiframe;
+	
 	// Proceed only if the browser is IE6 and offending elements are present
-	if(!($.browser.msie && (/^6\.[0-9]/).test($.browser.version) && $('select, object').length)) {
+	if(!PLUGINS.bgiframe.needBGI || !(browser.msie && browser.version.charAt(0) === '6')) {
 		return FALSE;
 	}
 
-	// Retrieve previous API object
-	var api = qTip.plugins.bgiframe;
-
-	// An API is already present,
-	if(api) {
-		return api;
-	}
-	// No API was found, create new instance
-	else {
-		qTip.plugins.bgiframe = new BGIFrame(qTip);
-		return qTip.plugins.bgiframe;
-	}
+	return 'object' === typeof self ? self : (api.plugins.bgiframe = new BGIFrame(api));
 };
 
 // Plugin needs to be initialized on render
-$.fn.qtip.plugins.bgiframe.initialize = 'render';
+PLUGINS.bgiframe.initialize = 'render';
 
+PLUGINS.bgiframe.needBGI = $('select, object').length > 0;

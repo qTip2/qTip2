@@ -1,4 +1,4 @@
-$.fn.qtip.plugins.svg = function(svg, corner)
+PLUGINS.svg = function(svg, corner)
 {
 	var doc = $(document),
 		elem = svg[0],

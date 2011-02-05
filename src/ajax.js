@@ -1,12 +1,12 @@
-function Ajax(qTip)
+function Ajax(api)
 {
 	var self = this,
-		tooltip = qTip.elements.tooltip,
-		opts = qTip.options.content.ajax,
+		tooltip = api.elements.tooltip,
+		opts = api.options.content.ajax,
 		namespace = '.qtip-ajax',
 		rscript = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
 
-	qTip.checks.ajax = {
+	api.checks.ajax = {
 		'^content.ajax': function(obj, name) {
 			if(name === 'once') {
 				self.once();
@@ -63,14 +63,14 @@ function Ajax(qTip)
 				}
 
 				// Set the content
-				qTip.set('content.text', content);
+				api.set('content.text', content);
 			}
 
 			// Error handler
-			function errorHandler(xh, status, error){ qTip.set('content.text', status + ': ' + error); }
+			function errorHandler(xh, status, error){ api.set('content.text', status + ': ' + error); }
 
 			// Setup $.ajax option object and process the request
-			$.ajax( $.extend({ success: successHandler, error: errorHandler, context: qTip }, opts, { url: url }) );
+			$.ajax( $.extend({ success: successHandler, error: errorHandler, context: api }, opts, { url: url }) );
 
 			return self;
 		},
@@ -86,17 +86,17 @@ function Ajax(qTip)
 }
 
 
-$.fn.qtip.plugins.ajax = function(qTip)
+PLUGINS.ajax = function(api)
 {
-	var api = qTip.plugins.ajax;
+	var self = api.plugins.ajax;
 	
-	return 'object' === typeof api ? api : (qTip.plugins.ajax = new Ajax(qTip));
+	return 'object' === typeof self ? self : (api.plugins.ajax = new Ajax(api));
 };
 
-$.fn.qtip.plugins.ajax.initialize = 'render';
+PLUGINS.ajax.initialize = 'render';
 
 // Setup plugin sanitization
-$.fn.qtip.plugins.ajax.sanitize = function(options)
+PLUGINS.ajax.sanitize = function(options)
 {
 	var content = options.content, opts;
 	if(content && 'ajax' in content) {
@@ -106,8 +106,8 @@ $.fn.qtip.plugins.ajax.sanitize = function(options)
 	}
 };
 
-// Extend original qTip defaults
-$.extend(TRUE, $.fn.qtip.defaults, {
+// Extend original api defaults
+$.extend(TRUE, QTIP.defaults, {
 	content: {
 		ajax: {
 			once: TRUE
