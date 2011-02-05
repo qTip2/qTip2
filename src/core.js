@@ -893,9 +893,9 @@ function QTip(target, options, id, attr)
 			return self;
 		},
 
-		show: function(event){ self.toggle(TRUE, event); },
+		show: function(event){ return self.toggle(TRUE, event); },
 
-		hide: function(event){ self.toggle(FALSE, event); },
+		hide: function(event){ return self.toggle(FALSE, event); },
 
 		focus: function(event)
 		{
@@ -949,6 +949,8 @@ function QTip(target, options, id, attr)
 			callback = $.Event('tooltipblur');
 			callback.originalEvent = cachedEvent;
 			tooltip.trigger(callback, [self]);
+
+			return self;
 		},
 
 		reposition: function(event, effect)
@@ -1143,8 +1145,7 @@ function QTip(target, options, id, attr)
 			// Make sure tooltip is rendered and the browser needs the redraw
 			if(!self.rendered || !($.browser.msie && $.browser.version < 8)) { return FALSE; }
 
-			var fluid = uitooltip + '-fluid',
-				dimensions;
+			var fluid = uitooltip + '-fluid', dimensions;
 
 			// Reset the height and width and add the fluid class to reset max/min widths
 			tooltip.css({ width: 'auto', height: 'auto' }).addClass(fluid);
@@ -1167,6 +1168,8 @@ function QTip(target, options, id, attr)
 
 			// Set the newly calculated dimensions and remvoe fluid class
 			tooltip.css(dimensions).removeClass(fluid);
+
+			return self;
 		},
 
 		enable: function() { self.disable(TRUE); },
