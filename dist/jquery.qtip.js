@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sat Feb 5 21:07:54 2011 +0000
+* Date: Sat Feb 5 22:18:37 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1015,14 +1015,15 @@ function QTip(target, options, id, attr)
 				fixed = tooltip.css('position') === 'fixed',
 				viewport = posOptions.viewport.jquery ? posOptions.viewport : $(window),
 				position = { left: 0, top: 0 },
-				tip = QTIP.defaults.style.tip,
+				tip = self.plugins.tip,
 				readjust = {
 					left: function(posLeft) {
 						var viewportScroll = viewport.scrollLeft,
 							myWidth = my.x === 'left' ? elemWidth : my.x === 'right' ? -elemWidth : -elemWidth / 2,
 							atWidth = at.x === 'left' ? targetWidth : at.x === 'right' ? -targetWidth : -targetWidth / 2,
-							overflowLeft = viewportScroll - posLeft,
-							overflowRight = posLeft + elemWidth - viewport.width - viewportScroll,
+							tipAdjust = 'corner' in tip && tip.corner.precedance === 'x' ? QTIP.defaults.style.tip.width : 0,
+							overflowLeft = viewportScroll - posLeft - tipAdjust,
+							overflowRight = posLeft + elemWidth - viewport.width - viewportScroll + tipAdjust,
 							offset = myWidth - (my.precedance === 'x' || my.x === my.y ? atWidth : 0);
 
 						if(overflowLeft > 0 && (my.x !== 'left' || overflowRight > 0)) {
@@ -1040,8 +1041,9 @@ function QTip(target, options, id, attr)
 						var viewportScroll = viewport.scrollTop,
 							myHeight = my.y === 'top' ? elemHeight : my.y === 'bottom' ? -elemHeight : -elemHeight / 2,
 							atHeight = at.y === 'top' ? targetHeight : at.y === 'bottom' ? -targetHeight : -targetHeight / 2,
-							overflowTop = viewportScroll - posTop,
-							overflowBottom = posTop + elemHeight - viewport.height - viewportScroll,
+							tipAdjust = 'corner' in tip && tip.corner.precedance === 'y' ? QTIP.defaults.style.tip.height : 0,
+							overflowTop = viewportScroll - posTop - tipAdjust,
+							overflowBottom = posTop + elemHeight - viewport.height - viewportScroll + tipAdjust,
 							offset = myHeight - (my.precedance === 'y' || my.x === my.y ? atHeight : 0);
 
 						if(overflowTop > 0 && (my.y !== 'top' || overflowBottom > 0)) {
@@ -1132,12 +1134,6 @@ function QTip(target, options, id, attr)
 				// Adjust position relative to target
 				position.left += at.x === 'right' ? targetWidth : at.x === 'center' ? targetWidth / 2 : 0;
 				position.top += at.y === 'bottom' ? targetHeight : at.y === 'center' ? targetHeight / 2 : 0;
-			}
-
-			// Add tip dimensions if enabled
-			if(self.plugins.tip) {
-				if(self.plugins.tip.corner.precedance === 'x') { elemWidth += tip.width; }
-				else { elemHeight += tip.height; }
 			}
 
 			// Adjust position relative to tooltip
