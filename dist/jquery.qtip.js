@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sat Feb 5 23:01:27 2011 +0000
+* Date: Sat Feb 5 23:05:34 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1024,14 +1024,16 @@ function QTip(target, options, id, attr)
 							tipAdjust = tip && tip.precedance === 'x' ? QTIP.defaults.style.tip.width : 0,
 							overflowLeft = viewportScroll - posLeft - tipAdjust,
 							overflowRight = posLeft + elemWidth - viewport.width - viewportScroll + tipAdjust,
-							offset = myWidth - (my.precedance === 'x' || my.x === my.y ? atWidth : 0);
+							offset = myWidth - (my.precedance === 'x' || my.x === my.y ? atWidth : 0),
+							isCenter = my.x === 'center';
 
 						if(overflowLeft > 0 && (my.x !== 'left' || overflowRight > 0)) {
-							position.left -= offset;
+							position.left -= offset + (isCenter ? 0 : 2 * adjust.x);
 						}
 						else if(overflowRight > 0 && (my.x !== 'right' || overflowLeft > 0)  ) {
-							position.left -= (my.x === 'center' ? -1 : 1) * offset + (2 * adjust.x);
+							position.left -= isCenter ? -offset : offset + (2 * adjust.x);
 						}
+						if(position.left !== posLeft && isCenter) { position.left -= adjust.x; }
 
 						// Make sure we haven't made things worse with the adjustment and return the adjusted difference
 						if(position.left < 0 && -position.left > overflowRight) { position.left = posLeft; }
@@ -1044,14 +1046,16 @@ function QTip(target, options, id, attr)
 							tipAdjust = tip && tip.precedance === 'y' ? QTIP.defaults.style.tip.height : 0,
 							overflowTop = viewportScroll - posTop - tipAdjust,
 							overflowBottom = posTop + elemHeight - viewport.height - viewportScroll + tipAdjust,
-							offset = myHeight - (my.precedance === 'y' || my.x === my.y ? atHeight : 0);
+							offset = myHeight - (my.precedance === 'y' || my.x === my.y ? atHeight : 0),
+							isCenter = my.y === 'center';
 
 						if(overflowTop > 0 && (my.y !== 'top' || overflowBottom > 0)) {
-							position.top -= offset;
+							position.top -= offset + (isCenter ? 0 : 2 * adjust.y);
 						}
 						else if(overflowBottom > 0 && (my.y !== 'bottom' || overflowTop > 0)  ) {
-							position.top -= (my.y === 'center' ? -1 : 1) * offset + (2 * adjust.y);
+							position.top -= isCenter ? -offset : offset + (2 * adjust.y);
 						}
+						if(position.top !== posTop && isCenter) { position.top -= adjust.y; }
 
 						// Make sure we haven't made things worse with the adjustment and return the adjusted difference
 						if(position.top < 0 && -position.top > overflowBottom) { position.top = posTop; }
