@@ -127,7 +127,7 @@ function QTip(target, options, id, attr)
 		// Loop through
 		for(i = 1; i < actual.length; i+=1) {
 			obj = option[ actual[i] ];
-			if(typeof obj === 'object' && !obj.jquery && !obj.precedance) {
+			if(typeof obj === 'object' && !obj.jquery && !obj.precedance && !obj.url) {
 				option = option[ actual[i] ];
 			}
 			else { break; }

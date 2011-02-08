@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sat Feb 5 23:05:34 2011 +0000
+* Date: Tue Feb 8 23:07:43 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -169,7 +169,7 @@ function QTip(target, options, id, attr)
 		// Loop through
 		for(i = 1; i < actual.length; i+=1) {
 			obj = option[ actual[i] ];
-			if(typeof obj === 'object' && !obj.jquery && !obj.precedance) {
+			if(typeof obj === 'object' && !obj.jquery && !obj.precedance && !obj.url) {
 				option = option[ actual[i] ];
 			}
 			else { break; }
@@ -1698,6 +1698,9 @@ QTIP.defaults = {
 			}
 			else if(opts && opts.url) {
 				self.load();
+			}
+			else {
+				self.destroy();
 			}
 		}
 	};

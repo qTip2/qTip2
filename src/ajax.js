@@ -14,6 +14,9 @@ function Ajax(api)
 			else if(opts && opts.url) {
 				self.load();
 			}
+			else {
+				self.destroy();
+			}
 		}
 	};
 
