@@ -116,24 +116,17 @@ function QTip(target, options, id, attr)
 	*/
 	function convertNotation(notation)
 	{
-		var i, obj,
+		var i = 0, obj, option = options, 
 
 		// Split notation into array
-		actual = notation.split('.'),
-
-		// Locate required option
-		option = options[ actual[0] ];
+		levels = notation.split('.');
 
 		// Loop through
-		for(i = 1; i < actual.length; i+=1) {
-			obj = option[ actual[i] ];
-			if(typeof obj === 'object' && !obj.jquery && !obj.precedance && !obj.url) {
-				option = option[ actual[i] ];
-			}
-			else { break; }
+		while( option = option[ levels[i++] ] ) {
+			if(i < levels.length) { obj = option; }
 		}
 
-		return actual[i] !== undefined ? [option, actual[i] ] : [options, actual[0]];
+		return [obj || options, levels.pop()];
 	}
 	
 	function isVisible() {
