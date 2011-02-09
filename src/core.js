@@ -128,7 +128,7 @@ function QTip(target, options, id, attr)
 
 		return [obj || options, levels.pop()];
 	}
-	
+
 	function isVisible() {
 		return tooltip && tooltip.css('left') !== hideOffset && tooltip.css('visibility') !== 'hidden';
 	}
@@ -707,10 +707,8 @@ function QTip(target, options, id, attr)
 			switch(notation.toLowerCase())
 			{
 				case 'dimensions':
-					// Find initial dimensions
 					result = {
-						height: tooltip.outerHeight(),
-						width: tooltip.outerWidth()
+						height: tooltip.outerHeight(), width: tooltip.outerWidth()
 					};
 				break;
 
@@ -720,7 +718,8 @@ function QTip(target, options, id, attr)
 
 				default:
 					o = convertNotation(notation.toLowerCase());
-					result = (o[0].precedance) ? o[0].string() : (o[0].jquery) ? o[0] : o[0][ o[1] ];
+					result = o[0][ o[1] ];
+					result = result.precedance ? result.string() : result;
 				break;
 			}
 
