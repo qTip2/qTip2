@@ -733,28 +733,23 @@ function QTip(target, options, id, attr)
 				checks = self.checks,
 				name;
 
-			function set(notation, value) {
-				notation = notation.toLowerCase();
+			function callback(notation, args) {
+				var category, rule;
 
-				var option = convertNotation(notation), previous, category, rule;
-
-				// Set new option value
-				previous = option[0][ option[1] ];
-				option[0][ option[1] ] = value.nodeType ? $(value) : value;
-
-				// Execute any valid callbacks (if rendered)
 				if(self.rendered) {
 					for(category in checks) {
 						for(rule in checks[category]) {
 							if((new RegExp(rule, 'i')).test(notation)) {
-								checks[category][rule].call(self, option[0], option[1], value, previous);
+								checks[category][rule].apply(self, args);
 							}
 						}
 					}
 				}
 
 				// If we're not rendered and show.ready was set, render it
-				else if(notation === 'show.ready') { self.render(TRUE); }
+				else if(notation === 'show.ready' && args[2]) {
+					isPositioning = 0; self.render(TRUE);
+				}
 			}
 
 			// Convert singular option/value pair into object form
@@ -762,22 +757,30 @@ function QTip(target, options, id, attr)
 				name = option; option = {}; option[name] = value;
 			}
 
-			/* 
-			 * Set each option/value pair in the object.
-			 * Also set isPositioning so we don't get loads of redundant repositioning calls
-			 */
-			isPositioning = 1;
-			for(name in option) {
-				set(name, option[name]);
-				reposition = rmove.test(name) || reposition;
-			}
-			isPositioning = 0;
+			// Set all of the defined options to their new values
+			$.each(option, function(notation, value) {
+				var obj = convertNotation( notation.toLowerCase() ), previous;
+				
+				// Set new obj value
+				previous = obj[0][ obj[1] ];
+				obj[0][ obj[1] ] = value.nodeType ? $(value) : value;
 
-			// Update position on ANY style/position/content change if shown and rendered
-			if(reposition && isVisible() && self.rendered) { self.reposition(); }
+				// Set the new params for the callback and test it against reposition
+				option[notation] = [obj[0], obj[1], value, previous];
+				reposition = rmove.test(notation) || reposition;
+			});
 
 			// Re-sanitize options
 			sanitizeOptions(options);
+
+			/*
+			 * Execute any valid callbacks for the set options
+			 * Also set isPositioning so we don't get loads of redundant repositioning calls
+			 */
+			isPositioning = 1; $.each(option, callback); isPositioning = 0;
+
+			// Update position on ANY style/position/content change if shown and rendered
+			if(reposition && isVisible() && self.rendered) { self.reposition(); }
 
 			return self;
 		},

@@ -7,15 +7,18 @@ function Ajax(api)
 		rscript = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
 
 	api.checks.ajax = {
-		'^content.ajax': function(obj, name) {
+		'^content.ajax': function(obj, name, v) {
+			// If content.ajax object was reset, set our local var
+			if(name === 'ajax') { opts = v; }
+
 			if(name === 'once') {
-				self.once();
+				self.once(opts.once);
 			}
 			else if(opts && opts.url) {
 				self.load();
 			}
 			else {
-				self.destroy();
+				self.once(0);
 			}
 		}
 	};
@@ -30,14 +33,9 @@ function Ajax(api)
 			}
 		},
 
-		once: function()
+		once: function(state)
 		{
-			if(opts.once) {
-				self.destroy();
-			}
-			else {
-				tooltip.bind('tooltipshow'+namespace, self.load);
-			}
+			tooltip[ (state ? '' : 'un') + 'bind' ]('tooltipshow'+namespace, self.load);
 		},
 
 		load: function()
@@ -76,12 +74,6 @@ function Ajax(api)
 			$.ajax( $.extend({ success: successHandler, error: errorHandler, context: api }, opts, { url: url }) );
 
 			return self;
-		},
-
-		destroy: function()
-		{
-			// Remove bound events
-			tooltip.unbind(namespace);
 		}
 	});
 
