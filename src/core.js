@@ -756,6 +756,7 @@ function QTip(target, options, id, attr)
 			if('string' === typeof option) {
 				name = option; option = {}; option[name] = value;
 			}
+			else { option = $.extend(TRUE, {}, option); }
 
 			// Set all of the defined options to their new values
 			$.each(option, function(notation, value) {
@@ -1340,12 +1341,13 @@ QTIP = $.fn.qtip = function(options, notation, newValue)
 			if(event && event.timeStamp) { api.cache.event = event; }
 
 			// Call APIcommand
-			if((/option|set/).test(command) && notation) {
+			if(command === 'option' && notation) {
 				if($.isPlainObject(notation) || newValue !== undefined) {
 					api.set(notation, newValue);
 				}
 				else {
 					returned = api.get(notation);
+					return FALSE;
 				}
 			}
 

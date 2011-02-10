@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Feb 9 18:18:23 2011 +0000
+* Date: Thu Feb 10 17:16:56 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -798,6 +798,7 @@ function QTip(target, options, id, attr)
 			if('string' === typeof option) {
 				name = option; option = {}; option[name] = value;
 			}
+			else { option = $.extend(TRUE, {}, option); }
 
 			// Set all of the defined options to their new values
 			$.each(option, function(notation, value) {
@@ -1382,12 +1383,13 @@ QTIP = $.fn.qtip = function(options, notation, newValue)
 			if(event && event.timeStamp) { api.cache.event = event; }
 
 			// Call APIcommand
-			if((/option|set/).test(command) && notation) {
+			if(command === 'option' && notation) {
 				if($.isPlainObject(notation) || newValue !== undefined) {
 					api.set(notation, newValue);
 				}
 				else {
 					returned = api.get(notation);
+					return FALSE;
 				}
 			}
 
