@@ -433,6 +433,13 @@ function QTip(target, options, id, attr)
 				});
 			}
 
+			// If mouse positioning is on, apply a mouseleave event so we don't get problems with overlapping
+			if(posOptions.target === 'mouse') {
+				tooltip.bind('mouseleave'+namespace, function(event) {
+					if((event.relatedTarget || event.target) !== targets.show[0]) { self.hide(event); }
+				});
+			}
+
 			// Focus/blur the tooltip
 			tooltip.bind('mouseenter'+namespace+' mouseleave'+namespace, function(event) {
 				self[ event.type === 'mouseenter' ? 'focus' : 'blur' ](event);
