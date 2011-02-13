@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Feb 10 17:28:43 2011 +0000
+* Date: Sat Feb 12 00:01:17 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1224,7 +1224,6 @@ function QTip(target, options, id, attr)
 			return self;
 		},
 
-		enable: function() { self.disable(TRUE); },
 		disable: function(state)
 		{
 			var c = disabled;
@@ -1243,6 +1242,8 @@ function QTip(target, options, id, attr)
 
 			return self;
 		},
+		
+		enable: function() { self.disable(FALSE); },
 
 		destroy: function()
 		{
@@ -1389,7 +1390,7 @@ QTIP = $.fn.qtip = function(options, notation, newValue)
 			// Cache the event if possible
 			if(event && event.timeStamp) { api.cache.event = event; }
 
-			// Call APIcommand
+			// Check for specific API commands
 			if(command === 'option' && notation) {
 				if($.isPlainObject(notation) || newValue !== undefined) {
 					api.set(notation, newValue);

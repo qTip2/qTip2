@@ -1182,7 +1182,6 @@ function QTip(target, options, id, attr)
 			return self;
 		},
 
-		enable: function() { self.disable(TRUE); },
 		disable: function(state)
 		{
 			var c = disabled;
@@ -1201,6 +1200,8 @@ function QTip(target, options, id, attr)
 
 			return self;
 		},
+		
+		enable: function() { self.disable(FALSE); },
 
 		destroy: function()
 		{
@@ -1347,7 +1348,7 @@ QTIP = $.fn.qtip = function(options, notation, newValue)
 			// Cache the event if possible
 			if(event && event.timeStamp) { api.cache.event = event; }
 
-			// Call APIcommand
+			// Check for specific API commands
 			if(command === 'option' && notation) {
 				if($.isPlainObject(notation) || newValue !== undefined) {
 					api.set(notation, newValue);
