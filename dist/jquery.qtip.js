@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sat Feb 12 00:01:17 2011 +0000
+* Date: Sun Feb 13 15:23:04 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1524,7 +1524,7 @@ PLUGINS = QTIP.plugins = {
 			while(parent = parent.offsetParent());
 
 			// Compensate for containers scroll if it also has an offsetParent
-			if(!addScroll || deep > 1) {
+			if(addScroll || deep > 1) {
 				coffset = addScroll ? 1 : -1;
 				pos.left += coffset * container.scrollLeft();
 				pos.top += coffset * container.scrollTop();

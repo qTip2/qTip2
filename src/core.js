@@ -1482,7 +1482,7 @@ PLUGINS = QTIP.plugins = {
 			while(parent = parent.offsetParent());
 
 			// Compensate for containers scroll if it also has an offsetParent
-			if(!addScroll || deep > 1) {
+			if(addScroll || deep > 1) {
 				coffset = addScroll ? 1 : -1;
 				pos.left += coffset * container.scrollLeft();
 				pos.top += coffset * container.scrollTop();
