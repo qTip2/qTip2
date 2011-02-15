@@ -29,13 +29,13 @@ function Ajax(api)
 			// Make sure ajax options are enabled before proceeding
 			if(opts && opts.url) {
 				self.load();
-				tooltip.one('tooltipshow', self.once);
+				tooltip.one('tooltipshow', function() { self.once(opts.once); });
 			}
 		},
 
 		once: function(state)
 		{
-			tooltip[ (state ? '' : 'un') + 'bind' ]('tooltipshow'+namespace, self.load);
+			tooltip[ (state ? 'un' : '') + 'bind' ]('tooltipshow'+namespace, self.load);
 		},
 
 		load: function()
