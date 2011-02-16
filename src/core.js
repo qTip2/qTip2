@@ -1464,13 +1464,13 @@ PLUGINS = QTIP.plugins = {
 		var pos = elem.offset(),
 			parent = container,
 			deep = 0,
-			addScroll = !PLUGINS.iOS,
+			docBody = document.body,
 			coffset;
 
 		if(parent) {
 			// Compensate for non-static containers offset
 			do {
-				if(parent[0] === document.body) { break; }
+				if(parent[0] === docBody) { break; }
 				else if(parent.css('position') !== 'static') {
 					coffset = parent.position();
 					pos.left -= coffset.left;
@@ -1482,8 +1482,8 @@ PLUGINS = QTIP.plugins = {
 			while(parent = parent.offsetParent());
 
 			// Compensate for containers scroll if it also has an offsetParent
-			if(addScroll || deep > 1) {
-				coffset = addScroll ? 1 : -1;
+			if(container[0] !== docBody || PLUGINS.iOS) {
+				coffset = PLUGINS.iOS ? -1 : 1;
 				pos.left += coffset * container.scrollLeft();
 				pos.top += coffset * container.scrollTop();
 			}
