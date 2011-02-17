@@ -1484,9 +1484,8 @@ PLUGINS = QTIP.plugins = {
 
 			// Compensate for containers scroll if it also has an offsetParent
 			if(container[0] !== docBody || PLUGINS.iOS) {
-				coffset = PLUGINS.iOS ? -1 : 1;
-				pos.left += coffset * container.scrollLeft();
-				pos.top += coffset * container.scrollTop();
+				pos.left -= container.scrollLeft();
+				pos.top -= container.scrollTop();
 			}
 		}
 

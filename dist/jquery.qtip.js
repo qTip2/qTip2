@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Feb 16 20:19:44 2011 +0000
+* Date: Thu Feb 17 18:23:44 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1526,9 +1526,8 @@ PLUGINS = QTIP.plugins = {
 
 			// Compensate for containers scroll if it also has an offsetParent
 			if(container[0] !== docBody || PLUGINS.iOS) {
-				coffset = PLUGINS.iOS ? -1 : 1;
-				pos.left += coffset * container.scrollLeft();
-				pos.top += coffset * container.scrollTop();
+				pos.left -= container.scrollLeft();
+				pos.top -= container.scrollTop();
 			}
 		}
 
