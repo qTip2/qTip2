@@ -842,8 +842,8 @@ function QTip(target, options, id, attr)
 				// Update tooltip position (without animation)
 				self.reposition(event, 0);
 
-				// Hide other tooltips if tooltip is solo
-				if(opts.solo) { $(selector).not(tooltip).qtip('hide', callback); }
+				// Hide other tooltips if tooltip is solo, using it as the context
+				if(opts.solo) { $(selector, opts.solo).not(tooltip).qtip('hide', callback); }
 			}
 			else {
 				// Clear show timer if we're hiding 
@@ -1290,6 +1290,7 @@ function init(id, opts)
 	if(posOptions.container === FALSE) { posOptions.container = docBody; }
 	if(posOptions.target === FALSE) { posOptions.target = newTarget; }
 	if(config.show.target === FALSE) { config.show.target = newTarget; }
+	if(config.show.solo === TRUE) { config.show.solo = docBody; }
 	if(config.hide.target === FALSE) { config.hide.target = newTarget; }
 	if(config.position.viewport === TRUE) { config.position.viewport = posOptions.container; }
 
