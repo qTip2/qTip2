@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Feb 17 18:23:44 2011 +0000
+* Date: Thu Feb 17 18:50:58 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -813,7 +813,7 @@ function QTip(target, options, id, attr)
 				
 				// Set new obj value
 				previous = obj[0][ obj[1] ];
-				obj[0][ obj[1] ] = value.nodeType ? $(value) : value;
+				obj[0][ obj[1] ] = value && value.nodeType ? $(value) : value;
 
 				// Set the new params for the callback and test it against reposition
 				option[notation] = [obj[0], obj[1], value, previous];

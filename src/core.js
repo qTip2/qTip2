@@ -771,7 +771,7 @@ function QTip(target, options, id, attr)
 				
 				// Set new obj value
 				previous = obj[0][ obj[1] ];
-				obj[0][ obj[1] ] = value.nodeType ? $(value) : value;
+				obj[0][ obj[1] ] = value && value.nodeType ? $(value) : value;
 
 				// Set the new params for the callback and test it against reposition
 				option[notation] = [obj[0], obj[1], value, previous];
