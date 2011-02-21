@@ -434,7 +434,7 @@ function QTip(target, options, id, attr)
 			}
 
 			// If mouse positioning is on, apply a mouseleave event so we don't get problems with overlapping
-			if(posOptions.target === 'mouse') {
+			if(posOptions.target === 'mouse' && options.hide.event) {
 				tooltip.bind('mouseleave'+namespace, function(event) {
 					if((event.relatedTarget || event.target) !== targets.show[0]) { self.hide(event); }
 				});
@@ -1468,6 +1468,11 @@ PLUGINS = QTIP.plugins = {
 			docBody = document.body,
 			coffset;
 
+		function scroll(e) {
+			pos.left -= e.scrollLeft();
+			pos.top -= e.scrollTop();
+		}
+
 		if(parent) {
 			// Compensate for non-static containers offset
 			do {
@@ -1483,10 +1488,8 @@ PLUGINS = QTIP.plugins = {
 			while(parent = parent.offsetParent());
 
 			// Compensate for containers scroll if it also has an offsetParent
-			if(container[0] !== docBody || PLUGINS.iOS) {
-				pos.left -= container.scrollLeft();
-				pos.top -= container.scrollTop();
-			}
+			if(container[0] !== docBody) { scroll( container ); }
+			if(PLUGINS.iOS) { scroll( $(window) ); }
 		}
 
 		return pos;

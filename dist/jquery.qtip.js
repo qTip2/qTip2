@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Feb 17 18:50:58 2011 +0000
+* Date: Mon Feb 21 10:44:20 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -476,7 +476,7 @@ function QTip(target, options, id, attr)
 			}
 
 			// If mouse positioning is on, apply a mouseleave event so we don't get problems with overlapping
-			if(posOptions.target === 'mouse') {
+			if(posOptions.target === 'mouse' && options.hide.event) {
 				tooltip.bind('mouseleave'+namespace, function(event) {
 					if((event.relatedTarget || event.target) !== targets.show[0]) { self.hide(event); }
 				});
@@ -1510,6 +1510,11 @@ PLUGINS = QTIP.plugins = {
 			docBody = document.body,
 			coffset;
 
+		function scroll(e) {
+			pos.left -= e.scrollLeft();
+			pos.top -= e.scrollTop();
+		}
+
 		if(parent) {
 			// Compensate for non-static containers offset
 			do {
@@ -1525,10 +1530,8 @@ PLUGINS = QTIP.plugins = {
 			while(parent = parent.offsetParent());
 
 			// Compensate for containers scroll if it also has an offsetParent
-			if(container[0] !== docBody || PLUGINS.iOS) {
-				pos.left -= container.scrollLeft();
-				pos.top -= container.scrollTop();
-			}
+			if(container[0] !== docBody) { scroll( container ); }
+			if(PLUGINS.iOS) { scroll( $(window) ); }
 		}
 
 		return pos;
