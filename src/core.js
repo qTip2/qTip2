@@ -1468,9 +1468,9 @@ PLUGINS = QTIP.plugins = {
 			docBody = document.body,
 			coffset;
 
-		function scroll(e) {
-			pos.left -= e.scrollLeft();
-			pos.top -= e.scrollTop();
+		function scroll(e, i) {
+			pos.left += i * e.scrollLeft();
+			pos.top += i * e.scrollTop();
 		}
 
 		if(parent) {
@@ -1488,8 +1488,8 @@ PLUGINS = QTIP.plugins = {
 			while(parent = parent.offsetParent());
 
 			// Compensate for containers scroll if it also has an offsetParent
-			if(container[0] !== docBody) { scroll( container ); }
-			if(PLUGINS.iOS) { scroll( $(window) ); }
+			if(container[0] !== docBody || deep > 1) { scroll( container, 1 ); }
+			if(PLUGINS.iOS) { scroll( $(window), -1 ); }
 		}
 
 		return pos;
