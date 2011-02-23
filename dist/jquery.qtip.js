@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Feb 23 00:11:30 2011 +0000
+* Date: Wed Feb 23 00:35:04 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -388,10 +388,10 @@ function QTip(target, options, id, attr)
 			targets = {
 				show: options.show.target,
 				hide: options.hide.target,
-				container: posOptions.container[0] === docBody ? document : posOptions.container
+				container: posOptions.container[0] === docBody ? $(document) : posOptions.container,
+				doc: $(document)
 			},
 			events = { show: String(options.show.event).split(' '), hide: String(options.hide.event).split(' ') },
-			$doc = $(document),
 			IE6 = $.browser.msie && parseInt($.browser.version, 10) === 6;
 
 		// Define show event method
@@ -546,7 +546,7 @@ function QTip(target, options, id, attr)
 
 			// Hide tooltip on document mousedown if unfocus events are enabled
 			if((/unfocus/i).test(options.hide.event)) {
-				$doc.bind('mousedown'+namespace, function(event) {
+				targets.doc.bind('mousedown'+namespace, function(event) {
 					var $target = $(event.target);
 					
 					if($target.parents(selector).length === 0 && $target.add(target).length > 1 && isVisible() && !tooltip.hasClass(disabled)) {
@@ -557,7 +557,7 @@ function QTip(target, options, id, attr)
 
 			// If mouse is the target, update tooltip position on document mousemove
 			if(posOptions.target === 'mouse') {
-				$doc.bind('mousemove'+namespace, function(event) {
+				targets.doc.bind('mousemove'+namespace, function(event) {
 					// Update the tooltip position only if the tooltip is visible and adjustment is enabled
 					if(posOptions.adjust.mouse && !tooltip.hasClass(disabled) && isVisible()) {
 						self.reposition(event || MOUSE);
@@ -586,7 +586,7 @@ function QTip(target, options, id, attr)
 			$([]).pushStack(
 				$.grep(
 					[ targets.show, targets.hide, targets.tooltip, targets.container, targets.content, targets.window ],
-					function(){ return this !== FALSE; }
+					function(i){ return typeof i === 'object'; }
 				)
 			)
 			.unbind(namespace);
@@ -635,14 +635,13 @@ function QTip(target, options, id, attr)
 		},
 
 		// Show & hide checks
-		'^(show|hide).(event|target|fixed|delay|inactive)$': function(obj, o, v, p) {
-			var args = o.search(/fixed/i) > -1 ? [0, [0,1,1,1]] : [o.substr(0,3), o.charAt(0) === 's' ? [1,0,0,0] : [0,1,0,0]];
+		'^(show|hide).(event|target|fixed|delay|inactive)$': function(obj, o, v, p, match) {
+			// Setup arguments
+			var args = [1,0,0];
+			args[match[0] === 'show' ? 'push' : 'unshift'](0);
 
-			if(args[0]) { obj[o] = p; }
-			unassignEvents.apply(self, args[1]);
-
-			if(args[0]) { obj[o] = v; }
-			assignEvents.apply(self, args[1]);
+			unassignEvents.apply(self, args);
+			assignEvents.apply(self, [1,1,0,0]);
 		},
 		'^show.ready$': function() { if(!self.rendered) { self.show(); } },
 
@@ -783,12 +782,13 @@ function QTip(target, options, id, attr)
 				name;
 
 			function callback(notation, args) {
-				var category, rule;
+				var category, rule, match;
 
 				if(self.rendered) {
 					for(category in checks) {
 						for(rule in checks[category]) {
-							if((new RegExp(rule, 'i')).test(notation)) {
+							if(match = (new RegExp(rule, 'i')).exec(notation)) {
+								args.push(match);
 								checks[category][rule].apply(self, args);
 							}
 						}
@@ -2727,4 +2727,6 @@ PLUGINS.bgiframe = function(api)
 // Plugin needs to be initialized on render
 PLUGINS.bgiframe.initialize = 'render';
 
-PLUGINS.bgiframe.needBGI = $('select, object').length > 0;}(jQuery, window));
+PLUGINS.bgiframe.needBGI = $('select, object').length > 0;
+
+}(jQuery, window));
