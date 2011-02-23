@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Feb 21 19:44:44 2011 +0000
+* Date: Tue Feb 22 23:23:09 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -572,12 +572,12 @@ function QTip(target, options, id, attr)
 		doc = parseInt(doc, 10) !== 0;
 		var namespace = '.qtip-'+id,
 			targets = {
-				show: show ? options.show.target : NULL,
-				hide: hide ? options.hide.target : NULL,
-				tooltip: tooltip ? elements.tooltip : NULL,
-				content: tooltip ? elements.content : NULL,
-				container: doc ? options.position.container[0] === docBody ? document : options.position.container : NULL,
-				window: doc ? window : NULL
+				show: show && options.show.target[0],
+				hide: hide && options.hide.target[0],
+				tooltip: tooltip && self.rendered && elements.tooltip[0],
+				content: tooltip && self.rendered && elements.content[0],
+				container: doc && options.position.container[0] === docBody ? document : options.position.container[0],
+				window: doc && window
 			};
 
 		// Check if tooltip is rendered
@@ -586,14 +586,14 @@ function QTip(target, options, id, attr)
 			$([]).pushStack(
 				$.grep(
 					[ targets.show, targets.hide, targets.tooltip, targets.container, targets.content, targets.window ],
-					function(){ return this !== null; }
+					function(){ return this !== FALSE; }
 				)
 			)
 			.unbind(namespace);
 		}
 
 		// Tooltip isn't yet rendered, remove render event
-		else if(show) { targets.show.unbind(namespace+'-create'); }
+		else if(show) { options.show.target.unbind(namespace+'-create'); }
 	}
 
 	// Setup builtin .set() option checks
@@ -1272,8 +1272,8 @@ function QTip(target, options, id, attr)
 				$.attr(t, 'title', title);
 			}
 
-			// Remove ARIA attributse
-			target.removeAttr('aria-describedby');
+			// Remove ARIA attributes and bound qtip events
+			target.removeAttr('aria-describedby').unbind('.qtip');
 
 			return target;
 		}
