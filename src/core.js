@@ -1479,8 +1479,8 @@ PLUGINS = QTIP.plugins = {
 				if(parent[0] === docBody) { break; }
 				else if(parent.css('position') !== 'static') {
 					coffset = parent.position();
-					pos.left -= coffset.left;
-					pos.top -= coffset.top;
+					pos.left -= coffset.left + (parseInt(parent.css('borderLeftWidth'), 10) || 0);
+					pos.top -= coffset.top + (parseInt(parent.css('borderTopWidth'), 10) || 0);
 					
 					deep++;
 				}
