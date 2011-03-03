@@ -434,7 +434,7 @@ function QTip(target, options, id, attr)
 			}
 
 			// If mouse positioning is on, apply a mouseleave event so we don't get problems with overlapping
-			if(posOptions.target === 'mouse' && options.hide.event) {
+			if(posOptions.target === 'mouse' && posOptions.adjust.mouse && options.hide.event) {
 				tooltip.bind('mouseleave'+namespace, function(event) {
 					if((event.relatedTarget || event.target) !== targets.show[0]) { self.hide(event); }
 				});
