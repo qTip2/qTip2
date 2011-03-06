@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Feb 24 23:26:34 2011 +0000
+* Date: Thu Mar 3 18:10:01 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -391,7 +391,10 @@ function QTip(target, options, id, attr)
 				container: posOptions.container[0] === docBody ? $(document) : posOptions.container,
 				doc: $(document)
 			},
-			events = { show: String(options.show.event).split(' '), hide: String(options.hide.event).split(' ') },
+			events = {
+				show: $.trim('' + options.show.event).split(' '),
+				hide: $.trim('' + options.hide.event).split(' ')
+			},
 			IE6 = $.browser.msie && parseInt($.browser.version, 10) === 6;
 
 		// Define show event method
@@ -1369,7 +1372,7 @@ function init(id, opts)
 // jQuery $.fn extension method
 QTIP = $.fn.qtip = function(options, notation, newValue)
 {
-	var command = String(options).toLowerCase(), // Parse command
+	var command = ('' + options).toLowerCase(), // Parse command
 		returned = NULL,
 		args = command === 'disable' ? [TRUE] : $.makeArray(arguments).slice(1, 10),
 		event = args[args.length - 1],
@@ -1426,10 +1429,10 @@ QTIP.bind = function(opts, event)
 {
 	return this.each(function(i) {
 		var options, targets, events,
-			
+
 		// Find next available ID, or use custom ID if provided
 		id = (!opts.id || opts.id === FALSE || opts.id.length < 1 || $('#'+uitooltip+'-'+opts.id).length) ? QTIP.nextid++ : opts.id,
-		
+
 		// Setup events namespace
 		namespace = '.qtip-'+id+'-create',
 
@@ -1446,8 +1449,8 @@ QTIP.bind = function(opts, event)
 		// Determine hide and show targets
 		targets = { show: options.show.target, hide: options.hide.target };
 		events = {
-			show: String(options.show.event).replace(' ', namespace+' ') + namespace,
-			hide: String(options.hide.event).replace(' ', namespace+' ') + namespace
+			show: $.trim('' + options.show.event).replace(/ /g, namespace+' ') + namespace,
+			hide: $.trim('' + options.hide.event).replace(/ /g, namespace+' ') + namespace
 		};
 
 		// Define hoverIntent function
@@ -1490,7 +1493,7 @@ QTIP.bind = function(opts, event)
 PLUGINS = QTIP.plugins = {
 	// Corner object parser
 	Corner: function(corner) {
-		corner = String(corner).replace(/([A-Z])/, ' $1').replace(/middle/gi, 'center').toLowerCase();
+		corner = ('' + corner).replace(/([A-Z])/, ' $1').replace(/middle/gi, 'center').toLowerCase();
 		this.x = (corner.match(/left|right/i) || corner.match(/center/) || ['inherit'])[0].toLowerCase();
 		this.y = (corner.match(/top|bottom|center/i) || ['inherit'])[0].toLowerCase();
 
