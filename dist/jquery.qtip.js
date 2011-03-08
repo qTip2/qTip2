@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Mar 3 18:10:01 2011 +0000
+* Date: Sun Mar 6 23:40:54 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -700,14 +700,15 @@ function QTip(target, options, id, attr)
 					})
 				);
 
-			// Set rendered status
-			self.rendered = TRUE;
-
-			// Update title and content
+			// Update title
+			self.rendered = -1;
 			if(title) { 
 				createTitle();
 				updateTitle(title);
 			}
+
+			// Set proper rendered flag and update content
+			self.rendered = TRUE;
 			updateContent(content);
 
 			// Setup widget classes
@@ -1197,20 +1198,21 @@ function QTip(target, options, id, attr)
 		// IE max/min height/width simulartor function
 		redraw: function()
 		{
-			// Make sure tooltip is rendered and the browser needs the redraw
-			if(!self.rendered || !($.browser.msie && $.browser.version < 8)) { return FALSE; }
+			var fluid = uitooltip + '-fluid',
+			 auto = 'auto', dimensions;
 
-			var fluid = uitooltip + '-fluid', dimensions;
+			// Return if tooltip is not rendered
+			if(self.rendered < 1) { return FALSE; }
 
 			// Reset the height and width and add the fluid class to reset max/min widths
-			tooltip.css({ width: 'auto', height: 'auto' }).addClass(fluid);
+			tooltip.css({ width: auto, height: auto }).addClass(fluid);
 
 			// Grab our tooltip dimensions
 			dimensions = {
 				height: tooltip.outerHeight(),
 				width: tooltip.outerWidth()
 			};
-			
+
 			// Determine actual width
 			$.each(['width', 'height'], function(i, prop) {
 				// Parse our max/min properties

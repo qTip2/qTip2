@@ -4,10 +4,6 @@
 	visibility: hidden;
 	position: static !important;
 	float: left !important;
-	max-width: none !important;
-	min-width: 0px !important;
-	max-height: none !important;
-	min-height: 0px !important;
 }
 
 .ui-tooltip, .qtip, .ui-tooltip-hidden{
