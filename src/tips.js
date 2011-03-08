@@ -204,7 +204,8 @@ function Tip(qTip, command)
 		},
 
 		detectColours: function() {
-			var tip = elems.tip.css({ backgroundColor: '', border: '' }),
+			var i,
+				tip = elems.tip.css({ backgroundColor: '', border: '' }),
 				corner = self.corner,
 				precedance = corner[ corner.precedance ],
 
@@ -215,26 +216,28 @@ function Tip(qTip, command)
 				backgroundColor = 'background-color',
 				transparent = 'transparent',
 
-				useTitle = elems.titlebar && 
-					(corner.y === 'top' || (corner.y === 'center' && tip.position().top + (size.height / 2) + opts.offset < elems.titlebar.outerHeight(1))),
-				colorElem = useTitle ? elems.titlebar : elems.content;
-				
+				bodyBorder = $(document.body).css('color'),
+				contentColour = qTip.elements.content.css('color'),
+
+				useTitle = elems.titlebar && (corner.y === 'top' || (corner.y === 'center' && tip.position().top + (size.height / 2) + opts.offset < elems.titlebar.outerHeight(1))),
+				colorElem = useTitle ? elems.titlebar : elems.content,
+
 			// Detect tip colours from CSS styles
-			color.fill = tip.css(backgroundColor) || transparent;
-			color.border = tip[0].style[ borderSideCamel ];
+			fill = tip.css(backgroundColor) || transparent,
+			border = tip[0].style[ borderSideCamel ];
 
 			// Make sure colours are valid
-			if(!color.fill || invalid.test(color.fill)) { 
+			if(!fill || invalid.test(fill)) {
 				color.fill = colorElem.css(backgroundColor);
 				if(invalid.test(color.fill)) {
-					color.fill = tooltip.css(backgroundColor);
+					color.fill = tooltip.css(backgroundColor) || fill;
 				}
 			}
-			if(!color.border || invalid.test(color.border)) {
+			if(!border || invalid.test(border)) {
 				color.border = tooltip.css(borderSide);
-				if(invalid.test(color.border) || color.border === $(document.body).css('color')) { 
-					color.border = (colorElem.css(borderSide) !== $(qTip.elements.content).css('color') ? 
-						colorElem.css(borderSide) : transparent);
+				if(invalid.test(color.border) || color.border === bodyBorder) {
+					color.border = colorElem.css(borderSide);
+					if(color.border === contentColour) { color.border = border; }
 				}
 			}
 
