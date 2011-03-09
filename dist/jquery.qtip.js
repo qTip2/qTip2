@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Mar 8 21:20:42 2011 +0000
+* Date: Tue Mar 8 22:04:23 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1546,7 +1546,7 @@ PLUGINS = QTIP.plugins = {
 	 * iOS 4.0 and below scroll fix detection used in offset() function.
 	 */
 	iOS: parseFloat(
-		('' + (/CPU.*OS (3_2|4_0)|(CPU like).*AppleWebKit.*Mobile/i.exec(navigator.userAgent) || [0,'4_2'])[1])
+		('' + (/CPU.*OS ([0-9_]{3})|(CPU like).*AppleWebKit.*Mobile/i.exec(navigator.userAgent) || [0,'4_2'])[1])
 		.replace('undefined', '3_2').replace('_','.')
 	) < 4.1,
 	
