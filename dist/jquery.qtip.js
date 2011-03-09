@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Mar 8 22:04:23 2011 +0000
+* Date: Wed Mar 9 10:39:15 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -699,17 +699,17 @@ function QTip(target, options, id, attr)
 						'aria-atomic': TRUE
 					})
 				);
+			self.rendered = -1;
 
 			// Update title
-			self.rendered = -1;
 			if(title) { 
 				createTitle();
 				updateTitle(title);
 			}
 
 			// Set proper rendered flag and update content
-			self.rendered = TRUE;
 			updateContent(content);
+			self.rendered = TRUE;
 
 			// Setup widget classes
 			setWidget();
@@ -746,7 +746,8 @@ function QTip(target, options, id, attr)
 					self.show(cache.event);
 				}
 
-				next(); // Move on
+				// Move on and redraw the tooltip properly
+				next(); self.redraw();
 			});
 
 			return self;

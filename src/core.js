@@ -657,17 +657,17 @@ function QTip(target, options, id, attr)
 						'aria-atomic': TRUE
 					})
 				);
+			self.rendered = -1;
 
 			// Update title
-			self.rendered = -1;
 			if(title) { 
 				createTitle();
 				updateTitle(title);
 			}
 
 			// Set proper rendered flag and update content
-			self.rendered = TRUE;
 			updateContent(content);
+			self.rendered = TRUE;
 
 			// Setup widget classes
 			setWidget();
@@ -704,7 +704,8 @@ function QTip(target, options, id, attr)
 					self.show(cache.event);
 				}
 
-				next(); // Move on
+				// Move on and redraw the tooltip properly
+				next(); self.redraw();
 			});
 
 			return self;
