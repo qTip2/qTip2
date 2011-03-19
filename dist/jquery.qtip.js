@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sat Mar 19 19:44:46 2011 +0000
+* Date: Sat Mar 19 19:51:43 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1250,7 +1250,7 @@ function QTip(target, options, id, attr)
 			return self;
 		},
 		
-		enable: function() { self.disable(FALSE); },
+		enable: function() { return self.disable(FALSE); },
 
 		destroy: function()
 		{

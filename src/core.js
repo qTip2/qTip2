@@ -1208,7 +1208,7 @@ function QTip(target, options, id, attr)
 			return self;
 		},
 		
-		enable: function() { self.disable(FALSE); },
+		enable: function() { return self.disable(FALSE); },
 
 		destroy: function()
 		{
