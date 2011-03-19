@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sat Mar 19 18:30:18 2011 +0000
+* Date: Sat Mar 19 19:44:46 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -661,7 +661,7 @@ function QTip(target, options, id, attr)
 	$.extend(self, {
 		render: function(show)
 		{
-			if(self.rendered) { return FALSE; } // If tooltip has already been rendered, exit
+			if(self.rendered) { return self; } // If tooltip has already been rendered, exit
 
 			var content = options.content.text,
 				title = options.content.title.text,
@@ -843,7 +843,7 @@ function QTip(target, options, id, attr)
 			// Make sure tooltip is rendered
 			if(!self.rendered) {
 				if(state) { self.render(1); } // Render the tooltip if showing and it isn't already
-				else { return FALSE; }
+				else { return self; }
 			}
 
 			var type = state ? 'show' : 'hide',
@@ -948,7 +948,7 @@ function QTip(target, options, id, attr)
 
 		focus: function(event)
 		{
-			if(!self.rendered) { return FALSE; }
+			if(!self.rendered) { return self; }
 
 			var qtips = $(selector),
 				curIndex = parseInt(tooltip[0].style.zIndex, 10),
@@ -1004,7 +1004,7 @@ function QTip(target, options, id, attr)
 
 		reposition: function(event, effect)
 		{
-			if(!self.rendered || isPositioning) { return FALSE; }
+			if(!self.rendered || isPositioning) { return self; }
 
 			// Set positioning flag
 			isPositioning = 1;
@@ -1198,7 +1198,7 @@ function QTip(target, options, id, attr)
 		// IE max/min height/width simulator function
 		redraw: function()
 		{
-			if(self.rendered < 1 || isDrawing) { return FALSE; }
+			if(self.rendered < 1 || isDrawing) { return self; }
 
 			var fluid = uitooltip + '-fluid', auto = 'auto', dimensions;
 			isDrawing = 1; // Set drawing flag
