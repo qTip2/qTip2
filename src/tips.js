@@ -246,7 +246,7 @@ function Tip(qTip, command)
 			}
 
 			// Reset background and border colours, and remove fluid class
-			$('*', tip).add(tip).css(backgroundColor, transparent).css('border', '0px dashed transparent');
+			$('*', tip).add(tip).css(backgroundColor, transparent).css('border', '');
 			tooltip.removeClass(fluid);
 		},
 
@@ -268,7 +268,7 @@ function Tip(qTip, command)
 				$('<canvas />').appendTo(elems.tip)[0].getContext('2d').save();
 			}
 			else {
-				vml = '<vml:shape coordorigin="0,0" style="display:block; position:absolute; behavior:url(#default#VML);"></vml:shape>';
+				vml = '<vml:shape coordorigin="0,0" style="display:inline-block; position:absolute; behavior:url(#default#VML);"></vml:shape>';
 				elems.tip.html( border ? vml += vml : vml );
 			}
 		},

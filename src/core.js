@@ -396,8 +396,6 @@ function QTip(target, options, id, attr)
 			}
 
 			// If tooltip has displayed, start hide timer
-			tooltip.stop(1, 1);
-
 			if(options.hide.delay > 0) {
 				self.timers.hide = setTimeout(function(){ self.hide(event); }, options.hide.delay);
 			}
@@ -858,31 +856,33 @@ function QTip(target, options, id, attr)
 
 			// Define post-animation state specific properties
 			function after() {
-				// Hide the tooltip using negative offset and reset opacity
 				if(!state) {
+					// Reset CSS states
 					tooltip.css({
 						display: '',
-					  visibility: '',
-					  width: '',
-					  opacity: '',
-					  left: '',
-					  top: ''
+						visibility: '',
+						width: '',
+						opacity: '',
+						left: '',
+						top: ''
 					});
 				}
+				else {
+					// Prevent antialias from disappearing in IE by removing filter
+					if($.browser.msie) { tooltip[0].style.removeAttribute('filter'); }
 
-				// Prevent antialias from disappearing in IE by removing filter
-				else if(state && $.browser.msie) {
-					tooltip[0].style.removeAttribute('filter');
+					// Remove overflow setting to prevent tip bugs
+					tooltip.css('overflow', '');
 				}
 			}
 
 			// Clear animation queue
-			tooltip.stop(1, 1);
+			tooltip.stop(0, 1);
 
 			// Use custom function if provided
 			if($.isFunction(opts.effect)) {
 				opts.effect.call(tooltip, self);
-				tooltip.queue('fx', function(next){ after.call(this, next); next(); });
+				tooltip.queue('fx', function(n){ after(); n(); });
 			}
 
 			// If no effect type is supplied, use a simple toggle
