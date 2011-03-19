@@ -204,7 +204,7 @@ function Tip(qTip, command)
 		},
 
 		detectColours: function() {
-			var i,
+			var i, fill, border,
 				tip = elems.tip.css({ backgroundColor: '', border: '' }),
 				corner = self.corner,
 				precedance = corner[ corner.precedance ],
@@ -215,15 +215,19 @@ function Tip(qTip, command)
 				invalid = /rgba?\(0, 0, 0(, 0)?\)|transparent/i,
 				backgroundColor = 'background-color',
 				transparent = 'transparent',
+				fluid = 'ui-tooltip-fluid',
 
 				bodyBorder = $(document.body).css('color'),
 				contentColour = qTip.elements.content.css('color'),
 
 				useTitle = elems.titlebar && (corner.y === 'top' || (corner.y === 'center' && tip.position().top + (size.height / 2) + opts.offset < elems.titlebar.outerHeight(1))),
-				colorElem = useTitle ? elems.titlebar : elems.content,
+				colorElem = useTitle ? elems.titlebar : elems.content;
+
+			// Apply the fluid class so we can see our CSS values properly
+			tooltip.addClass(fluid);
 
 			// Detect tip colours from CSS styles
-			fill = tip.css(backgroundColor) || transparent,
+			fill = tip.css(backgroundColor) || transparent;
 			border = tip[0].style[ borderSideCamel ];
 
 			// Make sure colours are valid
@@ -241,8 +245,9 @@ function Tip(qTip, command)
 				}
 			}
 
-			// Reset background and border colours
+			// Reset background and border colours, and remove fluid class
 			$('*', tip).add(tip).css(backgroundColor, transparent).css('border', '0px dashed transparent');
+			tooltip.removeClass(fluid);
 		},
 
 		create: function()

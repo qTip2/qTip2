@@ -6,11 +6,11 @@
 	float: left !important;
 }
 
-.ui-tooltip, .qtip, .ui-tooltip-hidden{
+.ui-tooltip, .qtip{
 	position: absolute;
 	left: -31000px;
 	top: -31000px;
-	display: block;
+	display: none;
 
 	max-width: 280px;
 	min-width: 50px;

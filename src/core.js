@@ -94,6 +94,7 @@ function QTip(target, options, id, attr)
 		docBody = document.body,
 		tooltipID = uitooltip + '-' + id,
 		isPositioning = 0,
+		isDrawing = 0,
 		tooltip, elements, cache;
 
 	// Setup class attributes
@@ -127,10 +128,6 @@ function QTip(target, options, id, attr)
 		}
 
 		return [obj || options, levels.pop()];
-	}
-
-	function isVisible() {
-		return tooltip && tooltip.css('left') !== hideOffset && tooltip.css('visibility') !== 'hidden';
 	}
 
 	function setWidget() {
@@ -264,7 +261,7 @@ function QTip(target, options, id, attr)
 
 		// Redraw and reposition
 		self.redraw();
-		if(self.rendered && isVisible()) {
+		if(self.rendered && tooltip.is(':visible')) {
 			self.reposition(cache.event);
 		}
 	}
@@ -302,7 +299,7 @@ function QTip(target, options, id, attr)
 				// If queue is empty, update tooltip and continue the queue
 				if(images.length === 0) {
 					self.redraw();
-					if(self.rendered && isVisible()) {
+					if(self.rendered && tooltip.is(':visible')) {
 						self.reposition(cache.event);
 					}
 
@@ -418,7 +415,7 @@ function QTip(target, options, id, attr)
 		}
 
 		function repositionMethod(event) {
-			if(isVisible()) { self.reposition(event); }
+			if(tooltip.is(':visible')) { self.reposition(event); }
 		}
 
 		// Assign tooltip events
@@ -473,7 +470,7 @@ function QTip(target, options, id, attr)
 				{
 					targets.show.bind(type+namespace, function(event)
 					{
-						if(isVisible()) { hideMethod(event); }
+						if(tooltip.is(':visible')) { hideMethod(event); }
 						else{ showMethod(event); }
 					});
 
@@ -510,7 +507,7 @@ function QTip(target, options, id, attr)
 				targets.doc.bind('mousedown'+namespace, function(event) {
 					var $target = $(event.target);
 					
-					if($target.parents(selector).length === 0 && $target.add(target).length > 1 && isVisible() && !tooltip.hasClass(disabled)) {
+					if($target.parents(selector).length === 0 && $target.add(target).length > 1 && tooltip.is(':visible') && !tooltip.hasClass(disabled)) {
 						self.hide(event);
 					}
 				});
@@ -520,7 +517,7 @@ function QTip(target, options, id, attr)
 			if(posOptions.target === 'mouse') {
 				targets.doc.bind('mousemove'+namespace, function(event) {
 					// Update the tooltip position only if the tooltip is visible and adjustment is enabled
-					if(posOptions.adjust.mouse && !tooltip.hasClass(disabled) && isVisible()) {
+					if(posOptions.adjust.mouse && !tooltip.hasClass(disabled) && tooltip.is(':visible')) {
 						self.reposition(event || MOUSE);
 					}
 				});
@@ -657,7 +654,10 @@ function QTip(target, options, id, attr)
 						'aria-atomic': TRUE
 					})
 				);
+
+			// Set rendered flag and prevent redundant redraw calls for npw
 			self.rendered = -1;
+			isDrawing = 1;
 
 			// Update title
 			if(title) { 
@@ -680,32 +680,30 @@ function QTip(target, options, id, attr)
 			// Assign events
 			assignEvents(1, 1, 1, 1);
 			$.each(options.events, function(name, callback) {
-				if(callback) {
-					var events = name === 'toggle' ? 'tooltipshow tooltiphide' : 'tooltip'+name;
-					tooltip.bind(events, callback);
+				if($.isFunction(callback)) {
+					tooltip.bind(name === 'toggle' ? 'tooltipshow tooltiphide' : 'tooltip'+name, callback);
 				}
 			});
-
-			// Set visibility AFTER plugin initialization to prevent issues in IE
-			tooltip.css('visibility', 'hidden')
 
 			/* Queue this part of the render process in our fx queue so we can
 			 * load images before the tooltip renders fully.
 			 *
 			 * See: updateContent method
 			*/
-			.queue('fx', function(next) {
+			tooltip.queue('fx', function(next) {
 				// Trigger tooltiprender event and pass original triggering event as original
 				callback.originalEvent = cache.event;
 				tooltip.trigger(callback, [self]);
+
+				// Redraw the tooltip manually now we're fully rendered
+				isDrawing = 0; self.redraw();
 
 				// Update tooltip position and show tooltip if needed
 				if(options.show.ready || show) {
 					self.show(cache.event);
 				}
 
-				// Move on and redraw the tooltip properly
-				next(); self.redraw();
+				next(); // Move on to next method in queue
 			});
 
 			return self;
@@ -760,7 +758,8 @@ function QTip(target, options, id, attr)
 
 				// If we're not rendered and show.ready was set, render it
 				else if(notation === 'show.ready' && args[2]) {
-					isPositioning = 0; self.render(TRUE);
+					isPositioning = 0; isDrawing = 0;
+					self.render(TRUE);
 				}
 			}
 
@@ -788,12 +787,13 @@ function QTip(target, options, id, attr)
 
 			/*
 			 * Execute any valid callbacks for the set options
-			 * Also set isPositioning so we don't get loads of redundant repositioning calls
+			 * Also set isPositioning/isDrawing so we don't get loads of redundant repositioning
+			 * and redraw calls
 			 */
-			isPositioning = 1; $.each(option, callback); isPositioning = 0;
+			isPositioning = isDrawing = 1; $.each(option, callback); isPositioning = isDrawing = 0;
 
 			// Update position on ANY style/position/content change if shown and rendered
-			if(reposition && isVisible() && self.rendered) { self.reposition(); }
+			if(reposition && tooltip.is(':visible') && self.rendered) { self.reposition(); }
 
 			return self;
 		},
@@ -808,7 +808,7 @@ function QTip(target, options, id, attr)
 
 			var type = state ? 'show' : 'hide',
 				opts = options[type],
-				visible = isVisible(),
+				visible = tooltip.is(':visible'),
 				callback;
 
 			// Detect state if valid one isn't provided
@@ -820,9 +820,9 @@ function QTip(target, options, id, attr)
 			// Try to prevent flickering when tooltip overlaps show element
 			if(event) {
 				if((/over|enter/).test(event.type) && (/out|leave/).test(cache.event.type) &&
-					event.target === options.show.target[0] && tooltip.has(event.relatedTarget).length){
+					event.target === options.show.target[0] && tooltip.has(event.relatedTarget).length) {
 					return self;
-					}
+				}
 
 				// Cache event
 				cache.event = $.extend({}, event);
@@ -839,8 +839,6 @@ function QTip(target, options, id, attr)
 
 			// Execute state specific properties
 			if(state) {
-				tooltip.hide().css({ visibility: '' }); // Hide it first so effects aren't skipped
-				
 				// Focus the tooltip
 				self.focus(event);
 
@@ -860,20 +858,21 @@ function QTip(target, options, id, attr)
 
 			// Define post-animation state specific properties
 			function after() {
-				// Prevent antialias from disappearing in IE by removing filter
-				if(state) {
-					if($.browser.msie) { tooltip[0].style.removeAttribute('filter'); }
-				}
 				// Hide the tooltip using negative offset and reset opacity
-				else {
+				if(!state) {
 					tooltip.css({
 						display: '',
-						visibility: 'hidden',
-						width: '',
-						opacity: '',
-						left: '',
-						top: ''
+					  visibility: '',
+					  width: '',
+					  opacity: '',
+					  left: '',
+					  top: ''
 					});
+				}
+
+				// Prevent antialias from disappearing in IE by removing filter
+				else if(state && $.browser.msie) {
+					tooltip[0].style.removeAttribute('filter');
 				}
 			}
 
@@ -966,7 +965,7 @@ function QTip(target, options, id, attr)
 			if(!self.rendered || isPositioning) { return FALSE; }
 
 			// Set positioning flag
-			isPositioning = TRUE;
+			isPositioning = 1;
 	
 			var target = options.position.target,
 				posOptions = options.position,
@@ -1136,7 +1135,7 @@ function QTip(target, options, id, attr)
 			}
 			
 			// Use custom function if provided
-			else if(isVisible() && $.isFunction(posOptions.effect)) {
+			else if(tooltip.is(':visible') && $.isFunction(posOptions.effect)) {
 				posOptions.effect.call(tooltip, self, position);
 				tooltip.queue(function(next) {
 					var elem = $(this);
@@ -1149,19 +1148,18 @@ function QTip(target, options, id, attr)
 			}
 
 			// Set positioning flag
-			isPositioning = FALSE;
+			isPositioning = 0;
 
 			return self;
 		},
 
-		// IE max/min height/width simulartor function
+		// IE max/min height/width simulator function
 		redraw: function()
 		{
-			var fluid = uitooltip + '-fluid',
-			 auto = 'auto', dimensions;
+			if(self.rendered < 1 || isDrawing) { return FALSE; }
 
-			// Return if tooltip is not rendered
-			if(self.rendered < 1) { return FALSE; }
+			var fluid = uitooltip + '-fluid', auto = 'auto', dimensions;
+			isDrawing = 1; // Set drawing flag
 
 			// Reset the height and width and add the fluid class to reset max/min widths
 			tooltip.css({ width: auto, height: auto }).addClass(fluid);
@@ -1172,7 +1170,7 @@ function QTip(target, options, id, attr)
 				width: tooltip.outerWidth()
 			};
 
-			// Determine actual width
+			// Determine actual width/height
 			$.each(['width', 'height'], function(i, prop) {
 				// Parse our max/min properties
 				var max = parseInt(tooltip.css('max-'+prop), 10) || 0,
@@ -1184,6 +1182,9 @@ function QTip(target, options, id, attr)
 
 			// Set the newly calculated dimensions and remvoe fluid class
 			tooltip.css(dimensions).removeClass(fluid);
+
+			// Set drawing flag
+			isDrawing = 0;
 
 			return self;
 		},
