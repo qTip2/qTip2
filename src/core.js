@@ -1166,8 +1166,8 @@ function QTip(target, options, id, attr)
 
 			// Grab our tooltip dimensions
 			dimensions = {
-				height: tooltip.outerHeight(),
-				width: tooltip.outerWidth()
+				height: tooltip.height(),
+				width: tooltip.width()
 			};
 
 			// Determine actual width/height
