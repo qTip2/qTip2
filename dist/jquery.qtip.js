@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sat Mar 19 19:52:41 2011 +0000
+* Date: Sat Mar 19 19:55:46 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -137,7 +137,8 @@ function QTip(target, options, id, attr)
 		tooltipID = uitooltip + '-' + id,
 		isPositioning = 0,
 		isDrawing = 0,
-		tooltip, elements, cache;
+		tooltip = $(),
+		elements, cache;
 
 	// Setup class attributes
 	self.id = id;

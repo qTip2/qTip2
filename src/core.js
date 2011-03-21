@@ -95,7 +95,8 @@ function QTip(target, options, id, attr)
 		tooltipID = uitooltip + '-' + id,
 		isPositioning = 0,
 		isDrawing = 0,
-		tooltip, elements, cache;
+		tooltip = $(),
+		elements, cache;
 
 	// Setup class attributes
 	self.id = id;
