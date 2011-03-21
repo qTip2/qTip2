@@ -1154,35 +1154,29 @@ function QTip(target, options, id, attr)
 			return self;
 		},
 
-		// IE max/min height/width simulator function
+		// IMax/min width simulator function for all browsers.. yeaaah!
 		redraw: function()
 		{
 			if(self.rendered < 1 || isDrawing) { return self; }
 
-			var fluid = uitooltip + '-fluid', auto = 'auto', dimensions;
+			var fluid = uitooltip + '-fluid', width, max, min;
 			isDrawing = 1; // Set drawing flag
 
-			// Reset the height and width and add the fluid class to reset max/min widths
-			tooltip.css({ width: auto, height: auto }).addClass(fluid);
+			// Reset the width and add the fluid class to reset max/min
+			tooltip.css('width', 'auto').addClass(fluid);
 
-			// Grab our tooltip dimensions
-			dimensions = {
-				height: tooltip.height(),
-				width: tooltip.width()
-			};
+			// Grab our tooltip width
+			width = tooltip.width();
 
-			// Determine actual width/height
-			$.each(['width', 'height'], function(i, prop) {
-				// Parse our max/min properties
-				var max = parseInt(tooltip.css('max-'+prop), 10) || 0,
-					min = parseInt(tooltip.css('min-'+prop), 10) || 0;
+			// Parse our max/min properties
+			max = parseInt(tooltip.css('max-width'), 10) || 0;
+			min = parseInt(tooltip.css('min-width'), 10) || 0;
 
-				// Determine new dimension size based on max/min/current values
-				dimensions[prop] = max + min ? Math.min( Math.max( dimensions[prop], min ), max ) : dimensions[prop];
-			});
+			// Determine new dimension size based on max/min/current values
+			width = max + min ? Math.min(Math.max(width, min), max) : width;
 
-			// Set the newly calculated dimensions and remvoe fluid class
-			tooltip.css(dimensions).removeClass(fluid);
+			// Set the newly calculated width and remvoe fluid class
+			tooltip.css('width', width).removeClass(fluid);
 
 			// Set drawing flag
 			isDrawing = 0;
