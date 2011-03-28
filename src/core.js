@@ -1208,7 +1208,7 @@ function QTip(target, options, id, attr)
 		destroy: function()
 		{
 			var t = target[0],
-				title = $.data(t, oldtitle);
+				title = $.attr(t, oldtitle);
 
 			// Destroy tooltip and  any associated plugins if rendered
 			if(self.rendered) {
@@ -1229,6 +1229,7 @@ function QTip(target, options, id, attr)
 
 			// Reset old title attribute if removed 
 			if(title) {
+				target.removeAttr(oldtitle);
 				$.attr(t, 'title', title);
 			}
 
@@ -1312,8 +1313,8 @@ function init(id, opts)
 
 	// Remove title attribute and store it if present
 	if($.attr(this, 'title')) {
-		$.data(this, oldtitle, $.attr(this, 'title'));
-		elem.removeAttr('title');
+		$.attr(this, oldtitle, $.attr(this, 'title'));
+		this.removeAttribute('title');
 	}
 
 	// Initialize the tooltip and add API reference
@@ -1519,7 +1520,7 @@ PLUGINS = QTIP.plugins = {
 			
 			if(attr === title) {
 				if(arguments.length < 2) {
-					return $.data(self, oldtitle);
+					return $.attr(self, oldtitle);
 				}
 				else if(typeof api === 'object') {
 					// If qTip is rendered and title was originally used as content, update it
@@ -1529,21 +1530,22 @@ PLUGINS = QTIP.plugins = {
 					
 					// Use the regular attr method to set, then cache the result
 					$.fn['attr'+replaceSuffix].apply(this, arguments);
-					$.data(self, oldtitle, $.attr(self, title));
-					return this.removeAttr('title');
+					$.attr(self, oldtitle, $.attr(self, title));
+					return this.removeAttr(title);
 				}
 			}
 		},
 		
 		/* Allow clone to correctly retrieve cached title attributes */
 		clone: function(keepData) {
-			var titles = $([]), elem;
+			var titles = $([]), title = 'title', elem;
 			
 			// Re-add cached titles before we clone
 			$('*', this).add(this).each(function() {
-				var title = $.data(this, oldtitle);
+				var t = $.attr(this, oldtitle);
 				if(title) {
-					$.attr(this, 'title', title);
+					$.attr(this, title, t);
+					this.removeAttribute(oldtitle);
 					titles = titles.add(this);
 				}
 			});
@@ -1552,7 +1554,7 @@ PLUGINS = QTIP.plugins = {
 			elem = $.fn['clone'+replaceSuffix].apply(this, arguments);
 			
 			// Remove the old titles again
-			titles.removeAttr('title');
+			titles.removeAttr(title);
 			
 			return elem;
 		},
