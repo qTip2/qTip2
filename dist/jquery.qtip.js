@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Mar 21 18:15:30 2011 +0000
+* Date: Mon Mar 21 18:22:45 2011 +0000
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1207,8 +1207,8 @@ function QTip(target, options, id, attr)
 			// Reset the width and add the fluid class to reset max/min
 			tooltip.css('width', 'auto').addClass(fluid);
 
-			// Grab our tooltip width
-			width = tooltip.width();
+			// Grab our tooltip width (add 1 so we don't get wrapping problems in Gecko)
+			width = tooltip.width() + ($.browser.mozilla ? 1 : 0);
 
 			// Parse our max/min properties
 			max = parseInt(tooltip.css('max-width'), 10) || 0;

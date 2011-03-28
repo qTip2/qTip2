@@ -1165,8 +1165,8 @@ function QTip(target, options, id, attr)
 			// Reset the width and add the fluid class to reset max/min
 			tooltip.css('width', 'auto').addClass(fluid);
 
-			// Grab our tooltip width
-			width = tooltip.width();
+			// Grab our tooltip width (add 1 so we don't get wrapping problems in Gecko)
+			width = tooltip.width() + ($.browser.mozilla ? 1 : 0);
 
 			// Parse our max/min properties
 			max = parseInt(tooltip.css('max-width'), 10) || 0;
