@@ -1229,8 +1229,8 @@ function QTip(target, options, id, attr)
 
 			// Reset old title attribute if removed 
 			if(title) {
-				target.removeAttr(oldtitle);
 				$.attr(t, 'title', title);
+				target.removeAttr(oldtitle);
 			}
 
 			// Remove ARIA attributes and bound qtip events
@@ -1539,23 +1539,16 @@ PLUGINS = QTIP.plugins = {
 		/* Allow clone to correctly retrieve cached title attributes */
 		clone: function(keepData) {
 			var titles = $([]), title = 'title', elem;
-			
-			// Re-add cached titles before we clone
-			$('*', this).add(this).each(function() {
-				var t = $.attr(this, oldtitle);
-				if(title) {
-					$.attr(this, title, t);
-					this.removeAttribute(oldtitle);
-					titles = titles.add(this);
-				}
-			});
-			
+
 			// Clone our element using the real clone method
-			elem = $.fn['clone'+replaceSuffix].apply(this, arguments);
-			
-			// Remove the old titles again
-			titles.removeAttr(title);
-			
+			elem = $.fn['clone'+replaceSuffix].apply(this, arguments)
+
+			// Grab all elements with an oldtitle set, and change it to regular title attribute
+			.filter('[oldtitle]').each(function() {
+				$.attr(this, title, $.attr(this, oldtitle));
+				this.removeAttribute(oldtitle);
+			});
+
 			return elem;
 		},
 		
