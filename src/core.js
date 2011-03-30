@@ -1542,12 +1542,13 @@ PLUGINS = QTIP.plugins = {
 
 			// Clone our element using the real clone method
 			elem = $.fn['clone'+replaceSuffix].apply(this, arguments)
-
+			
 			// Grab all elements with an oldtitle set, and change it to regular title attribute
 			.filter('[oldtitle]').each(function() {
 				$.attr(this, title, $.attr(this, oldtitle));
 				this.removeAttribute(oldtitle);
-			});
+			})
+			.end();
 
 			return elem;
 		},

@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Mar 28 15:53:34 2011 +0100
+* Date: Mon Mar 28 16:03:26 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1584,12 +1584,13 @@ PLUGINS = QTIP.plugins = {
 
 			// Clone our element using the real clone method
 			elem = $.fn['clone'+replaceSuffix].apply(this, arguments)
-
+			
 			// Grab all elements with an oldtitle set, and change it to regular title attribute
 			.filter('[oldtitle]').each(function() {
 				$.attr(this, title, $.attr(this, oldtitle));
 				this.removeAttribute(oldtitle);
-			});
+			})
+			.end();
 
 			return elem;
 		},
