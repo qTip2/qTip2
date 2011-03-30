@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Mar 28 16:03:26 2011 +0100
+* Date: Wed Mar 30 21:38:20 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1452,6 +1452,12 @@ QTIP.bind = function(opts, event)
 			show: $.trim('' + options.show.event).replace(/ /g, namespace+' ') + namespace,
 			hide: $.trim('' + options.hide.event).replace(/ /g, namespace+' ') + namespace
 		};
+		
+		/*
+		 * If hide event is just 'unfocus', we'll use mouseleave as the hide event...
+		 * since unfocus is actually library specific and won't fire as an event anywho.
+		 */
+		if(options.hide.event === 'unfocus') { events.hide = 'mouseleave' + namespace; }
 
 		// Define hoverIntent function
 		function hoverIntent(event) {

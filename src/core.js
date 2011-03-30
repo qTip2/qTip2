@@ -1410,6 +1410,12 @@ QTIP.bind = function(opts, event)
 			show: $.trim('' + options.show.event).replace(/ /g, namespace+' ') + namespace,
 			hide: $.trim('' + options.hide.event).replace(/ /g, namespace+' ') + namespace
 		};
+		
+		/*
+		 * If hide event is just 'unfocus', we'll use mouseleave as the hide event...
+		 * since unfocus is actually library specific and won't fire as an event anywho.
+		 */
+		if(options.hide.event === 'unfocus') { events.hide = 'mouseleave' + namespace; }
 
 		// Define hoverIntent function
 		function hoverIntent(event) {
