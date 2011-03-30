@@ -671,6 +671,13 @@ function QTip(target, options, id, attr)
 			// Setup widget classes
 			setWidget();
 
+			// Assign passed event callbacks (before plugins!)
+			$.each(options.events, function(name, callback) {
+				if($.isFunction(callback)) {
+					tooltip.bind(name === 'toggle' ? 'tooltipshow tooltiphide' : 'tooltip'+name, callback);
+				}
+			});
+
 			// Initialize 'render' plugins
 			$.each(PLUGINS, function() {
 				if(this.initialize === 'render') { this(self); }
@@ -678,11 +685,6 @@ function QTip(target, options, id, attr)
 
 			// Assign events
 			assignEvents(1, 1, 1, 1);
-			$.each(options.events, function(name, callback) {
-				if($.isFunction(callback)) {
-					tooltip.bind(name === 'toggle' ? 'tooltipshow tooltiphide' : 'tooltip'+name, callback);
-				}
-			});
 
 			/* Queue this part of the render process in our fx queue so we can
 			 * load images before the tooltip renders fully.

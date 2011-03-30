@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Mar 30 21:38:20 2011 +0100
+* Date: Wed Mar 30 21:52:47 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -713,6 +713,13 @@ function QTip(target, options, id, attr)
 			// Setup widget classes
 			setWidget();
 
+			// Assign passed event callbacks (before plugins!)
+			$.each(options.events, function(name, callback) {
+				if($.isFunction(callback)) {
+					tooltip.bind(name === 'toggle' ? 'tooltipshow tooltiphide' : 'tooltip'+name, callback);
+				}
+			});
+
 			// Initialize 'render' plugins
 			$.each(PLUGINS, function() {
 				if(this.initialize === 'render') { this(self); }
@@ -720,11 +727,6 @@ function QTip(target, options, id, attr)
 
 			// Assign events
 			assignEvents(1, 1, 1, 1);
-			$.each(options.events, function(name, callback) {
-				if($.isFunction(callback)) {
-					tooltip.bind(name === 'toggle' ? 'tooltipshow tooltiphide' : 'tooltip'+name, callback);
-				}
-			});
 
 			/* Queue this part of the render process in our fx queue so we can
 			 * load images before the tooltip renders fully.
@@ -1704,7 +1706,8 @@ QTIP.defaults = {
 		tooltip = api.elements.tooltip,
 		opts = api.options.content.ajax,
 		namespace = '.qtip-ajax',
-		rscript = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
+		rscript = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
+		first = TRUE;
 
 	api.checks.ajax = {
 		'^content.ajax': function(obj, name, v) {
@@ -1712,13 +1715,14 @@ QTIP.defaults = {
 			if(name === 'ajax') { opts = v; }
 
 			if(name === 'once') {
-				self.once(opts.once);
+				tooltip.unbind(namespace);
+				if(v) { tooltip.bind('tooltipshow'+namespace, self.load); }
 			}
 			else if(opts && opts.url) {
 				self.load();
 			}
 			else {
-				self.once(0);
+				tooltip.unbind(namespace);
 			}
 		}
 	};
@@ -1726,28 +1730,37 @@ QTIP.defaults = {
 	$.extend(self, {
 		init: function()
 		{
-			// Make sure ajax options are enabled before proceeding
+			// Make sure ajax options are enabled and bind event
 			if(opts && opts.url) {
-				self.load();
-				tooltip.one('tooltipshow', function() { self.once(opts.once); });
+				tooltip.bind('tooltipshow'+namespace, self.load);
 			}
+
+			return self;
 		},
 
-		once: function(state)
+		load: function(event, first)
 		{
-			tooltip[ (state ? 'un' : '') + 'bind' ]('tooltipshow'+namespace, self.load);
-		},
-
-		load: function()
-		{
+			// Make sure default event hasn't been prevented
+			if(event.isDefaultPrevented()) { return self; }
+			
 			var hasSelector = opts.url.indexOf(' '), 
 				url = opts.url,
-				selector;
+				selector,
+				hideFirst = opts.once && !opts.loading && first;
+
+			// If loading option is disabled, hide the tooltip until content is retrieved (first time only)
+			if(hideFirst) { tooltip.css('visibility', 'hidden'); }
 
 			// Check if user delcared a content selector like in .load()
 			if(hasSelector > -1) {
 				selector = url.substr(hasSelector);
 				url = url.substr(0, hasSelector);
+			}
+
+			// Define common after callback for both success/error handlers
+			function after() {
+				// Re-display tip if loading and first time, and reset first flag
+				if(hideFirst) { tooltip.css('visibility', ''); first = FALSE; }
 			}
 
 			// Define success handler
@@ -1765,14 +1778,16 @@ QTIP.defaults = {
 
 				// Set the content
 				api.set('content.text', content);
+
+				after(); // Call common callback
 			}
 
 			// Error handler
-			function errorHandler(xh, status, error){ api.set('content.text', status + ': ' + error); }
+			function errorHandler(xh, status, error){ api.set('content.text', status + ': ' + error); after(); }
 
 			// Setup $.ajax option object and process the request
 			$.ajax( $.extend({ success: successHandler, error: errorHandler, context: api }, opts, { url: url }) );
-
+			
 			return self;
 		}
 	});
@@ -1805,6 +1820,7 @@ PLUGINS.ajax.sanitize = function(options)
 $.extend(TRUE, QTIP.defaults, {
 	content: {
 		ajax: {
+			loading: TRUE,
 			once: TRUE
 		}
 	}
