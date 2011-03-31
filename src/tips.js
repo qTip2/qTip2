@@ -422,8 +422,9 @@ function Tip(qTip, command)
 			// Determine which tip dimension to use for adjustment
 			dimensions = calculateSize(corner);
 
-			// Setup IE specific dimension adjustment
-			adjust = $.browser.msie && border && /^(b|r)/i.test(corner.string()) ? 1 : 0;
+			// Setup IE specific dimension adjustments
+			adjust = $.browser.msie && parseFloat($.browser.version, 10) == 8 &&
+				border && /^(b|r)/i.test(corner.string()) ? 1 : 0;
 
 			// Calculate tip position
 			$.each(

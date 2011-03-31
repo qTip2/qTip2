@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Mar 30 21:52:47 2011 +0100
+* Date: Wed Mar 30 23:44:23 2011 +0100
 */
 
 /* Fluid class for determining actual width in IE */
@@ -259,7 +259,6 @@
 	.ui-tooltip-blue .ui-state-default .ui-tooltip-icon{
 		background-position: -2px 0;
 	}.ui-tooltip .ui-tooltip-tip{
-	position: absolute;
 	margin: 0 auto;
 	overflow: hidden;
 
@@ -270,6 +269,8 @@
 
 	.ui-tooltip .ui-tooltip-tip,
 	.ui-tooltip .ui-tooltip-tip *{
+		position: absolute;
+		
 		line-height: 0.1px !important;
 		font-size: 0.1px !important;
 		color: #123456;

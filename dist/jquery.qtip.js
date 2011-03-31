@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Mar 30 21:52:47 2011 +0100
+* Date: Wed Mar 30 23:44:23 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -2248,8 +2248,9 @@ function Tip(qTip, command)
 			// Determine which tip dimension to use for adjustment
 			dimensions = calculateSize(corner);
 
-			// Setup IE specific dimension adjustment
-			adjust = $.browser.msie && border && /^(b|r)/i.test(corner.string()) ? 1 : 0;
+			// Setup IE specific dimension adjustments
+			adjust = $.browser.msie && parseFloat($.browser.version, 10) == 8 &&
+				border && /^(b|r)/i.test(corner.string()) ? 1 : 0;
 
 			// Calculate tip position
 			$.each(

@@ -1,5 +1,4 @@
 .ui-tooltip .ui-tooltip-tip{
-	position: absolute;
 	margin: 0 auto;
 	overflow: hidden;
 
@@ -10,6 +9,8 @@
 
 	.ui-tooltip .ui-tooltip-tip,
 	.ui-tooltip .ui-tooltip-tip *{
+		position: absolute;
+		
 		line-height: 0.1px !important;
 		font-size: 0.1px !important;
 		color: #123456;
