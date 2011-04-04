@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Apr 4 17:05:27 2011 +0100
+* Date: Mon Apr 4 17:14:15 2011 +0100
 */
 
 /* Fluid class for determining actual width in IE */
@@ -277,9 +277,7 @@
 
 		background: transparent;
 		border: 0px dashed transparent;
-	}
-
-#qtip-overlay{
+	}#qtip-overlay{
 	position: absolute;
 	left: -10000em;
 	top: -10000em;

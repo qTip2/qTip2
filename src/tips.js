@@ -367,7 +367,8 @@ function Tip(qTip, command)
 					',' + coords[1][1] + ' ' + coords[2][0] + ',' + coords[2][1] + ' xe';
 
 				// Setup VML-specific offset for pixel-perfection
-				translate[2] = border && /^(r|b)/i.test(corner.string()) ? 1 : 0;
+				translate[2] = border && /^(r|b)/i.test(corner.string()) ?
+					parseFloat($.browser.version, 10) === 8 ? 2 : 1 : 0;
 
 				// Set initial CSS
 				inner.css({
@@ -393,8 +394,8 @@ function Tip(qTip, command)
 					// Check if border is enabled and add stroke element
 					if(!i && border > 0 && $this.html() === '') {
 						$this.html(
-							'<vml:stroke weight="'+(border*2)+'px" color="'+color.border+'" miterlimit="1000" joinstyle="miter" ' +
-							' style="behavior:url(#default#VML); display:block;" />'
+							'<vml:stroke weight="'+(border*2)+'px" color="red" miterlimit="1000" joinstyle="miter" ' +
+							' style="behavior:url(#default#VML); display:inline-block;" />'
 						);
 					}
 				});
