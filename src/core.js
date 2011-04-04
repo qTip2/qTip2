@@ -1355,7 +1355,7 @@ QTIP = $.fn.qtip = function(options, notation, newValue)
 			if(event && event.timeStamp) { api.cache.event = event; }
 
 			// Check for specific API commands
-			if(command === 'option' && notation) {
+			if((command === 'option' || command === 'options') && notation) {
 				if($.isPlainObject(notation) || newValue !== undefined) {
 					api.set(notation, newValue);
 				}
