@@ -512,6 +512,11 @@ function QTip(target, options, id, attr)
 				});
 			}
 
+			// Hide mouseleave/mouseout tooltips on window blur/mouseleave
+			if((/mouseleave|mouseout/i).test(options.hide.event)) {
+				$(window).bind('blur mouseleave', self.hide);
+			}
+
 			// If mouse is the target, update tooltip position on document mousemove
 			if(posOptions.target === 'mouse') {
 				targets.doc.bind('mousemove'+namespace, function(event) {
