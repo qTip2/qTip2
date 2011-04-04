@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Apr 4 17:04:20 2011 +0100
+* Date: Mon Apr 4 17:05:27 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -2690,28 +2690,28 @@ function BGIFrame(api)
 	var self = this,
 		elems = api.elements,
 		tooltip = elems.tooltip,
-		namespace = '.bgiframe-' + api.id,
-		events = 'tooltipmove'+namespace+' tooltipshow'+namespace;
+		namespace = '.bgiframe-' + api.id;
 
 	$.extend(self, {
 		init: function()
 		{
 			// Create the BGIFrame element
 			elems.bgiframe = $('<iframe class="ui-tooltip-bgiframe" frameborder="0" tabindex="-1" src="javascript:\'\';" ' +
-				' style="display:block; position:absolute; z-index:-1; filter:alpha(opacity=0);"></iframe>');
+				' style="display:block; position:absolute; z-index:-1; filter:alpha(opacity=0); ' +
+					'-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";"></iframe>');
 
 			// Append the new element to the tooltip
 			elems.bgiframe.appendTo(tooltip);
 
 			// Update BGIFrame on tooltip move
-			tooltip.bind(events, self.adjust);
+			tooltip.bind('tooltipmove'+namespace, self.adjust);
 		},
 
 		adjust: function()
 		{
 			var dimensions = api.get('dimensions'), // Determine current tooltip dimensions
 				plugin = api.plugins.tip,
-				tip = api.elements.tip,
+				tip = elems.tip,
 				tipAdjust, offset;
 
 			// Adjust border offset
@@ -2731,10 +2731,10 @@ function BGIFrame(api)
 		destroy: function()
 		{
 			// Remove iframe
-			self.iframe.remove();
+			elems.bgiframe.remove();
 
 			// Remove bound events
-			tooltip.unbind(events);
+			tooltip.unbind(namespace);
 		}
 	});
 
@@ -2746,8 +2746,8 @@ PLUGINS.bgiframe = function(api)
 	var browser = $.browser,
 		self = api.plugins.bgiframe;
 	
-	// Proceed only if the browser is IE6 and offending elements are present
-	if(!PLUGINS.bgiframe.needBGI || !(browser.msie && browser.version.charAt(0) === '6')) {
+		// Proceed only if the browser is IE6 and offending elements are present
+		if($('select, object').length < 1 || !(browser.msie && browser.version.charAt(0) === '6')) {
 		return FALSE;
 	}
 
@@ -2756,7 +2756,5 @@ PLUGINS.bgiframe = function(api)
 
 // Plugin needs to be initialized on render
 PLUGINS.bgiframe.initialize = 'render';
-
-PLUGINS.bgiframe.needBGI = $('select, object').length > 0;
 
 }(jQuery, window));
