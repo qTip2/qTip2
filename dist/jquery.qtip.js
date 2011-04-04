@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Apr 4 17:14:15 2011 +0100
+* Date: Mon Apr 4 17:41:48 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -2218,7 +2218,7 @@ function Tip(qTip, command)
 					// Check if border is enabled and add stroke element
 					if(!i && border > 0 && $this.html() === '') {
 						$this.html(
-							'<vml:stroke weight="'+(border*2)+'px" color="red" miterlimit="1000" joinstyle="miter" ' +
+							'<vml:stroke weight="'+(border*2)+'px" color="'+color.border+'" miterlimit="1000" joinstyle="miter" ' +
 							' style="behavior:url(#default#VML); display:inline-block;" />'
 						);
 					}

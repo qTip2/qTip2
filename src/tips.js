@@ -394,7 +394,7 @@ function Tip(qTip, command)
 					// Check if border is enabled and add stroke element
 					if(!i && border > 0 && $this.html() === '') {
 						$this.html(
-							'<vml:stroke weight="'+(border*2)+'px" color="red" miterlimit="1000" joinstyle="miter" ' +
+							'<vml:stroke weight="'+(border*2)+'px" color="'+color.border+'" miterlimit="1000" joinstyle="miter" ' +
 							' style="behavior:url(#default#VML); display:inline-block;" />'
 						);
 					}
