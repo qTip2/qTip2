@@ -287,52 +287,45 @@ function QTip(target, options, id, attr)
 		// Content is a regular string, insert the new content
 		else { elem.html(content); }
 
-		// Insert into 'fx' queue our image dimension checker which will halt the showing of the tooltip until image dimensions can be detected
-		tooltip.queue('fx', function(next) {
-			// Find all content images without dimensions
-			var images = elem.find('img:not([height]):not([width])');
+		// Image detection
+		function detectImages(next) {
+			var images;
 
-			// Update tooltip width and position when all images are loaded
-			function imageLoad(img) {
-				// Remove the image from the array
-				images = images.not(img);
-
-				// If queue is empty, update tooltip and continue the queue
-				if(images.length === 0) {
+			function imageLoad(event, i) {
+				// If queue is empty after image removal, update tooltip and continue the queue
+				if((images = images.not(this)).length === 0) {
 					self.redraw();
-					if(self.rendered && tooltip.is(':visible')) {
-						self.reposition(cache.event);
-					}
+					self.reposition(cache.event);
 
 					next();
 				}
 			}
 
-			// Apply the callback to img events and height checker method to ensure queue continues no matter what!
-			images.each(function(i, elem) {
-				// Apply the imageLoad to regular events to make sure the queue continues
-				var events = ['abort','error','load','unload',''].join('.qtip-image ');
-				$(this).bind(events, function() {
-					clearTimeout(self.timers.img[i]);
-					imageLoad(this);
-				});
+			// Find all content images without dimensions, and if no images were found, continue
+			if((images = elem.find('img:not([height]):not([width])')).length === 0) { return imageLoad.call(images); }
 
-				// Apply a recursive method that polls the image for dimensions every 20ms
+			// Apply the callback to img events to ensure queue continues no matter what!
+			images.one(['abort','error','load','unload',''].join('.qtip-image '), imageLoad)
+
+			// Apply a recursive method that polls the image for dimensions every 20ms
+			.each(function(i, elem) {
 				(function timer(){
-					// When the dimensions are found, remove the image from the queue
-					if(elem.height && elem.width) {
-						return imageLoad(elem);
-					}
-
+					// When the dimensions are found, remove the image from the queue and stop timer
+					if(elem.height && elem.width) { return imageLoad.call(elem, NULL); }
 					self.timers.img[i] = setTimeout(timer, 20);
 				}());
-
-				return TRUE;
 			});
+		}
 
-			// If no images were found, continue with queue
-			if(images.length === 0) { imageLoad(images);  }
-		});
+		/*
+		 * If we're still rendering... insert into 'fx' queue our image dimension
+		 * checker which will halt the showing of the tooltip until image dimensions
+		 * can be detected properly.
+		 */
+		if(self.rendered < 0) { tooltip.queue('fx', detectImages); }
+
+		// We're fully rendered, so reset isDrawing flag and proceed without queue delay
+		else { isDrawing = 0; detectImages($.noop); }
 
 		return self;
 	}
@@ -697,12 +690,12 @@ function QTip(target, options, id, attr)
 			 * See: updateContent method
 			*/
 			tooltip.queue('fx', function(next) {
+				// Redraw the tooltip manually now we're fully rendered
+				isDrawing = 0; self.redraw();
+
 				// Trigger tooltiprender event and pass original triggering event as original
 				callback.originalEvent = cache.event;
 				tooltip.trigger(callback, [self]);
-
-				// Redraw the tooltip manually now we're fully rendered
-				isDrawing = 0; self.redraw();
 
 				// Update tooltip position and show tooltip if needed
 				if(options.show.ready || show) {
