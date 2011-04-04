@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Apr 4 16:24:40 2011 +0100
+* Date: Mon Apr 4 17:04:20 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -732,12 +732,12 @@ function QTip(target, options, id, attr)
 			 * See: updateContent method
 			*/
 			tooltip.queue('fx', function(next) {
-				// Redraw the tooltip manually now we're fully rendered
-				isDrawing = 0; self.redraw();
-
 				// Trigger tooltiprender event and pass original triggering event as original
 				callback.originalEvent = cache.event;
 				tooltip.trigger(callback, [self]);
+
+				// Redraw the tooltip manually now we're fully rendered
+				isDrawing = 0; self.redraw();
 
 				// Update tooltip position and show tooltip if needed
 				if(options.show.ready || show) {

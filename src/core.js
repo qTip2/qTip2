@@ -690,12 +690,12 @@ function QTip(target, options, id, attr)
 			 * See: updateContent method
 			*/
 			tooltip.queue('fx', function(next) {
-				// Redraw the tooltip manually now we're fully rendered
-				isDrawing = 0; self.redraw();
-
 				// Trigger tooltiprender event and pass original triggering event as original
 				callback.originalEvent = cache.event;
 				tooltip.trigger(callback, [self]);
+
+				// Redraw the tooltip manually now we're fully rendered
+				isDrawing = 0; self.redraw();
 
 				// Update tooltip position and show tooltip if needed
 				if(options.show.ready || show) {
