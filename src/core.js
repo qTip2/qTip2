@@ -975,6 +975,9 @@ function QTip(target, options, id, attr)
 				my = posOptions.my, 
 				at = posOptions.at,
 				adjust = posOptions.adjust,
+				adjustMethod = adjust.method.substr(0, 4).toLowerCase(), // shift or flip (default)
+				adjustHoriz = adjust.method.length <= 5 || adjust.method.toLowerCase().lastIndexOf('hor') >= 0, // Horizontally adjust if not specified or explicit only horizontal
+				adjustVert = adjust.method.length <= 5 || adjust.method.toLowerCase().lastIndexOf('ver') >= 0, // Vertically adjust if not specified or explicitly only vertical
 				elemWidth = tooltip.outerWidth(),
 				elemHeight = tooltip.outerHeight(),
 				targetWidth = 0,
@@ -986,6 +989,9 @@ function QTip(target, options, id, attr)
 				tip = (self.plugins.tip || {}).corner,
 				readjust = {
 					left: function(posLeft) {
+					
+						if (!adjustHoriz) return 0;
+						
 						var viewportScroll = viewport.scrollLeft,
 							myWidth = my.x === 'left' ? elemWidth : my.x === 'right' ? -elemWidth : -elemWidth / 2,
 							atWidth = at.x === 'left' ? targetWidth : at.x === 'right' ? -targetWidth : -targetWidth / 2,
@@ -994,7 +1000,22 @@ function QTip(target, options, id, attr)
 							overflowRight = posLeft + elemWidth - viewport.width - viewportScroll + tipAdjust,
 							offset = myWidth - (my.precedance === 'x' || my.x === my.y ? atWidth : 0),
 							isCenter = my.x === 'center';
+					
+						// If the adjustment method is "shift", perform the adjustment calculation
+						if (adjustMethod === 'shif') {							
+							if(overflowLeft > 0)
+								position.left += overflowLeft;
+							else if(overflowRight > 0)
+								position.left -= overflowRight;
+							
+							// If we've shifted outside the bounds, reset
+							if(position.left < 0)
+								position.left = posLeft;
+								
+							return position.left;					
+						}
 
+						// Adjustment method is default "flip"
 						if(overflowLeft > 0 && (my.x !== 'left' || overflowRight > 0)) {
 							position.left -= offset + (isCenter ? 0 : 2 * adjust.x);
 						}
@@ -1008,6 +1029,9 @@ function QTip(target, options, id, attr)
 						return position.left - posLeft;
 					},
 					top: function(posTop) {
+					
+						if (!adjustVert) return 0;
+						
 						var viewportScroll = viewport.scrollTop,
 							myHeight = my.y === 'top' ? elemHeight : my.y === 'bottom' ? -elemHeight : -elemHeight / 2,
 							atHeight = at.y === 'top' ? targetHeight : at.y === 'bottom' ? -targetHeight : -targetHeight / 2,
@@ -1016,7 +1040,22 @@ function QTip(target, options, id, attr)
 							overflowBottom = posTop + elemHeight - viewport.height - viewportScroll + tipAdjust,
 							offset = myHeight - (my.precedance === 'y' || my.x === my.y ? atHeight : 0),
 							isCenter = my.y === 'center';
+					
+						// If the adjustment method is "shift", perform the adjustment calculation
+						if (adjustMethod === 'shif') {							
+							if(overflowTop > 0)
+								position.top += overflowTop;
+							else if(overflowBottom > 0)
+								position.top -= overflowBottom;
+							
+							// If we've shifted outside the bounds, reset
+							if(position.top < 0)
+								position.top = posTop;
+							
+							return position.top;						
+						}
 
+						// Adjustment method is default "flip"
 						if(overflowTop > 0 && (my.y !== 'top' || overflowBottom > 0)) {
 							position.top -= offset + (isCenter ? 0 : 2 * adjust.y);
 						}
@@ -1625,7 +1664,8 @@ QTIP.defaults = {
 		adjust: {
 			x: 0, y: 0,
 			mouse: TRUE,
-			resize: TRUE
+			resize: TRUE,
+			method: 'flip'
 		},
 		effect: TRUE
 	},
