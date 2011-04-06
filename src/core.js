@@ -843,8 +843,8 @@ function QTip(target, options, id, attr)
 				// Focus the tooltip
 				self.focus(event);
 
-				// Update tooltip position (without animation)
-				self.reposition(event, 0);
+				// Update tooltip position
+				self.reposition(event);
 
 				// Hide other tooltips if tooltip is solo, using it as the context
 				if(opts.solo) { $(selector, opts.solo).not(tooltip).qtip('hide', callback); }
@@ -1030,7 +1030,7 @@ function QTip(target, options, id, attr)
 						return position.top - posTop;
 					}
 				};
-				effect = effect === undefined || !!effect || FALSE;
+				effect = effect === undefined || !!effect;
 
 			// Cache our viewport details
 			viewport = !viewport ? FALSE : {
@@ -1133,18 +1133,17 @@ function QTip(target, options, id, attr)
 			delete position.adjusted;
 
 			// If effect is disabled or positioning gives NaN out, set CSS directly
-			if(!effect || !isNaN(position.left, position.top)) {
+			if(!effect || isNaN(position.left) || isNaN(position.top)) {
 				tooltip.css(position);
 			}
 			
 			// Use custom function if provided
-			else if(tooltip.is(':visible') && $.isFunction(posOptions.effect)) {
-				posOptions.effect.call(tooltip, self, position);
+			else if($.isFunction(posOptions.effect)) {
+				posOptions.effect.call(tooltip, self, $.extend({}, position));
 				tooltip.queue(function(next) {
-					var elem = $(this);
 					// Reset attributes to avoid cross-browser rendering bugs
-					elem.css({ opacity: '', height: '' });
-					if($.browser.msie && this.style) { this.style.removeAttribute('filter'); }
+					$(this).css({ opacity: '', height: '' });
+					if($.browser.msie) { this.style.removeAttribute('filter'); }
 
 					next();
 				});
