@@ -156,7 +156,9 @@ function QTip(target, options, id, attr)
 
 	function createButton()
 	{
-		var button = options.content.title.button;
+		var button = options.content.title.button,
+			isString = typeof button === 'string',
+			close = isString ? button : 'Close tooltip';
 
 		if(elements.button) { elements.button.remove(); }
 
@@ -167,8 +169,8 @@ function QTip(target, options, id, attr)
 		else {
 			elements.button = $('<a />', {
 				'class': 'ui-state-default ' + (options.style.widget ? '' : uitooltip+'-icon'),
-				'title': 'Close tooltip',
-				'aria-label': 'Close tooltip'
+				'title': close,
+				'aria-label': close
 			})
 			.prepend(
 				$('<span />', {

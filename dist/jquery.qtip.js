@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Apr 4 18:39:49 2011 +0100
+* Date: Wed Apr 6 01:00:54 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -198,7 +198,9 @@ function QTip(target, options, id, attr)
 
 	function createButton()
 	{
-		var button = options.content.title.button;
+		var button = options.content.title.button,
+			isString = typeof button === 'string',
+			close = isString ? button : 'Close tooltip';
 
 		if(elements.button) { elements.button.remove(); }
 
@@ -209,8 +211,8 @@ function QTip(target, options, id, attr)
 		else {
 			elements.button = $('<a />', {
 				'class': 'ui-state-default ' + (options.style.widget ? '' : uitooltip+'-icon'),
-				'title': 'Close tooltip',
-				'aria-label': 'Close tooltip'
+				'title': close,
+				'aria-label': close
 			})
 			.prepend(
 				$('<span />', {
