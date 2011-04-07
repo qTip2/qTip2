@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Apr 6 01:00:54 2011 +0100
+* Date: Thu Apr 7 05:09:48 2011 -0700
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1177,7 +1177,7 @@ function QTip(target, options, id, attr)
 			delete position.adjusted;
 
 			// If effect is disabled or positioning gives NaN out, set CSS directly
-			if(!effect || isNaN(position.left) || isNaN(position.top)) {
+			if(!effect || !isNaN(position.left) || !isNaN(position.top)) {
 				tooltip.css(position);
 			}
 			
