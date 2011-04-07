@@ -1135,7 +1135,7 @@ function QTip(target, options, id, attr)
 			delete position.adjusted;
 
 			// If effect is disabled or positioning gives NaN out, set CSS directly
-			if(!effect || isNaN(position.left) || isNaN(position.top)) {
+			if(!effect || !isNaN(position.left) || !isNaN(position.top)) {
 				tooltip.css(position);
 			}
 			
