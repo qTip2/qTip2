@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Apr 7 05:09:48 2011 -0700
+* Date: Thu Apr 7 20:07:06 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -552,7 +552,7 @@ function QTip(target, options, id, attr)
 			// Hide mouseleave/mouseout tooltips on window blur/mouseleave
 			if((/mouseleave|mouseout/i).test(options.hide.event)) {
 				$(window).bind('blur mouseleave', function(event) {
-					if(event.originalEvent.relatedTarget === NULL) { self.hide(event); }
+					if(event.originalEvent.currentTarget === NULL) { self.hide(event); }
 				});
 			}
 
