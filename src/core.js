@@ -597,12 +597,15 @@ function QTip(target, options, id, attr)
 		'^(show|hide).(event|target|fixed|delay|inactive)$': function(obj, o, v, p, match) {
 			// Setup arguments
 			var args = [1,0,0];
-			args[match[0] === 'show' ? 'push' : 'unshift'](0);
+			args[match[1] === 'show' ? 'push' : 'unshift'](0);
 
 			unassignEvents.apply(self, args);
 			assignEvents.apply(self, [1,1,0,0]);
 		},
-		'^show.ready$': function() { if(!self.rendered) { self.show(); } },
+		'^show.ready$': function() {
+			if(!self.rendered) { self.render(1); }
+			else { self.show(); }
+		},
 
 		// Style checks
 		'^style.classes$': function(obj, o, v) { 
@@ -740,7 +743,7 @@ function QTip(target, options, id, attr)
 
 		set: function(option, value)
 		{
-			var rmove = /^position.(my|at|adjust|target|container)|style|content/i,
+			var rmove = /^position\.(my|at|adjust|target|container)|style|content|show\.ready/i,
 				reposition = FALSE,
 				checks = self.checks,
 				name;
@@ -748,21 +751,13 @@ function QTip(target, options, id, attr)
 			function callback(notation, args) {
 				var category, rule, match;
 
-				if(self.rendered) {
-					for(category in checks) {
-						for(rule in checks[category]) {
-							if(match = (new RegExp(rule, 'i')).exec(notation)) {
-								args.push(match);
-								checks[category][rule].apply(self, args);
-							}
+				for(category in checks) {
+					for(rule in checks[category]) {
+						if(match = (new RegExp(rule, 'i')).exec(notation)) {
+							args.push(match);
+							checks[category][rule].apply(self, args);
 						}
 					}
-				}
-
-				// If we're not rendered and show.ready was set, render it
-				else if(notation === 'show.ready' && args[2]) {
-					isPositioning = 0; isDrawing = 0;
-					self.render(TRUE);
 				}
 			}
 
@@ -775,7 +770,7 @@ function QTip(target, options, id, attr)
 			// Set all of the defined options to their new values
 			$.each(option, function(notation, value) {
 				var obj = convertNotation( notation.toLowerCase() ), previous;
-				
+
 				// Set new obj value
 				previous = obj[0][ obj[1] ];
 				obj[0][ obj[1] ] = 'object' === typeof value && value.nodeType ? $(value) : value;
