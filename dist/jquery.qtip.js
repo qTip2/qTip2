@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Fri Apr 8 20:10:03 2011 +0100
+* Date: Fri Apr 8 20:14:06 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1212,21 +1212,27 @@ function QTip(target, options, id, attr)
 			var fluid = uitooltip + '-fluid', width, max, min;
 			isDrawing = 1; // Set drawing flag
 
-			// Reset the width and add the fluid class to reset max/min
-			tooltip.css('width', 'auto').addClass(fluid);
+			// Reset the width in style attribute
+			tooltip.css('width', '');
 
-			// Grab our tooltip width (add 1 so we don't get wrapping problems in Gecko)
-			width = tooltip.width() + ($.browser.mozilla ? 1 : 0);
+			// Makesure do pre-defined width is set
+			if(tooltip.css('width') === 'auto') {
+				// Add fluid class
+				tooltip.addClass(fluid);
 
-			// Parse our max/min properties
-			max = parseInt(tooltip.css('max-width'), 10) || 0;
-			min = parseInt(tooltip.css('min-width'), 10) || 0;
+				// Grab our tooltip width (add 1 so we don't get wrapping problems in Gecko)
+				width = tooltip.width() + ($.browser.mozilla ? 1 : 0);
 
-			// Determine new dimension size based on max/min/current values
-			width = max + min ? Math.min(Math.max(width, min), max) : width;
+				// Parse our max/min properties
+				max = parseInt(tooltip.css('max-width'), 10) || 0;
+				min = parseInt(tooltip.css('min-width'), 10) || 0;
 
-			// Set the newly calculated width and remvoe fluid class
-			tooltip.css('width', width).removeClass(fluid);
+				// Determine new dimension size based on max/min/current values
+				width = max + min ? Math.min(Math.max(width, min), max) : width;
+
+				// Set the newly calculated width and remvoe fluid class
+				tooltip.css('width', width).removeClass(fluid);
+			}
 
 			// Set drawing flag
 			isDrawing = 0;
