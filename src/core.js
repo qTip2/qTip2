@@ -509,9 +509,8 @@ function QTip(target, options, id, attr)
 
 			// Hide mouseleave/mouseout tooltips on window blur/mouseleave
 			if((/mouseleave|mouseout/i).test(options.hide.event)) {
-				$(window).bind('blur mouseleave', function(event) {
-					var oEvent = event.originalEvent;
-					if(!oEvent.currentTarget || !oEvent.relatedTarget) { self.hide(event); }
+				$(window).bind('blur mouseout', function(event) {
+					if(!event.relatedTarget) { self.hide(event); }
 				});
 			}
 
@@ -1622,7 +1621,8 @@ QTIP.defaults = {
 		adjust: {
 			x: 0, y: 0,
 			mouse: TRUE,
-			resize: TRUE
+			resize: TRUE,
+			method: 'flip'
 		},
 		effect: TRUE
 	},
