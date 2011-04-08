@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Fri Apr 8 16:33:01 2011 +0100
+* Date: Fri Apr 8 19:19:32 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1628,7 +1628,7 @@ $.each(PLUGINS.fn, function(name, func) {
 });
 
 // Cache mousemove events for positioning purposes
-$(window).bind('load.qtip', function() {
+$(window).one('load', function() {
 	var type = 'mousemove';
 	$(document).bind(type+'.qtip', function(event) {
 		MOUSE = { pageX: event.pageX, pageY: event.pageY, type: type };

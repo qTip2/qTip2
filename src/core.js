@@ -1586,7 +1586,7 @@ $.each(PLUGINS.fn, function(name, func) {
 });
 
 // Cache mousemove events for positioning purposes
-$(window).bind('load.qtip', function() {
+$(window).one('load', function() {
 	var type = 'mousemove';
 	$(document).bind(type+'.qtip', function(event) {
 		MOUSE = { pageX: event.pageX, pageY: event.pageY, type: type };
