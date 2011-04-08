@@ -293,12 +293,12 @@ function QTip(target, options, id, attr)
 		function detectImages(next) {
 			var images;
 
-			function imageLoad(event, i) {
+			function imageLoad(event) {
 				// If queue is empty after image removal, update tooltip and continue the queue
 				if((images = images.not(this)).length === 0) {
 					self.redraw();
 					self.reposition(cache.event);
-
+					
 					next();
 				}
 			}
@@ -306,15 +306,17 @@ function QTip(target, options, id, attr)
 			// Find all content images without dimensions, and if no images were found, continue
 			if((images = elem.find('img:not([height]):not([width])')).length === 0) { return imageLoad.call(images); }
 
-			// Apply the callback to img events to ensure queue continues no matter what!
-			images.one(['abort','error','load','unload',''].join('.qtip-image '), imageLoad)
-
-			// Apply a recursive method that polls the image for dimensions every 20ms
-			.each(function(i, elem) {
+			// Apply timer to each iamge to poll for dimensions
+			images.each(function(i, elem) {
 				(function timer(){
+					var timers = self.timers.img;
+
 					// When the dimensions are found, remove the image from the queue and stop timer
-					if(elem.height && elem.width) { return imageLoad.call(elem, NULL); }
-					self.timers.img[i] = setTimeout(timer, 20);
+					if(elem.height && elem.width) {
+						clearTimeout(timers[i]);
+						return imageLoad.call(elem);
+					}
+					timer = setTimeout(timers[i], 20);
 				}());
 			});
 		}
@@ -744,7 +746,9 @@ function QTip(target, options, id, attr)
 		set: function(option, value)
 		{
 			var rmove = /^position\.(my|at|adjust|target|container)|style|content|show\.ready/i,
+				rdraw = /^content\.(title|attr)|style/i,
 				reposition = FALSE,
+				redraw = FALSE,
 				checks = self.checks,
 				name;
 
@@ -775,9 +779,12 @@ function QTip(target, options, id, attr)
 				previous = obj[0][ obj[1] ];
 				obj[0][ obj[1] ] = 'object' === typeof value && value.nodeType ? $(value) : value;
 
-				// Set the new params for the callback and test it against reposition
+				// Set the new params for the callback
 				option[notation] = [obj[0], obj[1], value, previous];
+
+				// Also check if we need to reposition / redraw
 				reposition = rmove.test(notation) || reposition;
+				redraw = rdraw.test(notation) || redraw;
 			});
 
 			// Re-sanitize options
@@ -786,12 +793,15 @@ function QTip(target, options, id, attr)
 			/*
 			 * Execute any valid callbacks for the set options
 			 * Also set isPositioning/isDrawing so we don't get loads of redundant repositioning
-			 * and redraw calls
+			 * and redraw calls.
 			 */
 			isPositioning = isDrawing = 1; $.each(option, callback); isPositioning = isDrawing = 0;
 
-			// Update position on ANY style/position/content change if shown and rendered
-			if(reposition && tooltip.is(':visible') && self.rendered) { self.reposition(); }
+			// Update position / redraw if needed
+			if(tooltip.is(':visible') && self.rendered) {
+				if(reposition) { self.reposition(); }
+				if(redraw) { self.redraw(); }
+			}
 
 			return self;
 		},

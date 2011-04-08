@@ -62,7 +62,7 @@ function Ajax(api)
 			}
 
 			// Define success handler
-			function successHandler(content) { 
+			function successHandler(content) {
 				if(selector) {
 					// Create a dummy div to hold the results and grab the selector element
 					content = $('<div/>')
