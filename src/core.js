@@ -511,7 +511,7 @@ function QTip(target, options, id, attr)
 			if((/mouseleave|mouseout/i).test(options.hide.event)) {
 				$(window).bind('blur mouseleave', function(event) {
 					var oEvent = event.originalEvent;
-					if(oEvent.currentTarget === NULL || oEvent.relatedTarget === NULL) { self.hide(event); }
+					if(!oEvent.currentTarget || !oEvent.relatedTarget) { self.hide(event); }
 				});
 			}
 
