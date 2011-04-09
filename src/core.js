@@ -316,7 +316,7 @@ function QTip(target, options, id, attr)
 						clearTimeout(timers[i]);
 						return imageLoad.call(elem);
 					}
-					timer = setTimeout(timers[i], 20);
+					timers[i] = setTimeout(timer, 20);
 				}());
 			});
 		}
