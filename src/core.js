@@ -348,7 +348,8 @@ function QTip(target, options, id, attr)
 				show: $.trim('' + options.show.event).split(' '),
 				hide: $.trim('' + options.hide.event).split(' ')
 			},
-			IE6 = $.browser.msie && parseInt($.browser.version, 10) === 6;
+			IE6 = $.browser.msie && parseInt($.browser.version, 10) === 6,
+			additional;
 
 		// Define show event method
 		function showMethod(event)
@@ -509,11 +510,12 @@ function QTip(target, options, id, attr)
 				});
 			}
 
-			// Hide mouseleave/mouseout tooltips on window blur/mouseleave
-			if((/mouseleave|mouseout/i).test(options.hide.event)) {
-				$(window).bind('blur mouseout', function(event) {
-					if(!event.relatedTarget) { self.hide(event); }
-				});
+			// Hide mouseleave/mouseout tooltips on window/frame blur/mouseleave
+			if(options.hide.leave && (/mouseleave|mouseout/i).test(options.hide.event)) {
+				$(window).bind(
+					'blur'+namespace+' mouse' + (options.hide.leave.indexOf('frame') > -1 ? 'out' : 'leave') + namespace,
+					function(event) { if(!event.relatedTarget) { self.hide(event); } }
+				);
 			}
 
 			// If mouse is the target, update tooltip position on document mousemove
@@ -1653,7 +1655,8 @@ QTIP.defaults = {
 		effect: TRUE,
 		delay: 0,
 		fixed: FALSE,
-		inactive: FALSE
+		inactive: FALSE,
+		leave: 'window frame'
 	},
 	style: {
 		classes: '',
