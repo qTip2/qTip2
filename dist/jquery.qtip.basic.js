@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Apr 11 19:54:32 2011 +0100
+* Date: Tue Apr 12 00:17:35 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1056,7 +1056,7 @@ function QTip(target, options, id, attr)
 						var viewportScroll = viewport.scrollLeft,
 							myWidth = my.x === 'left' ? elemWidth : my.x === 'right' ? -elemWidth : -elemWidth / 2,
 							atWidth = at.x === 'left' ? targetWidth : at.x === 'right' ? -targetWidth : -targetWidth / 2,
-							tipAdjust = tip && tip.precedance === 'x' ? QTIP.defaults.style.tip.width : 0,
+							tipAdjust = tip && tip.precedance === 'x' ? options.style.tip.width : 0,
 							overflowLeft = viewportScroll - posLeft - tipAdjust,
 							overflowRight = posLeft + elemWidth - viewport.width - viewportScroll + tipAdjust,
 							offset = myWidth - (my.precedance === 'x' || my.x === my.y ? atWidth : 0),
@@ -1064,7 +1064,8 @@ function QTip(target, options, id, attr)
 
 						// Optional 'shift' style repositioning
 						if(readjust.method === 'shift') {
-							position.left += overflowLeft > 0 ? overflowLeft : overflowRight > 0 ? -overflowRight : 0;
+							position.left += overflowLeft > 0 ? overflowLeft - tipAdjust :
+								overflowRight > 0 ? -overflowRight + tipAdjust : 0;
 						}
 
 						// Default 'flip' repositioning
@@ -1089,7 +1090,7 @@ function QTip(target, options, id, attr)
 						var viewportScroll = viewport.scrollTop,
 							myHeight = my.y === 'top' ? elemHeight : my.y === 'bottom' ? -elemHeight : -elemHeight / 2,
 							atHeight = at.y === 'top' ? targetHeight : at.y === 'bottom' ? -targetHeight : -targetHeight / 2,
-							tipAdjust = tip && tip.precedance === 'y' ? QTIP.defaults.style.tip.height : 0,
+							tipAdjust = tip && tip.precedance === 'y' ? options.style.tip.height : 0,
 							overflowTop = viewportScroll - posTop - tipAdjust,
 							overflowBottom = posTop + elemHeight - viewport.height - viewportScroll + tipAdjust,
 							offset = myHeight - (my.precedance === 'y' || my.x === my.y ? atHeight : 0),
@@ -1097,7 +1098,8 @@ function QTip(target, options, id, attr)
 
 						// Optional 'shift' style repositioning
 						if(readjust.method === 'shift') {
-							position.top += overflowTop > 0 ? overflowTop : overflowBottom > 0 ? -overflowBottom : 0;
+							position.top += overflowTop - tipAdjust > 0 ? overflowTop :
+								overflowBottom > 0 ? -overflowBottom + tipAdjust : 0;
 						}
 
 						// Default 'flip' repositioning
