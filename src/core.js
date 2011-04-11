@@ -45,11 +45,10 @@ function sanitizeOptions(opts)
 			};
 		}
 
-		if('object' !== typeof opts.position.adjust) {
-			opts.position.adjust = {};
-		}
-		if('string' !== typeof opts.position.adjust.method) {
-			opts.position.adjust.method = String(opts.position.adjust.method).toLowerCase();
+		if('adjust' in opts.position) {
+			if(!(/flip|shift( horizontal| vertical)*/i).test(opts.position.adjust.method)) {
+				delete opts.position.adjust.method;
+			}
 		}
 	}
 
@@ -87,7 +86,7 @@ function sanitizeOptions(opts)
 	$.each(PLUGINS, function() {
 		if(this.sanitize) { this.sanitize(opts); }
 	});
-
+	
 	return opts;
 }
 

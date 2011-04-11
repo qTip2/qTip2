@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Apr 11 17:44:04 2011 +0100
+* Date: Mon Apr 11 19:54:32 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -87,11 +87,10 @@ function sanitizeOptions(opts)
 			};
 		}
 
-		if('object' !== typeof opts.position.adjust) {
-			opts.position.adjust = {};
-		}
-		if('string' !== typeof opts.position.adjust.method) {
-			opts.position.adjust.method = String(opts.position.adjust.method).toLowerCase();
+		if('adjust' in opts.position) {
+			if(!(/flip|shift( horizontal| vertical)*/i).test(opts.position.adjust.method)) {
+				delete opts.position.adjust.method;
+			}
 		}
 	}
 
@@ -129,7 +128,7 @@ function sanitizeOptions(opts)
 	$.each(PLUGINS, function() {
 		if(this.sanitize) { this.sanitize(opts); }
 	});
-
+	
 	return opts;
 }
 
