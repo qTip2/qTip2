@@ -1076,7 +1076,6 @@ function QTip(target, options, id, attr)
 						return position.top - posTop;
 					}
 				};
-				effect = effect === undefined || !!effect;
 
 			// Cache our viewport details
 			viewport = !viewport ? FALSE : {
@@ -1178,8 +1177,8 @@ function QTip(target, options, id, attr)
 			if(callback.isDefaultPrevented()){ return self; }
 			delete position.adjusted;
 
-			// If effect is disabled or positioning gives NaN out, set CSS directly
-			if(!effect || !isNaN(position.left) || !isNaN(position.top)) {
+			// If effect is disabled, no animation is defined or positioning gives NaN out, set CSS directly
+			if(effect === FALSE || isNaN(position.left) || isNaN(position.top) || !$.isFunction(posOptions.effect)) {
 				tooltip.css(position);
 			}
 			

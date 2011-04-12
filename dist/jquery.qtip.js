@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Apr 12 00:17:35 2011 +0100
+* Date: Tue Apr 12 00:30:03 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1118,7 +1118,6 @@ function QTip(target, options, id, attr)
 						return position.top - posTop;
 					}
 				};
-				effect = effect === undefined || !!effect;
 
 			// Cache our viewport details
 			viewport = !viewport ? FALSE : {
@@ -1220,8 +1219,8 @@ function QTip(target, options, id, attr)
 			if(callback.isDefaultPrevented()){ return self; }
 			delete position.adjusted;
 
-			// If effect is disabled or positioning gives NaN out, set CSS directly
-			if(!effect || !isNaN(position.left) || !isNaN(position.top)) {
+			// If effect is disabled, no animation is defined or positioning gives NaN out, set CSS directly
+			if(effect === FALSE || isNaN(position.left) || isNaN(position.top) || !$.isFunction(posOptions.effect)) {
 				tooltip.css(position);
 			}
 			
