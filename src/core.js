@@ -807,7 +807,7 @@ function QTip(target, options, id, attr)
 
 			// Update position / redraw if needed
 			if(tooltip.is(':visible') && self.rendered) {
-				if(reposition) { self.reposition(); }
+				if(reposition) { self.reposition(cache.event); }
 				if(redraw) { self.redraw(); }
 			}
 

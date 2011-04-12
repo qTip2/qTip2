@@ -1,4 +1,4 @@
-[qTip2](http://craigsworks.com/projects/qtip2/) - Pretty powerful tooltips
+# [qTip2](http://craigsworks.com/projects/qtip2/) - Pretty powerful tooltips
 ================================
 
 Pre-compiled scripts
