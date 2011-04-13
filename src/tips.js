@@ -477,10 +477,11 @@ function Tip(qTip, command)
 			});
 
 			// Adjust for tip dimensions
-			position[ corner[precedance] ] -= dimensions[ precedance === 'x' ? 'width' : 'height' ] +
+			position[ corner[precedance] ] -= dimensions[ precedance === 'x' ? 'width' : 'height' ];
 
-			/* IE specific adjustment */
-			($.browser.msie && parseFloat($.browser.version, 10) == 8 && border && /^(b|r)/i.test(corner.string()) ? 1 : 0);
+			/* IE specific adjustment - DEPRECATED... doesn't seem to need it anymore!
+			($.browser.msie && parseFloat($.browser.version, 10) == 8 && border && /^(b|r)/i.test(corner.string()) ? 0 : 0);
+			*/
 
 			// Set and return new position
 			if(set) { tip.css({ top: '', bottom: '', left: '', right: '', margin: '' }).css(position); }

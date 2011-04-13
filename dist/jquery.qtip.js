@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Apr 13 11:48:47 2011 +0100
+* Date: Wed Apr 13 12:35:15 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -2347,10 +2347,11 @@ function Tip(qTip, command)
 			});
 
 			// Adjust for tip dimensions
-			position[ corner[precedance] ] -= dimensions[ precedance === 'x' ? 'width' : 'height' ] +
+			position[ corner[precedance] ] -= dimensions[ precedance === 'x' ? 'width' : 'height' ];
 
-			/* IE specific adjustment */
-			($.browser.msie && parseFloat($.browser.version, 10) == 8 && border && /^(b|r)/i.test(corner.string()) ? 1 : 0);
+			/* IE specific adjustment - DEPRECATED... doesn't seem to need it anymore!
+			($.browser.msie && parseFloat($.browser.version, 10) == 8 && border && /^(b|r)/i.test(corner.string()) ? 0 : 0);
+			*/
 
 			// Set and return new position
 			if(set) { tip.css({ top: '', bottom: '', left: '', right: '', margin: '' }).css(position); }
