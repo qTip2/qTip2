@@ -4,10 +4,9 @@ function Modal(api)
 		options = api.options.show.modal,
 		elems = api.elements,
 		tooltip = elems.tooltip,
-		
 		selector = '#qtip-overlay',
 		namespace = '.qtipmodal',
-		events = 'tooltipshow'+namespace+' tooltiphide'+namespace;
+		overlay;
 
 	// Setup option set checks
 	api.checks.modal = {
@@ -23,33 +22,42 @@ function Modal(api)
 	$.extend(self, {
 		init: function()
 		{
-			if(options.on) {
-				// Apply our modal events (unbind the mfirst so we don't duplicate)
-				tooltip.unbind(namespace).bind(events, function(event, api, duration) {
-					var type = event.type.replace('tooltip', '');
+			// If modal is disabled... return
+			if(!options.on) { return self; }
+			
+			// Remove previous bound events in namespace
+			tooltip.unbind(namespace).unbind(namespace+api.id)
 
-					if($.isFunction(options[type])) {
-						options[type].call(elems.overlay, duration, api);
-					}
-					else {
-						self[type](duration);
-					}
-				});
+			// Apply our show/hide/focus modal events
+			.bind('tooltipshow'+namespace+' tooltiphide'+namespace, function(event, api, duration) {
+				var type = event.type.replace('tooltip', '');
 
-				// Create the overlay if needed
-				self.create();
-
-				// Hide tooltip on overlay click if enabled and toggle cursor style
-				if(options.blur === TRUE) {
-					elems.overlay.unbind(namespace+api.id).bind('click'+namespace+api.id, function(){ api.hide.call(api); });
+				if($.isFunction(options[type])) {
+					options[type].call(elems.overlay, duration, api);
 				}
-				elems.overlay.css('cursor', options.blur ? 'pointer' : '');
+				else {
+					self[type](duration);
+				}
+			})
+			.bind('tooltipfocus', function(event, api, zIndex) {
+				overlay.css('z-index', zIndex - 1); // Adjust modal z-index on tooltip focus
+			});
+
+			// Create the overlay if needed
+			self.create();
+
+			// Hide tooltip on overlay click if enabled and toggle cursor style
+			elems.overlay.css('cursor', options.blur ? 'pointer' : '');
+			if(options.blur === TRUE) {
+				elems.overlay.bind('click'+namespace+api.id, function(){ api.hide.call(api); });
 			}
+
+			return self;
 		},
 
 		create: function()
 		{
-			var elem = $(selector), overlay;
+			var elem = $(selector);
 
 			// Return if overlay is already rendered
 			if(elem.length) { elems.overlay = elem; return elem; }
@@ -81,8 +89,7 @@ function Modal(api)
 
 		toggle: function(state)
 		{
-			var overlay = elems.overlay,
-				effect = api.options.show.modal.effect,
+			var effect = api.options.show.modal.effect,
 				type = state ? 'show': 'hide',
 				zindex;
 
@@ -94,12 +101,6 @@ function Modal(api)
 
 			// Setop all animations
 			overlay.stop(TRUE, FALSE);
-
-			// Set z-indx if we're showing it
-			if(state) {
-				zindex = parseInt( $.css(tooltip[0], 'z-index'), 10);
-				overlay.css('z-index', (zindex || QTIP.zindex) - 1);
-			}
 
 			// Use custom function if provided
 			if($.isFunction(effect)) {
@@ -117,16 +118,18 @@ function Modal(api)
 					if(!state) { $(this).hide(); }
 				});
 			}
+
+			return self;
 		},
 
-		show: function() { self.toggle(TRUE); },
-		hide: function() { self.toggle(FALSE); },
+		show: function() { return self.toggle(TRUE); },
+		hide: function() { return self.toggle(FALSE); },
 
 		destroy: function()
 		{
-			var delBlanket = elems.overlay;
+			var delBlanket = overlay.length;
 
-			if(delBlanket) {
+			if(overlay.length) {
 				// Check if any other modal tooltips are present
 				$(selector).each(function() {
 					var api = $(this).data('qtip');
@@ -148,7 +151,7 @@ function Modal(api)
 			}
 
 			// Remove bound events
-			tooltip.unbind(events);
+			return tooltip.unbind(namespace);
 		}
 	});
 
