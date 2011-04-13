@@ -810,7 +810,7 @@ function QTip(target, options, id, attr)
 				if(reposition) {
 					self.reposition(
 						options.position.target === 'mouse' && options.position.adjust.mouse ?
-							cache.event : undefined
+							NULL : cache.event
 					);
 				}
 				if(redraw) { self.redraw(); }
