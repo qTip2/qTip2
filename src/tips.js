@@ -459,7 +459,7 @@ function Tip(qTip, command)
 
 			// Calculate tip position
 			$.each(corners, function(i, side) {
-				var b, br;
+				var d, b, br;
 
 				if(side === 'center') {
 					b = precedance === 'y' ? 'left' : 'top';
@@ -469,10 +469,12 @@ function Tip(qTip, command)
 				else {
 					b = borderWidth(corner, side, TRUE);
 					br = borderRadius(corner);
+					d = i && precedance === 'y' ? 'height' : 'width';
 
-					position[ side ] = i ?
-						borderWidth(corner, side) + (!i ? br : 0) :
-						offsets[i] + (br > b ? br : 0);
+					position[ side ] = Math.min(
+						tooltip[d]() - size[d] - border,
+						i ? borderWidth(corner, side) + (!i ? br : 0) : offsets[i] + (br > b ? br : 0)
+					);
 				}
 			});
 

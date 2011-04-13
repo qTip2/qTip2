@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Apr 13 23:41:51 2011 +0100
+* Date: Wed Apr 13 23:43:02 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -2337,7 +2337,7 @@ function Tip(qTip, command)
 
 			// Calculate tip position
 			$.each(corners, function(i, side) {
-				var b, br;
+				var d, b, br;
 
 				if(side === 'center') {
 					b = precedance === 'y' ? 'left' : 'top';
@@ -2347,10 +2347,12 @@ function Tip(qTip, command)
 				else {
 					b = borderWidth(corner, side, TRUE);
 					br = borderRadius(corner);
+					d = i && precedance === 'y' ? 'height' : 'width';
 
-					position[ side ] = i ?
-						borderWidth(corner, side) + (!i ? br : 0) :
-						offsets[i] + (br > b ? br : 0);
+					position[ side ] = Math.min(
+						tooltip[d]() - size[d] - border,
+						i ? borderWidth(corner, side) + (!i ? br : 0) : offsets[i] + (br > b ? br : 0)
+					);
 				}
 			});
 
