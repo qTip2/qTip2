@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Apr 13 23:43:02 2011 +0100
+* Date: Wed Apr 13 23:51:41 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1591,7 +1591,7 @@ PLUGINS = QTIP.plugins = {
 
 			// Compensate for containers scroll if it also has an offsetParent
 			if(container[0] !== docBody || deep > 1) { scroll( container, 1 ); }
-			if(PLUGINS.iOS) { scroll( $(window), -1 ); }
+			if(PLUGINS.iOS < 4.1 && PLUGINS.iOS > 3.1) { scroll( $(window), -1 ); }
 		}
 
 		return pos;
@@ -1600,13 +1600,10 @@ PLUGINS = QTIP.plugins = {
 	/*
 	 * iOS 3.2 - 4.0 scroll fix detection used in offset() function.
 	 */
-	iOS: (function() {
-		var v = parseFloat(
-			('' + (/CPU.*OS ([0-9_]{1,3})|(CPU like).*AppleWebKit.*Mobile/i.exec(navigator.userAgent) || [0,'4_2'])[1])
-				.replace('undefined', '3_2').replace('_','.')
-		);
-		return v < 4.1 && v > 3.1;
-	}()),
+	iOS: parseFloat(
+		('' + (/CPU.*OS ([0-9_]{1,3})|(CPU like).*AppleWebKit.*Mobile/i.exec(navigator.userAgent) || [0,'4_2'])[1])
+			.replace('undefined', '3_2').replace('_','.')
+	),
 	
 	/*
 	 * jQuery-secpfic $.fn overrides 
