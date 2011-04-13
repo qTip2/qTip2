@@ -94,10 +94,10 @@ function Tip(qTip, command)
 				if(adjusted.left) { adjust.left = Math.abs(adjusted.left); }
 
 				// Switch precedance based on adjusted properties
-				if(newCorner.precedance === 'y' && adjusted.top) {
+				if(newCorner.precedance === 'y' && adjusted.top && newCorner.x !== 'center') {
 					newCorner.precedance = newCorner.precedance === 'y' ? 'x' : 'y';
 				}
-				else if(newCorner.precedance === 'x' && adjusted.left){
+				else if(newCorner.precedance === 'x' && adjusted.left && newCorner.y !== 'center'){
 					newCorner.precedance = newCorner.precedance === 'x' ? 'y' : 'x';
 				}
 

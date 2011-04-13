@@ -645,11 +645,11 @@ function QTip(target, options, id, attr)
 			$.attr(target[0], 'aria-describedby', tooltipID);
 
 			// Create tooltip element
-			tooltip = elements.tooltip = $('<div/>')
-				.attr({
+			tooltip = elements.tooltip = $('<div/>', {
 					'id': tooltipID,
 					'class': uitooltip + ' qtip ui-helper-reset ' + options.style.classes,
-					
+					'width': options.style.width || '',
+
 					/* ARIA specific attributes */
 					'role': 'alert',
 					'aria-live': 'polite',
@@ -1203,32 +1203,26 @@ function QTip(target, options, id, attr)
 		// IMax/min width simulator function for all browsers.. yeaaah!
 		redraw: function()
 		{
-			if(self.rendered < 1 || isDrawing) { return self; }
+			if(self.rendered < 1 || options.style.width || isDrawing) { return self; }
 
 			var fluid = uitooltip + '-fluid', width, max, min;
 			isDrawing = 1; // Set drawing flag
 
-			// Reset the width in style attribute
-			tooltip.css('width', '');
+			// Reset width and add fluid class
+			tooltip.css('width', '').addClass(fluid);
 
-			// Makesure do pre-defined width is set
-			if(tooltip.css('width') === 'auto') {
-				// Add fluid class
-				tooltip.addClass(fluid);
+			// Grab our tooltip width (add 1 so we don't get wrapping problems in Gecko)
+			width = tooltip.width() + ($.browser.mozilla ? 1 : 0);
 
-				// Grab our tooltip width (add 1 so we don't get wrapping problems in Gecko)
-				width = tooltip.width() + ($.browser.mozilla ? 1 : 0);
+			// Parse our max/min properties
+			max = parseInt(tooltip.css('max-width'), 10) || 0;
+			min = parseInt(tooltip.css('min-width'), 10) || 0;
 
-				// Parse our max/min properties
-				max = parseInt(tooltip.css('max-width'), 10) || 0;
-				min = parseInt(tooltip.css('min-width'), 10) || 0;
+			// Determine new dimension size based on max/min/current values
+			width = max + min ? Math.min(Math.max(width, min), max) : width;
 
-				// Determine new dimension size based on max/min/current values
-				width = max + min ? Math.min(Math.max(width, min), max) : width;
-
-				// Set the newly calculated width and remvoe fluid class
-				tooltip.css('width', width).removeClass(fluid);
-			}
+			// Set the newly calculated width and remvoe fluid class
+			tooltip.css('width', width).removeClass(fluid);
 
 			// Set drawing flag
 			isDrawing = 0;
@@ -1696,7 +1690,8 @@ QTIP.defaults = {
 	},
 	style: {
 		classes: '',
-		widget: FALSE
+		widget: FALSE,
+		width: FALSE
 	},
 	events: {
 		render: NULL,
