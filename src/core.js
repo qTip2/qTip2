@@ -1551,12 +1551,15 @@ PLUGINS = QTIP.plugins = {
 	},
 	
 	/*
-	 * iOS 4.0 and below scroll fix detection used in offset() function.
+	 * iOS 3.2 - 4.0 scroll fix detection used in offset() function.
 	 */
-	iOS: parseFloat(
-		('' + (/CPU.*OS (3_2|4_0)|(CPU like).*AppleWebKit.*Mobile/i.exec(navigator.userAgent) || [0,'4_2'])[1])
-		.replace('undefined', '3_2').replace('_','.')
-	) < 4.1,
+	iOS: (function() {
+		var v = parseFloat(
+			('' + (/CPU.*OS (3_2|4_0)|(CPU like).*AppleWebKit.*Mobile/i.exec(navigator.userAgent) || [0,'4_2'])[1])
+				.replace('undefined', '3_2').replace('_','.')
+		);
+		return v < 4.1 && v > 3.1;
+	}()),
 	
 	/*
 	 * jQuery-secpfic $.fn overrides 
