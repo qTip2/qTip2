@@ -1555,7 +1555,7 @@ PLUGINS = QTIP.plugins = {
 	 */
 	iOS: (function() {
 		var v = parseFloat(
-			('' + (/CPU.*OS (3_2|4_0)|(CPU like).*AppleWebKit.*Mobile/i.exec(navigator.userAgent) || [0,'4_2'])[1])
+			('' + (/CPU.*OS ([0-9_]{1,3})|(CPU like).*AppleWebKit.*Mobile/i.exec(navigator.userAgent) || [0,'4_2'])[1])
 				.replace('undefined', '3_2').replace('_','.')
 		);
 		return v < 4.1 && v > 3.1;
