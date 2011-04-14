@@ -127,9 +127,9 @@ function Modal(api)
 
 		destroy: function()
 		{
-			var delBlanket = overlay.length;
+			var delBlanket = overlay;
 
-			if(overlay.length) {
+			if(delBlanket) {
 				// Check if any other modal tooltips are present
 				$(selector).each(function() {
 					var api = $(this).data('qtip');

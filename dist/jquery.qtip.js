@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Apr 13 23:54:54 2011 +0100
+* Date: Wed Apr 13 23:56:53 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -2712,9 +2712,9 @@ function Modal(api)
 
 		destroy: function()
 		{
-			var delBlanket = overlay.length;
+			var delBlanket = overlay;
 
-			if(overlay.length) {
+			if(delBlanket) {
 				// Check if any other modal tooltips are present
 				$(selector).each(function() {
 					var api = $(this).data('qtip');
