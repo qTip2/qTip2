@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Apr 14 20:08:23 2011 +0100
+* Date: Thu Apr 14 20:23:41 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1055,7 +1055,7 @@ function QTip(target, options, id, attr)
 						// Make sure this axis is enabled for reposition
 						if (!readjust.horizontal) { return 0; }
 
-						var viewportScroll = viewport.scrollLeft,
+						var viewportScroll = (viewport.offset.left || 0) + viewport.scrollLeft,
 							myWidth = my.x === 'left' ? elemWidth : my.x === 'right' ? -elemWidth : -elemWidth / 2,
 							atWidth = at.x === 'left' ? targetWidth : at.x === 'right' ? -targetWidth : -targetWidth / 2,
 							tipAdjust = tip && tip.precedance === 'x' ? options.style.tip.width : 0,
@@ -1089,7 +1089,7 @@ function QTip(target, options, id, attr)
 						// Make sure this axis is enabled for reposition
 						if (!readjust.vertical) { return 0; } 
 
-						var viewportScroll = viewport.scrollTop,
+						var viewportScroll = (viewport.offset.top || 0) + viewport.scrollTop,
 							myHeight = my.y === 'top' ? elemHeight : my.y === 'bottom' ? -elemHeight : -elemHeight / 2,
 							atHeight = at.y === 'top' ? targetHeight : at.y === 'bottom' ? -targetHeight : -targetHeight / 2,
 							tipAdjust = tip && tip.precedance === 'y' ? options.style.tip.height : 0,
@@ -1127,7 +1127,8 @@ function QTip(target, options, id, attr)
 				height: viewport[ (viewport[0] === window ? 'h' : 'outerH') + 'eight' ](),
 				width: viewport[ (viewport[0] === window ? 'w' : 'outerW') + 'idth' ](),
 				scrollLeft: viewport.scrollLeft(),
-				scrollTop: viewport.scrollTop()
+				scrollTop: viewport.scrollTop(),
+				offset: viewport.offset() || {}
 			};
 
 			// Check if mouse was the target
