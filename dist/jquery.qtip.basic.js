@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Apr 14 20:23:41 2011 +0100
+* Date: Thu Apr 14 23:46:32 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1055,11 +1055,11 @@ function QTip(target, options, id, attr)
 						// Make sure this axis is enabled for reposition
 						if (!readjust.horizontal) { return 0; }
 
-						var viewportScroll = (viewport.offset.left || 0) + viewport.scrollLeft,
+						var viewportScroll = viewport.scrollLeft,
 							myWidth = my.x === 'left' ? elemWidth : my.x === 'right' ? -elemWidth : -elemWidth / 2,
 							atWidth = at.x === 'left' ? targetWidth : at.x === 'right' ? -targetWidth : -targetWidth / 2,
 							tipAdjust = tip && tip.precedance === 'x' ? options.style.tip.width : 0,
-							overflowLeft = viewportScroll - posLeft - tipAdjust,
+							overflowLeft = (viewport.offset.left || 0) + viewportScroll - posLeft - tipAdjust,
 							overflowRight = posLeft + elemWidth - viewport.width - viewportScroll + tipAdjust,
 							offset = myWidth - (my.precedance === 'x' || my.x === my.y ? atWidth : 0),
 							isCenter = my.x === 'center';
@@ -1082,18 +1082,18 @@ function QTip(target, options, id, attr)
 						}
 
 						// Make sure we haven't made things worse with the adjustment and return the adjusted difference
-						if(position.left < 0 && -position.left > overflowRight) { position.left = posLeft; }
+						if(position.left < viewportScroll && -position.left > overflowRight) { position.left = posLeft; }
 						return position.left - posLeft;
 					},
 					top: function(posTop) {
 						// Make sure this axis is enabled for reposition
 						if (!readjust.vertical) { return 0; } 
 
-						var viewportScroll = (viewport.offset.top || 0) + viewport.scrollTop,
+						var viewportScroll = viewport.scrollTop,
 							myHeight = my.y === 'top' ? elemHeight : my.y === 'bottom' ? -elemHeight : -elemHeight / 2,
 							atHeight = at.y === 'top' ? targetHeight : at.y === 'bottom' ? -targetHeight : -targetHeight / 2,
 							tipAdjust = tip && tip.precedance === 'y' ? options.style.tip.height : 0,
-							overflowTop = viewportScroll - posTop - tipAdjust,
+							overflowTop = (viewport.offset.top || 0) + viewportScroll - posTop - tipAdjust,
 							overflowBottom = posTop + elemHeight - viewport.height - viewportScroll + tipAdjust,
 							offset = myHeight - (my.precedance === 'y' || my.x === my.y ? atHeight : 0),
 							isCenter = my.y === 'center';

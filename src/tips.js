@@ -82,7 +82,7 @@ function Tip(qTip, command)
 		var newCorner = $.extend({}, self.corner),
 			adjusted = pos.adjusted,
 			shift = qTip.options.position.adjust.method.substr(0, 5) === 'shift',
-			adjust = { left: 0, top: 0 },
+			adjust = { left: 0, top: 0, shift: shift },
 			offset;
 
 		// Make sure our tip position isn't fixed e.g. doesn't adjust with adjust.screen
@@ -102,7 +102,7 @@ function Tip(qTip, command)
 				}
 
 				// No shifting took place if both offets are zero...
-				if(!adjust.left && !adjust.top) { shift = FALSE; }
+				if(!adjust.left && !adjust.top) { shift = adjust.shift = FALSE; }
 			}
 
 			// Adjustment type = Flip
@@ -128,16 +128,11 @@ function Tip(qTip, command)
 		offset.option = Math.max(0, opts.offset);
 
 		// Adjust position to accomodate tip dimensions
-		if((shift && adjust.top && !adjust.left) || !shift || !offset) {
-			pos.left -= offset.left.charAt ? offset.option : (offset.right ? -1 : 1) * offset.left;
-		}
-		if((shift && adjust.left && !adjust.top) || !shift || !offset) {
-			pos.top -= offset.top.charAt ? offset.option : (offset.bottom ? -1 : 1) * offset.top;
-		}
-
-		// Make sure we also adjust for tip offset in shift repositioning
-		if(shift && adjust.left && newCorner.precedance === 'y') { pos.left -= offset.option; }
-		else if(shift && adjust.top && newCorner.precedance === 'x') { pos.top -= offset.option; }
+		pos.left -= shift && adjust.left || offset.left.charAt ? offset.option : 0;
+		pos.left -= ((shift && adjust.top && !adjust.left) || !shift ? (offset.right ? -1 : 1) * offset.left : 0) || 0;
+		
+		pos.top -= shift && adjust.top || offset.top.charAt ? offset.option : 0;
+		pos.top -= ((shift && adjust.left && !adjust.top) || !shift ? (offset.bottom ? -1 : 1) * offset.top : 0) || 0;
 
 		// Cache details
 		cache.left = adjusted.left; cache.top = adjusted.top;
@@ -437,11 +432,12 @@ function Tip(qTip, command)
 		},
 
 		// Tip positioning method
-		position: function(corner, offsets, set)
+		position: function(corner, adjust, set)
 		{
 			var tip = elems.tip,
 				position = {},
-				precedance, dimensions,corners;
+				userOffset = Math.max(0, opts.offset),
+				offsets, precedance, dimensions, corners;
 
 			// Return if tips are disabled or tip is not yet rendered
 			if(opts.corner === FALSE || !tip) { return FALSE; }
@@ -455,15 +451,12 @@ function Tip(qTip, command)
 
 			// Setup corners and offset array
 			corners = [ corner.x, corner.y ];
-			offsets = [
-				Math.max(0, opts.offset + (offsets ? offsets.left : 0)),
-				Math.max(0, opts.offset + (offsets ? offsets.top : 0))
-			];
+			offsets = [ adjust ? adjust.left : 0, adjust ? adjust.top : 0 ];
 			if(precedance === 'x') { corners.reverse(); offsets.reverse(); }
 
 			// Calculate tip position
 			$.each(corners, function(i, side) {
-				var d, b, br;
+				var b, br;
 
 				if(side === 'center') {
 					b = precedance === 'y' ? 'left' : 'top';
@@ -473,12 +466,10 @@ function Tip(qTip, command)
 				else {
 					b = borderWidth(corner, side, TRUE);
 					br = borderRadius(corner);
-					d = i && precedance === 'y' ? 'height' : 'width';
 
-					position[ side ] = Math.min(
-						tooltip[d]() - size[d] - border,
-						i ? borderWidth(corner, side) + (!i ? br : 0) : offsets[i] + (br > b ? br : 0)
-					);
+					position[ side ] = i ? borderWidth(corner, side) : adjust && adjust.shift ?
+						br > offsets[i] ? (br > b ? br : 0) : offsets[i] + userOffset :
+						offsets[i] + userOffset + (br > b ? br : 0);
 				}
 			});
 
