@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Apr 14 19:52:51 2011 +0100
+* Date: Thu Apr 14 20:08:23 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -2007,6 +2007,10 @@ function Tip(qTip, command)
 		if((shift && adjust.left && !adjust.top) || !shift || !offset) {
 			pos.top -= offset.top.charAt ? offset.option : (offset.bottom ? -1 : 1) * offset.top;
 		}
+
+		// Make sure we also adjust for tip offset in shift repositioning
+		if(shift && adjust.left && newCorner.precedance === 'y') { pos.left -= offset.option; }
+		else if(shift && adjust.top && newCorner.precedance === 'x') { pos.top -= offset.option; }
 
 		// Cache details
 		cache.left = adjusted.left; cache.top = adjusted.top;

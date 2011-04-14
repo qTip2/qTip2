@@ -135,6 +135,10 @@ function Tip(qTip, command)
 			pos.top -= offset.top.charAt ? offset.option : (offset.bottom ? -1 : 1) * offset.top;
 		}
 
+		// Make sure we also adjust for tip offset in shift repositioning
+		if(shift && adjust.left && newCorner.precedance === 'y') { pos.left -= offset.option; }
+		else if(shift && adjust.top && newCorner.precedance === 'x') { pos.top -= offset.option; }
+
 		// Cache details
 		cache.left = adjusted.left; cache.top = adjusted.top;
 		cache.corner = newCorner.string();
