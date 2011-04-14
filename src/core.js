@@ -1095,7 +1095,8 @@ function QTip(target, options, id, attr)
 
 				// Use cached event if one isn't available for positioning
 				event = event && (event.type === 'resize' || event.type === 'scroll') ? cache.event :
-					adjust.mouse || !event || !event.pageX ? $.extend({}, MOUSE) : event;
+					adjust.mouse || !event || !event.pageX || (/over|enter$/i.test(event.type) && !adjust.mouse) ?
+							$.extend({}, MOUSE) : event;
 
 				// Use event coordinates for position
 				position = { top: event.pageY, left: event.pageX };
