@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Fri Apr 22 22:14:58 2011 +0100
+* Date: Fri Apr 22 23:42:04 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -489,8 +489,7 @@ function QTip(target, options, id, attr)
 		// Assign hide events
 		if(hide) {
 			// Check if the tooltip hides when inactive
-			if('number' === typeof options.hide.inactive)
-			{
+			if('number' === typeof options.hide.inactive) {
 				// Bind inactive method to target as a custom event
 				targets.show.bind('qtip-'+id+'-inactive', inactiveMethod);
 
@@ -528,6 +527,20 @@ function QTip(target, options, id, attr)
 			$.each(events.show, function(index, type) {
 				targets.show.bind(type+namespace, showMethod);
 			});
+			
+			// Check if the tooltip hides when mouse is moved a certain distance
+			if('number' === typeof options.hide.distance) {
+				// Bind mousemove to target to detect distance difference
+				targets.show.bind('mousemove'+namespace, function(event) {
+					var coords = cache.coords || [],
+						limit = options.hide.distance;
+
+					// Check if the movement has gone beyond the limit, and hide it if so
+					if(coords && (Math.abs(event.pageX - coords[0]) >= limit || Math.abs(event.pageY - coords[1]) >= limit)){
+						self.hide(event);
+					}
+				});
+			}
 		}
 
 		// Apply document events
@@ -905,10 +918,18 @@ function QTip(target, options, id, attr)
 
 				// Hide other tooltips if tooltip is solo, using it as the context
 				if(opts.solo) { $(selector, opts.solo).not(tooltip).qtip('hide', callback); }
+
+				// Store coordinates if hide.distance is set
+				if('number' === typeof options.hide.distance) {
+					cache.coords = [ event.pageX, event.pageY ];
+				}
 			}
 			else {
 				// Clear show timer if we're hiding 
 				clearTimeout(self.timers.show);
+
+				// Delete cached coords
+				delete cache.coords;
 
 				// Blur the tooltip
 				self.blur(event);
@@ -1741,7 +1762,8 @@ QTIP.defaults = {
 		delay: 0,
 		fixed: FALSE,
 		inactive: FALSE,
-		leave: 'window'
+		leave: 'window',
+		distance: FALSE
 	},
 	style: {
 		classes: '',
