@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Fri Apr 22 20:26:38 2011 +0100
+* Date: Fri Apr 22 20:28:01 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -314,6 +314,7 @@ function QTip(target, options, id, attr)
 	function updateContent(content, reposition)
 	{
 		var elem = elements.content;
+		content = content || options.content.text;
 
 		// Make sure tooltip is rendered and content is defined. If not return
 		if(!self.rendered || !content) { return FALSE; }
@@ -673,8 +674,7 @@ function QTip(target, options, id, attr)
 		{
 			if(self.rendered) { return self; } // If tooltip has already been rendered, exit
 
-			var content = options.content.text,
-				title = options.content.title.text,
+			var title = options.content.title.text,
 				callback = $.Event('tooltiprender');
 
 			// Add ARIA attributes to target
@@ -716,7 +716,7 @@ function QTip(target, options, id, attr)
 			}
 
 			// Set proper rendered flag and update content
-			updateContent(content);
+			updateContent();
 			self.rendered = TRUE;
 
 			// Setup widget classes
@@ -896,7 +896,10 @@ function QTip(target, options, id, attr)
 				// Focus the tooltip
 				self.focus(event);
 
-				// Update tooltip position
+				// Update tooltip content if it's a dynamic function
+				if($.isFunction(options.content.text)) { updateContent(); }
+
+				// Update the tooltip position
 				self.reposition(event);
 
 				// Hide other tooltips if tooltip is solo, using it as the context

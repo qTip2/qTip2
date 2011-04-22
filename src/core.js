@@ -272,6 +272,7 @@ function QTip(target, options, id, attr)
 	function updateContent(content, reposition)
 	{
 		var elem = elements.content;
+		content = content || options.content.text;
 
 		// Make sure tooltip is rendered and content is defined. If not return
 		if(!self.rendered || !content) { return FALSE; }
@@ -631,8 +632,7 @@ function QTip(target, options, id, attr)
 		{
 			if(self.rendered) { return self; } // If tooltip has already been rendered, exit
 
-			var content = options.content.text,
-				title = options.content.title.text,
+			var title = options.content.title.text,
 				callback = $.Event('tooltiprender');
 
 			// Add ARIA attributes to target
@@ -674,7 +674,7 @@ function QTip(target, options, id, attr)
 			}
 
 			// Set proper rendered flag and update content
-			updateContent(content);
+			updateContent();
 			self.rendered = TRUE;
 
 			// Setup widget classes
@@ -854,7 +854,10 @@ function QTip(target, options, id, attr)
 				// Focus the tooltip
 				self.focus(event);
 
-				// Update tooltip position
+				// Update tooltip content if it's a dynamic function
+				if($.isFunction(options.content.text)) { updateContent(); }
+
+				// Update the tooltip position
 				self.reposition(event);
 
 				// Hide other tooltips if tooltip is solo, using it as the context
