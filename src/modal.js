@@ -5,7 +5,9 @@ function Modal(api)
 		elems = api.elements,
 		tooltip = elems.tooltip,
 		selector = '#qtip-overlay',
-		namespace = '.qtipmodal',
+		globalNamespace = '.qtipmodal',
+		namespace = globalNamespace + api.id,
+		attr = 'is-modal-qtip',
 		overlay;
 
 	// Setup option set checks
@@ -24,32 +26,45 @@ function Modal(api)
 		{
 			// If modal is disabled... return
 			if(!options.on) { return self; }
-			
-			// Remove previous bound events in namespace
-			tooltip.unbind(namespace).unbind(namespace+api.id)
-
-			// Apply our show/hide/focus modal events
-			.bind('tooltipshow'+namespace+' tooltiphide'+namespace, function(event, api, duration) {
-				var type = event.type.replace('tooltip', '');
-
-				if($.isFunction(options[type])) {
-					options[type].call(elems.overlay, duration, api);
-				}
-				else {
-					self[type](duration);
-				}
-			})
-			.bind('tooltipfocus', function(event, api, zIndex) {
-				overlay.css('z-index', zIndex - 1); // Adjust modal z-index on tooltip focus
-			});
 
 			// Create the overlay if needed
-			self.create();
+			overlay = self.create();
 
-			// Hide tooltip on overlay click if enabled and toggle cursor style
-			elems.overlay.css('cursor', options.blur ? 'pointer' : '');
-			if(options.blur === TRUE) {
-				elems.overlay.bind('click'+namespace+api.id, function(){ api.hide.call(api); });
+			// Add unique attribute so we can grab modal tooltips easily via a selector
+			tooltip.attr(attr, TRUE)
+
+			// Remove previous bound events in globalNamespace
+			.unbind(globalNamespace).unbind(namespace)
+
+			// Apply our show/hide/focus modal events
+			.bind('tooltipshow'+globalNamespace+' tooltiphide'+globalNamespace, function(event, api, duration) {
+				self[ event.type.replace('tooltip', '') ](duration);
+			})
+
+			// Adjust modal z-index on tooltip focus
+			.bind('tooltipfocus'+globalNamespace, function(event, api, zIndex) {
+				overlay.css('z-index', zIndex - 1); 
+			})
+
+			// Focus any other visible modals when this one blurs
+			.bind('tooltipblur'+globalNamespace, function(event) {
+				$('[' + attr + ']:visible').not(tooltip).last().qtip('focus', event);
+			});
+
+			// Apply keyboard "Escape key" close handler
+			if(options.escape) {
+				$(window).unbind(namespace).bind('keydown'+namespace, function(event) {
+					if(event.keyCode === 27 && tooltip.hasClass(focusClass)) {
+						api.hide(event);
+					}
+				});
+			}
+
+			// Apply click handler for blur option
+			if(options.blur) {
+				elems.overlay.unbind(namespace).bind('click'+namespace, function(event) {
+					if(tooltip.hasClass(focusClass)) { api.hide(event); }
+				});
 			}
 
 			return self;
@@ -76,7 +91,7 @@ function Modal(api)
 			.appendTo(document.body);
 
 			// Update position on window resize or scroll
-			$(window).bind('resize'+namespace, function() {
+			$(window).unbind(globalNamespace).bind('resize'+globalNamespace, function() {
 				overlay.css({
 					height: Math.max( $(window).height(), $(document).height() ),
 					width: Math.max( $(window).width(), $(document).width() )
@@ -89,15 +104,24 @@ function Modal(api)
 
 		toggle: function(state)
 		{
-			var effect = api.options.show.modal.effect,
+			var effect = options.effect,
 				type = state ? 'show': 'hide',
+				modals = $('[' + attr + ']:visible').not(tooltip),
 				zindex;
 
 			// Create our overlay if it isn't present already
 			if(!overlay) { overlay = self.create(); }
 
 			// Prevent modal from conflicting with show.solo
-			if(overlay.is(':animated') && !state) { return; }
+			if(overlay.is(':animated') && !state) { return self; }
+
+			// Make sure not to hide the backdrop if other modals are visible
+			if(!state && modals.length) { return self; }
+
+			// Toggle backdrop cursor style on show
+			else if(state) {
+				elems.overlay.css('cursor', options.blur ? 'pointer' : '');
+			}
 
 			// Setop all animations
 			overlay.stop(TRUE, FALSE);
@@ -131,27 +155,20 @@ function Modal(api)
 
 			if(delBlanket) {
 				// Check if any other modal tooltips are present
-				$(selector).each(function() {
-					var api = $(this).data('qtip');
-
-					// If another modal tooltip is present, leave overlay
-					if(api && api.id !== api.id && api.options.show.modal) {
-						return (delBlanket = FALSE);
-					}
-				});
+				delBlanket = $('[' + attr + ']').not(tooltip).length < 1;
 
 				// Remove overlay if needed
 				if(delBlanket) {
 					elems.overlay.remove();
-					$(window).unbind(namespace);
+					$(window).unbind(globalNamespace);
 				}
 				else {
-					elems.overlay.unbind(namespace+api.id);
+					elems.overlay.unbind(globalNamespace+api.id);
 				}
 			}
 
 			// Remove bound events
-			return tooltip.unbind(namespace);
+			return tooltip.removeAttr(attr).unbind(globalNamespace);
 		}
 	});
 
@@ -182,7 +199,8 @@ $.extend(TRUE, QTIP.defaults, {
 		modal: {
 			on: FALSE,
 			effect: TRUE,
-			blur: TRUE
+			blur: TRUE,
+			escape: TRUE
 		}
 	}
 });
