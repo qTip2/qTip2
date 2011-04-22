@@ -30,7 +30,7 @@ function Ajax(api)
 		{
 			// Make sure ajax options are enabled and bind event
 			if(opts && opts.url) {
-				tooltip.bind('tooltipshow'+namespace, self.load);
+				tooltip[ opts.once ? 'one' : 'bind' ]('tooltipshow'+namespace, self.load);
 			}
 
 			return self;
