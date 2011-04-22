@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Fri Apr 22 23:42:04 2011 +0100
+* Date: Sat Apr 23 00:09:47 2011 +0100
 */
 
 /* Fluid class for determining actual width in IE */
@@ -302,6 +302,9 @@
 	.ui-tooltip-shadow .ui-tooltip-content{
 		filter: progid:DXImageTransform.Microsoft.Shadow(Color='gray', Direction=135, Strength=3);
 		-ms-filter:"progid:DXImageTransform.Microsoft.Shadow(Color='gray', Direction=135, Strength=3)";
+
+		_margin-bottom: -3px; /* IE6 */
+		.margin-bottom: -3px; /* IE7 */
 	}
 
 
@@ -379,12 +382,12 @@
 	-moz-box-shadow: 0 0 12px #333;
 	box-shadow: 0 0 12px #333;
 }
+
 	/* IE Specific */
 	.ui-tooltip-jtools .ui-tooltip-titlebar{
 		filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#717171,endColorstr=#4A4A4A);
 		-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#717171,endColorstr=#4A4A4A)";
 	}
-	
 	.ui-tooltip-jtools .ui-tooltip-content{
 		filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#4A4A4A,endColorstr=#232323);
 		-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#4A4A4A,endColorstr=#232323)";
