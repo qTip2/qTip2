@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Apr 14 23:46:32 2011 +0100
+* Date: Fri Apr 15 00:58:09 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -85,12 +85,6 @@ function sanitizeOptions(opts)
 				my: opts.position,
 				at: opts.position
 			};
-		}
-
-		if('adjust' in opts.position) {
-			if(!(/flip|shift( horizontal| vertical)*/i).test(opts.position.adjust.method)) {
-				delete opts.position.adjust.method;
-			}
 		}
 	}
 
@@ -1034,7 +1028,7 @@ function QTip(target, options, id, attr)
 				my = posOptions.my, 
 				at = posOptions.at,
 				adjust = posOptions.adjust,
-				method = adjust.method,
+				method = adjust.method.split(' '),
 				elemWidth = tooltip.outerWidth(),
 				elemHeight = tooltip.outerHeight(),
 				targetWidth = 0,
@@ -1046,28 +1040,30 @@ function QTip(target, options, id, attr)
 				tip = (self.plugins.tip || {}).corner,
 				readjust = {
 					// Repositioning method and axis detection
-					method: method.substr(0, 5),
-					horizontal: method.length < 6 || method.indexOf('horizontal') > -1,
-					vertical: method.length < 6 || method.indexOf('vertical') > -1,
+					horizontal: method[0],
+					vertical: method[1] || method[0],
+					tip: options.style.tip,
 
 					// Reposition methods
 					left: function(posLeft) {
-						// Make sure this axis is enabled for reposition
-						if (!readjust.horizontal) { return 0; }
-
-						var viewportScroll = viewport.scrollLeft,
+						var viewportScroll = viewport.offset.left + viewport.scrollLeft,
 							myWidth = my.x === 'left' ? elemWidth : my.x === 'right' ? -elemWidth : -elemWidth / 2,
 							atWidth = at.x === 'left' ? targetWidth : at.x === 'right' ? -targetWidth : -targetWidth / 2,
-							tipAdjust = tip && tip.precedance === 'x' ? options.style.tip.width : 0,
-							overflowLeft = (viewport.offset.left || 0) + viewportScroll - posLeft - tipAdjust,
+							tipAdjust = tip && tip.precedance === 'y' ? readjust.tip.width + readjust.tip.border * 2 : 0,
+							overflowLeft = viewportScroll - posLeft - tipAdjust,
 							overflowRight = posLeft + elemWidth - viewport.width - viewportScroll + tipAdjust,
 							offset = myWidth - (my.precedance === 'x' || my.x === my.y ? atWidth : 0),
 							isCenter = my.x === 'center';
 
 						// Optional 'shift' style repositioning
-						if(readjust.method === 'shift') {
-							position.left += overflowLeft > 0 ? overflowLeft - tipAdjust :
-								overflowRight > 0 ? -overflowRight + tipAdjust : 0;
+						if(readjust.horizontal === 'shift') {
+							position.left += overflowLeft > 0 ? overflowLeft : overflowRight > 0 ? -overflowRight : 0;
+
+							// Make sure we stay within the viewport boundaries
+							position.left = Math.min(
+								Math.max(viewportScroll, position.left),
+								Math.max(overflowLeft > 0 ? -1E9 : 0, viewportScroll + viewport.width - elemWidth)
+							);
 						}
 
 						// Default 'flip' repositioning
@@ -1079,29 +1075,32 @@ function QTip(target, options, id, attr)
 								position.left -= isCenter ? -offset : offset + (2 * adjust.x);
 							}
 							if(position.left !== posLeft && isCenter) { position.left -= adjust.x; }
+							
+							// Make sure we haven't made things worse with the adjustment and return the adjusted difference
+							if(position.left < viewportScroll && -position.left > overflowRight) { position.left = posLeft; }
 						}
 
-						// Make sure we haven't made things worse with the adjustment and return the adjusted difference
-						if(position.left < viewportScroll && -position.left > overflowRight) { position.left = posLeft; }
 						return position.left - posLeft;
 					},
 					top: function(posTop) {
-						// Make sure this axis is enabled for reposition
-						if (!readjust.vertical) { return 0; } 
-
-						var viewportScroll = viewport.scrollTop,
+						var viewportScroll = viewport.offset.top + viewport.scrollTop,
 							myHeight = my.y === 'top' ? elemHeight : my.y === 'bottom' ? -elemHeight : -elemHeight / 2,
 							atHeight = at.y === 'top' ? targetHeight : at.y === 'bottom' ? -targetHeight : -targetHeight / 2,
-							tipAdjust = tip && tip.precedance === 'y' ? options.style.tip.height : 0,
-							overflowTop = (viewport.offset.top || 0) + viewportScroll - posTop - tipAdjust,
+							tipAdjust = tip && tip.precedance === 'x' ? readjust.tip.height + readjust.tip.border * 2 : 0,
+							overflowTop = viewportScroll - posTop - tipAdjust,
 							overflowBottom = posTop + elemHeight - viewport.height - viewportScroll + tipAdjust,
 							offset = myHeight - (my.precedance === 'y' || my.x === my.y ? atHeight : 0),
 							isCenter = my.y === 'center';
 
 						// Optional 'shift' style repositioning
-						if(readjust.method === 'shift') {
-							position.top += overflowTop - tipAdjust > 0 ? overflowTop :
-								overflowBottom > 0 ? -overflowBottom + tipAdjust : 0;
+						if(readjust.vertical === 'shift') {
+							position.top += overflowTop > 0 ? overflowTop : overflowBottom > 0 ? -overflowBottom : 0;
+
+							// Make sure we stay within the viewport boundaries
+							position.top = Math.min(
+								Math.max(viewportScroll, position.top),
+								Math.max(overflowTop > 0 ? -1E9 : 0, viewportScroll + viewport.height - elemHeight)
+							);
 						}
 
 						// Default 'flip' repositioning
@@ -1113,13 +1112,16 @@ function QTip(target, options, id, attr)
 								position.top -= isCenter ? -offset : offset + (2 * adjust.y);
 							}
 							if(position.top !== posTop && isCenter) { position.top -= adjust.y; }
+
+							// Make sure we haven't made things worse with the adjustment and return the adjusted difference
+							if(position.top < 0 && -position.top > overflowBottom) { position.top = posTop; }
 						}
 
-						// Make sure we haven't made things worse with the adjustment and return the adjusted difference
-						if(position.top < 0 && -position.top > overflowBottom) { position.top = posTop; }
 						return position.top - posTop;
 					}
 				};
+
+
 
 			// Cache our viewport details
 			viewport = !viewport ? FALSE : {
@@ -1128,7 +1130,7 @@ function QTip(target, options, id, attr)
 				width: viewport[ (viewport[0] === window ? 'w' : 'outerW') + 'idth' ](),
 				scrollLeft: viewport.scrollLeft(),
 				scrollTop: viewport.scrollTop(),
-				offset: viewport.offset() || {}
+				offset: viewport.offset() || { left:0, top: 0 }
 			};
 
 			// Check if mouse was the target
@@ -1205,7 +1207,10 @@ function QTip(target, options, id, attr)
 
 			// Calculate collision offset values
 			if(posOptions.viewport.jquery && target[0] !== window && target[0] !== docBody) {
-				position.adjusted = { left: readjust.left(position.left), top: readjust.top(position.top) };
+				position.adjusted = {
+					left: readjust.horizontal !== 'none' ? readjust.left(position.left) : 0,
+					top: readjust.vertical !== 'none' ? readjust.top(position.top) : 0
+				};
 			}
 			else {
 				position.adjusted = { left: 0, top: 0 };
@@ -1713,7 +1718,7 @@ QTIP.defaults = {
 			x: 0, y: 0,
 			mouse: TRUE,
 			resize: TRUE,
-			method: 'flip'
+			method: 'flip flip'
 		},
 		effect: TRUE
 	},
