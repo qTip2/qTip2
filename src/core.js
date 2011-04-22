@@ -821,6 +821,7 @@ function QTip(target, options, id, attr)
 			var type = state ? 'show' : 'hide',
 				opts = options[type],
 				visible = tooltip.is(':visible'),
+				delay,
 				callback;
 
 			// Detect state if valid one isn't provided
@@ -841,7 +842,7 @@ function QTip(target, options, id, attr)
 			}
 
 			// Call API methods
-			callback = $.Event('tooltip'+type); 
+			callback = $.Event('tooltip'+type);
 			callback.originalEvent = event ? cache.event : NULL;
 			tooltip.trigger(callback, [self, 90]);
 			if(callback.isDefaultPrevented()){ return self; }

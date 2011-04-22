@@ -38,7 +38,7 @@ function Ajax(api)
 		load: function(event, first)
 		{
 			// Make sure default event hasn't been prevented
-			if(event.isDefaultPrevented()) { return self; }
+			if(event && event.isDefaultPrevented()) { return self; }
 			
 			var hasSelector = opts.url.indexOf(' '), 
 				url = opts.url,
