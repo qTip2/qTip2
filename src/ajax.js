@@ -13,8 +13,7 @@ function Ajax(api)
 			if(name === 'ajax') { opts = v; }
 
 			if(name === 'once') {
-				tooltip.unbind(namespace);
-				if(v) { tooltip.bind('tooltipshow'+namespace, self.load); }
+				self.init();
 			}
 			else if(opts && opts.url) {
 				self.load();
@@ -30,7 +29,7 @@ function Ajax(api)
 		{
 			// Make sure ajax options are enabled and bind event
 			if(opts && opts.url) {
-				tooltip[ opts.once ? 'one' : 'bind' ]('tooltipshow'+namespace, self.load);
+				tooltip.unbind(namespace)[ opts.once ? 'one' : 'bind' ]('tooltipshow'+namespace, self.load);
 			}
 
 			return self;

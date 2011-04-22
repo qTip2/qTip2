@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Fri Apr 22 20:24:23 2011 +0100
+* Date: Fri Apr 22 20:26:38 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1768,8 +1768,7 @@ QTIP.defaults = {
 			if(name === 'ajax') { opts = v; }
 
 			if(name === 'once') {
-				tooltip.unbind(namespace);
-				if(v) { tooltip.bind('tooltipshow'+namespace, self.load); }
+				self.init();
 			}
 			else if(opts && opts.url) {
 				self.load();
@@ -1785,7 +1784,7 @@ QTIP.defaults = {
 		{
 			// Make sure ajax options are enabled and bind event
 			if(opts && opts.url) {
-				tooltip[ opts.once ? 'one' : 'bind' ]('tooltipshow'+namespace, self.load);
+				tooltip.unbind(namespace)[ opts.once ? 'one' : 'bind' ]('tooltipshow'+namespace, self.load);
 			}
 
 			return self;
