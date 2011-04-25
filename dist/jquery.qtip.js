@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sat Apr 23 00:09:47 2011 +0100
+* Date: Mon Apr 25 14:58:06 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -2674,12 +2674,12 @@ function Modal(api)
 
 			// Apply our show/hide/focus modal events
 			.bind('tooltipshow'+globalNamespace+' tooltiphide'+globalNamespace, function(event, api, duration) {
-				self[ event.type.replace('tooltip', '') ](duration);
+				self[ event.type.replace('tooltip', '') ](event, duration);
 			})
 
 			// Adjust modal z-index on tooltip focus
 			.bind('tooltipfocus'+globalNamespace, function(event, api, zIndex) {
-				overlay.css('z-index', zIndex - 1); 
+				overlay[0].style.zIndex = zIndex - 1;
 			})
 
 			// Focus any other visible modals when this one blurs
@@ -2738,8 +2738,11 @@ function Modal(api)
 			return overlay;
 		},
 
-		toggle: function(state)
+		toggle: function(event, state, duration)
 		{
+			// Make sure default event hasn't been prevented
+			if(event && event.isDefaultPrevented()) { return self; }
+
 			var effect = options.effect,
 				type = state ? 'show': 'hide',
 				modals = $('[' + attr + ']:visible').not(tooltip),
@@ -2748,14 +2751,11 @@ function Modal(api)
 			// Create our overlay if it isn't present already
 			if(!overlay) { overlay = self.create(); }
 
-			// Prevent modal from conflicting with show.solo
-			if(overlay.is(':animated') && !state) { return self; }
-
-			// Make sure not to hide the backdrop if other modals are visible
-			if(!state && modals.length) { return self; }
+			// Prevent modal from conflicting with show.solo, and don't hide backdrop is other modals are visible
+			if((overlay.is(':animated') && !state) || (!state && modals.length)) { return self; }
 
 			// Toggle backdrop cursor style on show
-			else if(state) {
+			if(state) {
 				elems.overlay.css('cursor', options.blur ? 'pointer' : '');
 			}
 
@@ -2774,7 +2774,7 @@ function Modal(api)
 
 			// Use basic fade function
 			else {
-				overlay.fadeTo(90, state ? 0.7 : 0, function() {
+				overlay.fadeTo( parseInt(duration, 10) || 90, state ? 0.7 : 0, function() {
 					if(!state) { $(this).hide(); }
 				});
 			}
@@ -2782,8 +2782,8 @@ function Modal(api)
 			return self;
 		},
 
-		show: function() { return self.toggle(TRUE); },
-		hide: function() { return self.toggle(FALSE); },
+		show: function(event, duration) { return self.toggle(event, TRUE, duration); },
+		hide: function(event, duration) { return self.toggle(event, FALSE, duration); },
 
 		destroy: function()
 		{
