@@ -1,0 +1,12 @@
+#qtip-overlay{
+	position: absolute;
+	left: -10000em;
+	top: -10000em;
+
+	background-color: black;
+
+	opacity: 0.7;
+	filter:alpha(opacity=70);
+	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";
+}
+
