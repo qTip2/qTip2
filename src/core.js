@@ -1244,8 +1244,12 @@ function QTip(target, options, id, attr)
 		{
 			if(self.rendered < 1 || options.style.width || isDrawing) { return self; }
 
-			var fluid = uitooltip + '-fluid', width, max, min;
-			isDrawing = 1; // Set drawing flag
+			var fluid = uitooltip + '-fluid',
+				container = options.position.container,
+				perc, width, max, min;
+
+			// Set drawing flag
+			isDrawing = 1; 
 
 			// Reset width and add fluid class
 			tooltip.css('width', '').addClass(fluid);
@@ -1253,15 +1257,20 @@ function QTip(target, options, id, attr)
 			// Grab our tooltip width (add 1 so we don't get wrapping problems in Gecko)
 			width = tooltip.width() + ($.browser.mozilla ? 1 : 0);
 
-			// Parse our max/min properties
-			max = parseInt(tooltip.css('max-width'), 10) || 0;
-			min = parseInt(tooltip.css('min-width'), 10) || 0;
+			// Grab our max/min properties
+			max = tooltip.css('max-width');
+			min = tooltip.css('min-width');
+
+			// Parse into proper pixel values
+			perc = (max + min).indexOf('%') > -1 ? container.width() / 100 : 0;
+			max = ((max.indexOf('%') > -1 ? perc : 1) * parseInt(max, 10)) || 0;
+			min = ((min.indexOf('%') > -1 ? perc : 1) * parseInt(min, 10)) || 0;
 
 			// Determine new dimension size based on max/min/current values
 			width = max + min ? Math.min(Math.max(width, min), max) : width;
 
 			// Set the newly calculated width and remvoe fluid class
-			tooltip.css('width', width).removeClass(fluid);
+			tooltip.css('width', Math.round(width)).removeClass(fluid);
 
 			// Set drawing flag
 			isDrawing = 0;
