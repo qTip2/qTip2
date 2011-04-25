@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Apr 25 15:11:35 2011 +0100
+* Date: Mon Apr 25 15:37:08 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -31,6 +31,7 @@
 		disabled = 'ui-state-disabled',
 		selector = 'div.qtip.'+uitooltip,
 		focusClass = uitooltip + '-focus',
+		hoverClass = uitooltip + '-hover',
 		hideOffset = '-31000px',
 		replaceSuffix = '_replacedByqTip',
 		oldtitle = 'oldtitle';
@@ -480,9 +481,14 @@ function QTip(target, options, id, attr)
 				});
 			}
 
-			// Focus/blur the tooltip
-			tooltip.bind('mouseenter'+namespace+' mouseleave'+namespace, function(event) {
+			// Focus the tooltip on mouseenter (z-index stacking)
+			tooltip.bind('mouseenter'+namespace, function(event) {
 				self[ event.type === 'mouseenter' ? 'focus' : 'blur' ](event);
+			});
+			
+			// Add hover class on mouseenter/mouseleave
+			tooltip.bind('mouseenter'+namespace+' mouseleave'+namespace, function(event) {
+				tooltip.toggleClass(hoverClass, event.type === 'mouseenter');
 			});
 		}
 
@@ -998,26 +1004,26 @@ function QTip(target, options, id, attr)
 			// Only update the z-index if it has changed and tooltip is not already focused
 			if(!tooltip.hasClass(focusClass))
 			{
-				// Only update z-index's if they've changed'
-				if(curIndex !== newIndex) {
-					// Reduce our z-index's and keep them properly ordered
-					qtips.each(function() {
-						if(this.style.zIndex > curIndex) {
-							this.style.zIndex = this.style.zIndex - 1;
-						}
-					});
-
-					// Fire blur event for focused tooltip
-					qtips.filter('.' + focusClass).qtip('blur', cachedEvent);
-				}
-
 				// Call API method
 				callback = $.Event('tooltipfocus');
 				callback.originalEvent = cachedEvent;
 				tooltip.trigger(callback, [self, newIndex]);
 
-				// If callback wasn't FALSE
+				// If default action wasn't prevented...
 				if(!callback.isDefaultPrevented()) {
+					// Only update z-index's if they've changed
+					if(curIndex !== newIndex) {
+						// Reduce our z-index's and keep them properly ordered
+						qtips.each(function() {
+							if(this.style.zIndex > curIndex) {
+								this.style.zIndex = this.style.zIndex - 1;
+							}
+						});
+						
+						// Fire blur event for focused tooltip
+						qtips.filter('.' + focusClass).qtip('blur', cachedEvent);
+					}
+
 					// Set the new z-index
 					tooltip.addClass(focusClass)[0].style.zIndex = newIndex;
 				}
