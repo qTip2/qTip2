@@ -1116,18 +1116,6 @@ function QTip(target, options, id, attr)
 					}
 				};
 
-
-
-			// Cache our viewport details
-			viewport = !viewport ? FALSE : {
-				elem: viewport,
-				height: viewport[ (viewport[0] === window ? 'h' : 'outerH') + 'eight' ](),
-				width: viewport[ (viewport[0] === window ? 'w' : 'outerW') + 'idth' ](),
-				scrollLeft: viewport.scrollLeft(),
-				scrollTop: viewport.scrollTop(),
-				offset: viewport.offset() || { left:0, top: 0 }
-			};
-
 			// Check if mouse was the target
 			if(target === 'mouse') {
 				// Force left top to allow flipping
@@ -1135,8 +1123,9 @@ function QTip(target, options, id, attr)
 
 				// Use cached event if one isn't available for positioning
 				event = event && (event.type === 'resize' || event.type === 'scroll') ? cache.event :
-					!adjust.mouse && cache.origin ? cache.origin : 
-					adjust.mouse || !event || !event.pageX ? { pageX: MOUSE.pageX, pageY: MOUSE.pageY } : event;
+					!adjust.mouse && cache.origin ? cache.origin :
+					MOUSE && (adjust.mouse || !event || !event.pageX) ? { pageX: MOUSE.pageX, pageY: MOUSE.pageY } :
+					event;
 
 				// Use event coordinates for position
 				position = { top: event.pageY, left: event.pageX };
@@ -1163,8 +1152,8 @@ function QTip(target, options, id, attr)
 
 					if(target[0] === window) {
 						position = {
-							top: !fixed || PLUGINS.iOS ? viewport.scrollTop : 0,
-							left: !fixed || PLUGINS.iOS ? viewport.scrollLeft : 0
+							top: !fixed || PLUGINS.iOS ? viewport.scrollTop() : 0,
+							left: !fixed || PLUGINS.iOS ? viewport.scrollLeft() : 0
 						};
 					}
 				}
@@ -1173,7 +1162,7 @@ function QTip(target, options, id, attr)
 				else if(target.is('area') && PLUGINS.imagemap) {
 					position = PLUGINS.imagemap(target, at);
 				}
-				else if(target[0].namespaceURI == 'http://www.w3.org/2000/svg' && PLUGINS.svg) {
+				else if(target[0].namespaceURI === 'http://www.w3.org/2000/svg' && PLUGINS.svg) {
 					position = PLUGINS.svg(target, at);
 				}
 
@@ -1200,16 +1189,29 @@ function QTip(target, options, id, attr)
 			position.left += adjust.x + (my.x === 'right' ? -elemWidth : my.x === 'center' ? -elemWidth / 2 : 0);
 			position.top += adjust.y + (my.y === 'bottom' ? -elemHeight : my.y === 'center' ? -elemHeight / 2 : 0);
 
-			// Calculate collision offset values
-			if(posOptions.viewport.jquery && target[0] !== window && target[0] !== docBody) {
+			// Calculate collision offset values if viewport positioning is enabled
+			if(viewport.jquery && target[0] !== window && target[0] !== docBody &&
+				readjust.vertical+readjust.horizontal !== 'nonenone')
+			{
+				// Cache our viewport details
+				viewport = {
+					elem: viewport,
+					height: viewport[ (viewport[0] === window ? 'h' : 'outerH') + 'eight' ](),
+					width: viewport[ (viewport[0] === window ? 'w' : 'outerW') + 'idth' ](),
+					scrollLeft: viewport.scrollLeft(),
+					scrollTop: viewport.scrollTop(),
+					offset: viewport.offset() || { left:0, top: 0 }
+				};
+
+				// Adjust position based onviewport and adjustment options
 				position.adjusted = {
 					left: readjust.horizontal !== 'none' ? readjust.left(position.left) : 0,
 					top: readjust.vertical !== 'none' ? readjust.top(position.top) : 0
 				};
 			}
-			else {
-				position.adjusted = { left: 0, top: 0 };
-			}
+
+			//Viewport adjustment is disabled, set values to zero
+			else { position.adjusted = { left: 0, top: 0 }; }
 
 			// Set tooltip position class
 			tooltip.attr('class', function(i, val) {
@@ -1219,7 +1221,7 @@ function QTip(target, options, id, attr)
 
 			// Call API method
 			callback.originalEvent = $.extend({}, event);
-			tooltip.trigger(callback, [self, position, viewport.elem]);
+			tooltip.trigger(callback, [self, position, viewport.elem || viewport]);
 			if(callback.isDefaultPrevented()){ return self; }
 			delete position.adjusted;
 
