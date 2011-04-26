@@ -147,8 +147,7 @@
 
 /* Tipsy style */
 .ui-tooltip-tipsy{
-	border: 0 solid #000;
-	border: 0 solid rgba(0,0,0,.87);
+	border: 0;
 }
 
 	.ui-tooltip-tipsy .ui-tooltip-titlebar,
@@ -159,7 +158,7 @@
 		-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#D9000000,endColorstr=#D9000000)";
 		
 		color: white;
-		border: 0 dashed transparent;
+		border: 0px transparent;
 
 		font-size: 11px;
 		font-family: 'Lucida Grande', sans-serif;
