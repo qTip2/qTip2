@@ -872,7 +872,7 @@ function QTip(target, options, id, attr)
 			// Execute state specific properties
 			if(state) {
 				// Store show origin coordinates
-				cache.origin = cache.event;
+				cache.origin = $.extend({}, MOUSE);
 
 				// Focus the tooltip
 				self.focus(event);
