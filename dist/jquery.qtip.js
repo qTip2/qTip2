@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Apr 26 14:21:13 2011 +0100
+* Date: Tue Apr 26 14:33:26 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1097,7 +1097,11 @@ function QTip(target, options, id, attr)
 							position.left = Math.max(
 								viewport.offset.left + (tipAdjust && tip.x === 'center' ? readjust.tip.offset : 0),
 								posLeft - offset,
-								Math.min( posLeft + offset, position.left )
+								Math.min(
+									viewport.offset.left + viewport.width,
+									posLeft + offset,
+									position.left
+								)
 							);
 						}
 
@@ -1139,7 +1143,11 @@ function QTip(target, options, id, attr)
 							position.top = Math.max(
 								viewport.offset.top + (tipAdjust && tip.x === 'center' ? readjust.tip.offset : 0),
 								posTop - offset,
-								Math.min( posTop + offset, position.top )
+								Math.min(
+									viewport.offset.top + viewport.height,
+									posTop + offset,
+									position.top
+								)
 							);
 						}
 

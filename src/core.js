@@ -1054,7 +1054,11 @@ function QTip(target, options, id, attr)
 							position.left = Math.max(
 								viewport.offset.left + (tipAdjust && tip.x === 'center' ? readjust.tip.offset : 0),
 								posLeft - offset,
-								Math.min( posLeft + offset, position.left )
+								Math.min(
+									viewport.offset.left + viewport.width,
+									posLeft + offset,
+									position.left
+								)
 							);
 						}
 
@@ -1096,7 +1100,11 @@ function QTip(target, options, id, attr)
 							position.top = Math.max(
 								viewport.offset.top + (tipAdjust && tip.x === 'center' ? readjust.tip.offset : 0),
 								posTop - offset,
-								Math.min( posTop + offset, position.top )
+								Math.min(
+									viewport.offset.top + viewport.height,
+									posTop + offset,
+									position.top
+								)
 							);
 						}
 
