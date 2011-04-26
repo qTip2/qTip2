@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Apr 26 15:12:27 2011 +0100
+* Date: Tue Apr 26 21:49:50 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1325,7 +1325,7 @@ function QTip(target, options, id, attr)
 
 			// Parse into proper pixel values
 			perc = (max + min).indexOf('%') > -1 ? container.width() / 100 : 0;
-			max = ((max.indexOf('%') > -1 ? perc : 1) * parseInt(max, 10)) || 0;
+			max = ((max.indexOf('%') > -1 ? perc : 1) * parseInt(max, 10)) || width;
 			min = ((min.indexOf('%') > -1 ? perc : 1) * parseInt(min, 10)) || 0;
 
 			// Determine new dimension size based on max/min/current values
