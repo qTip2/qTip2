@@ -1182,7 +1182,7 @@ function QTip(target, options, id, attr)
 					targetWidth = target.outerWidth();
 					targetHeight = target.outerHeight();
 
-					position = PLUGINS.offset(target, posOptions.container);
+					position = PLUGINS.offset(target, posOptions.container, fixed);
 				}
 
 				// Parse returned plugin values into proper variables
@@ -1572,7 +1572,7 @@ PLUGINS = QTIP.plugins = {
 	},
 
 	// Custom (more correct for qTip!) offset calculator
-	offset: function(elem, container) {
+	offset: function(elem, container, fixed) {
 		var pos = elem.offset(),
 			parent = container,
 			deep = 0,
@@ -1600,7 +1600,9 @@ PLUGINS = QTIP.plugins = {
 
 			// Compensate for containers scroll if it also has an offsetParent
 			if(container[0] !== docBody || deep > 1) { scroll( container, 1 ); }
-			if(PLUGINS.iOS < 4.1 && PLUGINS.iOS > 3.1) { scroll( $(window), -1 ); }
+
+			// Adjust for position.fixed tooltips (and also iOS scroll bug in v3.2 - v4.0)
+			if((PLUGINS.iOS < 4.1 && PLUGINS.iOS > 3.1) || (!PLUGINS.iOS && fixed)) { scroll( $(window), -1 ); }
 		}
 
 		return pos;

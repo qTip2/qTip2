@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Apr 25 19:59:02 2011 +0100
+* Date: Tue Apr 26 01:43:27 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1225,7 +1225,7 @@ function QTip(target, options, id, attr)
 					targetWidth = target.outerWidth();
 					targetHeight = target.outerHeight();
 
-					position = PLUGINS.offset(target, posOptions.container);
+					position = PLUGINS.offset(target, posOptions.container, fixed);
 				}
 
 				// Parse returned plugin values into proper variables
@@ -1615,7 +1615,7 @@ PLUGINS = QTIP.plugins = {
 	},
 
 	// Custom (more correct for qTip!) offset calculator
-	offset: function(elem, container) {
+	offset: function(elem, container, fixed) {
 		var pos = elem.offset(),
 			parent = container,
 			deep = 0,
@@ -1643,7 +1643,9 @@ PLUGINS = QTIP.plugins = {
 
 			// Compensate for containers scroll if it also has an offsetParent
 			if(container[0] !== docBody || deep > 1) { scroll( container, 1 ); }
-			if(PLUGINS.iOS < 4.1 && PLUGINS.iOS > 3.1) { scroll( $(window), -1 ); }
+
+			// Adjust for position.fixed tooltips (and also iOS scroll bug in v3.2 - v4.0)
+			if((PLUGINS.iOS < 4.1 && PLUGINS.iOS > 3.1) || (!PLUGINS.iOS && fixed)) { scroll( $(window), -1 ); }
 		}
 
 		return pos;
