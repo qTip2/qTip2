@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Apr 25 19:33:34 2011 +0100
+* Date: Mon Apr 25 19:59:02 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1080,7 +1080,8 @@ function QTip(target, options, id, attr)
 						var viewportScroll = viewport.offset.left + viewport.scrollLeft,
 							myWidth = my.x === 'left' ? elemWidth : my.x === 'right' ? -elemWidth : -elemWidth / 2,
 							atWidth = at.x === 'left' ? targetWidth : at.x === 'right' ? -targetWidth : -targetWidth / 2,
-							tipAdjust = tip && tip.precedance === 'x' ? readjust.tip.width + readjust.tip.border * 2: 0,
+							tipWidth = readjust.tip.width + readjust.tip.border * 2,
+							tipAdjust = tip && tip.precedance === 'x' ? tipWidth : 0,
 							overflowLeft = viewportScroll - posLeft - tipAdjust,
 							overflowRight = posLeft + elemWidth - viewport.width - viewportScroll + tipAdjust,
 							offset = myWidth - (my.precedance === 'x' || my.x === my.y ? atWidth : 0),
@@ -1088,12 +1089,15 @@ function QTip(target, options, id, attr)
 
 						// Optional 'shift' style repositioning
 						if(readjust.horizontal === 'shift') {
-							position.left += overflowLeft > 0 ? overflowLeft : overflowRight > 0 ? -overflowRight : 0;
+							tipAdjust = tip && tip.precedance === 'y' ? tipWidth : 0;
+							offset = (my.x === 'left' ? myWidth : -myWidth) - tipAdjust;
 
-							// Make sure we stay within the viewport boundaries
-							position.left = Math.min(
-								Math.max(viewportScroll, position.left),
-								Math.max(overflowLeft > 0 ? -1E9 : 0, viewportScroll + viewport.width - elemWidth)
+							// Adjust position but keep it within viewport dimensions
+							position.left += overflowLeft > 0 ? overflowLeft : overflowRight > 0 ? -overflowRight : 0;
+							position.left = Math.max(
+								viewport.offset.left + (tipAdjust && tip.x === 'center' ? readjust.tip.offset : 0),
+								posLeft - offset,
+								Math.min( posLeft + offset, position.left )
 							);
 						}
 
@@ -1117,7 +1121,8 @@ function QTip(target, options, id, attr)
 						var viewportScroll = viewport.offset.top + viewport.scrollTop,
 							myHeight = my.y === 'top' ? elemHeight : my.y === 'bottom' ? -elemHeight : -elemHeight / 2,
 							atHeight = at.y === 'top' ? targetHeight : at.y === 'bottom' ? -targetHeight : -targetHeight / 2,
-							tipAdjust = tip && tip.precedance === 'y' ? readjust.tip.height + readjust.tip.border * 2 : 0,
+							tipHeight = readjust.tip.height + readjust.tip.border * 2,
+							tipAdjust = tip && tip.precedance === 'y' ? tipHeight : 0,
 							overflowTop = viewportScroll - posTop - tipAdjust,
 							overflowBottom = posTop + elemHeight - viewport.height - viewportScroll + tipAdjust,
 							offset = myHeight - (my.precedance === 'y' || my.x === my.y ? atHeight : 0),
@@ -1125,12 +1130,15 @@ function QTip(target, options, id, attr)
 
 						// Optional 'shift' style repositioning
 						if(readjust.vertical === 'shift') {
-							position.top += overflowTop > 0 ? overflowTop : overflowBottom > 0 ? -overflowBottom : 0;
+							tipAdjust = tip && tip.precedance === 'x' ? tipHeight : 0;
+							offset = (my.y === 'top' ? myHeight : -myHeight) - tipAdjust;
 
-							// Make sure we stay within the viewport boundaries
-							position.top = Math.min(
-								Math.max(viewportScroll, position.top),
-								Math.max(overflowTop > 0 ? -1E9 : 0, viewportScroll + viewport.height - elemHeight)
+							// Adjust position but keep it within viewport dimensions
+							position.top += overflowTop > 0 ? overflowTop : overflowBottom > 0 ? -overflowBottom : 0;
+							position.top = Math.max(
+								viewport.offset.top + (tipAdjust && tip.x === 'center' ? readjust.tip.offset : 0),
+								posTop - offset,
+								Math.min( posTop + offset, position.top )
 							);
 						}
 
@@ -2060,8 +2068,7 @@ function Tip(qTip, command)
 			}
 			else {
 				props = offset.bottom !== undefined ?
-					[ adjust.top, -offset.top ] :
-					[ -adjust.top, offset.top ];
+					[ adjust.top, -offset.top ] : [ -adjust.top, offset.top ];
 
 				if( (shift.y = Math.max(props[0], props[1])) > props[0] ) {
 					pos.top -= adjust.top;

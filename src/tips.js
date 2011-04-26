@@ -141,8 +141,7 @@ function Tip(qTip, command)
 			}
 			else {
 				props = offset.bottom !== undefined ?
-					[ adjust.top, -offset.top ] :
-					[ -adjust.top, offset.top ];
+					[ adjust.top, -offset.top ] : [ -adjust.top, offset.top ];
 
 				if( (shift.y = Math.max(props[0], props[1])) > props[0] ) {
 					pos.top -= adjust.top;
