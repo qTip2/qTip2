@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Apr 26 01:43:27 2011 +0100
+* Date: Tue Apr 26 12:42:32 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -538,11 +538,12 @@ function QTip(target, options, id, attr)
 			if('number' === typeof options.hide.distance) {
 				// Bind mousemove to target to detect distance difference
 				targets.show.bind('mousemove'+namespace, function(event) {
-					var coords = cache.coords || [],
-						limit = options.hide.distance;
+					var origin = cache.origin || {},
+						limit = options.hide.distance,
+						abs = Math.abs;
 
 					// Check if the movement has gone beyond the limit, and hide it if so
-					if(coords && (Math.abs(event.pageX - coords[0]) >= limit || Math.abs(event.pageY - coords[1]) >= limit)){
+					if(origin && (abs(event.pageX - origin.pageX) >= limit || abs(event.pageY - origin.pageY) >= limit)){
 						self.hide(event);
 					}
 				});
@@ -913,6 +914,9 @@ function QTip(target, options, id, attr)
 
 			// Execute state specific properties
 			if(state) {
+				// Store show origin coordinates
+				cache.origin = cache.event;
+
 				// Focus the tooltip
 				self.focus(event);
 
@@ -924,18 +928,13 @@ function QTip(target, options, id, attr)
 
 				// Hide other tooltips if tooltip is solo, using it as the context
 				if(opts.solo) { $(selector, opts.solo).not(tooltip).qtip('hide', callback); }
-
-				// Store coordinates if hide.distance is set
-				if('number' === typeof options.hide.distance) {
-					cache.coords = [ event.pageX, event.pageY ];
-				}
 			}
 			else {
 				// Clear show timer if we're hiding 
 				clearTimeout(self.timers.show);
 
-				// Delete cached coords
-				delete cache.coords;
+				// Remove cached origin on hide
+				delete cache.origin;
 
 				// Blur the tooltip
 				self.blur(event);
@@ -1179,8 +1178,8 @@ function QTip(target, options, id, attr)
 
 				// Use cached event if one isn't available for positioning
 				event = event && (event.type === 'resize' || event.type === 'scroll') ? cache.event :
-					adjust.mouse || !event || !event.pageX || (/over|enter$/i.test(event.type) && !adjust.mouse) ?
-							$.extend({}, MOUSE) : event;
+					!adjust.mouse && cache.origin ? cache.origin : 
+					adjust.mouse || !event || !event.pageX ? { pageX: MOUSE.pageX, pageY: MOUSE.pageY } : event;
 
 				// Use event coordinates for position
 				position = { top: event.pageY, left: event.pageX };
