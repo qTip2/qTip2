@@ -1277,8 +1277,8 @@ function QTip(target, options, id, attr)
 			width = tooltip.width() + ($.browser.mozilla ? 1 : 0);
 
 			// Grab our max/min properties
-			max = tooltip.css('max-width');
-			min = tooltip.css('min-width');
+			max = tooltip.css('max-width') || '';
+			min = tooltip.css('min-width') || '';
 
 			// Parse into proper pixel values
 			perc = (max + min).indexOf('%') > -1 ? container.width() / 100 : 0;

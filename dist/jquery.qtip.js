@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Apr 26 14:41:51 2011 +0100
+* Date: Tue Apr 26 15:12:27 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1320,8 +1320,8 @@ function QTip(target, options, id, attr)
 			width = tooltip.width() + ($.browser.mozilla ? 1 : 0);
 
 			// Grab our max/min properties
-			max = tooltip.css('max-width');
-			min = tooltip.css('min-width');
+			max = tooltip.css('max-width') || '';
+			min = tooltip.css('min-width') || '';
 
 			// Parse into proper pixel values
 			perc = (max + min).indexOf('%') > -1 ? container.width() / 100 : 0;
