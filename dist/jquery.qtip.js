@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Apr 27 00:24:43 2011 +0100
+* Date: Wed Apr 27 01:02:12 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1072,7 +1072,7 @@ function QTip(target, options, id, attr)
 					// Repositioning method and axis detection
 					horizontal: method[0],
 					vertical: method[1] || method[0],
-					tip: options.style.tip,
+					tip: options.style.tip || {},
 
 					// Reposition methods
 					left: function(posLeft) {
@@ -1080,7 +1080,7 @@ function QTip(target, options, id, attr)
 							viewportScroll = viewport.offset.left + viewport.scrollLeft,
 							myWidth = my.x === 'left' ? elemWidth : my.x === 'right' ? -elemWidth : -elemWidth / 2,
 							atWidth = at.x === 'left' ? targetWidth : at.x === 'right' ? -targetWidth : -targetWidth / 2,
-							tipWidth = readjust.tip.width + readjust.tip.border * 2,
+							tipWidth = (readjust.tip.width + readjust.tip.border * 2) || 0,
 							tipAdjust = tip && tip.precedance === 'x' && !isShift ? tipWidth : 0,
 							overflowLeft = viewportScroll - posLeft - tipAdjust,
 							overflowRight = posLeft + elemWidth - viewport.width - viewportScroll + tipAdjust,
@@ -1125,7 +1125,7 @@ function QTip(target, options, id, attr)
 							viewportScroll = viewport.offset.top + viewport.scrollTop,
 							myHeight = my.y === 'top' ? elemHeight : my.y === 'bottom' ? -elemHeight : -elemHeight / 2,
 							atHeight = at.y === 'top' ? targetHeight : at.y === 'bottom' ? -targetHeight : -targetHeight / 2,
-							tipHeight = readjust.tip.height + readjust.tip.border * 2,
+							tipHeight = (readjust.tip.height + readjust.tip.border * 2) || 0,
 							tipAdjust = tip && tip.precedance === 'y' && !isShift ? tipHeight : 0,
 							overflowTop = viewportScroll - posTop - tipAdjust,
 							overflowBottom = posTop + elemHeight - viewport.height - viewportScroll + tipAdjust,
