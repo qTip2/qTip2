@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Apr 27 14:45:16 2011 +0100
+* Date: Thu Apr 28 13:47:27 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -394,6 +394,14 @@ function QTip(target, options, id, attr)
 			},
 			IE6 = $.browser.msie && parseInt($.browser.version, 10) === 6,
 			additional;
+
+		/*
+		 * Make sure hoverIntent functions properly by using mouseleave as a hide event if
+		 * mouseenter/mouseout is used for show.event, even if it isn't in the users options.
+		 */
+		if(/mouse(over|enter)/i.test(options.show.event) && !/mouse(out|leave)/i.test(options.hide.event)) {
+			events.hide.push('mouseleave');
+		}
 
 		// Define show event method
 		function showMethod(event)
@@ -1564,7 +1572,7 @@ QTIP.bind = function(opts, event)
 			show: $.trim('' + options.show.event).replace(/ /g, namespace+' ') + namespace,
 			hide: $.trim('' + options.hide.event).replace(/ /g, namespace+' ') + namespace
 		};
-		
+
 		/*
 		 * Make sure hoverIntent functions properly by using mouseleave as a hide event if
 		 * mouseenter/mouseout is used for show.event, even if it isn't in the users options.
