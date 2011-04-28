@@ -1523,10 +1523,12 @@ QTIP.bind = function(opts, event)
 		};
 		
 		/*
-		 * If hide event is just 'unfocus', we'll use mouseleave as the hide event...
-		 * since unfocus is actually library specific and won't fire as an event anywho.
+		 * Make sure hoverIntent functions properly by using mouseleave as a hide event if
+		 * mouseenter/mouseout is used for show.event, even if it isn't in the users options.
 		 */
-		if(options.hide.event === 'unfocus') { events.hide = 'mouseleave' + namespace; }
+		if(/mouse(over|enter)/i.test(events.show) && !/mouse(out|leave)/i.test(events.hide)) {
+			events.hide += ' mouseleave' + namespace;
+		}
 
 		// Define hoverIntent function
 		function hoverIntent(event) {

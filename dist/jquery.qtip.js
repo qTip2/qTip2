@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Apr 27 01:02:12 2011 +0100
+* Date: Wed Apr 27 14:45:16 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1566,10 +1566,12 @@ QTIP.bind = function(opts, event)
 		};
 		
 		/*
-		 * If hide event is just 'unfocus', we'll use mouseleave as the hide event...
-		 * since unfocus is actually library specific and won't fire as an event anywho.
+		 * Make sure hoverIntent functions properly by using mouseleave as a hide event if
+		 * mouseenter/mouseout is used for show.event, even if it isn't in the users options.
 		 */
-		if(options.hide.event === 'unfocus') { events.hide = 'mouseleave' + namespace; }
+		if(/mouse(over|enter)/i.test(events.show) && !/mouse(out|leave)/i.test(events.hide)) {
+			events.hide += ' mouseleave' + namespace;
+		}
 
 		// Define hoverIntent function
 		function hoverIntent(event) {
