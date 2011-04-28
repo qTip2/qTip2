@@ -352,14 +352,6 @@ function QTip(target, options, id, attr)
 			IE6 = $.browser.msie && parseInt($.browser.version, 10) === 6,
 			additional;
 
-		/*
-		 * Make sure hoverIntent functions properly by using mouseleave as a hide event if
-		 * mouseenter/mouseout is used for show.event, even if it isn't in the users options.
-		 */
-		if(/mouse(over|enter)/i.test(options.show.event) && !/mouse(out|leave)/i.test(options.hide.event)) {
-			events.hide.push('mouseleave');
-		}
-
 		// Define show event method
 		function showMethod(event)
 		{
@@ -467,6 +459,16 @@ function QTip(target, options, id, attr)
 				// Define events which reset the 'inactive' event handler
 				$.each(QTIP.inactiveEvents, function(index, type){
 					targets.hide.add(elements.tooltip).bind(type+namespace+'-inactive', inactiveMethod);
+				});
+			}
+
+			/*
+			 * Make sure hoverIntent functions properly by using mouseleave to clear show timer if
+			 * mouseenter/mouseout is used for show.event, even if it isn't in the users options.
+			 */
+			if(/mouse(over|enter)/i.test(options.show.event) && !/mouse(out|leave)/i.test(options.hide.event)) {
+				targets.hide.bind('mouseleave'+namespace, function(event) {
+					clearTimeout(self.timers.show);
 				});
 			}
 
