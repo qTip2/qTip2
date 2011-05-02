@@ -17,7 +17,6 @@
 		disabled = 'ui-state-disabled',
 		selector = 'div.qtip.'+uitooltip,
 		focusClass = uitooltip + '-focus',
-		hoverClass = uitooltip + '-hover',
 		hideOffset = '-31000px',
 		replaceSuffix = '_replacedByqTip',
 		oldtitle = 'oldtitle';
