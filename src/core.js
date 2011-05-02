@@ -1018,7 +1018,7 @@ function QTip(target, options, id, attr)
 				targetHeight = 0,
 				callback = $.Event('tooltipmove'),
 				fixed = tooltip.css('position') === 'fixed',
-				viewport = posOptions.viewport.jquery ? posOptions.viewport : $(window),
+				viewport = posOptions.viewport,
 				position = { left: 0, top: 0 },
 				tip = (self.plugins.tip || {}).corner,
 				readjust = {

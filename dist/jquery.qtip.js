@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sat Apr 23 00:09:47 2011 +0100
+* Date: Sat Apr 23 00:41:47 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1060,7 +1060,7 @@ function QTip(target, options, id, attr)
 				targetHeight = 0,
 				callback = $.Event('tooltipmove'),
 				fixed = tooltip.css('position') === 'fixed',
-				viewport = posOptions.viewport.jquery ? posOptions.viewport : $(window),
+				viewport = posOptions.viewport,
 				position = { left: 0, top: 0 },
 				tip = (self.plugins.tip || {}).corner,
 				readjust = {
