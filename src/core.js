@@ -1165,8 +1165,8 @@ function QTip(target, options, id, attr)
 
 				// Check if window or document is the target
 				else if(target[0] === document || target[0] === window) {
-					targetWidth = target.width();
-					targetHeight = target.height();
+					targetWidth = PLUGINS.iOS ? window.innerWidth : target.width();
+					targetHeight = PLUGINS.iOS ? window.innerHeight : target.height();
 
 					if(target[0] === window) {
 						position = {
