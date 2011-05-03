@@ -1213,8 +1213,8 @@ function QTip(target, options, id, attr)
 
 					if(target[0] === window) {
 						position = {
-							top: !fixed || PLUGINS.iOS ? viewport.scrollTop() : 0,
-							left: !fixed || PLUGINS.iOS ? viewport.scrollLeft() : 0
+							top: !fixed || PLUGINS.iOS ? $(viewport).scrollTop() : 0,
+							left: !fixed || PLUGINS.iOS ? $(viewport).scrollLeft() : 0
 						};
 					}
 				}
