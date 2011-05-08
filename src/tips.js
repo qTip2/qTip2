@@ -439,7 +439,7 @@ function Tip(qTip, command)
 					var $this = $(this);
 
 					// Set shape specific attributes
-					$this.attr({
+					$this[ $this.prop ? 'prop' : 'attr' ]({
 						coordsize: (width+border) + ' ' + (height+border),
 						path: coords,
 						fillcolor: color.fill,

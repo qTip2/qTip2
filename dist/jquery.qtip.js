@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun May 8 22:45:18 2011 +0100
+* Date: Sun May 8 22:49:04 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -2396,7 +2396,7 @@ function Tip(qTip, command)
 					var $this = $(this);
 
 					// Set shape specific attributes
-					$this.attr({
+					$this[ $this.prop ? 'prop' : 'attr' ]({
 						coordsize: (width+border) + ' ' + (height+border),
 						path: coords,
 						fillcolor: color.fill,
