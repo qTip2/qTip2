@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon May 2 20:24:21 2011 +0100
+* Date: Mon May 2 22:05:16 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1212,9 +1212,10 @@ function QTip(target, options, id, attr)
 					targetHeight = PLUGINS.iOS ? window.innerHeight : target.height();
 
 					if(target[0] === window) {
+						position = $(window);
 						position = {
-							top: !fixed || PLUGINS.iOS ? viewport.scrollTop() : 0,
-							left: !fixed || PLUGINS.iOS ? viewport.scrollLeft() : 0
+							top: !fixed || PLUGINS.iOS ? (viewport || position).scrollTop() : 0,
+							left: !fixed || PLUGINS.iOS ? (viewport || position).scrollLeft() : 0
 						};
 					}
 				}
