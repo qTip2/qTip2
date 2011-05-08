@@ -1266,38 +1266,45 @@ function QTip(target, options, id, attr)
 			return self;
 		},
 
-		// IMax/min width simulator function for all browsers.. yeaaah!
+		// Max/min width simulator function for all browsers.. yeaaah!
 		redraw: function()
 		{
-			if(self.rendered < 1 || options.style.width || isDrawing) { return self; }
+			if(self.rendered < 1 || isDrawing) { return self; }
 
 			var fluid = uitooltip + '-fluid',
 				container = options.position.container,
 				perc, width, max, min;
 
 			// Set drawing flag
-			isDrawing = 1; 
+			isDrawing = 1;
 
-			// Reset width and add fluid class
-			tooltip.css('width', '').addClass(fluid);
+			// If tooltip has a set width, just set it... like a boss!
+			if(options.style.width) { tooltip.css('width', options.style.width); }
 
-			// Grab our tooltip width (add 1 so we don't get wrapping problems in Gecko)
-			width = tooltip.width() + ($.browser.mozilla ? 1 : 0);
+			// Otherwise simualte max/min width...
+			else {
+				// Reset width and add fluid class
+				tooltip.css('width', '').addClass(fluid);
 
-			// Grab our max/min properties
-			max = tooltip.css('max-width') || '';
-			min = tooltip.css('min-width') || '';
+				// Grab our tooltip width (add 1 so we don't get wrapping problems in Gecko)
+				width = tooltip.width() + ($.browser.mozilla ? 1 : 0);
 
-			// Parse into proper pixel values
-			perc = (max + min).indexOf('%') > -1 ? container.width() / 100 : 0;
-			max = ((max.indexOf('%') > -1 ? perc : 1) * parseInt(max, 10)) || width;
-			min = ((min.indexOf('%') > -1 ? perc : 1) * parseInt(min, 10)) || 0;
+				// Grab our max/min properties
+				max = tooltip.css('max-width') || '';
+				min = tooltip.css('min-width') || '';
 
-			// Determine new dimension size based on max/min/current values
-			width = max + min ? Math.min(Math.max(width, min), max) : width;
+				// Parse into proper pixel values
+				perc = (max + min).indexOf('%') > -1 ? container.width() / 100 : 0;
+				max = ((max.indexOf('%') > -1 ? perc : 1) * parseInt(max, 10)) || width;
+				min = ((min.indexOf('%') > -1 ? perc : 1) * parseInt(min, 10)) || 0;
 
-			// Set the newly calculated width and remvoe fluid class
-			tooltip.css('width', Math.round(width)).removeClass(fluid);
+				// Determine new dimension size based on max/min/current values
+				width = max + min ? Math.min(Math.max(width, min), max) : width;
+
+				// Set the newly calculated width and remvoe fluid class
+				tooltip.css('width', Math.round(width)).removeClass(fluid);
+
+			}
 
 			// Set drawing flag
 			isDrawing = 0;
