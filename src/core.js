@@ -1169,10 +1169,9 @@ function QTip(target, options, id, attr)
 					targetHeight = PLUGINS.iOS ? window.innerHeight : target.height();
 
 					if(target[0] === window) {
-						position = $(window);
 						position = {
-							top: !fixed || PLUGINS.iOS ? (viewport || position).scrollTop() : 0,
-							left: !fixed || PLUGINS.iOS ? (viewport || position).scrollLeft() : 0
+							top: !fixed || PLUGINS.iOS ? (viewport || target).scrollTop() : 0,
+							left: !fixed || PLUGINS.iOS ? (viewport || target).scrollLeft() : 0
 						};
 					}
 				}
