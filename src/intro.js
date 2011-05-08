@@ -21,9 +21,3 @@
 		hideOffset = '-31000px',
 		replaceSuffix = '_replacedByqTip',
 		oldtitle = 'oldtitle';
-
-	// Simple console.error wrapper
-	function debug() {
-		var c = window.console;
-		return c && (c.error || c.log || $.noop).apply(c, arguments);
-	}

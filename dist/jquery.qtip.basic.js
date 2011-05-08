@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun May 8 22:49:04 2011 +0100
+* Date: Mon May 9 00:36:47 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -35,12 +35,6 @@
 		hideOffset = '-31000px',
 		replaceSuffix = '_replacedByqTip',
 		oldtitle = 'oldtitle';
-
-	// Simple console.error wrapper
-	function debug() {
-		var c = window.console;
-		return c && (c.error || c.log || $.noop).apply(c, arguments);
-	}
 // Option object sanitizer
 function sanitizeOptions(opts)
 {
@@ -1435,7 +1429,7 @@ function init(id, opts)
 
 	// If we don't get an object returned attempt to parse it manualyl without parseJSON
 	try { html5 = typeof html5 === 'string' ? (new Function("return " + html5))() : html5; }
-	catch(e) { debug('Unable to parse HTML5 attribute data: ' + html5); }
+	catch(e) { $.error('Unable to parse HTML5 attribute data: ' + html5); }
 
 	// Merge in and sanitize metadata
 	config = $.extend(TRUE, {}, QTIP.defaults, opts, 

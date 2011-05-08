@@ -1392,7 +1392,7 @@ function init(id, opts)
 
 	// If we don't get an object returned attempt to parse it manualyl without parseJSON
 	try { html5 = typeof html5 === 'string' ? (new Function("return " + html5))() : html5; }
-	catch(e) { debug('Unable to parse HTML5 attribute data: ' + html5); }
+	catch(e) { $.error('Unable to parse HTML5 attribute data: ' + html5); }
 
 	// Merge in and sanitize metadata
 	config = $.extend(TRUE, {}, QTIP.defaults, opts, 
