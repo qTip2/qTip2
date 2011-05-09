@@ -41,7 +41,7 @@ function Tip(qTip, command)
 		color = { },
 		border = opts.border || 0,
 		namespace = '.qtip-tip',
-		hasCanvas = $('<canvas />')[0].getContext;
+		hasCanvas = !!($('<canvas />')[0] || {}).getContext;
 
 	self.corner = NULL;
 	self.mimic = NULL;

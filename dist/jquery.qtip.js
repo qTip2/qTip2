@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon May 9 01:00:42 2011 +0100
+* Date: Mon May 9 14:55:00 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1994,7 +1994,7 @@ function Tip(qTip, command)
 		color = { },
 		border = opts.border || 0,
 		namespace = '.qtip-tip',
-		hasCanvas = $('<canvas />')[0].getContext;
+		hasCanvas = !!($('<canvas />')[0] || {}).getContext;
 
 	self.corner = NULL;
 	self.mimic = NULL;
