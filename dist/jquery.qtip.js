@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon May 9 14:55:00 2011 +0100
+* Date: Mon May 9 15:10:16 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -2250,12 +2250,14 @@ function Tip(qTip, command)
 			if(!border || invalid.test(border) || border === bodyBorder) {
 				color.border = colorElem.css(borderSide) || transparent;
 				if(invalid.test(color.border) || color.border === contentColour) {
-					color.border = transparent;
+					color.border = border;
 				}
 			}
 
-			// Reset background and border colours, and remove fluid class
+			// Reset background and border colours
 			$('*', tip).add(tip).css(backgroundColor, transparent).css('border', '');
+
+			// Remove fluid class
 			tooltip.removeClass(fluid);
 		},
 
@@ -2365,7 +2367,7 @@ function Tip(qTip, command)
 				context.lineWidth = border * 2;
 				context.lineJoin = 'miter';
 				context.miterLimit = 100;
-				context.stroke();
+				if(border) { context.stroke(); }
 				context.fill();
 			}
 

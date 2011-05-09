@@ -297,12 +297,14 @@ function Tip(qTip, command)
 			if(!border || invalid.test(border) || border === bodyBorder) {
 				color.border = colorElem.css(borderSide) || transparent;
 				if(invalid.test(color.border) || color.border === contentColour) {
-					color.border = transparent;
+					color.border = border;
 				}
 			}
 
-			// Reset background and border colours, and remove fluid class
+			// Reset background and border colours
 			$('*', tip).add(tip).css(backgroundColor, transparent).css('border', '');
+
+			// Remove fluid class
 			tooltip.removeClass(fluid);
 		},
 
@@ -412,7 +414,7 @@ function Tip(qTip, command)
 				context.lineWidth = border * 2;
 				context.lineJoin = 'miter';
 				context.miterLimit = 100;
-				context.stroke();
+				if(border) { context.stroke(); }
 				context.fill();
 			}
 
