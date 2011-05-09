@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon May 9 15:10:16 2011 +0100
+* Date: Mon May 9 16:30:41 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -2515,6 +2515,8 @@ $.extend(TRUE, QTIP.defaults, {
 	}
 });PLUGINS.imagemap = function(area, corner)
 {
+	if(!area.jquery) { area = $(area); }
+
 	var shape = area.attr('shape').toLowerCase(),
 		baseCoords = area.attr('coords').split(','),
 		coords = [],

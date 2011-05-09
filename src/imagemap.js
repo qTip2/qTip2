@@ -1,5 +1,7 @@
 PLUGINS.imagemap = function(area, corner)
 {
+	if(!area.jquery) { area = $(area); }
+
 	var shape = area.attr('shape').toLowerCase(),
 		baseCoords = area.attr('coords').split(','),
 		coords = [],
