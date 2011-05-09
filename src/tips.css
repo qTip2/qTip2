@@ -20,5 +20,3 @@
 	}
 
 	.ui-tooltip .ui-tooltip-tip canvas{ position: static; }
-
-	.ui-tooltip .ui-tooltip-tip .qvml{ behavior: url(#default#VML); }

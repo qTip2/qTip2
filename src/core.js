@@ -298,7 +298,9 @@ function QTip(target, options, id, attr)
 				// If queue is empty after image removal, update tooltip and continue the queue
 				if((images = images.not(this)).length === 0) {
 					self.redraw();
-					self.reposition(cache.event);
+					if(reposition !== FALSE) {
+						self.reposition(cache.event);
+					}
 					
 					next();
 				}
@@ -703,7 +705,7 @@ function QTip(target, options, id, attr)
 			}
 
 			// Set proper rendered flag and update content
-			updateContent();
+			updateContent(FALSE, FALSE);
 			self.rendered = TRUE;
 
 			// Setup widget classes

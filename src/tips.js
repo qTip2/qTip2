@@ -284,8 +284,8 @@ function Tip(qTip, command)
 			tooltip.addClass(fluid);
 
 			// Detect tip colours from CSS styles
-			fill = tip.css(backgroundColor);
-			border = tip[0].style[ borderSideCamel ] || tooltip.css(borderSide);
+			color.fill = fill = tip.css(backgroundColor);
+			color.border = border = tip[0].style[ borderSideCamel ] || tooltip.css(borderSide);
 
 			// Make sure colours are valid
 			if(!fill || invalid.test(fill)) {
@@ -294,13 +294,10 @@ function Tip(qTip, command)
 					color.fill = tooltip.css(backgroundColor) || fill;
 				}
 			}
-			if(!border || invalid.test(border)) {
-				color.border = tooltip.css(borderSide) || transparent;
-				if(invalid.test(color.border) || color.border === bodyBorder) {
-					color.border = colorElem.css(borderSide) || transparent;
-					if(color.border === contentColour || invalid.test(color.border)) {
-						color.border = border;
-					}
+			if(!border || invalid.test(border) || border === bodyBorder) {
+				color.border = colorElem.css(borderSide) || transparent;
+				if(invalid.test(color.border) || color.border === contentColour) {
+					color.border = transparent;
 				}
 			}
 

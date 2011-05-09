@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon May 9 00:37:46 2011 +0100
+* Date: Mon May 9 01:00:42 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -335,7 +335,9 @@ function QTip(target, options, id, attr)
 				// If queue is empty after image removal, update tooltip and continue the queue
 				if((images = images.not(this)).length === 0) {
 					self.redraw();
-					self.reposition(cache.event);
+					if(reposition !== FALSE) {
+						self.reposition(cache.event);
+					}
 					
 					next();
 				}
@@ -740,7 +742,7 @@ function QTip(target, options, id, attr)
 			}
 
 			// Set proper rendered flag and update content
-			updateContent();
+			updateContent(FALSE, FALSE);
 			self.rendered = TRUE;
 
 			// Setup widget classes
@@ -2235,8 +2237,8 @@ function Tip(qTip, command)
 			tooltip.addClass(fluid);
 
 			// Detect tip colours from CSS styles
-			fill = tip.css(backgroundColor);
-			border = tip[0].style[ borderSideCamel ] || tooltip.css(borderSide);
+			color.fill = fill = tip.css(backgroundColor);
+			color.border = border = tip[0].style[ borderSideCamel ] || tooltip.css(borderSide);
 
 			// Make sure colours are valid
 			if(!fill || invalid.test(fill)) {
@@ -2245,13 +2247,10 @@ function Tip(qTip, command)
 					color.fill = tooltip.css(backgroundColor) || fill;
 				}
 			}
-			if(!border || invalid.test(border)) {
-				color.border = tooltip.css(borderSide) || transparent;
-				if(invalid.test(color.border) || color.border === bodyBorder) {
-					color.border = colorElem.css(borderSide) || transparent;
-					if(color.border === contentColour || invalid.test(color.border)) {
-						color.border = border;
-					}
+			if(!border || invalid.test(border) || border === bodyBorder) {
+				color.border = colorElem.css(borderSide) || transparent;
+				if(invalid.test(color.border) || color.border === contentColour) {
+					color.border = transparent;
 				}
 			}
 

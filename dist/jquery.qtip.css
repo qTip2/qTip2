@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon May 9 00:37:46 2011 +0100
+* Date: Mon May 9 01:00:42 2011 +0100
 */
 
 /* Fluid class for determining actual width in IE */
@@ -284,9 +284,7 @@
 		border: 0px dashed transparent;
 	}
 
-	.ui-tooltip .ui-tooltip-tip canvas{ position: static; }
-
-	.ui-tooltip .ui-tooltip-tip .qvml{ behavior: url(#default#VML); }#qtip-overlay{
+	.ui-tooltip .ui-tooltip-tip canvas{ position: static; }#qtip-overlay{
 	position: absolute;
 	left: -10000em;
 	top: -10000em;

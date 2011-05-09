@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon May 9 00:37:46 2011 +0100
+* Date: Mon May 9 01:00:42 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -335,7 +335,9 @@ function QTip(target, options, id, attr)
 				// If queue is empty after image removal, update tooltip and continue the queue
 				if((images = images.not(this)).length === 0) {
 					self.redraw();
-					self.reposition(cache.event);
+					if(reposition !== FALSE) {
+						self.reposition(cache.event);
+					}
 					
 					next();
 				}
@@ -740,7 +742,7 @@ function QTip(target, options, id, attr)
 			}
 
 			// Set proper rendered flag and update content
-			updateContent();
+			updateContent(FALSE, FALSE);
 			self.rendered = TRUE;
 
 			// Setup widget classes
