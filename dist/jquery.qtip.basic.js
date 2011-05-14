@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon May 9 16:35:26 2011 +0100
+* Date: Sat May 14 15:38:54 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -1251,8 +1251,8 @@ function QTip(target, options, id, attr)
 					elem: viewport,
 					height: viewport[ (viewport[0] === window ? 'h' : 'outerH') + 'eight' ](),
 					width: viewport[ (viewport[0] === window ? 'w' : 'outerW') + 'idth' ](),
-					scrollLeft: viewport.scrollLeft(),
-					scrollTop: viewport.scrollTop(),
+					scrollLeft: fixed ? 0 : viewport.scrollLeft(),
+					scrollTop: fixed ? 0 : viewport.scrollTop(),
 					offset: viewport.offset() || { left: 0, top: 0 }
 				};
 

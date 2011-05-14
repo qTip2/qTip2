@@ -1214,8 +1214,8 @@ function QTip(target, options, id, attr)
 					elem: viewport,
 					height: viewport[ (viewport[0] === window ? 'h' : 'outerH') + 'eight' ](),
 					width: viewport[ (viewport[0] === window ? 'w' : 'outerW') + 'idth' ](),
-					scrollLeft: viewport.scrollLeft(),
-					scrollTop: viewport.scrollTop(),
+					scrollLeft: fixed ? 0 : viewport.scrollLeft(),
+					scrollTop: fixed ? 0 : viewport.scrollTop(),
 					offset: viewport.offset() || { left: 0, top: 0 }
 				};
 
