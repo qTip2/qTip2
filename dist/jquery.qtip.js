@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sat May 14 15:38:54 2011 +0100
+* Date: Sat May 14 15:39:41 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -949,7 +949,7 @@ function QTip(target, options, id, attr)
 					tooltip.css({
 						display: '',
 						visibility: '',
-						width: '',
+						width: options.style.width || '',
 						opacity: '',
 						left: '',
 						top: ''

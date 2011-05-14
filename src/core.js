@@ -912,7 +912,7 @@ function QTip(target, options, id, attr)
 					tooltip.css({
 						display: '',
 						visibility: '',
-						width: '',
+						width: options.style.width || '',
 						opacity: '',
 						left: '',
 						top: ''
