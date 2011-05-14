@@ -389,12 +389,8 @@ function QTip(target, options, id, attr)
 			clearTimeout(self.timers.hide);
 
 			// Prevent hiding if tooltip is fixed and event target is the tooltip. Or if mouse positioning is enabled and cursor momentarily overlaps
-			if((posOptions.target === 'mouse' && ontoTooltip) || (options.hide.fixed && ((/mouse(out|leave|move)/).test(event.type) && (ontoTooltip || ontoTarget))))
-			{
-				// Prevent default and popagation
-				event.stopPropagation();
+			if((posOptions.target === 'mouse' && ontoTooltip) || (options.hide.fixed && ((/mouse(out|leave|move)/).test(event.type) && (ontoTooltip || ontoTarget)))) {
 				event.preventDefault();
-				return FALSE;
 			}
 
 			// If tooltip has displayed, start hide timer
@@ -542,10 +538,10 @@ function QTip(target, options, id, attr)
 				});
 			}
 
-			// Hide mouseleave/mouseout tooltips on window/frame blur/mouseleave
+			// Hide mouseleave/mouseout tooltips on window/frame mouseleave
 			if(options.hide.leave && (/mouseleave|mouseout/i).test(options.hide.event)) {
 				$(window).bind(
-					'blur'+namespace+' mouse' + (options.hide.leave.indexOf('frame') > -1 ? 'out' : 'leave') + namespace,
+					'mouse' + (options.hide.leave.indexOf('frame') > -1 ? 'out' : 'leave') + namespace,
 					function(event) { if(!event.relatedTarget) { self.hide(event); } }
 				);
 			}
