@@ -634,7 +634,7 @@ function QTip(target, options, id, attr)
 		},
 
 		// Properties which require event reassignment
-		'^(show|hide|position).(event|target|fixed|inactive|leave|distance|viewport|adjust)$': function(obj, o, v, p, match) {
+		'^(show|hide|position).(event|target|fixed|inactive|leave|distance|viewport|adjust)$': function() {
 			unassignEvents(); assignEvents();
 		}
 	};

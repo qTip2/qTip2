@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sat May 14 15:49:38 2011 +0100
+* Date: Sun May 15 15:15:52 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -671,7 +671,7 @@ function QTip(target, options, id, attr)
 		},
 
 		// Properties which require event reassignment
-		'^(show|hide|position).(event|target|fixed|inactive|leave|distance|viewport|adjust)$': function(obj, o, v, p, match) {
+		'^(show|hide|position).(event|target|fixed|inactive|leave|distance|viewport|adjust)$': function() {
 			unassignEvents(); assignEvents();
 		}
 	};
