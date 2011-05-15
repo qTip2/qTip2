@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sat May 14 15:39:41 2011 +0100
+* Date: Sat May 14 15:49:38 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -133,6 +133,7 @@ function QTip(target, options, id, attr)
 		isPositioning = 0,
 		isDrawing = 0,
 		tooltip = $(),
+		namespace = '.qtip-' + id,
 		elements, cache;
 
 	// Setup class attributes
@@ -374,22 +375,21 @@ function QTip(target, options, id, attr)
 		return self;
 	}
 
-	function assignEvents(show, hide, tip, doc)
+	function assignEvents()
 	{
-		var namespace = '.qtip-'+id,
-			posOptions = options.position,
+		var posOptions = options.position,
 			targets = {
 				show: options.show.target,
 				hide: options.hide.target,
-				container: posOptions.container[0] === docBody ? $(document) : posOptions.container,
-				doc: $(document)
+				viewport: $(posOptions.viewport),
+				document: $(document),
+				window: $(window)
 			},
 			events = {
 				show: $.trim('' + options.show.event).split(' '),
 				hide: $.trim('' + options.hide.event).split(' ')
 			},
-			IE6 = $.browser.msie && parseInt($.browser.version, 10) === 6,
-			additional;
+			IE6 = $.browser.msie && parseInt($.browser.version, 10) === 6;
 
 		// Define show event method
 		function showMethod(event)
@@ -427,7 +427,7 @@ function QTip(target, options, id, attr)
 
 			// Prevent hiding if tooltip is fixed and event target is the tooltip. Or if mouse positioning is enabled and cursor momentarily overlaps
 			if((posOptions.target === 'mouse' && ontoTooltip) || (options.hide.fixed && ((/mouse(out|leave|move)/).test(event.type) && (ontoTooltip || ontoTarget)))) {
-				event.preventDefault();
+				event.preventDefault(); return;
 			}
 
 			// If tooltip has displayed, start hide timer
@@ -451,177 +451,169 @@ function QTip(target, options, id, attr)
 			if(tooltip.is(':visible')) { self.reposition(event); }
 		}
 
-		// Assign tooltip events
-		if(tip) {
-			// Enable hide.fixed
-			if(options.hide.fixed) {
-				// Add tooltip as a hide target
-				targets.hide = targets.hide.add(tooltip);
-
-				// Clear hide timer on tooltip hover to prevent it from closing
-				tooltip.bind('mouseover'+namespace, function() {
-					if(!tooltip.hasClass(disabled)) {
-						clearTimeout(self.timers.hide);
-					}
-				});
-			}
-
-			// If mouse positioning is on, apply a mouseleave event so we don't get problems with overlapping
-			if(posOptions.target === 'mouse' && posOptions.adjust.mouse && options.hide.event) {
-				tooltip.bind('mouseleave'+namespace, function(event) {
-					if((event.relatedTarget || event.target) !== targets.show[0]) { self.hide(event); }
-				});
-			}
+		// On mouseenter/mouseleave...
+		tooltip.bind('mouseenter'+namespace+' mouseleave'+namespace, function(event) {
+			var state = event.type === 'mouseenter';
 
 			// Focus the tooltip on mouseenter (z-index stacking)
-			tooltip.bind('mouseenter'+namespace, function(event) {
-				self[ event.type === 'mouseenter' ? 'focus' : 'blur' ](event);
-			});
-			
-			// Add hover class on mouseenter/mouseleave
-			tooltip.bind('mouseenter'+namespace+' mouseleave'+namespace, function(event) {
-				tooltip.toggleClass(hoverClass, event.type === 'mouseenter');
-			});
-		}
+			if(state) { self.focus(event); }
 
-		// Assign hide events
-		if(hide) {
-			// Check if the tooltip hides when inactive
-			if('number' === typeof options.hide.inactive) {
-				// Bind inactive method to target as a custom event
-				targets.show.bind('qtip-'+id+'-inactive', inactiveMethod);
+			// Add hover class
+			tooltip.toggleClass(hoverClass, state);
+		});
 
-				// Define events which reset the 'inactive' event handler
-				$.each(QTIP.inactiveEvents, function(index, type){
-					targets.hide.add(elements.tooltip).bind(type+namespace+'-inactive', inactiveMethod);
-				});
-			}
+		// Enable hide.fixed
+		if(options.hide.fixed) {
+			// Add tooltip as a hide target
+			targets.hide = targets.hide.add(tooltip);
 
-			/*
-			 * Make sure hoverIntent functions properly by using mouseleave to clear show timer if
-			 * mouseenter/mouseout is used for show.event, even if it isn't in the users options.
-			 */
-			if(/mouse(over|enter)/i.test(options.show.event) && !/mouse(out|leave)/i.test(options.hide.event)) {
-				targets.hide.bind('mouseleave'+namespace, function(event) {
-					clearTimeout(self.timers.show);
-				});
-			}
-
-			// Apply hide events
-			$.each(events.hide, function(index, type) {
-				var showIndex = $.inArray(type, events.show),
-					 targetHide = $(targets.hide);
-
-				// Both events and targets are identical, apply events using a toggle
-				if((showIndex > -1 && targetHide.add(targets.show).length === targetHide.length) || type === 'unfocus')
-				{
-					targets.show.bind(type+namespace, function(event)
-					{
-						if(tooltip.is(':visible')) { hideMethod(event); }
-						else{ showMethod(event); }
-					});
-
-					// Don't bind the event again
-					delete events.show[ showIndex ];
-				}
-
-				// Events are not identical, bind normally
-				else{ targets.hide.bind(type+namespace, hideMethod); }
+			// Clear hide timer on tooltip hover to prevent it from closing
+			tooltip.bind('mouseover'+namespace, function() {
+				if(!tooltip.hasClass(disabled)) { clearTimeout(self.timers.hide); }
 			});
 		}
 
-		// Apply show events
-		if(show) {
-			$.each(events.show, function(index, type) {
-				targets.show.bind(type+namespace, showMethod);
-			});
-			
-			// Check if the tooltip hides when mouse is moved a certain distance
-			if('number' === typeof options.hide.distance) {
-				// Bind mousemove to target to detect distance difference
-				targets.show.bind('mousemove'+namespace, function(event) {
-					var origin = cache.origin || {},
-						limit = options.hide.distance,
-						abs = Math.abs;
-
-					// Check if the movement has gone beyond the limit, and hide it if so
-					if(origin && (abs(event.pageX - origin.pageX) >= limit || abs(event.pageY - origin.pageY) >= limit)){
-						self.hide(event);
-					}
-				});
-			}
-		}
-
-		// Apply document events
-		if(doc) {
-			// Adjust positions of the tooltip on window resize if enabled
-			if(posOptions.adjust.resize || posOptions.viewport) {
-				$($.event.special.resize ? posOptions.viewport : window).bind('resize'+namespace, repositionMethod);
-			}
-
-			// Adjust tooltip position on scroll if screen adjustment is enabled
-			if(posOptions.viewport || (IE6 && tooltip.css('position') === 'fixed')) {
-				$(posOptions.viewport).bind('scroll'+namespace, repositionMethod);
-			}
-
-			// Hide tooltip on document mousedown if unfocus events are enabled
-			if((/unfocus/i).test(options.hide.event)) {
-				targets.doc.bind('mousedown'+namespace, function(event) {
-					var $target = $(event.target);
-					
-					if($target.parents(selector).length === 0 && $target.add(target).length > 1 && tooltip.is(':visible') && !tooltip.hasClass(disabled)) {
-						self.hide(event);
-					}
-				});
-			}
-
-			// Hide mouseleave/mouseout tooltips on window/frame mouseleave
-			if(options.hide.leave && (/mouseleave|mouseout/i).test(options.hide.event)) {
-				$(window).bind(
+		// If using mouseout/mouseleave as a hide event...
+		if(/mouse(out|leave)/i.test(options.hide.event)) {
+			// Hide tooltips when leaving current window/frame
+			if(options.hide.leave) {
+				targets.window.bind(
 					'mouse' + (options.hide.leave.indexOf('frame') > -1 ? 'out' : 'leave') + namespace,
 					function(event) { if(!event.relatedTarget) { self.hide(event); } }
 				);
 			}
+		}
 
-			// If mouse is the target, update tooltip position on document mousemove
-			if(posOptions.target === 'mouse') {
-				targets.doc.bind('mousemove'+namespace, function(event) {
+		/*
+		 * Make sure hoverIntent functions properly by using mouseleave to clear show timer if
+		 * mouseenter/mouseout is used for show.event, even if it isn't in the users options.
+		 */
+		else if(/mouse(over|enter)/i.test(options.show.event)) {
+			targets.hide.bind('mouseleave'+namespace, function(event) {
+				clearTimeout(self.timers.show);
+			});
+		}
+
+		// Hide tooltip on document mousedown if unfocus events are enabled
+		if(options.hide.event.indexOf('unfocus') > 0) {
+			targets.document.bind('mousedown'+namespace, function(event) {
+				var $target = $(event.target),
+					enabled = !tooltip.hasClass(disabled) && tooltip.is(':visible');
+
+				if($target.parents(selector).length === 0 && $target.add(target).length > 1) {
+					self.hide(event);
+				}
+			});
+		}
+
+		// Check if the tooltip hides when inactive
+		if('number' === typeof options.hide.inactive) {
+			// Bind inactive method to target as a custom event
+			targets.show.bind('qtip-'+id+'-inactive', inactiveMethod);
+			
+			// Define events which reset the 'inactive' event handler
+			$.each(QTIP.inactiveEvents, function(index, type){
+				targets.hide.add(elements.tooltip).bind(type+namespace+'-inactive', inactiveMethod);
+			});
+		}
+
+		// Apply hide events
+		$.each(events.hide, function(index, type) {
+			var showIndex = $.inArray(type, events.show),
+					targetHide = $(targets.hide);
+
+			// Both events and targets are identical, apply events using a toggle
+			if((showIndex > -1 && targetHide.add(targets.show).length === targetHide.length) || type === 'unfocus')
+			{
+				targets.show.bind(type+namespace, function(event) {
+					if(tooltip.is(':visible')) { hideMethod(event); }
+					else { showMethod(event); }
+				});
+
+				// Don't bind the event again
+				delete events.show[ showIndex ];
+			}
+
+			// Events are not identical, bind normally
+			else { targets.hide.bind(type+namespace, hideMethod); }
+		});
+
+		// Apply show events
+		$.each(events.show, function(index, type) {
+			targets.show.bind(type+namespace, showMethod);
+		});
+
+		// Check if the tooltip hides when mouse is moved a certain distance
+		if('number' === typeof options.hide.distance) {
+			// Bind mousemove to target to detect distance difference
+			targets.show.bind('mousemove'+namespace, function(event) {
+				var origin = cache.origin || {},
+					limit = options.hide.distance,
+					abs = Math.abs;
+
+				// Check if the movement has gone beyond the limit, and hide it if so
+				if(abs(event.pageX - origin.pageX) >= limit || abs(event.pageY - origin.pageY) >= limit) {
+					self.hide(event);
+				}
+			});
+		}
+
+		// Mouse positioning events
+		if(posOptions.target === 'mouse') {
+			// Cache mousemove events on show targets and tooltip for positioning purposes
+			targets.show.add(tooltip).bind('mousemove'+namespace, function(event) {
+				MOUSE = { pageX: event.pageX, pageY: event.pageY, type: 'mousemove' };
+			});
+
+			// If mouse adjustment is on...
+			if(posOptions.adjust.mouse) {
+				// Apply a mouseleave event so we don't get problems with overlapping
+				if(options.hide.event) {
+					tooltip.bind('mouseleave'+namespace, function(event) {
+						if((event.relatedTarget || event.target) !== targets.show[0]) { self.hide(event); }
+					});
+				}
+
+				// Update tooltip position on mousemove
+				targets.document.bind('mousemove'+namespace, function(event) {
 					// Update the tooltip position only if the tooltip is visible and adjustment is enabled
-					if(posOptions.adjust.mouse && !tooltip.hasClass(disabled) && tooltip.is(':visible')) {
+					if(!tooltip.hasClass(disabled) && tooltip.is(':visible')) {
 						self.reposition(event || MOUSE);
 					}
 				});
 			}
 		}
+
+		// Adjust positions of the tooltip on window resize if enabled
+		if(posOptions.adjust.resize || targets.viewport.length) {
+			($.event.special.resize ? targets.viewport : targets.window).bind('resize'+namespace, repositionMethod);
+		}
+
+		// Adjust tooltip position on scroll if screen adjustment is enabled
+		if(targets.viewport.length || (IE6 && tooltip.css('position') === 'fixed')) {
+			targets.viewport.bind('scroll'+namespace, repositionMethod);
+		}
 	}
 
-	function unassignEvents(show, hide, tooltip, doc)
+	function unassignEvents()
 	{
-		doc = parseInt(doc, 10) !== 0;
-		var namespace = '.qtip-'+id,
-			targets = {
-				show: show && options.show.target[0],
-				hide: hide && options.hide.target[0],
-				tooltip: tooltip && self.rendered && elements.tooltip[0],
-				content: tooltip && self.rendered && elements.content[0],
-				container: doc && options.position.container[0] === docBody ? document : options.position.container[0],
-				window: doc && window
-			};
+		var targets = [
+				options.show.target[0],
+				options.hide.target[0],
+				self.rendered && elements.tooltip[0],
+				options.position.container[0],
+				options.position.viewport[0],
+				window,
+				document
+			];
 
 		// Check if tooltip is rendered
-		if(self.rendered)
-		{
-			$([]).pushStack(
-				$.grep(
-					[ targets.show, targets.hide, targets.tooltip, targets.container, targets.content, targets.window ],
-					function(i){ return typeof i === 'object'; }
-				)
-			)
-			.unbind(namespace);
+		if(self.rendered) {
+			$([]).pushStack( $.grep(targets, function(i){ return typeof i === 'object'; }) ).unbind(namespace);
 		}
 
 		// Tooltip isn't yet rendered, remove render event
-		else if(show) { options.show.target.unbind(namespace+'-create'); }
+		else { options.show.target.unbind(namespace+'-create'); }
 	}
 
 	// Setup builtin .set() option checks
@@ -657,20 +649,11 @@ function QTip(target, options, id, attr)
 				obj[o] = new PLUGINS.Corner(v);
 			}
 		},
-
 		'^position.container$': function(obj, o, v){
 			if(self.rendered) { tooltip.appendTo(v); }
 		},
 
-		// Show & hide checks
-		'^(show|hide).(event|target|fixed|delay|inactive)$': function(obj, o, v, p, match) {
-			// Setup arguments
-			var args = [1,0,0];
-			args[match[1] === 'show' ? 'push' : 'unshift'](0);
-
-			unassignEvents.apply(self, args);
-			assignEvents.apply(self, [1,1,0,0]);
-		},
+		// Show checks
 		'^show.ready$': function() {
 			if(!self.rendered) { self.render(1); }
 			else { self.show(); }
@@ -685,6 +668,11 @@ function QTip(target, options, id, attr)
 		// Events check
 		'^events.(render|show|move|hide|focus|blur)$': function(obj, o, v) {
 			tooltip[($.isFunction(v) ? '' : 'un') + 'bind']('tooltip'+o, v);
+		},
+
+		// Properties which require event reassignment
+		'^(show|hide|position).(event|target|fixed|inactive|leave|distance|viewport|adjust)$': function(obj, o, v, p, match) {
+			unassignEvents(); assignEvents();
 		}
 	};
 
@@ -757,7 +745,7 @@ function QTip(target, options, id, attr)
 			});
 
 			// Assign events
-			assignEvents(1, 1, 1, 1);
+			assignEvents();
 
 			/* Queue this part of the render process in our fx queue so we can
 			 * load images before the tooltip renders fully.
@@ -1385,7 +1373,7 @@ function QTip(target, options, id, attr)
 			// Clear timers and remove bound events
 			clearTimeout(self.timers.show);
 			clearTimeout(self.timers.hide);
-			unassignEvents(1, 1, 1, 1);
+			unassignEvents();
 
 			// Remove api object
 			$.removeData(t, 'qtip');
@@ -1752,11 +1740,6 @@ $.each(PLUGINS.fn, function(name, func) {
 	$.fn[name] = function() {
 		return func.apply(this, arguments) || old.apply(this, arguments);
 	};
-});
-
-// Cache mousemove events for positioning purposes
-$(document).bind('mousemove.qtip', function(event) {
-	MOUSE = { pageX: event.pageX, pageY: event.pageY, type: 'mousemove' };
 });
 
 // Set global qTip properties
