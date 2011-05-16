@@ -458,7 +458,7 @@ function QTip(target, options, id, attr)
 		}
 
 		// Hide tooltip on document mousedown if unfocus events are enabled
-		if(options.hide.event.indexOf('unfocus') > 0) {
+		if(('' + options.hide.event).indexOf('unfocus') > 0) {
 			targets.document.bind('mousedown'+namespace, function(event) {
 				var $target = $(event.target),
 					enabled = !tooltip.hasClass(disabled) && tooltip.is(':visible');

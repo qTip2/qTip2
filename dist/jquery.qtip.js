@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun May 15 15:15:52 2011 +0100
+* Date: Sun May 15 15:19:33 2011 +0100
 */
 
 "use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
@@ -495,7 +495,7 @@ function QTip(target, options, id, attr)
 		}
 
 		// Hide tooltip on document mousedown if unfocus events are enabled
-		if(options.hide.event.indexOf('unfocus') > 0) {
+		if(('' + options.hide.event).indexOf('unfocus') > 0) {
 			targets.document.bind('mousedown'+namespace, function(event) {
 				var $target = $(event.target),
 					enabled = !tooltip.hasClass(disabled) && tooltip.is(':visible');
