@@ -11,7 +11,8 @@ var ok = {
 	"Expected an identifier and instead saw 'undefined' (a reserved word).": true,
 	"Expected a conditional expression and instead saw an assignment.": true,
 	"Insecure '.'.": true,
-	"Insecure '^'.": true
+	"Insecure '^'.": true,
+	'Missing "use strict" statement.': true
 };
 
 var e = JSLINT.errors, found = 0, w;

@@ -9,16 +9,17 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun May 15 15:19:33 2011 +0100
+* Date: Mon May 16 13:32:17 2011 +0100
 */
 
-"use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
 /*global window: false, jQuery: false */
 
 
 (function($, window, undefined) {
 
+	"use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
+	
 	// Munge the primitives - Paul Irish tip
 	var TRUE = true,
 		FALSE = false,
