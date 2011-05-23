@@ -9,17 +9,10 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon May 23 16:21:20 2011 +0100
+* Date: Mon May 23 16:36:48 2011 +0100
 */
 
-/* Fluid class for determining actual width in IE */
-.ui-tooltip-fluid{
-	display: block;
-	visibility: hidden;
-	position: static !important;
-	float: left !important;
-}
-
+/* Core qTip styles */
 .ui-tooltip, .qtip{
 	position: absolute;
 	left: -28000px;
@@ -32,6 +25,14 @@
 	font-size: 10.5px;
 	line-height: 12px;
 }
+
+	/* Fluid class for determining actual width in IE */
+	.ui-tooltip-fluid{
+		display: block;
+		visibility: hidden;
+		position: static !important;
+		float: left !important;
+	}
 
 	.ui-tooltip-content{
 		position: relative;
@@ -74,9 +75,7 @@
 			border-style: solid;
 		}
 		
-		* html .ui-tooltip-titlebar .ui-state-default{
-			top: 16px;
-		}
+		* html .ui-tooltip-titlebar .ui-state-default{ top: 16px; } /* IE fix */
 
 		.ui-tooltip-titlebar .ui-icon,
 		.ui-tooltip-icon .ui-icon{
@@ -137,6 +136,7 @@
 		color: #111;
 	}
 
+/* Tips plugin */
 .ui-tooltip .ui-tooltip-tip{
 	margin: 0 auto;
 	overflow: hidden;
@@ -160,6 +160,7 @@
 
 	.ui-tooltip .ui-tooltip-tip canvas{ position: static; }
 
+/* Modal plugin */
 #qtip-overlay{
 	position: absolute;
 	left: -10000em;
