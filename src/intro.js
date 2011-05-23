@@ -23,3 +23,4 @@
 		hideOffset = '-31000px',
 		replaceSuffix = '_replacedByqTip',
 		oldtitle = 'oldtitle';
+

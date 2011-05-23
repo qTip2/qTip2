@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun May 22 21:37:07 2011 +0100
+* Date: Mon May 23 16:21:20 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -37,6 +37,7 @@
 		hideOffset = '-31000px',
 		replaceSuffix = '_replacedByqTip',
 		oldtitle = 'oldtitle';
+
 // Option object sanitizer
 function sanitizeOptions(opts)
 {
@@ -1809,7 +1810,9 @@ QTIP.defaults = {
 		focus: NULL,
 		blur: NULL
 	}
-};function Ajax(api)
+};
+
+function Ajax(api)
 {
 	var self = this,
 		tooltip = api.elements.tooltip,
@@ -1932,7 +1935,9 @@ $.extend(TRUE, QTIP.defaults, {
 			once: TRUE
 		}
 	}
-});// Tip coordinates calculator
+});
+
+// Tip coordinates calculator
 function calculateTip(corner, width, height)
 {	
 	var width2 = Math.ceil(width / 2), height2 = Math.ceil(height / 2),
@@ -2494,7 +2499,9 @@ $.extend(TRUE, QTIP.defaults, {
 			offset: 0
 		}
 	}
-});PLUGINS.imagemap = function(area, corner)
+});
+
+PLUGINS.imagemap = function(area, corner)
 {
 	if(!area.jquery) { area = $(area); }
 
@@ -2871,7 +2878,9 @@ $.extend(TRUE, QTIP.defaults, {
 			escape: TRUE
 		}
 	}
-});/* 
+});
+
+/* 
  * BGIFrame adaption (http://plugins.jquery.com/project/bgiframe)
  * Special thanks to Brandon Aaron
  */
@@ -2946,5 +2955,6 @@ PLUGINS.bgiframe = function(api)
 
 // Plugin needs to be initialized on render
 PLUGINS.bgiframe.initialize = 'render';
+
 
 }(jQuery, window));

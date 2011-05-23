@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun May 22 21:37:07 2011 +0100
+* Date: Mon May 23 16:21:20 2011 +0100
 */
 
 /* Fluid class for determining actual width in IE */
@@ -135,7 +135,9 @@
 	.ui-tooltip-default .ui-tooltip-titlebar .ui-state-hover{
 		border-color: #AAA;
 		color: #111;
-	}.ui-tooltip .ui-tooltip-tip{
+	}
+
+.ui-tooltip .ui-tooltip-tip{
 	margin: 0 auto;
 	overflow: hidden;
 
@@ -156,7 +158,9 @@
 		border: 0px dashed transparent;
 	}
 
-	.ui-tooltip .ui-tooltip-tip canvas{ position: static; }#qtip-overlay{
+	.ui-tooltip .ui-tooltip-tip canvas{ position: static; }
+
+#qtip-overlay{
 	position: absolute;
 	left: -10000em;
 	top: -10000em;
@@ -527,3 +531,4 @@
 			background-color: #FBFBFB;
 			color: #555;
 		}
+

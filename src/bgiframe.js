@@ -73,3 +73,4 @@ PLUGINS.bgiframe = function(api)
 
 // Plugin needs to be initialized on render
 PLUGINS.bgiframe.initialize = 'render';
+

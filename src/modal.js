@@ -204,3 +204,4 @@ $.extend(TRUE, QTIP.defaults, {
 		}
 	}
 });
+

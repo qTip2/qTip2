@@ -1771,3 +1771,4 @@ QTIP.defaults = {
 		blur: NULL
 	}
 };
+

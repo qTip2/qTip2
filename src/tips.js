@@ -561,3 +561,4 @@ $.extend(TRUE, QTIP.defaults, {
 		}
 	}
 });
+

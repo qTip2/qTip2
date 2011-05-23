@@ -122,3 +122,4 @@ $.extend(TRUE, QTIP.defaults, {
 		}
 	}
 });
+

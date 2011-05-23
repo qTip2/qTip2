@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun May 22 21:37:07 2011 +0100
+* Date: Mon May 23 16:21:20 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -37,6 +37,7 @@
 		hideOffset = '-31000px',
 		replaceSuffix = '_replacedByqTip',
 		oldtitle = 'oldtitle';
+
 // Option object sanitizer
 function sanitizeOptions(opts)
 {
@@ -1810,4 +1811,6 @@ QTIP.defaults = {
 		blur: NULL
 	}
 };
+
+
 }(jQuery, window));
