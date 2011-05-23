@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon May 23 16:36:48 2011 +0100
+* Date: Mon May 23 16:40:00 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1573,15 +1573,25 @@ QTIP.bind = function(opts, event)
 			events.hide += ' mouseleave' + namespace;
 		}
 
+		/*
+		 * Cache mousemove events on show targets and tooltip for positioning purposes.
+		 * We'll do this here as well as in assignEvents so that it positions properly
+		 * on first show/render.
+		 */
+		if(options.position.target === 'mouse') {
+			targets.show.bind('mousemove'+namespace, function(event) {
+				MOUSE = { pageX: event.pageX, pageY: event.pageY, type: 'mousemove' };
+			});
+		}
+
 		// Define hoverIntent function
 		function hoverIntent(event) {
 			function render() {
 				// Cache mouse coords,render and render the tooltip
 				api.render(typeof event === 'object' || options.show.ready);
 
-				// Unbind show and hide event
-				targets.show.unbind(events.show);
-				targets.hide.unbind(events.hide);
+				// Unbind show and hide events
+				targets.show.add(targets.hide).unbind(namespace);
 			}
 
 			// Only continue if tooltip isn't disabled
