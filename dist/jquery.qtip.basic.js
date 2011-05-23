@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon May 23 16:40:00 2011 +0100
+* Date: Mon May 23 17:28:06 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -498,7 +498,7 @@ function QTip(target, options, id, attr)
 		}
 
 		// Hide tooltip on document mousedown if unfocus events are enabled
-		if(('' + options.hide.event).indexOf('unfocus') > 0) {
+		if(('' + options.hide.event).indexOf('unfocus') > -1) {
 			targets.document.bind('mousedown'+namespace, function(event) {
 				var $target = $(event.target),
 					enabled = !tooltip.hasClass(disabled) && tooltip.is(':visible');
