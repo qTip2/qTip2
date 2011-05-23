@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon May 23 17:28:06 2011 +0100
+* Date: Mon May 23 17:45:53 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -478,11 +478,13 @@ function QTip(target, options, id, attr)
 
 		// If using mouseout/mouseleave as a hide event...
 		if(/mouse(out|leave)/i.test(options.hide.event)) {
-			// Hide tooltips when leaving current window/frame
+			// Hide tooltips when leaving current window/frame (but not select/option elements)
 			if(options.hide.leave) {
 				targets.window.bind(
 					'mouse' + (options.hide.leave.indexOf('frame') > -1 ? 'out' : 'leave') + namespace,
-					function(event) { if(!event.relatedTarget) { self.hide(event); } }
+					function(event) {
+						if(/select|option/.test(event.target) && !event.relatedTarget) { self.hide(event); }
+					}
 				);
 			}
 		}
