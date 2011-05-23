@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun May 22 21:33:23 2011 +0100
+* Date: Sun May 22 21:37:07 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -31,6 +31,7 @@
 		widget = 'ui-widget',
 		disabled = 'ui-state-disabled',
 		selector = 'div.qtip.'+uitooltip,
+		defaultClass = uitooltip + '-default',
 		focusClass = uitooltip + '-focus',
 		hoverClass = uitooltip + '-hover',
 		hideOffset = '-31000px',
@@ -173,7 +174,7 @@ function QTip(target, options, id, attr)
 	function setWidget() {
 		var on = options.style.widget;
 
-		tooltip.toggleClass(widget, on);
+		tooltip.toggleClass(widget, on).toggleClass(defaultClass, !on);
 		elements.content.toggleClass(widget+'-content', on);
 		
 		if(elements.titlebar){
@@ -694,7 +695,7 @@ function QTip(target, options, id, attr)
 			// Create tooltip element
 			tooltip = elements.tooltip = $('<div/>', {
 					'id': tooltipID,
-					'class': uitooltip + ' qtip ui-helper-reset ' + options.style.classes,
+					'class': uitooltip + ' qtip ui-helper-reset ' + defaultClass + ' ' + options.style.classes,
 					'width': options.style.width || '',
 
 					/* ARIA specific attributes */

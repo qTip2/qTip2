@@ -21,9 +21,8 @@ CSS_MODULES = ${SRC_DIR}/header.txt\
 	${SRC_DIR}/core.css\
 	${SRC_DIR}/tips.css\
 	${SRC_DIR}/modal.css\
+	${SRC_DIR}/styles.css\
 	${SRC_DIR}/extra.css
-
-
 
 QTIP = ${DIST_DIR}/jquery.qtip.js
 QTIP_MIN = ${DIST_DIR}/jquery.qtip.min.js

@@ -135,7 +135,7 @@ function QTip(target, options, id, attr)
 	function setWidget() {
 		var on = options.style.widget;
 
-		tooltip.toggleClass(widget, on);
+		tooltip.toggleClass(widget, on).toggleClass(defaultClass, !on);
 		elements.content.toggleClass(widget+'-content', on);
 		
 		if(elements.titlebar){
@@ -656,7 +656,7 @@ function QTip(target, options, id, attr)
 			// Create tooltip element
 			tooltip = elements.tooltip = $('<div/>', {
 					'id': tooltipID,
-					'class': uitooltip + ' qtip ui-helper-reset ' + options.style.classes,
+					'class': uitooltip + ' qtip ui-helper-reset ' + defaultClass + ' ' + options.style.classes,
 					'width': options.style.width || '',
 
 					/* ARIA specific attributes */
