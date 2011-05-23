@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon May 23 17:45:53 2011 +0100
+* Date: Mon May 23 17:54:24 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -2691,10 +2691,11 @@ function Modal(api)
 		options = api.options.show.modal,
 		elems = api.elements,
 		tooltip = elems.tooltip,
-		selector = '#qtip-overlay',
+		overlaySelector = '#qtip-overlay',
 		globalNamespace = '.qtipmodal',
 		namespace = globalNamespace + api.id,
 		attr = 'is-modal-qtip',
+		docBody = $(document.body),
 		overlay;
 
 	// Setup option set checks
@@ -2725,7 +2726,15 @@ function Modal(api)
 
 			// Apply our show/hide/focus modal events
 			.bind('tooltipshow'+globalNamespace+' tooltiphide'+globalNamespace, function(event, api, duration) {
-				self[ event.type.replace('tooltip', '') ](event, duration);
+				var oEvent = event.originalEvent;
+				
+				// Make sure mouseout doesn't trigger a hide when showing the modal and mousing onto backdrop
+				if(event.type === 'tooltiphide' && /mouse(leave|enter)/.test(oEvent.type) && oEvent.relatedTarget === overlay[0]) {
+					event.preventDefault();
+				}
+				else {
+					self[ event.type.replace('tooltip', '') ](event, duration);
+				}
 			})
 
 			// Adjust modal z-index on tooltip focus
@@ -2759,14 +2768,14 @@ function Modal(api)
 
 		create: function()
 		{
-			var elem = $(selector);
+			var elem = $(overlaySelector);
 
 			// Return if overlay is already rendered
 			if(elem.length) { elems.overlay = elem; return elem; }
 
 			// Create document overlay
 			overlay = elems.overlay = $('<div />', {
-				id: selector.substr(1),
+				id: overlaySelector.substr(1),
 				css: {
 					position: 'absolute',
 					top: 0,
@@ -2805,9 +2814,21 @@ function Modal(api)
 			// Prevent modal from conflicting with show.solo, and don't hide backdrop is other modals are visible
 			if((overlay.is(':animated') && !state) || (!state && modals.length)) { return self; }
 
-			// Toggle backdrop cursor style on show
+			// State specific...
 			if(state) {
+				// Toggle backdrop cursor style on show
 				elems.overlay.css('cursor', options.blur ? 'pointer' : '');
+
+				// Make sure we can't focus anything outside the tooltip
+				docBody.delegate('*', 'focusin'+namespace, function(event) {
+					if($(event.target).closest(selector)[0] !== tooltip[0]) {
+						$('a, :input, img', tooltip).add(tooltip).focus();
+					}
+				});
+			}
+			else {
+				// Undelegate focus handler
+				docBody.undelegate('*', 'focus'+namespace);
 			}
 
 			// Setop all animations
@@ -2852,6 +2873,9 @@ function Modal(api)
 				else {
 					elems.overlay.unbind(globalNamespace+api.id);
 				}
+
+				// Undelegate focus handler
+				docBody.undelegate('*', 'focus'+namespace);
 			}
 
 			// Remove bound events
