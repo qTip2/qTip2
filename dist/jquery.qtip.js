@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon May 23 17:54:24 2011 +0100
+* Date: Mon May 23 20:11:07 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -401,6 +401,11 @@ function QTip(target, options, id, attr)
 
 			// If set, hide tooltip when inactive for delay period
 			targets.show.trigger('qtip-'+id+'-inactive');
+
+			// If the target has changed, update position
+			if(cache.target[0] !== event.target) {
+				self.reposition(event);
+			}
 
 			// Clear hide timers
 			clearTimeout(self.timers.show);
@@ -1186,6 +1191,7 @@ function QTip(target, options, id, attr)
 						target = cache.target;
 					}
 				}
+				else { cache.target = $(target); }
 
 				// Parse the target into a jQuery object and make sure there's an element present
 				target = $(target).eq(0);
@@ -1271,8 +1277,8 @@ function QTip(target, options, id, attr)
 			if(callback.isDefaultPrevented()){ return self; }
 			delete position.adjusted;
 
-			// If effect is disabled, no animation is defined or positioning gives NaN out, set CSS directly
-			if(effect === FALSE || isNaN(position.left) || isNaN(position.top) || !$.isFunction(posOptions.effect)) {
+			// If effect is disabled, target it mouse, no animation is defined or positioning gives NaN out, set CSS directly
+			if(effect === FALSE || isNaN(position.left) || isNaN(position.top) || target === 'mouse' || !$.isFunction(posOptions.effect)) {
 				tooltip.css(position);
 			}
 			
@@ -1788,7 +1794,9 @@ QTIP.defaults = {
 			resize: TRUE,
 			method: 'flip flip'
 		},
-		effect: TRUE
+		effect: function(api, pos, viewport) {
+			$(this).stop().animate(pos, 200);
+		}
 	},
 	show: {
 		target: FALSE,
