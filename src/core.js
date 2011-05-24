@@ -363,7 +363,7 @@ function QTip(target, options, id, attr)
 			targets.show.trigger('qtip-'+id+'-inactive');
 
 			// If the target has changed, update position
-			if(cache.target[0] !== event.target) {
+			if(posOptions.target !== 'mouse' && cache.target[0] !== event.target) {
 				self.reposition(event);
 			}
 

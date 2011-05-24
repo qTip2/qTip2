@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon May 23 20:11:07 2011 +0100
+* Date: Tue May 24 12:16:32 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -403,7 +403,7 @@ function QTip(target, options, id, attr)
 			targets.show.trigger('qtip-'+id+'-inactive');
 
 			// If the target has changed, update position
-			if(cache.target[0] !== event.target) {
+			if(posOptions.target !== 'mouse' && cache.target[0] !== event.target) {
 				self.reposition(event);
 			}
 
