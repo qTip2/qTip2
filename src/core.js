@@ -362,11 +362,6 @@ function QTip(target, options, id, attr)
 			// If set, hide tooltip when inactive for delay period
 			targets.show.trigger('qtip-'+id+'-inactive');
 
-			// If the target has changed, update position
-			if(posOptions.target !== 'mouse' && cache.target[0] !== event.target) {
-				self.reposition(event);
-			}
-
 			// Clear hide timers
 			clearTimeout(self.timers.show);
 			clearTimeout(self.timers.hide);
@@ -834,6 +829,7 @@ function QTip(target, options, id, attr)
 
 		toggle: function(state, event)
 		{
+
 			// Make sure tooltip is rendered
 			if(!self.rendered) {
 				if(state) { self.render(1); } // Render the tooltip if showing and it isn't already
@@ -843,6 +839,7 @@ function QTip(target, options, id, attr)
 			var type = state ? 'show' : 'hide',
 				opts = options[type],
 				visible = tooltip.is(':visible'),
+				sameTarget = cache.target[0] === event.target,
 				delay,
 				callback;
 
@@ -850,7 +847,7 @@ function QTip(target, options, id, attr)
 			if((typeof state).search('boolean|number')) { state = !visible; }
 
 			// Return if element is already in correct state
-			if(visible === state) { return self; }
+			if(visible === state && sameTarget) { return self; }
 
 			// Try to prevent flickering when tooltip overlaps show element
 			if(event) {
@@ -922,19 +919,19 @@ function QTip(target, options, id, attr)
 				}
 			}
 
-			// Clear animation queue
-			tooltip.stop(0, 1);
-
-			// Use custom function if provided
-			if($.isFunction(opts.effect)) {
-				opts.effect.call(tooltip, self);
-				tooltip.queue('fx', function(n){ after(); n(); });
-			}
+			// Clear animation queue if same target
+			if(sameTarget) { tooltip.stop(0, 1); }
 
 			// If no effect type is supplied, use a simple toggle
-			else if(opts.effect === FALSE) {
+			if(sameTarget || opts.effect === FALSE) {
 				tooltip[ type ]();
 				after.call(tooltip);
+			}
+
+			// Use custom function if provided
+			else if($.isFunction(opts.effect)) {
+				opts.effect.call(tooltip, self);
+				tooltip.queue('fx', function(n){ after(); n(); });
 			}
 
 			// Use basic fade function by default
