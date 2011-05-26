@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu May 26 12:56:14 2011 +0100
+* Date: Thu May 26 15:15:55 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -149,7 +149,7 @@ function QTip(target, options, id, attr)
 	self.plugins = {};
 	self.cache = cache = {
 		event: {},
-		target: NULL,
+		target: $(),
 		disabled: FALSE,
 		attr: attr
 	};

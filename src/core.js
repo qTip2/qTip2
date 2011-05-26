@@ -109,7 +109,7 @@ function QTip(target, options, id, attr)
 	self.plugins = {};
 	self.cache = cache = {
 		event: {},
-		target: NULL,
+		target: $(),
 		disabled: FALSE,
 		attr: attr
 	};
