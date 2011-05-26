@@ -1393,9 +1393,6 @@ function init(id, opts)
 		typeof html5 === 'object' ? sanitizeOptions(html5) : NULL,
 		sanitizeOptions(metadata5 || metadata));
 
-	// Remove metadata object so we don't interfere with other metadata calls
-	if(metadata) { $.removeData(this, 'metadata'); }
-
 	// Re-grab our positioning options now we've merged our metadata and set id to passed value
 	posOptions = config.position;
 	config.id = id;

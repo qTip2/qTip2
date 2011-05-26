@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue May 24 12:33:42 2011 +0100
+* Date: Thu May 26 12:56:14 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1432,9 +1432,6 @@ function init(id, opts)
 	config = $.extend(TRUE, {}, QTIP.defaults, opts, 
 		typeof html5 === 'object' ? sanitizeOptions(html5) : NULL,
 		sanitizeOptions(metadata5 || metadata));
-
-	// Remove metadata object so we don't interfere with other metadata calls
-	if(metadata) { $.removeData(this, 'metadata'); }
 
 	// Re-grab our positioning options now we've merged our metadata and set id to passed value
 	posOptions = config.position;
