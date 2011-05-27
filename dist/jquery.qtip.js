@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu May 26 21:50:55 2011 +0100
+* Date: Thu May 26 22:09:43 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -407,7 +407,7 @@ function QTip(target, options, id, attr)
 			clearTimeout(self.timers.hide);
 
 			// Start show timer
-			var callback = function(){ self.show(event); };
+			var callback = function(){ self.toggle(TRUE, event); };
 			if(options.show.delay > 0) {
 				self.timers.show = setTimeout(callback, options.show.delay);
 			}
@@ -661,7 +661,7 @@ function QTip(target, options, id, attr)
 		// Show checks
 		'^show.ready$': function() {
 			if(!self.rendered) { self.render(1); }
-			else { self.show(); }
+			else { self.toggle(TRUE); }
 		},
 
 		// Style checks
@@ -767,7 +767,7 @@ function QTip(target, options, id, attr)
 
 				// Update tooltip position and show tooltip if needed
 				if(options.show.ready || show) {
-					self.show(cache.event);
+					self.toggle(TRUE, cache.event);
 				}
 
 				next(); // Move on to next method in queue
@@ -1601,6 +1601,7 @@ QTIP.bind = function(opts, event)
 
 			// Cache the event data
 			api.cache.event = $.extend({}, event);
+			api.cache.target = event ? $(event.target) : [undefined];
 
 			// Start the event sequence
 			if(options.show.delay > 0) {
