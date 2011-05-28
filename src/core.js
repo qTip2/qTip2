@@ -829,7 +829,6 @@ function QTip(target, options, id, attr)
 
 		toggle: function(state, event)
 		{
-
 			// Make sure tooltip is rendered
 			if(!self.rendered) {
 				if(state) { self.render(1); } // Render the tooltip if showing and it isn't already
@@ -847,7 +846,7 @@ function QTip(target, options, id, attr)
 			if((typeof state).search('boolean|number')) { state = !visible; }
 
 			// Return if element is already in correct state
-			if(visible === state && sameTarget) { return self; }
+			if(!tooltip.is(':animated') && visible === state && sameTarget) { return self; }
 
 			// Try to prevent flickering when tooltip overlaps show element
 			if(event) {
@@ -923,7 +922,7 @@ function QTip(target, options, id, attr)
 			if(sameTarget) { tooltip.stop(0, 1); }
 
 			// If no effect type is supplied, use a simple toggle
-			if(sameTarget || opts.effect === FALSE) {
+			if(opts.effect === FALSE) {
 				tooltip[ type ]();
 				after.call(tooltip);
 			}
