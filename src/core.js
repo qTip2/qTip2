@@ -1124,7 +1124,7 @@ function QTip(target, options, id, attr)
 				};
 
 			// Check if mouse was the target
-			if(target === 'mouse' && (event.pageX || cache.event.pageX)) {
+			if(target === 'mouse' && ((event && event.pageX) || cache.event.pageX)) {
 				// Force left top to allow flipping
 				at = { x: 'left', y: 'top' };
 

@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sat May 28 17:39:08 2011 +0100
+* Date: Sun May 29 00:34:10 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1164,7 +1164,7 @@ function QTip(target, options, id, attr)
 				};
 
 			// Check if mouse was the target
-			if(target === 'mouse' && (event.pageX || cache.event.pageX)) {
+			if(target === 'mouse' && ((event && event.pageX) || cache.event.pageX)) {
 				// Force left top to allow flipping
 				at = { x: 'left', y: 'top' };
 
