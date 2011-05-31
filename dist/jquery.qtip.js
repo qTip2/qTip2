@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue May 31 11:49:21 2011 +0100
+* Date: Tue May 31 17:48:21 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1658,14 +1658,17 @@ PLUGINS = QTIP.plugins = {
 		if(parent) {
 			// Compensate for non-static containers offset
 			do {
-				if(parent[0] === docBody) { break; }
-				else if(parent.css('position') !== 'static') {
-					coffset = parent.position();
+				if(parent.css('position') !== 'static') {
+					coffset = parent[0] === docBody ?
+						{ left: parseInt(parent.css('left'), 10) || 0, top: parseInt(parent.css('top'), 10) || 0 } :
+						parent.position();
+
 					pos.left -= coffset.left + (parseInt(parent.css('borderLeftWidth'), 10) || 0);
 					pos.top -= coffset.top + (parseInt(parent.css('borderTopWidth'), 10) || 0);
-					
+
 					deep++;
 				}
+				if(parent[0] === docBody) { break; }
 			}
 			while(parent = parent.offsetParent());
 
