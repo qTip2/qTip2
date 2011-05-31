@@ -45,7 +45,9 @@ function Tip(qTip, command)
 
 	self.corner = NULL;
 	self.mimic = NULL;
-	self.position = {};
+	self.border = border;
+	self.offset = opts.offset;
+	self.size = size;
 
 	// Add new option checks for the plugin
 	qTip.checks.tip = {
@@ -366,14 +368,14 @@ function Tip(qTip, command)
 			self.detectColours();
 
 			// Detect border width, taking into account colours
-			border = color.border === 'transparent' || color.border === '#123456' ? 0 :
+			self.border = border = color.border === 'transparent' || color.border === '#123456' ? 0 :
 				opts.border === TRUE ? borderWidth(corner, NULL, TRUE) : opts.border;
 
 			// Calculate coordinates
 			coords = calculateTip(mimic, width , height);
 
 			// Determine tip size
-			newSize = calculateSize(corner);
+			self.size = newSize = calculateSize(corner);
 			tip.css(newSize);
 
 			// Calculate tip translation

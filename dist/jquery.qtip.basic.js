@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue May 31 18:14:52 2011 +0100
+* Date: Tue May 31 18:27:18 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1064,12 +1064,11 @@ function QTip(target, options, id, attr)
 				fixed = tooltip.css('position') === 'fixed',
 				viewport = posOptions.viewport,
 				position = { left: 0, top: 0 },
-				tip = (self.plugins.tip || {}).corner,
+				tip = self.plugins.tip,
 				readjust = {
 					// Repositioning method and axis detection
 					horizontal: method[0],
 					vertical: method[1] || method[0],
-					tip: options.style.tip || {},
 
 					// Reposition methods
 					left: function(posLeft) {
@@ -1077,22 +1076,22 @@ function QTip(target, options, id, attr)
 							viewportScroll = viewport.offset.left + viewport.scrollLeft,
 							myWidth = my.x === 'left' ? elemWidth : my.x === 'right' ? -elemWidth : -elemWidth / 2,
 							atWidth = at.x === 'left' ? targetWidth : at.x === 'right' ? -targetWidth : -targetWidth / 2,
-							tipWidth = (readjust.tip.width + readjust.tip.border * 2) || 0,
-							tipAdjust = tip && tip.precedance === 'x' && !isShift ? tipWidth : 0,
-							overflowLeft = viewportScroll - posLeft - tipAdjust,
+							tipWidth = tip ? tip.size.width || 0 : 0,
+							tipAdjust = tip && tip.corner.precedance === 'x' && !isShift ? tipWidth : 0,
+							overflowLeft = viewportScroll - posLeft + tipAdjust,
 							overflowRight = posLeft + elemWidth - viewport.width - viewportScroll + tipAdjust,
 							offset = myWidth - (my.precedance === 'x' || my.x === my.y ? atWidth : 0),
 							isCenter = my.x === 'center';
 
 						// Optional 'shift' style repositioning
 						if(isShift) {
-							tipAdjust = tip && tip.precedance === 'y' ? tipWidth : 0;
+							tipAdjust = tip && tip.corner.precedance === 'y' ? tipWidth : 0;
 							offset = (my.x === 'left' ? 1 : -1) * myWidth - tipAdjust;
 
 							// Adjust position but keep it within viewport dimensions
 							position.left += overflowLeft > 0 ? overflowLeft : overflowRight > 0 ? -overflowRight : 0;
 							position.left = Math.max(
-								viewport.offset.left + (tipAdjust && tip.x === 'center' ? readjust.tip.offset : 0),
+								viewport.offset.left + (tipAdjust && tip.corner.x === 'center' ? tip.offset : 0),
 								posLeft - offset,
 								Math.min(
 									Math.max(viewport.offset.left + viewport.width, posLeft + offset),
@@ -1122,22 +1121,22 @@ function QTip(target, options, id, attr)
 							viewportScroll = viewport.offset.top + viewport.scrollTop,
 							myHeight = my.y === 'top' ? elemHeight : my.y === 'bottom' ? -elemHeight : -elemHeight / 2,
 							atHeight = at.y === 'top' ? targetHeight : at.y === 'bottom' ? -targetHeight : -targetHeight / 2,
-							tipHeight = (readjust.tip.height + readjust.tip.border * 2) || 0,
-							tipAdjust = tip && tip.precedance === 'y' && !isShift ? tipHeight : 0,
-							overflowTop = viewportScroll - posTop - tipAdjust,
+							tipHeight = tip ? tip.size.height || 0 : 0,
+							tipAdjust = tip && tip.corner.precedance === 'y' && !isShift ? tipHeight : 0,
+							overflowTop = viewportScroll - posTop + tipAdjust,
 							overflowBottom = posTop + elemHeight - viewport.height - viewportScroll + tipAdjust,
 							offset = myHeight - (my.precedance === 'y' || my.x === my.y ? atHeight : 0),
 							isCenter = my.y === 'center';
-
+							
 						// Optional 'shift' style repositioning
 						if(isShift) {
-							tipAdjust = tip && tip.precedance === 'x' ? tipHeight : 0;
+							tipAdjust = tip && tip.corner.precedance === 'x' ? tipHeight : 0;
 							offset = (my.y === 'top' ? 1 : -1) * myHeight - tipAdjust;
 
 							// Adjust position but keep it within viewport dimensions
 							position.top += overflowTop > 0 ? overflowTop : overflowBottom > 0 ? -overflowBottom : 0;
 							position.top = Math.max(
-								viewport.offset.top + (tipAdjust && tip.x === 'center' ? readjust.tip.offset : 0),
+								viewport.offset.top + (tipAdjust && tip.corner.x === 'center' ? tip.offset : 0),
 								posTop - offset,
 								Math.min(
 									Math.max(viewport.offset.top + viewport.height, posTop + offset),
