@@ -1130,6 +1130,7 @@ function QTip(target, options, id, attr)
 
 				// Use cached event if one isn't available for positioning
 				event = event && (event.type === 'resize' || event.type === 'scroll') ? cache.event :
+					event && event.pageX && event.type === 'mousemove' ? event :
 					!adjust.mouse && cache.origin ? cache.origin :
 					MOUSE && (adjust.mouse || !event || !event.pageX) ? { pageX: MOUSE.pageX, pageY: MOUSE.pageY } :
 					event;
