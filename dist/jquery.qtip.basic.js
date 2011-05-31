@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon May 30 13:29:43 2011 +0100
+* Date: Tue May 31 11:49:21 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -27,6 +27,7 @@
 		
 		// Shortcut vars
 		QTIP, PLUGINS, MOUSE,
+		usedIDs = {},
 		uitooltip = 'ui-tooltip',
 		widget = 'ui-widget',
 		disabled = 'ui-state-disabled',
@@ -1394,6 +1395,9 @@ function QTip(target, options, id, attr)
 			// Remove ARIA attributes and bound qtip events
 			target.removeAttr('aria-describedby').unbind('.qtip');
 
+			// Remove ID from sued id object
+			delete usedIDs[self.id];
+
 			return target;
 		}
 	});
@@ -1541,13 +1545,14 @@ QTIP = $.fn.qtip = function(options, notation, newValue)
 QTIP.bind = function(opts, event)
 {
 	return this.each(function(i) {
-		var options, targets, events,
+		var options, targets, events, namespace, api, id;
 
 		// Find next available ID, or use custom ID if provided
-		id = (!opts.id || opts.id === FALSE || opts.id.length < 1 || $('#'+uitooltip+'-'+opts.id).length) ? QTIP.nextid++ : opts.id,
+		id = $.isArray(opts.id) ? opts.id[i] : opts.id;
+		id = !id || id === FALSE || id.length < 1 || usedIDs[id] ? QTIP.nextid++ : (usedIDs[id] = id);
 
 		// Setup events namespace
-		namespace = '.qtip-'+id+'-create',
+		namespace = '.qtip-'+id+'-create';
 
 		// Initialize the qTip and re-grab newly sanitized options
 		api = init.call(this, id, opts);

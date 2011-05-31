@@ -13,6 +13,7 @@
 		
 		// Shortcut vars
 		QTIP, PLUGINS, MOUSE,
+		usedIDs = {},
 		uitooltip = 'ui-tooltip',
 		widget = 'ui-widget',
 		disabled = 'ui-state-disabled',

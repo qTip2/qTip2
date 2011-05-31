@@ -1354,6 +1354,9 @@ function QTip(target, options, id, attr)
 			// Remove ARIA attributes and bound qtip events
 			target.removeAttr('aria-describedby').unbind('.qtip');
 
+			// Remove ID from sued id object
+			delete usedIDs[self.id];
+
 			return target;
 		}
 	});
@@ -1501,13 +1504,14 @@ QTIP = $.fn.qtip = function(options, notation, newValue)
 QTIP.bind = function(opts, event)
 {
 	return this.each(function(i) {
-		var options, targets, events,
+		var options, targets, events, namespace, api, id;
 
 		// Find next available ID, or use custom ID if provided
-		id = (!opts.id || opts.id === FALSE || opts.id.length < 1 || $('#'+uitooltip+'-'+opts.id).length) ? QTIP.nextid++ : opts.id,
+		id = $.isArray(opts.id) ? opts.id[i] : opts.id;
+		id = !id || id === FALSE || id.length < 1 || usedIDs[id] ? QTIP.nextid++ : (usedIDs[id] = id);
 
 		// Setup events namespace
-		namespace = '.qtip-'+id+'-create',
+		namespace = '.qtip-'+id+'-create';
 
 		// Initialize the qTip and re-grab newly sanitized options
 		api = init.call(this, id, opts);
