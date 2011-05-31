@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun May 29 00:34:10 2011 +0100
+* Date: Mon May 30 13:29:43 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -2807,6 +2807,7 @@ function Modal(api)
 
 			var effect = options.effect,
 				type = state ? 'show': 'hide',
+				visible = overlay.is(':visible'),
 				modals = $('[' + attr + ']:visible').not(tooltip),
 				zindex;
 
@@ -2814,7 +2815,7 @@ function Modal(api)
 			if(!overlay) { overlay = self.create(); }
 
 			// Prevent modal from conflicting with show.solo, and don't hide backdrop is other modals are visible
-			if((overlay.is(':animated') && !state) || (!state && modals.length)) { return self; }
+			if((overlay.is(':animated') && visible === state) || (!state && modals.length)) { return self; }
 
 			// State specific...
 			if(state) {
@@ -2833,7 +2834,7 @@ function Modal(api)
 				docBody.undelegate('*', 'focus'+namespace);
 			}
 
-			// Setop all animations
+			// Stop all animations
 			overlay.stop(TRUE, FALSE);
 
 			// Use custom function if provided

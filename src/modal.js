@@ -118,6 +118,7 @@ function Modal(api)
 
 			var effect = options.effect,
 				type = state ? 'show': 'hide',
+				visible = overlay.is(':visible'),
 				modals = $('[' + attr + ']:visible').not(tooltip),
 				zindex;
 
@@ -125,7 +126,7 @@ function Modal(api)
 			if(!overlay) { overlay = self.create(); }
 
 			// Prevent modal from conflicting with show.solo, and don't hide backdrop is other modals are visible
-			if((overlay.is(':animated') && !state) || (!state && modals.length)) { return self; }
+			if((overlay.is(':animated') && visible === state) || (!state && modals.length)) { return self; }
 
 			// State specific...
 			if(state) {
@@ -144,7 +145,7 @@ function Modal(api)
 				docBody.undelegate('*', 'focus'+namespace);
 			}
 
-			// Setop all animations
+			// Stop all animations
 			overlay.stop(TRUE, FALSE);
 
 			// Use custom function if provided
