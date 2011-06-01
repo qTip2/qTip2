@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue May 31 18:27:18 2011 +0100
+* Date: Tue May 31 18:53:19 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -2741,7 +2741,7 @@ function Modal(api)
 				var oEvent = event.originalEvent;
 				
 				// Make sure mouseout doesn't trigger a hide when showing the modal and mousing onto backdrop
-				if(event.type === 'tooltiphide' && /mouse(leave|enter)/.test(oEvent.type) && oEvent.relatedTarget === overlay[0]) {
+				if(oEvent && event.type === 'tooltiphide' && /mouse(leave|enter)/.test(oEvent.type) && oEvent.relatedTarget === overlay[0]) {
 					event.preventDefault();
 				}
 				else {

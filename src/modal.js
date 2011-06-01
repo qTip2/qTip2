@@ -42,7 +42,7 @@ function Modal(api)
 				var oEvent = event.originalEvent;
 				
 				// Make sure mouseout doesn't trigger a hide when showing the modal and mousing onto backdrop
-				if(event.type === 'tooltiphide' && /mouse(leave|enter)/.test(oEvent.type) && oEvent.relatedTarget === overlay[0]) {
+				if(oEvent && event.type === 'tooltiphide' && /mouse(leave|enter)/.test(oEvent.type) && oEvent.relatedTarget === overlay[0]) {
 					event.preventDefault();
 				}
 				else {
