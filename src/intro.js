@@ -23,5 +23,6 @@
 		hoverClass = uitooltip + '-hover',
 		hideOffset = '-31000px',
 		replaceSuffix = '_replacedByqTip',
-		oldtitle = 'oldtitle';
+		oldtitle = 'oldtitle',
+		trackingBound = FALSE;
 

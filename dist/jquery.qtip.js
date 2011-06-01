@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue May 31 18:53:19 2011 +0100
+* Date: Wed Jun 1 23:40:47 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -37,7 +37,8 @@
 		hoverClass = uitooltip + '-hover',
 		hideOffset = '-31000px',
 		replaceSuffix = '_replacedByqTip',
-		oldtitle = 'oldtitle';
+		oldtitle = 'oldtitle',
+		trackingBound = FALSE;
 
 // Option object sanitizer
 function sanitizeOptions(opts)
@@ -566,8 +567,8 @@ function QTip(target, options, id, attr)
 
 		// Mouse positioning events
 		if(posOptions.target === 'mouse') {
-			// Cache mousemove events on show targets and tooltip for positioning purposes
-			targets.show.add(tooltip).bind('mousemove'+namespace, function(event) {
+			// Cache mousemove coords on show targets
+			targets.show.bind('mousemove'+namespace, function(event) {
 				MOUSE = { pageX: event.pageX, pageY: event.pageY, type: 'mousemove' };
 			});
 
@@ -677,7 +678,13 @@ function QTip(target, options, id, attr)
 		},
 
 		// Properties which require event reassignment
-		'^(show|hide|position).(event|target|fixed|inactive|leave|distance|viewport|adjust)$': function() {
+		'^(show|hide|position).(event|target|fixed|inactive|leave|distance|viewport|adjust)': function() {
+			var posOptions = options.position;
+
+			// Set tracking flag
+			tooltip.attr('tracking', posOptions.target === 'mouse' && posOptions.adjust.mouse);
+
+			// Reassign events
 			unassignEvents(); assignEvents();
 		}
 	};
@@ -691,6 +698,7 @@ function QTip(target, options, id, attr)
 			if(self.rendered) { return self; } // If tooltip has already been rendered, exit
 
 			var title = options.content.title.text,
+				posOptions = options.position,
 				callback = $.Event('tooltiprender');
 
 			// Add ARIA attributes to target
@@ -701,6 +709,7 @@ function QTip(target, options, id, attr)
 					'id': tooltipID,
 					'class': uitooltip + ' qtip ui-helper-reset ' + defaultClass + ' ' + options.style.classes,
 					'width': options.style.width || '',
+					'tracking': posOptions.target === 'mouse' && posOptions.adjust.mouse,
 
 					/* ARIA specific attributes */
 					'role': 'alert',
@@ -880,6 +889,7 @@ function QTip(target, options, id, attr)
 				opts = options[type],
 				visible = tooltip.is(':visible'),
 				sameTarget = !event || cache.target[0] === event.target,
+				posOptions = options.position,
 				delay,
 				callback;
 
@@ -920,6 +930,14 @@ function QTip(target, options, id, attr)
 				// Update tooltip content if it's a dynamic function
 				if($.isFunction(options.content.text)) { updateContent(); }
 
+				// Cache mousemove events for positioning purposes (if not already tracking)
+				if(!trackingBound && posOptions.target === 'mouse' && posOptions.adjust.mouse) {
+					$(document).bind('mousemove.qtip', function(event) {
+						MOUSE = { pageX: event.pageX, pageY: event.pageY, type: 'mousemove' };
+					});
+					trackingBound = TRUE;
+				}
+
 				// Update the tooltip position
 				self.reposition(event);
 
@@ -933,6 +951,12 @@ function QTip(target, options, id, attr)
 				// Remove cached origin on hide
 				delete cache.origin;
 
+				// Remove mouse tracking event if not needed (all tracking qTips are hidden)
+				if(trackingBound && !$(selector+'[tracking="true"]:visible', opts.solo).not(tooltip).length) {
+					$(document).unbind('mousemove.qtip');
+					trackingBound = FALSE;
+				}
+				
 				// Blur the tooltip
 				self.blur(event);
 			}
@@ -1171,8 +1195,8 @@ function QTip(target, options, id, attr)
 				// Use cached event if one isn't available for positioning
 				event = event && (event.type === 'resize' || event.type === 'scroll') ? cache.event :
 					event && event.pageX && event.type === 'mousemove' ? event :
-					!adjust.mouse && cache.origin ? cache.origin :
 					MOUSE && (adjust.mouse || !event || !event.pageX) ? { pageX: MOUSE.pageX, pageY: MOUSE.pageY } :
+					!adjust.mouse && cache.origin ? cache.origin :
 					event;
 
 				// Use event coordinates for position
@@ -1577,17 +1601,6 @@ QTIP.bind = function(opts, event)
 		 */
 		if(/mouse(over|enter)/i.test(events.show) && !/mouse(out|leave)/i.test(events.hide)) {
 			events.hide += ' mouseleave' + namespace;
-		}
-
-		/*
-		 * Cache mousemove events on show targets and tooltip for positioning purposes.
-		 * We'll do this here as well as in assignEvents so that it positions properly
-		 * on first show/render.
-		 */
-		if(options.position.target === 'mouse') {
-			targets.show.bind('mousemove'+namespace, function(event) {
-				MOUSE = { pageX: event.pageX, pageY: event.pageY, type: 'mousemove' };
-			});
 		}
 
 		// Define hoverIntent function
