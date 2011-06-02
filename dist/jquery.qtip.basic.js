@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Jun 1 23:40:47 2011 +0100
+* Date: Thu Jun 2 00:24:35 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -285,7 +285,7 @@ function QTip(target, options, id, attr)
 		}
 	}
 
-	function updateTitle(content)
+	function updateTitle(content, reposition)
 	{
 		var elem = elements.title;
 
@@ -307,7 +307,7 @@ function QTip(target, options, id, attr)
 
 		// Redraw and reposition
 		self.redraw();
-		if(self.rendered && tooltip.is(':visible')) {
+		if(reposition !== FALSE && self.rendered && tooltip.is(':visible')) {
 			self.reposition(cache.event);
 		}
 	}
@@ -315,7 +315,6 @@ function QTip(target, options, id, attr)
 	function updateContent(content, reposition)
 	{
 		var elem = elements.content;
-		content = content || options.content.text;
 
 		// Make sure tooltip is rendered and content is defined. If not return
 		if(!self.rendered || !content) { return FALSE; }
@@ -741,7 +740,7 @@ function QTip(target, options, id, attr)
 			}
 
 			// Set proper rendered flag and update content
-			updateContent(FALSE, FALSE);
+			updateContent(options.content.text, FALSE);
 			self.rendered = TRUE;
 
 			// Setup widget classes
@@ -890,6 +889,7 @@ function QTip(target, options, id, attr)
 				visible = tooltip.is(':visible'),
 				sameTarget = !event || cache.target[0] === event.target,
 				posOptions = options.position,
+				contentOptions = options.content,
 				delay,
 				callback;
 
@@ -927,8 +927,9 @@ function QTip(target, options, id, attr)
 				// Focus the tooltip
 				self.focus(event);
 
-				// Update tooltip content if it's a dynamic function
-				if($.isFunction(options.content.text)) { updateContent(); }
+				// Update tooltip content & title if it's a dynamic function
+				if($.isFunction(contentOptions.text)) { updateContent(contentOptions.text, FALSE); }
+				if($.isFunction(contentOptions.title.text)) { updateTitle(contentOptions.title.text, FALSE); }
 
 				// Cache mousemove events for positioning purposes (if not already tracking)
 				if(!trackingBound && posOptions.target === 'mouse' && posOptions.adjust.mouse) {
