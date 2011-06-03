@@ -4,6 +4,7 @@
 	position: absolute;
 	left: -10000em;
 	top: -10000em;
+	display: none;
 
 	background-color: black;
 

@@ -90,12 +90,6 @@ function Modal(api)
 			// Create document overlay
 			overlay = elems.overlay = $('<div />', {
 				id: overlaySelector.substr(1),
-				css: {
-					position: 'absolute',
-					top: 0,
-					left: 0,
-					display: 'none'
-				},
 				mousedown: function() { return FALSE; }
 			})
 			.appendTo(document.body);
