@@ -154,7 +154,7 @@ function Modal(api)
 
 			// Use custom function if provided
 			if($.isFunction(effect)) {
-				effect.call(overlay, state);
+				effect.call(overlay, state, opacity);
 			}
 
 			// If no effect type is supplied, use a simple toggle
