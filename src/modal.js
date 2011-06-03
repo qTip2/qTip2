@@ -104,7 +104,7 @@ function Modal(api)
 					width: $(window).width()
 				});
 			})
-			.trigger('resize');
+			.triggerHandler('resize');
 
 			return overlay;
 		},
@@ -128,6 +128,9 @@ function Modal(api)
 
 			// State specific...
 			if(state) {
+				// Set position
+				overlay.css({ left: 0, top: 0 });
+
 				// Toggle backdrop cursor style on show
 				elems.overlay.css('cursor', options.blur ? 'pointer' : '');
 
@@ -163,9 +166,14 @@ function Modal(api)
 				});
 			}
 
-			// Store CSS opacity
+			// After effect...
 			overlay.queue(function(next) {
+				// Store CSS opacity
 				opacity = overlay.css('opacity', '').css('opacity');
+
+				// Reset position on hide
+				if(!state) { overlay.css({ left: '', top: '' }); }
+				
 				next();
 			});
 
