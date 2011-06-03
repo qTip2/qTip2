@@ -9,6 +9,7 @@ function Modal(api)
 		namespace = globalNamespace + api.id,
 		attr = 'is-modal-qtip',
 		docBody = $(document.body),
+		opacity = 0,
 		overlay;
 
 	// Setup option set checks
@@ -99,6 +100,9 @@ function Modal(api)
 			})
 			.appendTo(document.body);
 
+			// Grab opacity
+			opacity = overlay.css('opacity');
+
 			// Update position on window resize or scroll
 			$(window).unbind(globalNamespace).bind('resize'+globalNamespace, function() {
 				overlay.css({
@@ -160,10 +164,16 @@ function Modal(api)
 
 			// Use basic fade function
 			else {
-				overlay.fadeTo( parseInt(duration, 10) || 90, state ? 0.7 : 0, function() {
+				overlay.fadeTo( parseInt(duration, 10) || 90, state ? opacity : 0, function() {
 					if(!state) { $(this).hide(); }
 				});
 			}
+
+			// Store CSS opacity
+			overlay.queue(function(next) {
+				opacity = overlay.css('opacity', '').css('opacity');
+				next();
+			});
 
 			return self;
 		},

@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Jun 2 00:24:35 2011 +0100
+* Date: Thu Jun 2 12:53:48 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -2722,6 +2722,7 @@ function Modal(api)
 		namespace = globalNamespace + api.id,
 		attr = 'is-modal-qtip',
 		docBody = $(document.body),
+		opacity = 0,
 		overlay;
 
 	// Setup option set checks
@@ -2812,6 +2813,9 @@ function Modal(api)
 			})
 			.appendTo(document.body);
 
+			// Grab opacity
+			opacity = overlay.css('opacity');
+
 			// Update position on window resize or scroll
 			$(window).unbind(globalNamespace).bind('resize'+globalNamespace, function() {
 				overlay.css({
@@ -2873,10 +2877,16 @@ function Modal(api)
 
 			// Use basic fade function
 			else {
-				overlay.fadeTo( parseInt(duration, 10) || 90, state ? 0.7 : 0, function() {
+				overlay.fadeTo( parseInt(duration, 10) || 90, state ? opacity : 0, function() {
 					if(!state) { $(this).hide(); }
 				});
 			}
+
+			// Store CSS opacity
+			overlay.queue(function(next) {
+				opacity = overlay.css('opacity', '').css('opacity');
+				next();
+			});
 
 			return self;
 		},
