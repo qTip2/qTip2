@@ -106,8 +106,8 @@ function Modal(api)
 			// Update position on window resize or scroll
 			$(window).unbind(globalNamespace).bind('resize'+globalNamespace, function() {
 				overlay.css({
-					height: Math.max( $(window).height(), $(document).height() ),
-					width: Math.max( $(window).width(), $(document).width() )
+					height: $(window).height(),
+					width: $(window).width()
 				});
 			})
 			.trigger('resize');

@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Fri Jun 3 02:09:57 2011 +0100
+* Date: Fri Jun 3 02:11:03 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -2819,8 +2819,8 @@ function Modal(api)
 			// Update position on window resize or scroll
 			$(window).unbind(globalNamespace).bind('resize'+globalNamespace, function() {
 				overlay.css({
-					height: Math.max( $(window).height(), $(document).height() ),
-					width: Math.max( $(window).width(), $(document).width() )
+					height: $(window).height(),
+					width: $(window).width()
 				});
 			})
 			.trigger('resize');

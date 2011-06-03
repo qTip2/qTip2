@@ -1,5 +1,6 @@
 /* Modal plugin */
 #qtip-overlay{
+	position: fixed;
 	position: absolute;
 	left: -10000em;
 	top: -10000em;
