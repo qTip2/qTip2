@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Fri Jun 3 10:26:22 2011 +0100
+* Date: Fri Jun 3 10:52:10 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1470,7 +1470,10 @@ function init(id, opts)
 		if(config.content.attr !== FALSE && attr) { config.content.text = attr; }
 
 		// No valid content was found, abort render
-		else { return FALSE; }
+		else {
+			$.error('Unable to locate content for tooltip! Aborting render of tooltip ' + id + '...');
+			return FALSE;
+		}
 	}
 
 	// Setup target options

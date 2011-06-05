@@ -1428,7 +1428,10 @@ function init(id, opts)
 		if(config.content.attr !== FALSE && attr) { config.content.text = attr; }
 
 		// No valid content was found, abort render
-		else { return FALSE; }
+		else {
+			$.error('Unable to locate content for tooltip! Aborting render of tooltip ' + id + '...');
+			return FALSE;
+		}
 	}
 
 	// Setup target options
