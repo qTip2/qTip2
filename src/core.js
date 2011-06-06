@@ -1438,7 +1438,7 @@ function init(id, opts)
 
 		// No valid content was found, abort render
 		else {
-			log('Unable to locate content for tooltip! Aborting render of tooltip ' + id + '...');
+			log('Unable to locate content for tooltip! Aborting render of tooltip on element: ', elem);
 			return FALSE;
 		}
 	}

@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Jun 6 17:21:40 2011 +0100
+* Date: Mon Jun 6 17:22:25 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -41,7 +41,7 @@
 		trackingBound = FALSE;
 
 	function log(msg) {
-		if(console) { (console.info || console.log || $.noop)(msg); }
+		if(console) { (console.info || console.log || $.noop).apply(this, arguments); }
 	}
 
 // Option object sanitizer
@@ -1484,7 +1484,7 @@ function init(id, opts)
 
 		// No valid content was found, abort render
 		else {
-			log('Unable to locate content for tooltip! Aborting render of tooltip ' + id + '...');
+			log('Unable to locate content for tooltip! Aborting render of tooltip on element: ', elem);
 			return FALSE;
 		}
 	}
