@@ -1307,7 +1307,7 @@ function QTip(target, options, id, attr)
 			// Otherwise simualte max/min width...
 			else {
 				// Reset width and add fluid class
-				tooltip.css('width', '').addClass(fluid);
+				tooltip.css('width', '').addClass(fluid).appendTo(document.body);
 
 				// Grab our tooltip width (add 1 so we don't get wrapping problems in Gecko)
 				width = tooltip.width() + ($.browser.mozilla ? 1 : 0);
@@ -1325,8 +1325,7 @@ function QTip(target, options, id, attr)
 				width = max + min ? Math.min(Math.max(width, min), max) : width;
 
 				// Set the newly calculated width and remvoe fluid class
-				tooltip.css('width', Math.round(width)).removeClass(fluid);
-
+				tooltip.css('width', Math.round(width)).removeClass(fluid).appendTo(container);
 			}
 
 			// Set drawing flag

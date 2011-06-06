@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Jun 6 17:22:25 2011 +0100
+* Date: Mon Jun 6 17:25:37 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1353,7 +1353,7 @@ function QTip(target, options, id, attr)
 			// Otherwise simualte max/min width...
 			else {
 				// Reset width and add fluid class
-				tooltip.css('width', '').addClass(fluid);
+				tooltip.css('width', '').addClass(fluid).appendTo(document.body);
 
 				// Grab our tooltip width (add 1 so we don't get wrapping problems in Gecko)
 				width = tooltip.width() + ($.browser.mozilla ? 1 : 0);
@@ -1371,8 +1371,7 @@ function QTip(target, options, id, attr)
 				width = max + min ? Math.min(Math.max(width, min), max) : width;
 
 				// Set the newly calculated width and remvoe fluid class
-				tooltip.css('width', Math.round(width)).removeClass(fluid);
-
+				tooltip.css('width', Math.round(width)).removeClass(fluid).appendTo(container);
 			}
 
 			// Set drawing flag
