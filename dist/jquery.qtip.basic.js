@@ -9,11 +9,11 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun Jun 5 11:43:07 2011 +0100
+* Date: Mon Jun 6 17:14:09 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
-/*global window: false, jQuery: false */
+/*global window: false, jQuery: false, console: false */
 
 
 (function($, window, undefined) {
@@ -39,6 +39,10 @@
 		replaceSuffix = '_replacedByqTip',
 		oldtitle = 'oldtitle',
 		trackingBound = FALSE;
+
+	function log(msg) {
+		if(!console) { (console.info || console.log || $.noop)(msg); }
+	}
 
 // Option object sanitizer
 function sanitizeOptions(opts)
@@ -1460,7 +1464,7 @@ function init(id, opts)
 
 	// If we don't get an object returned attempt to parse it manualyl without parseJSON
 	try { html5 = typeof html5 === 'string' ? (new Function("return " + html5))() : html5; }
-	catch(e) { $.error('Unable to parse HTML5 attribute data: ' + html5); }
+	catch(e) { log('Unable to parse HTML5 attribute data: ' + html5); }
 
 	// Merge in and sanitize metadata
 	config = $.extend(TRUE, {}, QTIP.defaults, opts, 
@@ -1480,7 +1484,7 @@ function init(id, opts)
 
 		// No valid content was found, abort render
 		else {
-			$.error('Unable to locate content for tooltip! Aborting render of tooltip ' + id + '...');
+			log('Unable to locate content for tooltip! Aborting render of tooltip ' + id + '...');
 			return FALSE;
 		}
 	}
