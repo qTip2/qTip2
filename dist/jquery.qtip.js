@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Jun 6 17:25:37 2011 +0100
+* Date: Mon Jun 6 21:23:14 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -973,7 +973,6 @@ function QTip(target, options, id, attr)
 					tooltip.css({
 						display: '',
 						visibility: '',
-						width: options.style.width || '',
 						opacity: '',
 						left: '',
 						top: ''

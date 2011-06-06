@@ -927,7 +927,6 @@ function QTip(target, options, id, attr)
 					tooltip.css({
 						display: '',
 						visibility: '',
-						width: options.style.width || '',
 						opacity: '',
 						left: '',
 						top: ''
