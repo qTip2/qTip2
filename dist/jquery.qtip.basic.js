@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Fri Jun 3 10:52:10 2011 +0100
+* Date: Sun Jun 5 11:43:07 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1188,8 +1188,15 @@ function QTip(target, options, id, attr)
 					}
 				};
 
+			// Check if absolute position was passed
+			if($.isArray(target) && target.length === 2) {
+				// Force left top and set position
+				at = { x: 'left', y: 'top' };
+				position = { left: target[0], top: target[1] };
+			}
+
 			// Check if mouse was the target
-			if(target === 'mouse' && ((event && event.pageX) || cache.event.pageX)) {
+			else if(target === 'mouse' && ((event && event.pageX) || cache.event.pageX)) {
 				// Force left top to allow flipping
 				at = { x: 'left', y: 'top' };
 
@@ -1203,6 +1210,8 @@ function QTip(target, options, id, attr)
 				// Use event coordinates for position
 				position = { top: event.pageY, left: event.pageX };
 			}
+
+			// Target wasn't mouse or absolute...
 			else {
 				// Check if event targetting is being used
 				if(target === 'event') {
