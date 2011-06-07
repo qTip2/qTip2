@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Jun 7 21:30:29 2011 +0100
+* Date: Tue Jun 7 21:43:19 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -2367,8 +2367,19 @@ function Tip(qTip, command)
 			self.detectColours();
 
 			// Detect border width, taking into account colours
-			self.border = border = color.border === 'transparent' || color.border === '#123456' ? 0 :
-				opts.border === TRUE ? borderWidth(corner, NULL, TRUE) : opts.border;
+			if(color.border !== 'transparent' && color.border !== '#123456') {
+				// Grab border width
+				border = borderWidth(corner, NULL, TRUE);
+
+				// If border width isn't zero, use border color as fill (1.0 style tips)
+				if(opts.border === 0 && border > 0) { color.fill = color.border; }
+
+				// Set border width (use detected border width if opts.border is true)
+				else if(opts.border !== TRUE) { self.border = border = opts.border; }
+			}
+
+			// Border colour was invalid, set border to zero
+			else { self.border = border = 0; }
 
 			// Calculate coordinates
 			coords = calculateTip(mimic, width , height);
@@ -2500,7 +2511,7 @@ function Tip(qTip, command)
 					br = borderRadius(corner);
 					
 					position[ side ] = i ?
-						borderWidth(corner, side) : 
+						border ? borderWidth(corner, side) : 0 : 
 						userOffset + (br > b ? br : 0);
 				}
 			});
