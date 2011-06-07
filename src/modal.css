@@ -5,6 +5,10 @@
 	top: -10000em;
 }
 
+	/* Applied to modals with show.modal.blur set to true */
+	#qtip-overlay.blurs{ cursor: pointer; }
+
+	/* Change opacity of overlay here */
 	#qtip-overlay div{
 		position: absolute;
 		left: 0; top: 0;

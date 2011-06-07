@@ -129,7 +129,7 @@ function Modal(api)
 				overlay.css({ left: 0, top: 0 });
 
 				// Toggle backdrop cursor style on show
-				elems.overlay.css('cursor', options.blur ? 'pointer' : '');
+				overlay.toggleClass('blurs', options.blur);
 
 				// Make sure we can't focus anything outside the tooltip
 				docBody.delegate('*', 'focusin'+namespace, function(event) {

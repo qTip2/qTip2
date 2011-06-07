@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Jun 7 15:02:53 2011 +0100
+* Date: Tue Jun 7 19:37:38 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -2860,7 +2860,7 @@ function Modal(api)
 				overlay.css({ left: 0, top: 0 });
 
 				// Toggle backdrop cursor style on show
-				elems.overlay.css('cursor', options.blur ? 'pointer' : '');
+				overlay.toggleClass('blurs', options.blur);
 
 				// Make sure we can't focus anything outside the tooltip
 				docBody.delegate('*', 'focusin'+namespace, function(event) {
