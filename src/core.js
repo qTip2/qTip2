@@ -252,7 +252,7 @@ function QTip(target, options, id, attr)
 
 		// Use function to parse content
 		if($.isFunction(content)) {
-			content = content.call(target, self) || '';
+			content = content.call(target, cache.event, self) || '';
 		}
 
 		// Append new content if its a DOM array and show it if hidden
@@ -279,7 +279,7 @@ function QTip(target, options, id, attr)
 
 		// Use function to parse content
 		if($.isFunction(content)) {
-			content = content.call(target, self) || '';
+			content = content.call(target, cache.event, self) || '';
 		}
 
 		// Append new content if its a DOM array and show it if hidden
