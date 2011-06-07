@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Jun 7 19:40:34 2011 +0100
+* Date: Tue Jun 7 19:48:24 2011 +0100
 */
 
 /* Core qTip styles */
@@ -367,6 +367,9 @@
 
 	.ui-tooltip-youtube .ui-tooltip-titlebar,
 	.ui-tooltip-youtube .ui-tooltip-content{
+		_margin-bottom: 0; /* IE6 */
+		.margin-bottom: 0; /* IE7 */
+
 		background: transparent;
 		background: rgba(0, 0, 0, 0.85);
 		filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#D9000000,endColorstr=#D9000000);
@@ -466,6 +469,9 @@
 
 	.ui-tooltip-tipsy .ui-tooltip-titlebar,
 	.ui-tooltip-tipsy .ui-tooltip-content{
+		_margin-bottom: 0; /* IE6 */
+		.margin-bottom: 0; /* IE7 */
+
 		background: transparent;
 		background: rgba(0, 0, 0, .87);
 		filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#D9000000,endColorstr=#D9000000);
@@ -507,6 +513,8 @@
 	.ui-tooltip-tipped .ui-tooltip-titlebar,
 	.ui-tooltip-tipped .ui-tooltip-content{
 		border: 3px solid #959FA9;
+
+		filter: none; -ms-filter: none;
 	}
 
 	.ui-tooltip-tipped .ui-tooltip-titlebar{
@@ -545,3 +553,9 @@
 			color: #555;
 		}
 
+/* IE9 fix - removes all filters */
+.ui-tooltip:not(.ie9haxors) div.ui-tooltip-content,
+.ui-tooltip:not(.ie9haxors) div.ui-tooltip-titlebar{
+	filter: none;
+	-ms-filter: none;
+}

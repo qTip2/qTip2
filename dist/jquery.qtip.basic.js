@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Jun 7 19:40:34 2011 +0100
+* Date: Tue Jun 7 19:48:24 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1343,8 +1343,7 @@ function QTip(target, options, id, attr)
 		{
 			if(self.rendered < 1 || isDrawing) { return self; }
 
-			var browser = $.browser,
-				fluid = uitooltip + '-fluid',
+			var fluid = uitooltip + '-fluid',
 				container = options.position.container,
 				perc, width, max, min;
 

@@ -1297,8 +1297,7 @@ function QTip(target, options, id, attr)
 		{
 			if(self.rendered < 1 || isDrawing) { return self; }
 
-			var browser = $.browser,
-				fluid = uitooltip + '-fluid',
+			var fluid = uitooltip + '-fluid',
 				container = options.position.container,
 				perc, width, max, min;
 
