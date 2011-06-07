@@ -53,7 +53,7 @@ function Modal(api)
 
 			// Adjust modal z-index on tooltip focus
 			.bind('tooltipfocus'+globalNamespace, function(event, api, zIndex) {
-				overlay[0].style.zIndex = zIndex - 1;
+				overlay[0].style.zIndex = zIndex;
 			})
 
 			// Focus any other visible modals when this one blurs
@@ -92,7 +92,7 @@ function Modal(api)
 				id: overlaySelector.substr(1),
 				mousedown: function() { return FALSE; }
 			})
-			.appendTo(document.body);
+			.insertBefore( $(selector).last() );
 
 			// Grab opacity
 			opacity = overlay.css('opacity');

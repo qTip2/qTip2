@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Jun 6 21:23:14 2011 +0100
+* Date: Mon Jun 6 21:27:54 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -149,7 +149,7 @@ function QTip(target, options, id, attr)
 	self.id = id;
 	self.rendered = FALSE;
 	self.elements = elements = { target: target };
-	self.timers = { img: [] };
+	self.timers = { img: {} };
 	self.options = options;
 	self.checks = {};
 	self.plugins = {};
@@ -341,6 +341,10 @@ function QTip(target, options, id, attr)
 			var images;
 
 			function imageLoad(event) {
+				// Clear any timers and events associated with the image
+				clearTimeout(self.timers.img[this]);
+				$(this).unbind(namespace);
+
 				// If queue is empty after image removal, update tooltip and continue the queue
 				if((images = images.not(this)).length === 0) {
 					self.redraw();
@@ -355,18 +359,18 @@ function QTip(target, options, id, attr)
 			// Find all content images without dimensions, and if no images were found, continue
 			if((images = elem.find('img:not([height]):not([width])')).length === 0) { return imageLoad.call(images); }
 
-			// Apply timer to each iamge to poll for dimensions
+			// Apply timer to each image to poll for dimensions
 			images.each(function(i, elem) {
 				(function timer(){
-					var timers = self.timers.img;
+					// When the dimensions are found, remove the image from the queue
+					if(elem.height && elem.width) { return imageLoad.call(elem); }
 
-					// When the dimensions are found, remove the image from the queue and stop timer
-					if(elem.height && elem.width) {
-						clearTimeout(timers[i]);
-						return imageLoad.call(elem);
-					}
-					timers[i] = setTimeout(timer, 20);
+					// Restart timer
+					self.timers.img[elem] = setTimeout(timer, 1000);
 				}());
+
+				// Also apply regular load/error event handlers
+				$(elem).bind('error'+namespace+' load'+namespace, imageLoad);
 			});
 		}
 
@@ -1352,7 +1356,7 @@ function QTip(target, options, id, attr)
 			// Otherwise simualte max/min width...
 			else {
 				// Reset width and add fluid class
-				tooltip.css('width', '').addClass(fluid).appendTo(document.body);
+				tooltip.css('width', '').addClass(fluid);
 
 				// Grab our tooltip width (add 1 so we don't get wrapping problems in Gecko)
 				width = tooltip.width() + ($.browser.mozilla ? 1 : 0);
@@ -1370,7 +1374,7 @@ function QTip(target, options, id, attr)
 				width = max + min ? Math.min(Math.max(width, min), max) : width;
 
 				// Set the newly calculated width and remvoe fluid class
-				tooltip.css('width', Math.round(width)).removeClass(fluid).appendTo(container);
+				tooltip.css('width', Math.round(width)).removeClass(fluid);
 			}
 
 			// Set drawing flag
@@ -2780,7 +2784,7 @@ function Modal(api)
 
 			// Adjust modal z-index on tooltip focus
 			.bind('tooltipfocus'+globalNamespace, function(event, api, zIndex) {
-				overlay[0].style.zIndex = zIndex - 1;
+				overlay[0].style.zIndex = zIndex;
 			})
 
 			// Focus any other visible modals when this one blurs
@@ -2819,7 +2823,7 @@ function Modal(api)
 				id: overlaySelector.substr(1),
 				mousedown: function() { return FALSE; }
 			})
-			.appendTo(document.body);
+			.insertBefore( $(selector).last() );
 
 			// Grab opacity
 			opacity = overlay.css('opacity');
