@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Jun 7 23:35:06 2011 +0100
+* Date: Tue Jun 7 23:53:32 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1109,8 +1109,8 @@ function QTip(target, options, id, attr)
 							viewportScroll = viewport.offset.left + viewport.scrollLeft,
 							myWidth = my.x === 'left' ? elemWidth : my.x === 'right' ? -elemWidth : -elemWidth / 2,
 							atWidth = at.x === 'left' ? targetWidth : at.x === 'right' ? -targetWidth : -targetWidth / 2,
-							tipWidth = tip ? tip.size.width || 0 : 0,
-							tipAdjust = tip && tip.corner.precedance === 'x' && !isShift ? tipWidth : 0,
+							tipWidth = tip && tip.size ? tip.size.width || 0 : 0,
+							tipAdjust = tip && tip.corner && tip.corner.precedance === 'x' && !isShift ? tipWidth : 0,
 							overflowLeft = viewportScroll - posLeft + tipAdjust,
 							overflowRight = posLeft + elemWidth - viewport.width - viewportScroll + tipAdjust,
 							offset = myWidth - (my.precedance === 'x' || my.x === my.y ? atWidth : 0),
@@ -1154,8 +1154,8 @@ function QTip(target, options, id, attr)
 							viewportScroll = viewport.offset.top + viewport.scrollTop,
 							myHeight = my.y === 'top' ? elemHeight : my.y === 'bottom' ? -elemHeight : -elemHeight / 2,
 							atHeight = at.y === 'top' ? targetHeight : at.y === 'bottom' ? -targetHeight : -targetHeight / 2,
-							tipHeight = tip ? tip.size.height || 0 : 0,
-							tipAdjust = tip && tip.corner.precedance === 'y' && !isShift ? tipHeight : 0,
+							tipHeight = tip && tip.size ? tip.size.height || 0 : 0,
+							tipAdjust = tip && tip.corner && tip.corner.precedance === 'y' && !isShift ? tipHeight : 0,
 							overflowTop = viewportScroll - posTop + tipAdjust,
 							overflowBottom = posTop + elemHeight - viewport.height - viewportScroll + tipAdjust,
 							offset = myHeight - (my.precedance === 'y' || my.x === my.y ? atHeight : 0),
