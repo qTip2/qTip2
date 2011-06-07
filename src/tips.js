@@ -335,7 +335,7 @@ function Tip(qTip, command)
 			}
 			else {
 				vml = '<vml:shape coordorigin="0,0" style="display:inline-block; position:absolute; behavior:url(#default#VML);"></vml:shape>';
-				elems.tip.html( border ? vml += vml : vml );
+				elems.tip.html(vml + vml);
 			}
 		},
 
@@ -382,7 +382,7 @@ function Tip(qTip, command)
 				if(opts.border === 0 && border > 0) { color.fill = color.border; }
 
 				// Set border width (use detected border width if opts.border is true)
-				else if(opts.border !== TRUE) { self.border = border = opts.border; }
+				self.border = border = opts.border !== TRUE ? opts.border : border;
 			}
 
 			// Border colour was invalid, set border to zero
@@ -469,7 +469,7 @@ function Tip(qTip, command)
 					.css({ display: border || i ? 'block' : 'none' });
 
 					// Check if border is enabled and add stroke element
-					if(!i && border > 0 && $this.html() === '') {
+					if(!i && $this.html() === '') {
 						$this.html(
 							'<vml:stroke weight="'+(border*2)+'px" color="'+color.border+'" miterlimit="1000" joinstyle="miter" ' +
 							' style="behavior:url(#default#VML); display:inline-block;" />'
