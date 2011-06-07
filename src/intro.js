@@ -21,6 +21,7 @@
 		defaultClass = uitooltip + '-default',
 		focusClass = uitooltip + '-focus',
 		hoverClass = uitooltip + '-hover',
+		fluidClass = uitooltip + '-fluid',
 		hideOffset = '-31000px',
 		replaceSuffix = '_replacedByqTip',
 		oldtitle = 'oldtitle',

@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Jun 7 19:48:24 2011 +0100
+* Date: Tue Jun 7 21:30:29 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -35,6 +35,7 @@
 		defaultClass = uitooltip + '-default',
 		focusClass = uitooltip + '-focus',
 		hoverClass = uitooltip + '-hover',
+		fluidClass = uitooltip + '-fluid',
 		hideOffset = '-31000px',
 		replaceSuffix = '_replacedByqTip',
 		oldtitle = 'oldtitle',
@@ -1343,8 +1344,7 @@ function QTip(target, options, id, attr)
 		{
 			if(self.rendered < 1 || isDrawing) { return self; }
 
-			var fluid = uitooltip + '-fluid',
-				container = options.position.container,
+			var container = options.position.container,
 				perc, width, max, min;
 
 			// Set drawing flag
@@ -1356,7 +1356,7 @@ function QTip(target, options, id, attr)
 			// Otherwise simualte max/min width...
 			else {
 				// Reset width and add fluid class
-				tooltip.css('width', '').addClass(fluid);
+				tooltip.css('width', '').addClass(fluidClass);
 
 				// Grab our tooltip width (add 1 so we don't get wrapping problems.. huzzah!)
 				width = tooltip.width() + 1;
@@ -1374,7 +1374,7 @@ function QTip(target, options, id, attr)
 				width = max + min ? Math.min(Math.max(width, min), max) : width;
 
 				// Set the newly calculated width and remvoe fluid class
-				tooltip.css('width', Math.round(width)).removeClass(fluid);
+				tooltip.css('width', Math.round(width)).removeClass(fluidClass);
 			}
 
 			// Set drawing flag

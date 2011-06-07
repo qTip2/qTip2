@@ -175,13 +175,20 @@ function Tip(qTip, command)
 	/* border width calculator */
 	function borderWidth(corner, side, backup) {
 		side = !side ? corner[corner.precedance] : side;
-
-		var isTitleTop = elems.titlebar && corner.y === 'top',
+		
+		var isFluid = tooltip.hasClass(fluidClass),
+			isTitleTop = elems.titlebar && corner.y === 'top',
 			elem = isTitleTop ? elems.titlebar : elems.content,
 			css = 'border-' + side + '-width',
-			val = parseInt(elem.css(css), 10);
+			val;
 
-		return (backup ? val || parseInt(tooltip.css(css), 10) : val) || 0;
+		// Grab the border-width value (add fluid class if needed)
+		tooltip.addClass(fluidClass);
+		val = parseInt(elem.css(css), 10);
+		val = (backup ? val || parseInt(tooltip.css(css), 10) : val) || 0;
+		tooltip.toggleClass(fluidClass, isFluid);
+
+		return val;
 	}
 
 	function borderRadius(corner) {
@@ -274,7 +281,6 @@ function Tip(qTip, command)
 				invalid = /rgba?\(0, 0, 0(, 0)?\)|transparent/i,
 				backgroundColor = 'background-color',
 				transparent = 'transparent',
-				fluid = 'ui-tooltip-fluid',
 
 				bodyBorder = $(document.body).css('color'),
 				contentColour = qTip.elements.content.css('color'),
@@ -283,7 +289,7 @@ function Tip(qTip, command)
 				colorElem = useTitle ? elems.titlebar : elems.content;
 
 			// Apply the fluid class so we can see our CSS values properly
-			tooltip.addClass(fluid);
+			tooltip.addClass(fluidClass);
 
 			// Detect tip colours from CSS styles
 			color.fill = fill = tip.css(backgroundColor);
@@ -307,7 +313,7 @@ function Tip(qTip, command)
 			$('*', tip).add(tip).css(backgroundColor, transparent).css('border', '');
 
 			// Remove fluid class
-			tooltip.removeClass(fluid);
+			tooltip.removeClass(fluidClass);
 		},
 
 		create: function()
