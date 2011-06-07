@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Jun 7 19:37:38 2011 +0100
+* Date: Tue Jun 7 19:40:34 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1343,7 +1343,8 @@ function QTip(target, options, id, attr)
 		{
 			if(self.rendered < 1 || isDrawing) { return self; }
 
-			var fluid = uitooltip + '-fluid',
+			var browser = $.browser,
+				fluid = uitooltip + '-fluid',
 				container = options.position.container,
 				perc, width, max, min;
 
@@ -1358,8 +1359,8 @@ function QTip(target, options, id, attr)
 				// Reset width and add fluid class
 				tooltip.css('width', '').addClass(fluid);
 
-				// Grab our tooltip width (add 1 so we don't get wrapping problems in Gecko)
-				width = tooltip.width() + ($.browser.mozilla ? 1 : 0);
+				// Grab our tooltip width (add 1 so we don't get wrapping problems.. huzzah!)
+				width = tooltip.width() + 1;
 
 				// Grab our max/min properties
 				max = tooltip.css('max-width') || '';
