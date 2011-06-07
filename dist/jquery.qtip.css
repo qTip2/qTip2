@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Jun 7 14:13:34 2011 +0100
+* Date: Tue Jun 7 15:02:53 2011 +0100
 */
 
 /* Core qTip styles */
@@ -167,13 +167,19 @@
 	position: fixed;
 	left: -10000em;
 	top: -10000em;
-
-	background-color: black;
-
-	opacity: 0.7;
-	filter:alpha(opacity=70);
-	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";
 }
+
+	#qtip-overlay div{
+		position: absolute;
+		left: 0; top: 0;
+		width: 100%; height: 100%;
+
+		background-color: black;
+
+		opacity: 0.7;
+		filter:alpha(opacity=70);
+		-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";
+	}
 
 /*! Light tooltip style */
 .ui-tooltip-light .ui-tooltip-titlebar,

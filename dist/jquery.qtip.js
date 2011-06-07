@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Jun 7 14:13:34 2011 +0100
+* Date: Tue Jun 7 15:02:53 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -2740,7 +2740,6 @@ function Modal(api)
 		namespace = globalNamespace + api.id,
 		attr = 'is-modal-qtip',
 		docBody = $(document.body),
-		opacity = 0,
 		overlay;
 
 	// Setup option set checks
@@ -2774,7 +2773,7 @@ function Modal(api)
 				var oEvent = event.originalEvent;
 				
 				// Make sure mouseout doesn't trigger a hide when showing the modal and mousing onto backdrop
-				if(oEvent && event.type === 'tooltiphide' && /mouse(leave|enter)/.test(oEvent.type) && oEvent.relatedTarget === overlay[0]) {
+				if(oEvent && event.type === 'tooltiphide' && /mouse(leave|enter)/.test(oEvent.type) && oEvent.relatedTarget.closest(overlay[0]).length) {
 					event.preventDefault();
 				}
 				else {
@@ -2821,12 +2820,10 @@ function Modal(api)
 			// Create document overlay
 			overlay = elems.overlay = $('<div />', {
 				id: overlaySelector.substr(1),
+				html: '<div></div>',
 				mousedown: function() { return FALSE; }
 			})
 			.insertBefore( $(selector).last() );
-
-			// Grab opacity
-			opacity = overlay.css('opacity');
 
 			// Update position on window resize or scroll
 			$(window).unbind(globalNamespace).bind('resize'+globalNamespace, function() {
@@ -2882,7 +2879,7 @@ function Modal(api)
 
 			// Use custom function if provided
 			if($.isFunction(effect)) {
-				effect.call(overlay, state, opacity);
+				effect.call(overlay, state);
 			}
 
 			// If no effect type is supplied, use a simple toggle
@@ -2892,21 +2889,18 @@ function Modal(api)
 
 			// Use basic fade function
 			else {
-				overlay.fadeTo( parseInt(duration, 10) || 90, state ? opacity : 0, function() {
+				overlay.fadeTo( parseInt(duration, 10) || 90, state ? 1 : 0, function() {
 					if(!state) { $(this).hide(); }
 				});
 			}
 
-			// After effect...
-			overlay.queue(function(next) {
-				// Store CSS opacity
-				opacity = overlay.css('opacity', '').css('opacity');
-
-				// Reset position on hide
-				if(!state) { overlay.css({ left: '', top: '' }); }
-				
-				next();
-			});
+			// Reset position on hide
+			if(!state) {
+				overlay.queue(function(next) {
+					overlay.css({ left: '', top: '' });
+					next();
+				});
+			}
 
 			return self;
 		},
