@@ -27,7 +27,9 @@
 		oldtitle = 'oldtitle',
 		trackingBound = FALSE;
 
-	function log(msg) {
-		if(console) { (console.info || console.log || $.noop).apply(this, arguments); }
+	function log() {
+		if(console) {
+			return (console.info || console.info || $.noop).apply(console, arguments);
+		}
 	}
 

@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Jun 7 23:53:32 2011 +0100
+* Date: Wed Jun 8 00:02:52 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -41,8 +41,10 @@
 		oldtitle = 'oldtitle',
 		trackingBound = FALSE;
 
-	function log(msg) {
-		if(console) { (console.info || console.log || $.noop).apply(this, arguments); }
+	function log() {
+		if(console) {
+			return (console.info || console.info || $.noop).apply(console, arguments);
+		}
 	}
 
 // Option object sanitizer
