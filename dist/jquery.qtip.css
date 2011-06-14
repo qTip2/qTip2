@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Jun 8 00:02:52 2011 +0100
+* Date: Tue Jun 14 14:43:01 2011 +0100
 */
 
 /* Core qTip styles */
@@ -159,7 +159,8 @@
 		background: transparent;
 		border: 0px dashed transparent;
 	}
-
+	
+	.ui-tooltip .ui-tooltip-tip canvas{ top: 0; left: 0; }
 
 
 /* Modal plugin */

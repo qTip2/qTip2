@@ -19,6 +19,7 @@
 		background: transparent;
 		border: 0px dashed transparent;
 	}
-
+	
+	.ui-tooltip .ui-tooltip-tip canvas{ top: 0; left: 0; }
 
 
