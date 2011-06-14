@@ -1782,7 +1782,10 @@ QTIP.defaults = {
 			method: 'flip flip'
 		},
 		effect: function(api, pos, viewport) {
-			$(this).stop().animate(pos, 200);
+			$(this).animate(pos, {
+				duration: 200,
+				queue: FALSE
+			});
 		}
 	},
 	show: {

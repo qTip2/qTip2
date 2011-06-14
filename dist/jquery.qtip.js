@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Jun 14 14:43:01 2011 +0100
+* Date: Tue Jun 14 15:10:33 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1831,7 +1831,10 @@ QTIP.defaults = {
 			method: 'flip flip'
 		},
 		effect: function(api, pos, viewport) {
-			$(this).stop().animate(pos, 200);
+			$(this).animate(pos, {
+				duration: 200,
+				queue: FALSE
+			});
 		}
 	},
 	show: {
