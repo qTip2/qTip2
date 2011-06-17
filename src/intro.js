@@ -28,8 +28,8 @@
 		trackingBound = FALSE;
 
 	function log() {
-		if(console && console.apply) {
-			return (console.info || console.info || $.noop).apply(console, arguments);
+		if(console) {
+			return (console.info || console.log || $.noop).apply(console, arguments);
 		}
 	}
 
