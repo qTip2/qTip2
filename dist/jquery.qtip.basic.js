@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Jun 14 15:10:33 2011 +0100
+* Date: Tue Jun 14 15:11:53 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -42,7 +42,7 @@
 		trackingBound = FALSE;
 
 	function log() {
-		if(console) {
+		if(console && console.apply) {
 			return (console.info || console.info || $.noop).apply(console, arguments);
 		}
 	}
