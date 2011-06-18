@@ -25,11 +25,14 @@
 		hideOffset = '-31000px',
 		replaceSuffix = '_replacedByqTip',
 		oldtitle = 'oldtitle',
-		trackingBound = FALSE;
-
+		trackingBound;
+		
+	/* Thanks to Paul Irish for this one: http://paulirish.com/2009/log-a-lightweight-wrapper-for-consolelog/ */
 	function log() {
-		if(console) {
-			return (console.info || console.log || $.noop).apply(console, arguments);
+		log.history = log.history || [];
+		log.history.push(arguments);
+		if(console){
+			(console.warn || console.log)(Array.prototype.slice.call(arguments));
 		}
 	}
 

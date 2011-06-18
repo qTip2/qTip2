@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Fri Jun 17 19:00:31 2011 +0100
+* Date: Sat Jun 18 13:56:55 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -39,11 +39,14 @@
 		hideOffset = '-31000px',
 		replaceSuffix = '_replacedByqTip',
 		oldtitle = 'oldtitle',
-		trackingBound = FALSE;
-
+		trackingBound;
+		
+	/* Thanks to Paul Irish for this one: http://paulirish.com/2009/log-a-lightweight-wrapper-for-consolelog/ */
 	function log() {
-		if(console) {
-			return (console.info || console.log || $.noop).apply(console, arguments);
+		log.history = log.history || [];
+		log.history.push(arguments);
+		if(console){
+			(console.warn || console.log)(Array.prototype.slice.call(arguments));
 		}
 	}
 
