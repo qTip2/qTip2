@@ -849,7 +849,7 @@ function QTip(target, options, id, attr)
 			var type = state ? 'show' : 'hide',
 				opts = options[type],
 				visible = tooltip.is(':visible'),
-				sameTarget = !event || cache.target[0] === event.target,
+				sameTarget = !event || options[type].target.length < 2 || cache.target[0] === event.target,
 				posOptions = options.position,
 				contentOptions = options.content,
 				delay,

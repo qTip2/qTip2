@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Fri Jun 17 18:59:56 2011 +0100
+* Date: Fri Jun 17 19:00:31 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -898,7 +898,7 @@ function QTip(target, options, id, attr)
 			var type = state ? 'show' : 'hide',
 				opts = options[type],
 				visible = tooltip.is(':visible'),
-				sameTarget = !event || cache.target[0] === event.target,
+				sameTarget = !event || options[type].target.length < 2 || cache.target[0] === event.target,
 				posOptions = options.position,
 				contentOptions = options.content,
 				delay,
