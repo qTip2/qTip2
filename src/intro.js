@@ -32,7 +32,8 @@
 		log.history = log.history || [];
 		log.history.push(arguments);
 		if(console) {
-			console[ console.warn ? 'warn' : 'log' ](Array.prototype.slice.call(arguments));
+			var c = console[ console.warn ? 'warn' : 'log' ],
+			a = c.apply ? c.apply(console, arguments) : c(Array.prototype.slice.call(arguments));
 		}
 	}
 

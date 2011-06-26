@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun Jun 26 13:56:48 2011 +0100
+* Date: Sun Jun 26 13:58:17 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -46,7 +46,8 @@
 		log.history = log.history || [];
 		log.history.push(arguments);
 		if(console) {
-			console[ console.warn ? 'warn' : 'log' ](Array.prototype.slice.call(arguments));
+			var c = console[ console.warn ? 'warn' : 'log' ],
+			a = c.apply ? c.apply(console, arguments) : c(Array.prototype.slice.call(arguments));
 		}
 	}
 
