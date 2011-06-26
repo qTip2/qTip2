@@ -31,7 +31,7 @@
 	function log() {
 		log.history = log.history || [];
 		log.history.push(arguments);
-		if(console) {
+		if('object' === typeof console) {
 			var c = console[ console.warn ? 'warn' : 'log' ],
 			a = c.apply ? c.apply(console, arguments) : c(Array.prototype.slice.call(arguments));
 		}
