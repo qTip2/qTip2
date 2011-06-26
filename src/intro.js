@@ -32,7 +32,7 @@
 		log.history = log.history || [];
 		log.history.push(arguments);
 		if(console) {
-			console[ console.warn ? 'warn' : 'log' ](Array.prototype.slice.call(arguments).join(' '));
+			console[ console.warn ? 'warn' : 'log' ](Array.prototype.slice.call(arguments));
 		}
 	}
 
