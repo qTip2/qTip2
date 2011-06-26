@@ -28,13 +28,11 @@
 		trackingBound;
 		
 	/* Thanks to Paul Irish for this one: http://paulirish.com/2009/log-a-lightweight-wrapper-for-consolelog/ */
-	function log(a,b,c,d,e,f,g) {
+	function log() {
 		log.history = log.history || [];
 		log.history.push(arguments);
-		if(console){
-			con = console[ console.warn ? 'warn' : 'log' ];
-			if($.browser.msie) { con(Array.prototype.slice.call(arguments).join(' ')); }
-			else { con.apply(console, arguments); }
+		if(console) {
+			console[ console.warn ? 'warn' : 'log' ](Array.prototype.slice.call(arguments).join(' '));
 		}
 	}
 

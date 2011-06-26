@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sat Jun 18 14:05:31 2011 +0100
+* Date: Sun Jun 26 13:53:22 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -42,13 +42,11 @@
 		trackingBound;
 		
 	/* Thanks to Paul Irish for this one: http://paulirish.com/2009/log-a-lightweight-wrapper-for-consolelog/ */
-	function log(a,b,c,d,e,f,g) {
+	function log() {
 		log.history = log.history || [];
 		log.history.push(arguments);
-		if(console){
-			con = console[ console.warn ? 'warn' : 'log' ];
-			if($.browser.msie) { con(Array.prototype.slice.call(arguments).join(' ')); }
-			else { con.apply(console, arguments); }
+		if(console) {
+			console[ console.warn ? 'warn' : 'log' ](Array.prototype.slice.call(arguments).join(' '));
 		}
 	}
 
