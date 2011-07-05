@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun Jun 26 14:03:44 2011 +0100
+* Date: Sun Jun 26 14:07:37 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -300,8 +300,11 @@ function QTip(target, options, id, attr)
 	{
 		var elem = elements.title;
 
+		// Remove title if content is FALSE
+		if(elem && content === FALSE) { removeTitle(); }
+		
 		// Make sure tooltip is rendered and if not, return
-		if(!self.rendered || !content) { return FALSE; }
+		else if(!self.rendered || !content) { return FALSE; }
 
 		// Use function to parse content
 		if($.isFunction(content)) {

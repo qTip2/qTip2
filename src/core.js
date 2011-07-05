@@ -247,8 +247,11 @@ function QTip(target, options, id, attr)
 	{
 		var elem = elements.title;
 
+		// Remove title if content is FALSE
+		if(elem && content === FALSE) { removeTitle(); }
+		
 		// Make sure tooltip is rendered and if not, return
-		if(!self.rendered || !content) { return FALSE; }
+		else if(!self.rendered || !content) { return FALSE; }
 
 		// Use function to parse content
 		if($.isFunction(content)) {
