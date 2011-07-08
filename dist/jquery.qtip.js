@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun Jun 26 14:07:37 2011 +0100
+* Date: Tue Jul 5 17:30:39 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -2900,7 +2900,7 @@ function Modal(api)
 			}
 			else {
 				// Undelegate focus handler
-				docBody.undelegate('*', 'focus'+namespace);
+				docBody.undelegate('*', 'focusin'+namespace);
 			}
 
 			// Stop all animations
@@ -2955,7 +2955,7 @@ function Modal(api)
 				}
 
 				// Undelegate focus handler
-				docBody.undelegate('*', 'focus'+namespace);
+				docBody.undelegate('*', 'focusin'+namespace);
 			}
 
 			// Remove bound events

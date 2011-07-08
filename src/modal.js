@@ -140,7 +140,7 @@ function Modal(api)
 			}
 			else {
 				// Undelegate focus handler
-				docBody.undelegate('*', 'focus'+namespace);
+				docBody.undelegate('*', 'focusin'+namespace);
 			}
 
 			// Stop all animations
@@ -195,7 +195,7 @@ function Modal(api)
 				}
 
 				// Undelegate focus handler
-				docBody.undelegate('*', 'focus'+namespace);
+				docBody.undelegate('*', 'focusin'+namespace);
 			}
 
 			// Remove bound events
