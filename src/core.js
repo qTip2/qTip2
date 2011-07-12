@@ -447,9 +447,9 @@ function QTip(target, options, id, attr)
 			// Hide tooltips when leaving current window/frame (but not select/option elements)
 			if(options.hide.leave) {
 				targets.window.bind(
-					'mouse' + (options.hide.leave.indexOf('frame') > -1 ? 'out' : 'leave') + namespace,
+					'mouseleave' + namespace,
 					function(event) {
-						if(/select|option/.test(event.target) && !event.relatedTarget) { self.hide(event); }
+						//if(/select|option/.test(event.target) && !event.relatedTarget) { self.hide(event); }
 					}
 				);
 			}
@@ -632,7 +632,7 @@ function QTip(target, options, id, attr)
 
 		// Style checks
 		'^style.classes$': function(obj, o, v) { 
-			$.attr(tooltip[0], 'class', uitooltip + ' qtip ui-helper-reset ' + v);
+			tooltip.attr('class', uitooltip + ' qtip ui-helper-reset ' + v);
 		},
 		'^style.widget|content.title': setWidget,
 
