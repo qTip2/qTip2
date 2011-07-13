@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Jul 12 21:12:52 2011 +0100
+* Date: Wed Jul 13 15:07:25 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -45,9 +45,19 @@
 	function log() {
 		log.history = log.history || [];
 		log.history.push(arguments);
+		
+		// Make sure console is present
 		if('object' === typeof console) {
+
+			// Setup console and arguments
 			var c = console[ console.warn ? 'warn' : 'log' ],
-			a = c.apply ? c.apply(console, arguments) : c(Array.prototype.slice.call(arguments));
+			args = Array.prototype.slice.call(arguments), a;
+
+			// Add qTip2 marker to first argument if it's a string
+			if(typeof arguments[0] === 'string') { args[0] = 'qTip2: ' + args[0]; }
+
+			// Apply console.warn or .log if not supported
+			a = c.apply ? c.apply(console, args) : c(args);
 		}
 	}
 
@@ -502,7 +512,7 @@ function QTip(target, options, id, attr)
 				targets.window.bind(
 					'mouseleave' + namespace,
 					function(event) {
-						//if(/select|option/.test(event.target) && !event.relatedTarget) { self.hide(event); }
+						if(/select|option/.test(event.target) && !event.relatedTarget) { self.hide(event); }
 					}
 				);
 			}

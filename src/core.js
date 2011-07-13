@@ -449,7 +449,7 @@ function QTip(target, options, id, attr)
 				targets.window.bind(
 					'mouseleave' + namespace,
 					function(event) {
-						//if(/select|option/.test(event.target) && !event.relatedTarget) { self.hide(event); }
+						if(/select|option/.test(event.target) && !event.relatedTarget) { self.hide(event); }
 					}
 				);
 			}
