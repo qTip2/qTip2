@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Jul 13 18:37:25 2011 +0100
+* Date: Wed Jul 13 19:10:57 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1721,7 +1721,7 @@ PLUGINS = QTIP.plugins = {
 			while(parent = parent.offsetParent());
 
 			// Compensate for containers scroll if it also has an offsetParent
-			if(container[0] !== docBody || deep > 1) { scroll( container, 1 ); }
+			if(container[0] !== docBody && deep > 1) { scroll( container, 1 ); }
 
 			// Adjust for position.fixed tooltips (and also iOS scroll bug in v3.2 - v4.0)
 			if((PLUGINS.iOS < 4.1 && PLUGINS.iOS > 3.1) || (!PLUGINS.iOS && fixed)) { scroll( $(window), -1 ); }

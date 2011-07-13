@@ -1658,7 +1658,7 @@ PLUGINS = QTIP.plugins = {
 			while(parent = parent.offsetParent());
 
 			// Compensate for containers scroll if it also has an offsetParent
-			if(container[0] !== docBody || deep > 1) { scroll( container, 1 ); }
+			if(container[0] !== docBody && deep > 1) { scroll( container, 1 ); }
 
 			// Adjust for position.fixed tooltips (and also iOS scroll bug in v3.2 - v4.0)
 			if((PLUGINS.iOS < 4.1 && PLUGINS.iOS > 3.1) || (!PLUGINS.iOS && fixed)) { scroll( $(window), -1 ); }
