@@ -642,7 +642,7 @@ function QTip(target, options, id, attr)
 		},
 
 		// Properties which require event reassignment
-		'^(show|hide|position).(event|target|fixed|inactive|leave|distance|viewport|adjust)': function() {
+		'^(show|hide|position).(event|target|fixed|leave|distance|viewport|adjust)': function() {
 			var posOptions = options.position;
 
 			// Set tracking flag

@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Jul 13 15:07:25 2011 +0100
+* Date: Wed Jul 13 18:01:49 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -705,7 +705,7 @@ function QTip(target, options, id, attr)
 		},
 
 		// Properties which require event reassignment
-		'^(show|hide|position).(event|target|fixed|inactive|leave|distance|viewport|adjust)': function() {
+		'^(show|hide|position).(event|target|fixed|leave|distance|viewport|adjust)': function() {
 			var posOptions = options.position;
 
 			// Set tracking flag
