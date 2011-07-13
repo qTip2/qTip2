@@ -445,13 +445,10 @@ function QTip(target, options, id, attr)
 		// If using mouseout/mouseleave as a hide event...
 		if(/mouse(out|leave)/i.test(options.hide.event)) {
 			// Hide tooltips when leaving current window/frame (but not select/option elements)
-			if(options.hide.leave) {
-				targets.window.bind(
-					'mouseleave' + namespace,
-					function(event) {
-						if(/select|option/.test(event.target) && !event.relatedTarget) { self.hide(event); }
-					}
-				);
+			if(options.hide.leave === 'window') {
+				targets.window.bind('mouseout' + namespace, function(event) {
+					if(/select|option/.test(event.target) && !event.relatedTarget) { self.hide(event); }
+				});
 			}
 		}
 
