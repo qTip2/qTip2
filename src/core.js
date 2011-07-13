@@ -1074,7 +1074,7 @@ function QTip(target, options, id, attr)
 
 						// Optional 'shift' style repositioning
 						if(isShift) {
-							tipAdjust = tip && tip.corner.precedance === 'y' ? tipWidth : 0;
+							tipAdjust = tip && tip.corner && tip.corner.precedance === 'y' ? tipWidth : 0;
 							offset = (my.x === 'left' ? 1 : -1) * myWidth - tipAdjust;
 
 							// Adjust position but keep it within viewport dimensions
@@ -1119,7 +1119,7 @@ function QTip(target, options, id, attr)
 							
 						// Optional 'shift' style repositioning
 						if(isShift) {
-							tipAdjust = tip && tip.corner.precedance === 'x' ? tipHeight : 0;
+							tipAdjust = tip && tip.corner && tip.corner.precedance === 'x' ? tipHeight : 0;
 							offset = (my.y === 'top' ? 1 : -1) * myHeight - tipAdjust;
 
 							// Adjust position but keep it within viewport dimensions

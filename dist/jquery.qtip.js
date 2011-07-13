@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Fri Jul 8 11:46:16 2011 +0100
+* Date: Tue Jul 12 21:12:52 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1127,7 +1127,7 @@ function QTip(target, options, id, attr)
 
 						// Optional 'shift' style repositioning
 						if(isShift) {
-							tipAdjust = tip && tip.corner.precedance === 'y' ? tipWidth : 0;
+							tipAdjust = tip && tip.corner && tip.corner.precedance === 'y' ? tipWidth : 0;
 							offset = (my.x === 'left' ? 1 : -1) * myWidth - tipAdjust;
 
 							// Adjust position but keep it within viewport dimensions
@@ -1172,7 +1172,7 @@ function QTip(target, options, id, attr)
 							
 						// Optional 'shift' style repositioning
 						if(isShift) {
-							tipAdjust = tip && tip.corner.precedance === 'x' ? tipHeight : 0;
+							tipAdjust = tip && tip.corner && tip.corner.precedance === 'x' ? tipHeight : 0;
 							offset = (my.y === 'top' ? 1 : -1) * myHeight - tipAdjust;
 
 							// Adjust position but keep it within viewport dimensions
