@@ -252,11 +252,11 @@ function QTip(target, options, id, attr)
 
 		// Use function to parse content
 		if($.isFunction(content)) {
-			content = content.call(target, cache.event, self) || '';
-		}
+			content = content.call(target, cache.event, self);
 
-		// Remove title if content is FALSE
-		if(elem && content === FALSE) { removeTitle(); }
+			// Remove title if callback returns false
+			if(content === FALSE) { removeTitle(); }
+		}
 
 		// Append new content if its a DOM array and show it if hidden
 		else if(content.jquery && content.length > 0) {

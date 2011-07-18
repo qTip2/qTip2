@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Jul 13 19:46:07 2011 +0100
+* Date: Wed Jul 13 19:47:57 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -315,11 +315,11 @@ function QTip(target, options, id, attr)
 
 		// Use function to parse content
 		if($.isFunction(content)) {
-			content = content.call(target, cache.event, self) || '';
-		}
+			content = content.call(target, cache.event, self);
 
-		// Remove title if content is FALSE
-		if(elem && content === FALSE) { removeTitle(); }
+			// Remove title if callback returns false
+			if(content === FALSE) { removeTitle(); }
+		}
 
 		// Append new content if its a DOM array and show it if hidden
 		else if(content.jquery && content.length > 0) {
