@@ -259,7 +259,7 @@ function QTip(target, options, id, attr)
 		}
 
 		// Append new content if its a DOM array and show it if hidden
-		else if(content.jquery && content.length > 0) {
+		if(content.jquery && content.length > 0) {
 			elem.empty().append(content.css({ display: 'block' }));
 		}
 

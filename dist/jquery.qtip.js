@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Jul 18 13:08:05 2011 +0100
+* Date: Tue Jul 19 12:32:18 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -322,7 +322,7 @@ function QTip(target, options, id, attr)
 		}
 
 		// Append new content if its a DOM array and show it if hidden
-		else if(content.jquery && content.length > 0) {
+		if(content.jquery && content.length > 0) {
 			elem.empty().append(content.css({ display: 'block' }));
 		}
 
