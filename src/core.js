@@ -935,6 +935,11 @@ function QTip(target, options, id, attr)
 						left: '',
 						top: ''
 					});
+
+					// Autofocus elements if enabled
+					if('string' === typeof opts.autofocus) {
+						$(opts.autofocus, tooltip).focus();
+					}
 				}
 				else {
 					// Prevent antialias from disappearing in IE by removing filter
@@ -1794,7 +1799,8 @@ QTIP.defaults = {
 		effect: TRUE,
 		delay: 90,
 		solo: FALSE,
-		ready: FALSE
+		ready: FALSE,
+		autofocus: FALSE
 	},
 	hide: {
 		target: FALSE,
