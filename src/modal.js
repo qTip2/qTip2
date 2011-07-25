@@ -52,7 +52,7 @@ function Modal(api)
 
 			// Adjust modal z-index on tooltip focus
 			.bind('tooltipfocus'+globalNamespace, function(event, api, zIndex) {
-				overlay[0].style.zIndex = zIndex;
+				overlay[0].style.zIndex = zIndex - 1;
 			})
 
 			// Focus any other visible modals when this one blurs
