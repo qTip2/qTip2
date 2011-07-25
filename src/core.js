@@ -146,12 +146,14 @@ function QTip(target, options, id, attr)
 		}
 	}
 
-	function removeTitle()
+	function removeTitle(reposition)
 	{
 		if(elements.title) {
 			elements.titlebar.remove();
 			elements.titlebar = elements.title = elements.button = NULL;
-			self.reposition();
+
+			// Reposition if enabled
+			if(reposition !== FALSE) { self.reposition(); }
 		}
 	}
 
@@ -253,13 +255,13 @@ function QTip(target, options, id, attr)
 		// Use function to parse content
 		if($.isFunction(content)) {
 			content = content.call(target, cache.event, self);
-
-			// Remove title if callback returns false
-			if(content === FALSE) { return removeTitle(); }
 		}
 
+		// Remove title if callback returns false
+		if(content === FALSE) { return removeTitle(FALSE); }
+
 		// Append new content if its a DOM array and show it if hidden
-		if(content.jquery && content.length > 0) {
+		else if(content.jquery && content.length > 0) {
 			elem.empty().append(content.css({ display: 'block' }));
 		}
 
@@ -698,7 +700,7 @@ function QTip(target, options, id, attr)
 			// Update title
 			if(title) { 
 				createTitle();
-				updateTitle(title);
+				updateTitle(title, FALSE);
 			}
 
 			// Set proper rendered flag and update content
