@@ -255,7 +255,7 @@ function QTip(target, options, id, attr)
 			content = content.call(target, cache.event, self);
 
 			// Remove title if callback returns false
-			if(content === FALSE) { removeTitle(); }
+			if(content === FALSE) { return removeTitle(); }
 		}
 
 		// Append new content if its a DOM array and show it if hidden
