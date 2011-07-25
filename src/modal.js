@@ -206,8 +206,7 @@ function Modal(api)
 	self.init();
 }
 
-PLUGINS.modal = function(api)
-{
+PLUGINS.modal = function(api) {
 	var self = api.plugins.modal;
 
 	return 'object' === typeof self ? self : (api.plugins.modal = new Modal(api));

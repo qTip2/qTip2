@@ -1404,7 +1404,7 @@ function QTip(target, options, id, attr)
 // Initialization method
 function init(id, opts)
 {
-	var obj, posOptions, attr, config,
+	var obj, posOptions, attr, config, title,
 
 	// Setup element references
 	elem = $(this),
@@ -1472,9 +1472,8 @@ function init(id, opts)
 	}
 
 	// Remove title attribute and store it if present
-	if($.attr(this, 'title')) {
-		$.attr(this, oldtitle, $.attr(this, 'title'));
-		this.removeAttribute('title');
+	if(title = $.attr(this, 'title')) {
+		$(this).removeAttr('title').attr(oldtitle, title);
 	}
 
 	// Initialize the tooltip and add API reference
