@@ -693,9 +693,9 @@ function QTip(target, options, id, attr)
 					})
 				);
 
-			// Set rendered flag and prevent redundant redraw calls for npw
+			// Set rendered flag and prevent redundant redraw/reposition calls for now
 			self.rendered = -1;
-			isDrawing = 1;
+			isDrawing = 1; isPositioning = 1;
 
 			// Update title
 			if(title) { 
@@ -735,10 +735,13 @@ function QTip(target, options, id, attr)
 				callback.originalEvent = cache.event;
 				tooltip.trigger(callback, [self]);
 
-				// Redraw the tooltip manually now we're fully rendered
-				isDrawing = 0; self.redraw();
+				// Reset flags
+				isDrawing = 0; isPositioning = 0;
 
-				// Update tooltip position and show tooltip if needed
+				// Redraw the tooltip manually now we're fully rendered
+				self.redraw();
+
+				// Show tooltip if needed
 				if(options.show.ready || show) {
 					self.toggle(TRUE, cache.event);
 				}
