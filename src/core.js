@@ -385,7 +385,7 @@ function QTip(target, options, id, attr)
 		// Define hide method
 		function hideMethod(event)
 		{
-			if(tooltip.hasClass(disabled)) { return FALSE; }
+			if(tooltip.hasClass(disabled) || isPositioning || isDrawing) { return FALSE; }
 
 			// Check if new target was actually the tooltip element
 			var relatedTarget = $(event.relatedTarget || event.target),
@@ -398,7 +398,7 @@ function QTip(target, options, id, attr)
 
 			// Prevent hiding if tooltip is fixed and event target is the tooltip. Or if mouse positioning is enabled and cursor momentarily overlaps
 			if((posOptions.target === 'mouse' && ontoTooltip) || (options.hide.fixed && ((/mouse(out|leave|move)/).test(event.type) && (ontoTooltip || ontoTarget)))) {
-				event.preventDefault(); return;
+				event.preventDefault(); event.stopImmediatePropagation(); return;
 			}
 
 			// If tooltip has displayed, start hide timer
@@ -1348,14 +1348,12 @@ function QTip(target, options, id, attr)
 
 		disable: function(state)
 		{
-			var c = disabled;
-			
 			if('boolean' !== typeof state) {
-				state = !(tooltip.hasClass(c) || cache.disabled);
+				state = !(tooltip.hasClass(disabled) || cache.disabled);
 			}
 			 
 			if(self.rendered) {
-				tooltip.toggleClass(c, state);
+				tooltip.toggleClass(disabled, state);
 				$.attr(tooltip[0], 'aria-disabled', state);
 			}
 			else {

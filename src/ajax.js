@@ -40,7 +40,7 @@ function Ajax(api)
 			// Make sure default event hasn't been prevented
 			if(event && event.isDefaultPrevented()) { return self; }
 			
-			var hasSelector = opts.url.indexOf(' '), 
+			var hasSelector = opts.url.indexOf(' '),
 				url = opts.url,
 				selector,
 				hideFirst = opts.once && !opts.loading && first;
@@ -58,6 +58,9 @@ function Ajax(api)
 			function after() {
 				// Re-display tip if loading and first time, and reset first flag
 				if(hideFirst) { tooltip.css('visibility', ''); first = FALSE; }
+
+				// Call users complete if it was defined
+				if($.isFunction(opts.complete)) { opts.complete.apply(this, arguments); }
 			}
 
 			// Define success handler
@@ -75,15 +78,13 @@ function Ajax(api)
 
 				// Set the content
 				api.set('content.text', content);
-
-				after(); // Call common callback
 			}
 
 			// Error handler
-			function errorHandler(xh, status, error){ api.set('content.text', status + ': ' + error); after(); }
+			function errorHandler(xh, status, error){ api.set('content.text', status + ': ' + error); }
 
 			// Setup $.ajax option object and process the request
-			$.ajax( $.extend({ success: successHandler, error: errorHandler, context: api }, opts, { url: url }) );
+			$.ajax( $.extend({ success: successHandler, error: errorHandler, context: api }, opts, { url: url, complete: after }) );
 			
 			return self;
 		}

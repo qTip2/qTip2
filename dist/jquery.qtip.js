@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Jul 25 12:30:35 2011 +0100
+* Date: Wed Jul 27 20:23:08 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -448,7 +448,7 @@ function QTip(target, options, id, attr)
 		// Define hide method
 		function hideMethod(event)
 		{
-			if(tooltip.hasClass(disabled)) { return FALSE; }
+			if(tooltip.hasClass(disabled) || isPositioning || isDrawing) { return FALSE; }
 
 			// Check if new target was actually the tooltip element
 			var relatedTarget = $(event.relatedTarget || event.target),
@@ -461,7 +461,7 @@ function QTip(target, options, id, attr)
 
 			// Prevent hiding if tooltip is fixed and event target is the tooltip. Or if mouse positioning is enabled and cursor momentarily overlaps
 			if((posOptions.target === 'mouse' && ontoTooltip) || (options.hide.fixed && ((/mouse(out|leave|move)/).test(event.type) && (ontoTooltip || ontoTarget)))) {
-				event.preventDefault(); return;
+				event.preventDefault(); event.stopImmediatePropagation(); return;
 			}
 
 			// If tooltip has displayed, start hide timer
@@ -1411,14 +1411,12 @@ function QTip(target, options, id, attr)
 
 		disable: function(state)
 		{
-			var c = disabled;
-			
 			if('boolean' !== typeof state) {
-				state = !(tooltip.hasClass(c) || cache.disabled);
+				state = !(tooltip.hasClass(disabled) || cache.disabled);
 			}
 			 
 			if(self.rendered) {
-				tooltip.toggleClass(c, state);
+				tooltip.toggleClass(disabled, state);
 				$.attr(tooltip[0], 'aria-disabled', state);
 			}
 			else {
@@ -1937,7 +1935,7 @@ function Ajax(api)
 			// Make sure default event hasn't been prevented
 			if(event && event.isDefaultPrevented()) { return self; }
 			
-			var hasSelector = opts.url.indexOf(' '), 
+			var hasSelector = opts.url.indexOf(' '),
 				url = opts.url,
 				selector,
 				hideFirst = opts.once && !opts.loading && first;
@@ -1955,6 +1953,9 @@ function Ajax(api)
 			function after() {
 				// Re-display tip if loading and first time, and reset first flag
 				if(hideFirst) { tooltip.css('visibility', ''); first = FALSE; }
+
+				// Call users complete if it was defined
+				if($.isFunction(opts.complete)) { opts.complete.apply(this, arguments); }
 			}
 
 			// Define success handler
@@ -1972,15 +1973,13 @@ function Ajax(api)
 
 				// Set the content
 				api.set('content.text', content);
-
-				after(); // Call common callback
 			}
 
 			// Error handler
-			function errorHandler(xh, status, error){ api.set('content.text', status + ': ' + error); after(); }
+			function errorHandler(xh, status, error){ api.set('content.text', status + ': ' + error); }
 
 			// Setup $.ajax option object and process the request
-			$.ajax( $.extend({ success: successHandler, error: errorHandler, context: api }, opts, { url: url }) );
+			$.ajax( $.extend({ success: successHandler, error: errorHandler, context: api }, opts, { url: url, complete: after }) );
 			
 			return self;
 		}
