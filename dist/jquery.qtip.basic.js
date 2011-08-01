@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Aug 1 15:56:09 2011 +0100
+* Date: Mon Aug 1 16:13:35 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -360,15 +360,18 @@ function QTip(target, options, id, attr)
 
 		// Image detection
 		function detectImages(next) {
-			var images;
+			var images, srcs = {};
 
-			function imageLoad(event) {
-				// Clear any timers and events associated with the image
-				clearTimeout(self.timers.img[this]);
-				$(this).unbind(namespace);
+			function imageLoad(image) {
+				// Clear src from object and any timers and events associated with the image
+				if(image) {
+					delete srcs[image.src];
+					clearTimeout(self.timers.img[image.src]);
+					$(image).unbind(namespace);
+				}
 
 				// If queue is empty after image removal, update tooltip and continue the queue
-				if((images = images.not(this)).length === 0) {
+				if($.isEmptyObject(srcs)) {
 					self.redraw();
 					if(reposition !== FALSE) {
 						self.reposition(cache.event);
@@ -379,20 +382,26 @@ function QTip(target, options, id, attr)
 			}
 
 			// Find all content images without dimensions, and if no images were found, continue
-			if((images = elem.find('img:not([height]):not([width])')).length === 0) { return imageLoad.call(images); }
+			if((images = elem.find('img:not([height]):not([width])')).length === 0) { return imageLoad(); }
 
 			// Apply timer to each image to poll for dimensions
 			images.each(function(i, elem) {
+				// Skip if the src is already present
+				if(srcs[elem.src] !== undefined) { return; }
+
 				(function timer(){
 					// When the dimensions are found, remove the image from the queue
-					if(elem.height && elem.width) { return imageLoad.call(elem); }
+					if(elem.height || elem.width) { return imageLoad(elem); }
 
 					// Restart timer
-					self.timers.img[elem] = setTimeout(timer, 1000);
+					self.timers.img[elem.src] = setTimeout(timer, 700);
 				}());
 
 				// Also apply regular load/error event handlers
-				$(elem).bind('error'+namespace+' load'+namespace, imageLoad);
+				$(elem).bind('error'+namespace+' load'+namespace, function(){ imageLoad(this); });
+
+				// Store the src and element in our object
+				srcs[elem.src] = elem;
 			});
 		}
 
