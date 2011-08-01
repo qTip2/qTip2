@@ -516,7 +516,7 @@ function QTip(target, options, id, attr)
 		// Check if the tooltip hides when mouse is moved a certain distance
 		if('number' === typeof options.hide.distance) {
 			// Bind mousemove to target to detect distance difference
-			targets.show.bind('mousemove'+namespace, function(event) {
+			targets.show.add(tooltip).bind('mousemove'+namespace, function(event) {
 				var origin = cache.origin || {},
 					limit = options.hide.distance,
 					abs = Math.abs;

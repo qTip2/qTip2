@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Jul 27 20:23:08 2011 +0100
+* Date: Mon Aug 1 15:56:09 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -579,7 +579,7 @@ function QTip(target, options, id, attr)
 		// Check if the tooltip hides when mouse is moved a certain distance
 		if('number' === typeof options.hide.distance) {
 			// Bind mousemove to target to detect distance difference
-			targets.show.bind('mousemove'+namespace, function(event) {
+			targets.show.add(tooltip).bind('mousemove'+namespace, function(event) {
 				var origin = cache.origin || {},
 					limit = options.hide.distance,
 					abs = Math.abs;
