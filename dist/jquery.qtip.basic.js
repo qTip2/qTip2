@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Aug 8 18:22:25 2011 +0100
+* Date: Mon Aug 8 18:48:21 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1479,7 +1479,7 @@ function QTip(target, options, id, attr)
 // Initialization method
 function init(id, opts)
 {
-	var obj, posOptions, attr, config, title, data,
+	var obj, posOptions, attr, config, title,
 
 	// Setup element references
 	elem = $(this),
@@ -1537,11 +1537,11 @@ function init(id, opts)
 	posOptions.my = new PLUGINS.Corner(posOptions.my);
 
 	// Destroy previous tooltip if overwrite is enabled, or skip element if not
-	if(data = $.data(this, 'qtip')) {
-		if(data.options.overwrite) {
+	if($.data(this, 'qtip')) {
+		if(config.overwrite) {
 			elem.qtip('destroy');
 		}
-		else if(data.options.overwrite === FALSE) {
+		else if(config.overwrite === FALSE) {
 			return FALSE;
 		}
 	}
