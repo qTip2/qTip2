@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Aug 1 18:56:34 2011 +0100
+* Date: Mon Aug 8 18:22:25 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1460,7 +1460,7 @@ function QTip(target, options, id, attr)
 			$.removeData(t, 'qtip');
 
 			// Reset old title attribute if removed 
-			if(title) {
+			if(options.suppress && title) {
 				$.attr(t, 'title', title);
 				target.removeAttr(oldtitle);
 			}
@@ -1547,7 +1547,7 @@ function init(id, opts)
 	}
 
 	// Remove title attribute and store it if present
-	if(title = $.attr(this, 'title')) {
+	if(config.suppress && (title = $.attr(this, 'title'))) {
 		$(this).removeAttr('title').attr(oldtitle, title);
 	}
 
@@ -1755,52 +1755,53 @@ PLUGINS = QTIP.plugins = {
 	) || FALSE,
 	
 	/*
-	 * jQuery-secpfic $.fn overrides 
+	 * jQuery-specific $.fn overrides
 	 */
 	fn: {
 		/* Allow other plugins to successfully retrieve the title of an element with a qTip applied */
 		attr: function(attr, val) {
-			if(!this.length) { return; }
-			
-			var self = this[0],
-			title = 'title',
-			api = $.data(self, 'qtip');
-			
-			if(attr === title) {
-				if(arguments.length < 2) {
-					return $.attr(self, oldtitle);
-				}
-				else if(typeof api === 'object') {
-					// If qTip is rendered and title was originally used as content, update it
-					if(api && api.rendered && api.options.content.attr === title && api.cache.attr) {
-						api.set('content.text', val);
+			if(this.length) {
+				var self = this[0],
+					title = 'title',
+					api = $.data(self, 'qtip');
+
+				if(attr === title && 'object' === typeof api && api.options.suppress) {
+					if(arguments.length < 2) {
+						return $.attr(self, oldtitle);
 					}
-					
-					// Use the regular attr method to set, then cache the result
-					$.fn['attr'+replaceSuffix].apply(this, arguments);
-					$.attr(self, oldtitle, $.attr(self, title));
-					return this.removeAttr(title);
+					else {
+						// If qTip is rendered and title was originally used as content, update it
+						if(api && api.options.content.attr === title && api.cache.attr) {
+							api.set('content.text', val);
+						}
+
+						// Use the regular attr method to set, then cache the result
+						return this.attr(oldtitle, val);
+					}
 				}
 			}
+
+			return $.fn['attr'+replaceSuffix].apply(this, arguments);
 		},
 		
 		/* Allow clone to correctly retrieve cached title attributes */
 		clone: function(keepData) {
-			var titles = $([]), title = 'title', elem;
+			var titles = $([]), title = 'title',
 
 			// Clone our element using the real clone method
-			elem = $.fn['clone'+replaceSuffix].apply(this, arguments)
-			
-			// Grab all elements with an oldtitle set, and change it to regular title attribute
-			.filter('[oldtitle]').each(function() {
-				$.attr(this, title, $.attr(this, oldtitle));
-				this.removeAttribute(oldtitle);
-			})
-			.end();
+			elems = $.fn['clone'+replaceSuffix].apply(this, arguments);
 
-			return elem;
+			// Grab all elements with an oldtitle set, and change it to regular title attribute, if keepData is false
+			if(!keepData) {
+				elems.filter('['+oldtitle+']').attr('title', function() {
+					return $.attr(this, oldtitle);
+				})
+				.removeAttr(oldtitle);
+			}
+
+			return elems;
 		},
-		
+
 		/* 
 		 * Taken directly from jQuery 1.8.2 widget source code
 		 * Trigger 'remove' event on all elements on removal if jQuery UI isn't present 
@@ -1840,6 +1841,7 @@ QTIP.defaults = {
 	prerender: FALSE,
 	id: FALSE,
 	overwrite: TRUE,
+	suppress: TRUE,
 	content: {
 		text: TRUE,
 		attr: 'title',
