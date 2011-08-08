@@ -1416,7 +1416,7 @@ function QTip(target, options, id, attr)
 // Initialization method
 function init(id, opts)
 {
-	var obj, posOptions, attr, config, title,
+	var obj, posOptions, attr, config, title, data,
 
 	// Setup element references
 	elem = $(this),
@@ -1474,11 +1474,11 @@ function init(id, opts)
 	posOptions.my = new PLUGINS.Corner(posOptions.my);
 
 	// Destroy previous tooltip if overwrite is enabled, or skip element if not
-	if($.data(this, 'qtip')) {
-		if(config.overwrite) {
+	if(data = $.data(this, 'qtip')) {
+		if(data.options.overwrite) {
 			elem.qtip('destroy');
 		}
-		else if(config.overwrite === FALSE) {
+		else if(data.options.overwrite === FALSE) {
 			return FALSE;
 		}
 	}
@@ -1664,7 +1664,7 @@ PLUGINS = QTIP.plugins = {
 						{ left: parseInt(parent.css('left'), 10) || 0, top: parseInt(parent.css('top'), 10) || 0 } :
 						parent.position();
 
-					pos.left -= coffset.left + (parseInt(parent.css('borderLeftWidth'), 10) || 0);
+					pos.left -= coffset.left + (parseInt(parent.css('borderLeftWidth'), 10) || 0) + (parseInt(parent.css('marginLeft'), 10) || 0);
 					pos.top -= coffset.top + (parseInt(parent.css('borderTopWidth'), 10) || 0);
 
 					deep++;
