@@ -681,6 +681,7 @@ function QTip(target, options, id, attr)
 					'id': tooltipID,
 					'class': uitooltip + ' qtip ui-helper-reset ' + defaultClass + ' ' + options.style.classes,
 					'width': options.style.width || '',
+					'height': options.style.height || '',
 					'tracking': posOptions.target === 'mouse' && posOptions.adjust.mouse,
 
 					/* ARIA specific attributes */
@@ -1327,6 +1328,9 @@ function QTip(target, options, id, attr)
 			// Set drawing flag
 			isDrawing = 1;
 
+			// If tooltip has a set height, just set it... like a boss!
+			if(options.style.height) { tooltip.css('height', options.style.height); }
+
 			// If tooltip has a set width, just set it... like a boss!
 			if(options.style.width) { tooltip.css('width', options.style.width); }
 
@@ -1841,7 +1845,8 @@ QTIP.defaults = {
 	style: {
 		classes: '',
 		widget: FALSE,
-		width: FALSE
+		width: FALSE,
+		height: FALSE
 	},
 	events: {
 		render: NULL,
