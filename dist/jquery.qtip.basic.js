@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Aug 9 11:38:03 2011 +0100
+* Date: Tue Aug 9 14:37:52 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1001,17 +1001,14 @@ function QTip(target, options, id, attr)
 				self.blur(event);
 			}
 
-			// Define post-animation state specific properties
+			// Define post-animation, state specific properties
 			function after() {
-				if(!state) {
-					// Reset CSS states
-					tooltip.css({
-						display: '',
-						visibility: '',
-						opacity: '',
-						left: '',
-						top: ''
-					});
+				if(state) {
+					// Prevent antialias from disappearing in IE by removing filter
+					if($.browser.msie) { tooltip[0].style.removeAttribute('filter'); }
+
+					// Remove overflow setting to prevent tip bugs
+					tooltip.css('overflow', '');
 
 					// Autofocus elements if enabled
 					if('string' === typeof opts.autofocus) {
@@ -1024,11 +1021,14 @@ function QTip(target, options, id, attr)
 					tooltip.trigger(callback, [self]);
 				}
 				else {
-					// Prevent antialias from disappearing in IE by removing filter
-					if($.browser.msie) { tooltip[0].style.removeAttribute('filter'); }
-
-					// Remove overflow setting to prevent tip bugs
-					tooltip.css('overflow', '');
+					// Reset CSS states
+					tooltip.css({
+						display: '',
+						visibility: '',
+						opacity: '',
+						left: '',
+						top: ''
+					});
 				}
 			}
 

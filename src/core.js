@@ -938,17 +938,14 @@ function QTip(target, options, id, attr)
 				self.blur(event);
 			}
 
-			// Define post-animation state specific properties
+			// Define post-animation, state specific properties
 			function after() {
-				if(!state) {
-					// Reset CSS states
-					tooltip.css({
-						display: '',
-						visibility: '',
-						opacity: '',
-						left: '',
-						top: ''
-					});
+				if(state) {
+					// Prevent antialias from disappearing in IE by removing filter
+					if($.browser.msie) { tooltip[0].style.removeAttribute('filter'); }
+
+					// Remove overflow setting to prevent tip bugs
+					tooltip.css('overflow', '');
 
 					// Autofocus elements if enabled
 					if('string' === typeof opts.autofocus) {
@@ -961,11 +958,14 @@ function QTip(target, options, id, attr)
 					tooltip.trigger(callback, [self]);
 				}
 				else {
-					// Prevent antialias from disappearing in IE by removing filter
-					if($.browser.msie) { tooltip[0].style.removeAttribute('filter'); }
-
-					// Remove overflow setting to prevent tip bugs
-					tooltip.css('overflow', '');
+					// Reset CSS states
+					tooltip.css({
+						display: '',
+						visibility: '',
+						opacity: '',
+						left: '',
+						top: ''
+					});
 				}
 			}
 
