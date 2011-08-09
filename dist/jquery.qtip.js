@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Aug 8 18:51:11 2011 +0100
+* Date: Mon Aug 8 19:15:47 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -2333,8 +2333,8 @@ function Tip(qTip, command)
 
 			// Detect tip colours from CSS styles
 			color.fill = fill = tip.css(backgroundColor);
-			color.border = border = tip[0].style[ borderSideCamel ] || tooltip.css(borderSide);
-
+			color.border = border = tip[0].style[ borderSideCamel ] || tip.css(borderSide) || tooltip.css(borderSide);
+			
 			// Make sure colours are valid
 			if(!fill || invalid.test(fill)) {
 				color.fill = colorElem.css(backgroundColor) || transparent;
