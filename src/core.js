@@ -954,6 +954,11 @@ function QTip(target, options, id, attr)
 					if('string' === typeof opts.autofocus) {
 						$(opts.autofocus, tooltip).focus();
 					}
+
+					// Call API method
+					callback = $.Event('tooltipvisible');
+					callback.originalEvent = event ? cache.event : NULL;
+					tooltip.trigger(callback, [self]);
 				}
 				else {
 					// Prevent antialias from disappearing in IE by removing filter
@@ -1844,6 +1849,7 @@ QTIP.defaults = {
 		show: NULL,
 		hide: NULL,
 		toggle: NULL,
+		visible: NULL,
 		focus: NULL,
 		blur: NULL
 	}
