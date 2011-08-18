@@ -85,7 +85,7 @@ function Modal(api)
 
 			// Focus any other visible modals when this one hides
 			.bind('tooltiphide'+globalNamespace, function(event) {
-				$('[' + attr + ']:visible').not(tooltip).last().qtip('focus', event);
+				$('[' + attr + ']').filter(':visible').not(tooltip).last().qtip('focus', event);
 			});
 
 			// Apply keyboard "Escape key" close handler

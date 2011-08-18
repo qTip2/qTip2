@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Fri Aug 12 20:46:46 2011 +0100
+* Date: Sun Aug 14 13:09:40 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -2891,7 +2891,7 @@ function Modal(api)
 
 			// Focus any other visible modals when this one hides
 			.bind('tooltiphide'+globalNamespace, function(event) {
-				$('[' + attr + ']:visible').not(tooltip).last().qtip('focus', event);
+				$('[' + attr + ']').filter(':visible').not(tooltip).last().qtip('focus', event);
 			});
 
 			// Apply keyboard "Escape key" close handler
