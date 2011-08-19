@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun Aug 14 13:09:40 2011 +0100
+* Date: Thu Aug 18 15:16:56 2011 -0700
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -2948,7 +2948,7 @@ function Modal(api)
 			var effect = options.effect,
 				type = state ? 'show': 'hide',
 				visible = overlay.is(':visible'),
-				modals = $('[' + attr + ']:visible').not(tooltip),
+				modals = $('[' + attr + ']').filter(':visible').not(tooltip),
 				zindex;
 
 			// Create our overlay if it isn't present already
