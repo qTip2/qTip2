@@ -142,7 +142,7 @@ function Modal(api)
 			var effect = options.effect,
 				type = state ? 'show': 'hide',
 				visible = overlay.is(':visible'),
-				modals = $('[' + attr + ']:visible').not(tooltip),
+				modals = $('[' + attr + ']').filter(':visible').not(tooltip),
 				zindex;
 
 			// Create our overlay if it isn't present already
