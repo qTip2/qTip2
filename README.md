@@ -3,7 +3,7 @@
 
 Pre-compiled scripts
 --------------------
-If you're not interested in compiling your own version of qTip2, you can grab the pre-compiled scripts from the 
+If you're not interested in compiling your own version of qTip2, you can grab the pre-compiled scripts from the
 [dist](http://github.com/Craga89/qTip2/tree/master/dist/) directory and get started quickly. If you want more options
 over what plugins are included in your build, take a look below.
 
@@ -45,8 +45,7 @@ You can also create each individually using these commands:
 
 	make qtip		# Build non-minified qTip2 source
 	make css 		# Build CSS files
-	make min 		# Build minified JS and CSS
-	make pack		# Build minified and packed qTip2 JS (smallest filesize!)
+	make min 		# Build minified JS and CSS (Smaller filesize)
 
 To build and test the source code against JSLint type this:
 
@@ -55,6 +54,13 @@ To build and test the source code against JSLint type this:
 Finally, you can remove all the built files using the command:
 
 	make clean
+
+
+Submitting a pull request to the qTip2 repository
+-------------------------------------------------
+If you're planning on submitting a pull request to the GitHub repository, you'll need to make sure your local git repo rebuilds the `dist/` directory on each commit. To do this,
+simply copy the `hooks` folder into the `.git` directory. Inside here is a pre-commit script that will run `make` for you prior to each commit call. Make sure to make MAke installed as
+detailed above
 
 
 Building to a different directory
@@ -67,21 +73,21 @@ With this example, the output files would end up in `/home/craig/qtip/dist/`.
 
 Choosing which features are included in your qTip2 build
 --------------------------------------------------------
-By default qTip2 is built with all plugins built into the file. You can see an example of this in the [dist](http://github.com/Craga89/qTip2/tree/master/dist/)
-directory files. If you want more control over what plugins are included, you can do so by adding some extra parameters to your build commands.
+By default qTip2 is built with all plugins enabled. You can see an example of this in the [dist](http://github.com/Craga89/qTip2/tree/master/dist/jquery.qtip.js) file.
+If you want more control over what plugins are included, you can do so by adding some extra parameters to your build commands.
 
 For example, if you plan on using only the tips plugin, you'd specify the plugins variable as so:
 
-	make PLUGINS="src/tips.js" [command]
-	
-Notice the only thing that was added was the PLUGINS parameter. This tells the compiler which files to include in the final qTip2 build. You can specify multiple
-plugins by separating them wit a space:
+	make PLUGINS="tips" [command]
 
-	make PLUGINS="src/tips.js src/ajax.js src/modal.js" [command]
-	
+Notice the only thing that was added was the PLUGINS parameter. This tells the compiler which files to include in the final qTip2 build. You can specify multiple
+plugins by separating them with a space:
+
+	make PLUGINS="tips ajax modal" [command]
+
 By default all plugins are included in the build, so the regular `[make all]` command is actually equivilent to:
 
-	make PLUGINS="src/ajax.js src/tips.js src/imagemap.js src/svg.js src/modal.js src/bgiframe.js" [command]
+	make PLUGINS="ajax tips imagemap svg modal bgiframe" [command]
 
 * Note: The above was correct at the time of writing. Subsequent revisions may change file names or add new plugins, so checkout the Makefile for a full up-to-date list of all plugins*
 

@@ -31,5 +31,5 @@ if ( found > 0 ) {
 	print( "\n" + found + " Error(s) found.\n" );
 	
 } else {
-	print( "JSLint check passed.\n" );
+	print( "Success!\n" );
 }
