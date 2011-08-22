@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Fri Aug 19 08:14:39 2011 +0100
+* Date: Sat Aug 20 18:18:17 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -742,7 +742,7 @@ function QTip(target, options, id, attr)
 			// Create tooltip element
 			tooltip = elements.tooltip = $('<div/>', {
 					'id': tooltipID,
-					'class': uitooltip + ' qtip ui-helper-reset ' + defaultClass + ' ' + options.style.classes,
+					'class': uitooltip + ' qtip ui-helper-reset ' + defaultClass + ' ' + options.style.classes + ' '+ uitooltip + '-pos-' + options.position.my.abbreviation(),
 					'width': options.style.width || '',
 					'height': options.style.height || '',
 					'tracking': posOptions.target === 'mouse' && posOptions.adjust.mouse,
@@ -1138,12 +1138,14 @@ function QTip(target, options, id, attr)
 				fixed = tooltip.css('position') === 'fixed',
 				viewport = posOptions.viewport,
 				position = { left: 0, top: 0 },
+				flipoffset = FALSE,
 				tip = self.plugins.tip,
 				readjust = {
-					// Repositioning method and axis detection
+					// Axis detection and readjustment indicator
 					horizontal: method[0],
-					vertical: method[1] || method[0],
-
+					vertical: (method[1] = method[1] || method[0]),
+					enabled: viewport.jquery && target[0] !== window && target[0] !== docBody && adjust.method !== 'none',
+			 
 					// Reposition methods
 					left: function(posLeft) {
 						var isShift = readjust.horizontal === 'shift',
@@ -1292,7 +1294,7 @@ function QTip(target, options, id, attr)
 
 				// Use Imagemap/SVG plugins if needed
 				else if(target.is('area') && PLUGINS.imagemap) {
-					position = PLUGINS.imagemap(target, at);
+					position = PLUGINS.imagemap(target, at, readjust.enabled ? method : FALSE);
 				}
 				else if(target[0].namespaceURI === 'http://www.w3.org/2000/svg' && PLUGINS.svg) {
 					position = PLUGINS.svg(target, at);
@@ -1309,12 +1311,15 @@ function QTip(target, options, id, attr)
 				if(position.offset) {
 					targetWidth = position.width;
 					targetHeight = position.height;
+					flipoffset = position.flipoffset;
 					position = position.offset;
 				}
+				else {
 
 				// Adjust position relative to target
 				position.left += at.x === 'right' ? targetWidth : at.x === 'center' ? targetWidth / 2 : 0;
 				position.top += at.y === 'bottom' ? targetHeight : at.y === 'center' ? targetHeight / 2 : 0;
+				}
 			}
 
 			// Adjust position relative to tooltip
@@ -1322,9 +1327,7 @@ function QTip(target, options, id, attr)
 			position.top += adjust.y + (my.y === 'bottom' ? -elemHeight : my.y === 'center' ? -elemHeight / 2 : 0);
 
 			// Calculate collision offset values if viewport positioning is enabled
-			if(viewport.jquery && target[0] !== window && target[0] !== docBody &&
-				readjust.vertical+readjust.horizontal !== 'nonenone')
-			{
+			if(readjust.enabled) {
 				// Cache our viewport details
 				viewport = {
 					elem: viewport,
@@ -1340,16 +1343,21 @@ function QTip(target, options, id, attr)
 					left: readjust.horizontal !== 'none' ? readjust.left(position.left) : 0,
 					top: readjust.vertical !== 'none' ? readjust.top(position.top) : 0
 				};
+
+				// Set tooltip position class
+				if(position.adjusted.left + position.adjusted.top) {
+					tooltip.attr('class', function(i, val) {
+						return val.replace(/ui-tooltip-pos-\w+/i, uitooltip + '-pos-' + my.abbreviation());
+					});
+				}
+
+				// Apply flip offsets supplied by positioning plugins
+				if(flipoffset && position.adjusted.left) { position.left += flipoffset.left; }
+				if(flipoffset && position.adjusted.top) {  position.top += flipoffset.top; }
 			}
 
 			//Viewport adjustment is disabled, set values to zero
 			else { position.adjusted = { left: 0, top: 0 }; }
-
-			// Set tooltip position class
-			tooltip.attr('class', function(i, val) {
-				return $.attr(this, 'class').replace(/ui-tooltip-pos-\w+/i, '');
-			})
-			.addClass(uitooltip + '-pos-' + my.abbreviation());
 
 			// Call API method
 			callback.originalEvent = $.extend({}, event);

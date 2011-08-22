@@ -1,4 +1,4 @@
-PLUGINS.imagemap = function(area, corner)
+PLUGINS.imagemap = function(area, corner, flip)
 {
 	if(!area.jquery) { area = $(area); }
 
@@ -11,12 +11,12 @@ PLUGINS.imagemap = function(area, corner)
 			width: 0, height: 0,
 			offset: { top: 1e10, right: 0, bottom: 0, left: 1e10 }
 		},
-		i = 0, next = 0;
+		i = 0, next = 0, dimensions;
 
 	// POLY area coordinate calculator
 	//	Special thanks to Ed Cradock for helping out with this.
 	//	Uses a binary search algorithm to find suitable coordinates.
-	function polyCoordinates(result, coords)
+	function polyCoordinates(result, coords, corner)
 	{
 		var i = 0,
 			compareX = 1, compareY = 1,
@@ -113,7 +113,18 @@ PLUGINS.imagemap = function(area, corner)
 				};
 			}
 			else {
-				result.offset = polyCoordinates(result, coords.slice());
+				result.offset = polyCoordinates(result, coords.slice(), corner);
+
+				// If flip adjustment is enabled, also calculate the closest opposite point
+				if(flip && (flip[0] === 'flip' || flip[1] === 'flip')) {
+					result.flipoffset = polyCoordinates(result, coords.slice(), {
+						x: corner.x === 'left' ? 'right' : corner.x === 'right' ? 'left' : 'center',
+						y: corner.y === 'top' ? 'bottom' : corner.y === 'bottom' ? 'top' : 'center'
+					});
+
+					result.flipoffset.left -= result.offset.left;
+					result.flipoffset.top -= result.offset.top;
+				}
 			}
 
 			result.width = result.height = 0;
