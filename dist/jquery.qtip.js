@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sat Aug 20 18:18:17 2011 +0100
+* Date: Wed Aug 24 15:36:08 2011 -0700
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -402,7 +402,7 @@ function QTip(target, options, id, attr)
 
 					// Restart timer
 					self.timers.img[elem.src] = setTimeout(timer, 700);
-				}());
+				}());  
 
 				// Also apply regular load/error event handlers
 				$(elem).bind('error'+namespace+' load'+namespace, function(){ imageLoad(this); });
