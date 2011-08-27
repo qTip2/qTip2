@@ -34,6 +34,7 @@ function Modal(api)
 			// Add unique attribute so we can grab modal tooltips easily via a selector
 			tooltip.attr(attr, TRUE)
 
+			// Set z-index
 			.css('z-index', PLUGINS.modal.zindex + $(selector+'['+attr+']').length)
 			
 			// Remove previous bound events in globalNamespace
@@ -80,7 +81,7 @@ function Modal(api)
 				tooltip.addClass(focusClass)[0].style.zIndex = newIndex;
 
 				// Prevent default handling
-				event.preventDefault();
+				try { event.preventDefault(); } catch(e) {}
 			})
 
 			// Focus any other visible modals when this one hides

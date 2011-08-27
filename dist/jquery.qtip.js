@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Aug 22 01:08:55 2011 +0100
+* Date: Sat Aug 27 16:05:30 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -2309,6 +2309,7 @@ function Modal(api)
 			// Add unique attribute so we can grab modal tooltips easily via a selector
 			tooltip.attr(attr, TRUE)
 
+			// Set z-index
 			.css('z-index', PLUGINS.modal.zindex + $(selector+'['+attr+']').length)
 			
 			// Remove previous bound events in globalNamespace
@@ -2355,7 +2356,7 @@ function Modal(api)
 				tooltip.addClass(focusClass)[0].style.zIndex = newIndex;
 
 				// Prevent default handling
-				event.preventDefault();
+				try { event.preventDefault(); } catch(e) {}
 			})
 
 			// Focus any other visible modals when this one hides
