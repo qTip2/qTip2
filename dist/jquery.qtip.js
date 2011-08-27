@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sat Aug 20 18:18:17 2011 +0100
+* Date: Mon Aug 22 01:08:55 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1179,10 +1179,10 @@ function QTip(target, options, id, attr)
 						// Default 'flip' repositioning
 						else {
 							if(overflowLeft > 0 && (my.x !== 'left' || overflowRight > 0)) {
-								position.left -= offset + (isCenter ? 0 : 2 * adjust.x);
+								position.left -= offset;
 							}
 							else if(overflowRight > 0 && (my.x !== 'right' || overflowLeft > 0)  ) {
-								position.left -= isCenter ? -offset : offset + (2 * adjust.x);
+								position.left -= isCenter ? -offset : offset;
 							}
 							if(position.left !== posLeft && isCenter) { position.left -= adjust.x; }
 							
@@ -1224,10 +1224,10 @@ function QTip(target, options, id, attr)
 						// Default 'flip' repositioning
 						else {
 							if(overflowTop > 0 && (my.y !== 'top' || overflowBottom > 0)) {
-								position.top -= offset + (isCenter ? 0 : 2 * adjust.y);
+								position.top -= offset;
 							}
 							else if(overflowBottom > 0 && (my.y !== 'bottom' || overflowTop > 0)  ) {
-								position.top -= isCenter ? -offset : offset + (2 * adjust.y);
+								position.top -= isCenter ? -offset : offset;
 							}
 							if(position.top !== posTop && isCenter) { position.top -= adjust.y; }
 
