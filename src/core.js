@@ -1727,7 +1727,7 @@ PLUGINS = QTIP.plugins = {
 					title = 'title',
 					api = $.data(self, 'qtip');
 
-				if(attr === title && 'object' === typeof api && api.options.suppress) {
+				if(attr === title && api && 'object' === typeof api && api.options.suppress) {
 					if(arguments.length < 2) {
 						return $.attr(self, oldtitle);
 					}

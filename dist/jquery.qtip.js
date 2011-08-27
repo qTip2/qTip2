@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sat Aug 27 16:20:38 2011 +0100
+* Date: Sat Aug 27 17:32:33 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1790,7 +1790,7 @@ PLUGINS = QTIP.plugins = {
 					title = 'title',
 					api = $.data(self, 'qtip');
 
-				if(attr === title && 'object' === typeof api && api.options.suppress) {
+				if(attr === title && api && 'object' === typeof api && api.options.suppress) {
 					if(arguments.length < 2) {
 						return $.attr(self, oldtitle);
 					}
