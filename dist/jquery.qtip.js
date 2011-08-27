@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sat Aug 27 16:18:00 2011 +0100
+* Date: Sat Aug 27 16:20:38 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1847,7 +1847,7 @@ PLUGINS = QTIP.plugins = {
 
 // Apply the fn overrides above
 $.each(PLUGINS.fn, function(name, func) {
-	if(!func) { return TRUE; }
+	if(!func || $.fn[name+replaceSuffix]) { return TRUE; }
 	
 	var old = $.fn[name+replaceSuffix] = $.fn[name];
 	$.fn[name] = function() {

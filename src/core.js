@@ -1784,7 +1784,7 @@ PLUGINS = QTIP.plugins = {
 
 // Apply the fn overrides above
 $.each(PLUGINS.fn, function(name, func) {
-	if(!func) { return TRUE; }
+	if(!func || $.fn[name+replaceSuffix]) { return TRUE; }
 	
 	var old = $.fn[name+replaceSuffix] = $.fn[name];
 	$.fn[name] = function() {
