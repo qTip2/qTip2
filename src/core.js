@@ -1123,10 +1123,10 @@ function QTip(target, options, id, attr)
 						// Default 'flip' repositioning
 						else {
 							if(overflowLeft > 0 && (my.x !== 'left' || overflowRight > 0)) {
-								position.left -= offset + (isCenter ? 0 : 2 * adjust.x);
+								position.left -= offset;
 							}
 							else if(overflowRight > 0 && (my.x !== 'right' || overflowLeft > 0)  ) {
-								position.left -= isCenter ? -offset : offset + (2 * adjust.x);
+								position.left -= isCenter ? -offset : offset;
 							}
 							if(position.left !== posLeft && isCenter) { position.left -= adjust.x; }
 							
@@ -1168,10 +1168,10 @@ function QTip(target, options, id, attr)
 						// Default 'flip' repositioning
 						else {
 							if(overflowTop > 0 && (my.y !== 'top' || overflowBottom > 0)) {
-								position.top -= offset + (isCenter ? 0 : 2 * adjust.y);
+								position.top -= offset;
 							}
 							else if(overflowBottom > 0 && (my.y !== 'bottom' || overflowTop > 0)  ) {
-								position.top -= isCenter ? -offset : offset + (2 * adjust.y);
+								position.top -= isCenter ? -offset : offset;
 							}
 							if(position.top !== posTop && isCenter) { position.top -= adjust.y; }
 
@@ -1734,7 +1734,7 @@ PLUGINS = QTIP.plugins = {
 					title = 'title',
 					api = $.data(self, 'qtip');
 
-				if(attr === title && 'object' === typeof api && api.options.suppress) {
+				if(attr === title && api && 'object' === typeof api && api.options.suppress) {
 					if(arguments.length < 2) {
 						return $.attr(self, oldtitle);
 					}
@@ -1791,7 +1791,7 @@ PLUGINS = QTIP.plugins = {
 
 // Apply the fn overrides above
 $.each(PLUGINS.fn, function(name, func) {
-	if(!func) { return TRUE; }
+	if(!func || $.fn[name+replaceSuffix]) { return TRUE; }
 	
 	var old = $.fn[name+replaceSuffix] = $.fn[name];
 	$.fn[name] = function() {
