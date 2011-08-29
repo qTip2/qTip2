@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun Aug 28 14:09:00 2011 -0700
+* Date: Mon Aug 29 15:25:34 2011 -0700
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -2444,9 +2444,17 @@ function Modal(api)
 
 				// Make sure we can't focus anything outside the tooltip
 				docBody.bind('focusin'+namespace, function(event) {
-          var target = $(event.target),
+          var target           = $(event.target),
             targetTipContainer = target.closest('.qtip'),
-            targetOnTop = (targetTipContainer.length > 0) && (parseInt(targetTipContainer.css('zIndex'), 10) > parseInt(tooltip.css('zIndex'), 10));
+            targetOnTop;
+
+            if (targetTipContainer.length > 0) {
+              // The item we tried to focus on was inside a qtip...
+              targetOnTop = (targetTipContainer.length > 0) && (parseInt(targetTipContainer.css('zIndex'), 10) > parseInt(tooltip.css('zIndex'), 10));
+            }
+            else {
+              targetOnTop = false;
+            }
 
           // If we're showing a modal, but focus has landed on an input below
           // this modal, divert focus to the first visible input in this modal
