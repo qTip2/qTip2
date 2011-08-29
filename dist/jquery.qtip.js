@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun Aug 28 14:05:44 2011 -0700
+* Date: Sun Aug 28 14:09:00 2011 -0700
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -2443,9 +2443,15 @@ function Modal(api)
 				overlay.toggleClass('blurs', options.blur);
 
 				// Make sure we can't focus anything outside the tooltip
-				docBody.delegate('*', 'focusin'+namespace, function(event) {
-					if($(event.target).closest(selector)[0] !== tooltip[0]) {
-						$('a, :input, img', tooltip).add(tooltip).focus();
+				docBody.bind('focusin'+namespace, function(event) {
+          var target = $(event.target),
+            targetTipContainer = target.closest('.qtip'),
+            targetOnTop = (targetTipContainer.length > 0) && (parseInt(targetTipContainer.css('zIndex'), 10) > parseInt(tooltip.css('zIndex'), 10));
+
+          // If we're showing a modal, but focus has landed on an input below
+          // this modal, divert focus to the first visible input in this modal
+					if(($(event.target).closest(selector)[0] !== tooltip[0]) && !targetOnTop) {
+					  tooltip.find('input:visible').filter(':first').focus();
 					}
 				});
 			}

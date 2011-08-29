@@ -161,9 +161,23 @@ function Modal(api)
 				overlay.toggleClass('blurs', options.blur);
 
 				// Make sure we can't focus anything outside the tooltip
-				docBody.delegate('*', 'focusin'+namespace, function(event) {
-					if($(event.target).closest(selector)[0] !== tooltip[0]) {
-						$('a, :input, img', tooltip).add(tooltip).focus();
+				docBody.bind('focusin'+namespace, function(event) {
+          var target           = $(event.target),
+            targetTipContainer = target.closest('.qtip'),
+            targetOnTop;
+
+            if (targetTipContainer.length > 0) {
+              // The item we tried to focus on was inside a qtip...
+              targetOnTop = (targetTipContainer.length > 0) && (parseInt(targetTipContainer.css('zIndex'), 10) > parseInt(tooltip.css('zIndex'), 10));
+            }
+            else {
+              targetOnTop = false;
+            }
+
+          // If we're showing a modal, but focus has landed on an input below
+          // this modal, divert focus to the first visible input in this modal
+					if(($(event.target).closest(selector)[0] !== tooltip[0]) && !targetOnTop) {
+					  tooltip.find('input:visible').filter(':first').focus();
 					}
 				});
 			}
