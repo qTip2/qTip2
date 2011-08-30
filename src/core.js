@@ -326,13 +326,20 @@ function QTip(target, options, id, attr)
 				// Skip if the src is already present
 				if(srcs[elem.src] !== undefined) { return; }
 
+        // Keep track of how many times we poll for image dimensions.
+        // If it doesn't return in a reasonable amount of time, it's better
+        // to display the tooltip, rather than hold up the queue.
+        var iterations = 0, maxIterations = 3;
+
 				(function timer(){
 					// When the dimensions are found, remove the image from the queue
-					if(elem.height || elem.width) { return imageLoad(elem); }
+					if(elem.height || elem.width || (iterations > maxIterations)) { return imageLoad(elem); }
+
+          iterations += 1;
 
 					// Restart timer
 					self.timers.img[elem.src] = setTimeout(timer, 700);
-				}());
+				}());  
 
 				// Also apply regular load/error event handlers
 				$(elem).bind('error'+namespace+' load'+namespace, function(){ imageLoad(this); });
