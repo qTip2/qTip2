@@ -1251,12 +1251,10 @@ function QTip(target, options, id, attr)
 					flipoffset = position.flipoffset;
 					position = position.offset;
 				}
-				else {
 
 				// Adjust position relative to target
 				position.left += at.x === 'right' ? targetWidth : at.x === 'center' ? targetWidth / 2 : 0;
 				position.top += at.y === 'bottom' ? targetHeight : at.y === 'center' ? targetHeight / 2 : 0;
-				}
 			}
 
 			// Adjust position relative to tooltip

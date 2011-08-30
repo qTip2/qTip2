@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sat Aug 27 17:34:23 2011 +0100
+* Date: Sat Aug 27 17:36:27 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1314,12 +1314,10 @@ function QTip(target, options, id, attr)
 					flipoffset = position.flipoffset;
 					position = position.offset;
 				}
-				else {
 
 				// Adjust position relative to target
 				position.left += at.x === 'right' ? targetWidth : at.x === 'center' ? targetWidth / 2 : 0;
 				position.top += at.y === 'bottom' ? targetHeight : at.y === 'center' ? targetHeight / 2 : 0;
-				}
 			}
 
 			// Adjust position relative to tooltip
