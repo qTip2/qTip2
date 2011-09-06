@@ -121,7 +121,7 @@ function Modal(api)
 				html: '<div></div>',
 				mousedown: function() { return FALSE; }
 			})
-			.insertBefore( $(selector).first() );
+			.prependTo(document.body);
 
 			// Update position on window resize or scroll
 			$(window).unbind(globalNamespace).bind('resize'+globalNamespace, function() {
