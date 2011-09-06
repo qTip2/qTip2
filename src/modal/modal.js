@@ -65,7 +65,7 @@ function Modal(api)
 				curIndex = parseInt(tooltip[0].style.zIndex, 10);
 
 				// Set overlay z-index
-				overlay[0].style.zIndex = newIndex;
+				overlay[0].style.zIndex = newIndex - 1;
 
 				// Reduce modal z-index's and keep them properly ordered
 				qtips.each(function() {
@@ -113,7 +113,10 @@ function Modal(api)
 			var elem = $(overlaySelector);
 
 			// Return if overlay is already rendered
-			if(elem.length) { elems.overlay = elem; return elem; }
+			if(elem.length) {
+				// Modal overlay should always be below all tooltips if possible
+				return (elems.overlay = elem.insertAfter( $(selector).last() ));
+			}
 
 			// Create document overlay
 			overlay = elems.overlay = $('<div />', {
@@ -121,7 +124,7 @@ function Modal(api)
 				html: '<div></div>',
 				mousedown: function() { return FALSE; }
 			})
-			.prependTo(document.body);
+			.insertAfter( $(selector).last() );
 
 			// Update position on window resize or scroll
 			$(window).unbind(globalNamespace).bind('resize'+globalNamespace, function() {
