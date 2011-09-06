@@ -1242,7 +1242,7 @@ function QTip(target, options, id, attr)
 					targetWidth = target.outerWidth();
 					targetHeight = target.outerHeight();
 
-					position = PLUGINS.offset(target, posOptions.container, fixed);
+					position = PLUGINS.offset(target, posOptions.container);
 				}
 
 				// Parse returned plugin values into proper variables
@@ -1675,7 +1675,7 @@ PLUGINS = QTIP.plugins = {
 	},
 
 	// Custom (more correct for qTip!) offset calculator
-	offset: function(elem, container, fixed) {
+	offset: function(elem, container) {
 		var pos = elem.offset(),
 			parent = container,
 			deep = 0,
