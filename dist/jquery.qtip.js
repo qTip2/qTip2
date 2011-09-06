@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sat Aug 27 17:36:27 2011 +0100
+* Date: Tue Aug 30 11:39:47 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1237,7 +1237,8 @@ function QTip(target, options, id, attr)
 
 						return position.top - posTop;
 					}
-				};
+				},
+				win;
 
 			// Check if absolute position was passed
 			if($.isArray(target) && target.length === 2) {
@@ -1313,6 +1314,13 @@ function QTip(target, options, id, attr)
 					targetHeight = position.height;
 					flipoffset = position.flipoffset;
 					position = position.offset;
+				}
+
+				// Adjust for position.fixed tooltips (and also iOS scroll bug in v3.2 - v4.0)
+				if((PLUGINS.iOS < 4.1 && PLUGINS.iOS > 3.1) || PLUGINS.iOS == 4.3 || (!PLUGINS.iOS && fixed)) {
+					win = $(window);
+					position.left -= win.scrollLeft();
+					position.top -= win.scrollTop();
 				}
 
 				// Adjust position relative to target
@@ -1761,9 +1769,6 @@ PLUGINS = QTIP.plugins = {
 
 			// Compensate for containers scroll if it also has an offsetParent
 			if(container[0] !== docBody && deep > 1) { scroll( container, 1 ); }
-
-			// Adjust for position.fixed tooltips (and also iOS scroll bug in v3.2 - v4.0)
-			if((PLUGINS.iOS < 4.1 && PLUGINS.iOS > 3.1) || (!PLUGINS.iOS && fixed)) { scroll( $(window), -1 ); }
 		}
 
 		return pos;
