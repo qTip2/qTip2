@@ -46,7 +46,7 @@ function Modal(api)
 				
 				// Make sure mouseout doesn't trigger a hide when showing the modal and mousing onto backdrop
 				if(oEvent && event.type === 'tooltiphide' && /mouse(leave|enter)/.test(oEvent.type) && $(oEvent.relatedTarget).closest(overlay[0]).length) {
-					event.preventDefault();
+					try { event.preventDefault(); } catch(e) {}
 				}
 				else {
 					self[ event.type.replace('tooltip', '') ](event, duration);
