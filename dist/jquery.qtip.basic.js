@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Sep 7 01:18:55 2011 +0100
+* Date: Tue Sep 13 17:05:46 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1473,7 +1473,8 @@ function QTip(target, options, id, attr)
 		destroy: function()
 		{
 			var t = target[0],
-				title = $.attr(t, oldtitle);
+				title = $.attr(t, oldtitle),
+				elemAPI = target.data('qtip');
 
 			// Destroy tooltip and  any associated plugins if rendered
 			if(self.rendered) {
@@ -1489,17 +1490,23 @@ function QTip(target, options, id, attr)
 			clearTimeout(self.timers.hide);
 			unassignEvents();
 
-			// Remove api object
-			$.removeData(t, 'qtip');
+			// If the API if actually this qTip API...
+			if(!elemAPI || self === elemAPI) {
+				// Remove api object
+				$.removeData(t, 'qtip');
 
-			// Reset old title attribute if removed 
-			if(options.suppress && title) {
-				$.attr(t, 'title', title);
-				target.removeAttr(oldtitle);
+				// Reset old title attribute if removed
+				if(options.suppress && title) {
+					$.attr(t, 'title', title);
+					target.removeAttr(oldtitle);
+				}
+
+				// Remove ARIA attributes
+				target.removeAttr('aria-describedby');
 			}
 
-			// Remove ARIA attributes and bound qtip events
-			target.removeAttr('aria-describedby').unbind('.qtip');
+			// Remove qTip events associated with this API
+			target.unbind('.qtip-'+id);
 
 			// Remove ID from sued id object
 			delete usedIDs[self.id];
@@ -1589,7 +1596,7 @@ function init(id, opts)
 	$.data(this, 'qtip', obj);
 
 	// Catch remove events on target element to destroy redundant tooltip
-	elem.bind('remove.qtip', function(){ obj.destroy(); });
+	elem.bind('remove.qtip-'+id, function(){ obj.destroy(); });
 
 	return obj;
 }
