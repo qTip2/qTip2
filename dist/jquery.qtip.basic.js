@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Sep 7 01:08:28 2011 +0100
+* Date: Wed Sep 7 01:18:55 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -739,7 +739,8 @@ function QTip(target, options, id, attr)
 		{
 			if(self.rendered) { return self; } // If tooltip has already been rendered, exit
 
-			var title = options.content.title.text,
+			var text = options.content.text,
+				title = options.content.title.text,
 				posOptions = options.position,
 				callback = $.Event('tooltiprender');
 
@@ -777,14 +778,16 @@ function QTip(target, options, id, attr)
 			self.rendered = -1;
 			isDrawing = 1; isPositioning = 1;
 
-			// Update title
+			// Create title...
 			if(title) { 
 				createTitle();
-				updateTitle(title, FALSE);
+
+				// Update title only if its not a callback (called in toggle if so)
+				if(!$.isFunction(title)) { updateTitle(title, FALSE); }
 			}
 
-			// Set proper rendered flag and update content
-			updateContent(options.content.text, FALSE);
+			// Set proper rendered flag and update content if not a callback function (called in toggle)
+			if(!$.isFunction(text)) { updateContent(text, FALSE); }
 			self.rendered = TRUE;
 
 			// Setup widget classes
