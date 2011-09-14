@@ -37,17 +37,18 @@ function Ajax(api)
 
 		load: function(event, first)
 		{
-			// Make sure default event hasn't been prevented
-			if(event && event.isDefaultPrevented()) { return self; }
-			
+
 			var hasSelector = opts.url.indexOf(' '),
 				url = opts.url,
 				selector,
 				hideFirst = opts.once && !opts.loading && first;
 
-			// If loading option is disabled, hide the tooltip until content is retrieved (first time only)
-			if(hideFirst) { tooltip.css('visibility', 'hidden'); }
+			// If loading option is disabled, prevent the tooltip showing until we've completed the request
+			if(hideFirst) { try{ event.preventDefault(); } catch(e) {} }
 
+			// Make sure default event hasn't been prevented
+			else if(event && event.isDefaultPrevented()) { return self; }
+			
 			// Check if user delcared a content selector like in .load()
 			if(hasSelector > -1) {
 				selector = url.substr(hasSelector);
@@ -57,7 +58,7 @@ function Ajax(api)
 			// Define common after callback for both success/error handlers
 			function after() {
 				// Re-display tip if loading and first time, and reset first flag
-				if(hideFirst) { tooltip.css('visibility', ''); first = FALSE; }
+				if(hideFirst) { api.show(event.originalEvent); first = FALSE; }
 
 				// Call users complete if it was defined
 				if($.isFunction(opts.complete)) { opts.complete.apply(this, arguments); }
@@ -85,8 +86,6 @@ function Ajax(api)
 
 			// Setup $.ajax option object and process the request
 			$.ajax( $.extend({ success: successHandler, error: errorHandler, context: api }, opts, { url: url, complete: after }) );
-			
-			return self;
 		}
 	});
 
