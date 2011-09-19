@@ -1697,7 +1697,7 @@ PLUGINS = QTIP.plugins = {
 			parent = container,
 			deep = 0,
 			docBody = document.body,
-			coffset;
+			coffset, overflow;
 
 		function scroll(e, i) {
 			pos.left += i * e.scrollLeft();
@@ -1715,14 +1715,16 @@ PLUGINS = QTIP.plugins = {
 					pos.left -= coffset.left + (parseInt(parent.css('borderLeftWidth'), 10) || 0) + (parseInt(parent.css('marginLeft'), 10) || 0);
 					pos.top -= coffset.top + (parseInt(parent.css('borderTopWidth'), 10) || 0);
 
-					deep++;
+					overflow = parent.css('overflow');
+					if(overflow === 'scroll' || overflow === 'auto') { deep++; }
 				}
+				
 				if(parent[0] === docBody) { break; }
 			}
 			while(parent = parent.offsetParent());
 
 			// Compensate for containers scroll if it also has an offsetParent
-			if(container[0] !== docBody && deep > 1) { scroll( container, 1 ); }
+			if(container[0] !== docBody && deep) { scroll( container, 1 ); }
 		}
 
 		return pos;
