@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Sep 14 01:09:26 2011 +0100
+* Date: Mon Sep 19 17:45:44 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1980,8 +1980,7 @@ function Ajax(api)
 	};
 
 	$.extend(self, {
-		init: function()
-		{
+		init: function() {
 			// Make sure ajax options are enabled and bind event
 			if(opts && opts.url) {
 				tooltip.unbind(namespace)[ opts.once ? 'one' : 'bind' ]('tooltipshow'+namespace, self.load);
@@ -1990,9 +1989,7 @@ function Ajax(api)
 			return self;
 		},
 
-		load: function(event, first)
-		{
-
+		load: function(event, first) {
 			var hasSelector = opts.url.indexOf(' '),
 				url = opts.url,
 				selector,
@@ -2037,7 +2034,10 @@ function Ajax(api)
 			}
 
 			// Error handler
-			function errorHandler(xh, status, error){ api.set('content.text', status + ': ' + error); }
+			function errorHandler(xh, status, error) {
+				if (xh.status === 0) { return; }
+				api.set('content.text', status + ': ' + error);
+			}
 
 			// Setup $.ajax option object and process the request
 			$.ajax( $.extend({ success: successHandler, error: errorHandler, context: api }, opts, { url: url, complete: after }) );
