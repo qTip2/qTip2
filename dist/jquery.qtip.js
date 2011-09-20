@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Sep 19 17:45:44 2011 +0100
+* Date: Mon Sep 19 18:27:05 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -993,7 +993,7 @@ function QTip(target, options, id, attr)
 				self.reposition(event);
 
 				// Hide other tooltips if tooltip is solo, using it as the context
-				if(opts.solo) { $(selector, opts.solo).not(tooltip).qtip('hide', callback); }
+				if((callback.solo = !!opts.solo)) { $(selector, opts.solo).not(tooltip).qtip('hide', callback); }
 			}
 			else {
 				// Clear show timer if we're hiding 
@@ -2339,12 +2339,12 @@ function Modal(api)
 			// Apply our show/hide/focus modal events
 			.bind('tooltipshow'+globalNamespace+' tooltiphide'+globalNamespace, function(event, api, duration) {
 				var oEvent = event.originalEvent;
-				
+
 				// Make sure mouseout doesn't trigger a hide when showing the modal and mousing onto backdrop
 				if(oEvent && event.type === 'tooltiphide' && /mouse(leave|enter)/.test(oEvent.type) && $(oEvent.relatedTarget).closest(overlay[0]).length) {
 					try { event.preventDefault(); } catch(e) {}
 				}
-				else {
+				else if(oEvent && !oEvent.solo){
 					self[ event.type.replace('tooltip', '') ](event, duration);
 				}
 			})

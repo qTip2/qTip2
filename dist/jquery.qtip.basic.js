@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Sep 19 17:45:44 2011 +0100
+* Date: Mon Sep 19 18:27:05 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -993,7 +993,7 @@ function QTip(target, options, id, attr)
 				self.reposition(event);
 
 				// Hide other tooltips if tooltip is solo, using it as the context
-				if(opts.solo) { $(selector, opts.solo).not(tooltip).qtip('hide', callback); }
+				if((callback.solo = !!opts.solo)) { $(selector, opts.solo).not(tooltip).qtip('hide', callback); }
 			}
 			else {
 				// Clear show timer if we're hiding 
