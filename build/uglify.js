@@ -130,7 +130,7 @@ function output(text) {
                         mode: 0644
                 });
         }
-        out.write(text);
+        out.write(text + ';');
         out.end();
 };
 
