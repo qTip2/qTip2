@@ -186,13 +186,9 @@ function QTip(target, options, id, attr)
 		// Create button and setup attributes
 		elements.button.appendTo(elements.titlebar)
 			.attr('role', 'button')
-			.hover(function(event){ $(this).toggleClass('ui-state-hover', event.type === 'mouseenter'); })
 			.click(function(event) {
 				if(!tooltip.hasClass(disabled)) { self.hide(event); }
 				return FALSE;
-			})
-			.bind('mousedown keydown mouseup keyup mouseout', function(event) {
-				$(this).toggleClass('ui-state-active ui-state-focus', event.type.substr(-4) === 'down');
 			});
 
 		// Redraw the tooltip when we're done
@@ -217,10 +213,19 @@ function QTip(target, options, id, attr)
 				'aria-atomic': TRUE
 			})
 		)
-		.insertBefore(elements.content);
+		.insertBefore(elements.content)
+
+		// Button-specific events
+		.delegate('.ui-state-default', 'mousedown keydown mouseup keyup mouseout', function(event) {
+			$(this).toggleClass('ui-state-active ui-state-focus', event.type.substr(-4) === 'down');
+		})
+		.delegate('.ui-state-default', 'mouseover mouseout', function(event){
+			$(this).toggleClass('ui-state-hover', event.type === 'mouseover');
+		});
 
 		// Create button if enabled
 		if(options.content.title.button) { createButton(); }
+
 
 		// Redraw the tooltip dimensions if it's rendered
 		else if(self.rendered){ self.redraw(); } 
