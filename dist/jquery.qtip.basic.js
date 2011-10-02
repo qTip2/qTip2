@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Sep 20 22:20:54 2011 +0100
+* Date: Tue Sep 27 15:50:03 2011 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -554,7 +554,7 @@ function QTip(target, options, id, attr)
 				var $target = $(event.target),
 					enabled = !tooltip.hasClass(disabled) && tooltip.is(':visible');
 
-				if($target[0] !== tooltip[0] && $target.parents(selector).length === 0 && $target.add(target).length > 1) {
+				if($target[0] !== tooltip[0] && $target.parents(selector).length === 0 && $target.add(target).length > 1 && !$target.attr('disabled')) {
 					self.hide(event);
 				}
 			});
