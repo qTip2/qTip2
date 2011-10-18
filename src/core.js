@@ -216,10 +216,10 @@ function QTip(target, options, id, attr)
 		.insertBefore(elements.content)
 
 		// Button-specific events
-		.delegate('.ui-state-default', 'mousedown keydown mouseup keyup mouseout', function(event) {
+		.delegate('.'+uitooltip+'-icon', 'mousedown keydown mouseup keyup mouseout', function(event) {
 			$(this).toggleClass('ui-state-active ui-state-focus', event.type.substr(-4) === 'down');
 		})
-		.delegate('.ui-state-default', 'mouseover mouseout', function(event){
+		.delegate('.'+uitooltip+'-icon', 'mouseover mouseout', function(event){
 			$(this).toggleClass('ui-state-hover', event.type === 'mouseover');
 		});
 
