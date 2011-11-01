@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Nov 1 21:06:49 2011 +0000
+* Date: Tue Nov 1 21:07:13 2011 +0000
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -2895,10 +2895,10 @@ function Tip(qTip, command)
 			return self.corner.string() !== 'centercenter';
 		},
 
-		detectColours: function() {
+		detectColours: function(actual) {
 			var i, fill, border,
-				tip = elems.tip.css({ backgroundColor: '', border: '' }),
-				corner = self.corner,
+				tip = elems.tip.css('cssText', ''),
+				corner = actual || self.corner,
 				precedance = corner[ corner.precedance ],
 
 				borderSide = 'border-' + precedance + '-color',
@@ -2931,7 +2931,7 @@ function Tip(qTip, command)
 			}
 			if(!border || invalid.test(border) || border === bodyBorder) {
 				color.border = colorElem.css(borderSide) || transparent;
-				if(invalid.test(color.border) || color.border === contentColour) {
+				if(invalid.test(color.border)) {
 					color.border = border;
 				}
 			}
@@ -2998,7 +2998,7 @@ function Tip(qTip, command)
 			precedance = mimic.precedance;
 
 			// Update our colours
-			self.detectColours();
+			self.detectColours(corner);
 
 			// Detect border width, taking into account colours
 			if(color.border !== 'transparent' && color.border !== '#123456') {
