@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Oct 3 17:40:57 2011 +0200
+* Date: Mon Oct 17 06:07:50 2011 -0700
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -2907,6 +2907,7 @@ function Tip(qTip, command)
 				invalid = /rgba?\(0, 0, 0(, 0)?\)|transparent/i,
 				backgroundColor = 'background-color',
 				transparent = 'transparent',
+				important = ' !important',
 
 				bodyBorder = $(document.body).css('color'),
 				contentColour = qTip.elements.content.css('color'),
@@ -2920,7 +2921,7 @@ function Tip(qTip, command)
 			// Detect tip colours from CSS styles
 			color.fill = fill = tip.css(backgroundColor);
 			color.border = border = tip[0].style[ borderSideCamel ] || tip.css(borderSide) || tooltip.css(borderSide);
-			
+
 			// Make sure colours are valid
 			if(!fill || invalid.test(fill)) {
 				color.fill = colorElem.css(backgroundColor) || transparent;
@@ -2936,7 +2937,7 @@ function Tip(qTip, command)
 			}
 
 			// Reset background and border colours
-			$('*', tip).add(tip).css(backgroundColor, transparent).css('border', '');
+			$('*', tip).add(tip).css('cssText', backgroundColor+':'+transparent+important+';border:0'+important+';');
 
 			// Remove fluid class
 			tooltip.removeClass(fluidClass);
