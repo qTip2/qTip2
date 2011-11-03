@@ -64,7 +64,7 @@ PLUGINS.bgiframe = function(api)
 		self = api.plugins.bgiframe;
 	
 		// Proceed only if the browser is IE6 and offending elements are present
-		if($('select, object').length < 1 || !(browser.msie && browser.version.charAt(0) === '6')) {
+		if($('select, object').length < 1 || !(browser.msie && browser.version.toString().charAt(0) === '6')) {
 		return FALSE;
 	}
 
