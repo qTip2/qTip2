@@ -871,11 +871,8 @@ function QTip(target, options, id, attr)
 
 		toggle: function(state, event)
 		{
-			// Make sure tooltip is rendered
-			if(!self.rendered) {
-				if(state) { self.render(1); } // Render the tooltip if showing and it isn't already
-				else { return self; }
-			}
+			// Render the tooltip if showing and it isn't already
+			if(!self.rendered) { return state ? self.render(1) : self; }
 
 			var type = state ? 'show' : 'hide',
 				opts = options[type],

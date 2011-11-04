@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Fri Nov 4 18:08:03 2011 +0000
+* Date: Fri Nov 4 18:08:48 2011 +0000
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -934,11 +934,8 @@ function QTip(target, options, id, attr)
 
 		toggle: function(state, event)
 		{
-			// Make sure tooltip is rendered
-			if(!self.rendered) {
-				if(state) { self.render(1); } // Render the tooltip if showing and it isn't already
-				else { return self; }
-			}
+			// Render the tooltip if showing and it isn't already
+			if(!self.rendered) { return state ? self.render(1) : self; }
 
 			var type = state ? 'show' : 'hide',
 				opts = options[type],
