@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Fri Nov 4 18:02:15 2011 +0000
+* Date: Fri Nov 4 18:04:02 2011 +0000
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -2348,11 +2348,14 @@ function Modal(api)
 			.bind('tooltipshow'+globalNamespace+' tooltiphide'+globalNamespace, function(event, api, duration) {
 				var oEvent = event.originalEvent;
 
+				console.log(oEvent);
+
+				
 				// Make sure mouseout doesn't trigger a hide when showing the modal and mousing onto backdrop
 				if(oEvent && event.type === 'tooltiphide' && /mouse(leave|enter)/.test(oEvent.type) && $(oEvent.relatedTarget).closest(overlay[0]).length) {
 					try { event.preventDefault(); } catch(e) {}
 				}
-				else if(oEvent && !oEvent.solo){
+				else if(!oEvent || (oEvent && !oEvent.solo)) {
 					self[ event.type.replace('tooltip', '') ](event, duration);
 				}
 			})
