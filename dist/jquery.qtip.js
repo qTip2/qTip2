@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Fri Nov 4 17:58:53 2011 +0000
+* Date: Fri Nov 4 18:02:15 2011 +0000
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -2152,7 +2152,7 @@ PLUGINS.bgiframe = function(api)
 		self = api.plugins.bgiframe;
 	
 		// Proceed only if the browser is IE6 and offending elements are present
-		if($('select, object').length < 1 || !(browser.msie && browser.version.charAt(0) === '6')) {
+		if($('select, object').length < 1 || !(browser.msie && (''+browser.version).charAt(0) === '6')) {
 		return FALSE;
 	}
 
