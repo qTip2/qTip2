@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Nov 1 21:07:13 2011 +0000
+* Date: Tue Nov 1 21:07:32 2011 +0000
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1857,9 +1857,11 @@ PLUGINS = QTIP.plugins = {
 
 		/* 
 		 * Taken directly from jQuery 1.8.2 widget source code
-		 * Trigger 'remove' event on all elements on removal if jQuery UI isn't present 
+		 * Trigger 'remove' event on all elements on removal
 		 */
-		remove: $.ui ? NULL : function( selector, keepData ) {
+		remove: function( selector, keepData ) {
+			if($.ui) { return; } // We don't need to do this if jQuery UI is present!
+
 			$(this).each(function() {
 				if (!keepData) {
 					if (!selector || $.filter( selector, [ this ] ).length) {

@@ -1794,9 +1794,11 @@ PLUGINS = QTIP.plugins = {
 
 		/* 
 		 * Taken directly from jQuery 1.8.2 widget source code
-		 * Trigger 'remove' event on all elements on removal if jQuery UI isn't present 
+		 * Trigger 'remove' event on all elements on removal
 		 */
-		remove: $.ui ? NULL : function( selector, keepData ) {
+		remove: function( selector, keepData ) {
+			if($.ui) { return; } // We don't need to do this if jQuery UI is present!
+
 			$(this).each(function() {
 				if (!keepData) {
 					if (!selector || $.filter( selector, [ this ] ).length) {
