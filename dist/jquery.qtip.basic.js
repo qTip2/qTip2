@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Fri Nov 4 18:08:48 2011 +0000
+* Date: Fri Nov 4 18:11:20 2011 +0000
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -234,7 +234,7 @@ function QTip(target, options, id, attr)
 		}
 		else {
 			elements.button = $('<a />', {
-				'class': 'ui-state-default ' + (options.style.widget ? '' : uitooltip+'-icon'),
+				'class': 'ui-state-default ui-tooltip-close ' + (options.style.widget ? '' : uitooltip+'-icon'),
 				'title': close,
 				'aria-label': close
 			})
@@ -279,16 +279,15 @@ function QTip(target, options, id, attr)
 		.insertBefore(elements.content)
 
 		// Button-specific events
-		.delegate('.ui-state-default', 'mousedown keydown mouseup keyup mouseout', function(event) {
+		.delegate('.ui-tooltip-close', 'mousedown keydown mouseup keyup mouseout', function(event) {
 			$(this).toggleClass('ui-state-active ui-state-focus', event.type.substr(-4) === 'down');
 		})
-		.delegate('.ui-state-default', 'mouseover mouseout', function(event){
+		.delegate('.ui-tooltip-close', 'mouseover mouseout', function(event){
 			$(this).toggleClass('ui-state-hover', event.type === 'mouseover');
 		});
 
 		// Create button if enabled
 		if(options.content.title.button) { createButton(); }
-
 
 		// Redraw the tooltip dimensions if it's rendered
 		else if(self.rendered){ self.redraw(); } 
