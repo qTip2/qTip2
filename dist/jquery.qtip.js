@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Fri Nov 4 18:13:21 2011 +0000
+* Date: Fri Nov 4 20:40:57 2011 +0000
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -450,9 +450,6 @@ function QTip(target, options, id, attr)
 		function showMethod(event)
 		{
 			if(tooltip.hasClass(disabled)) { return FALSE; }
-
-			// If set, hide tooltip when inactive for delay period
-			targets.show.trigger('qtip-'+id+'-inactive');
 
 			// Clear hide timers
 			clearTimeout(self.timers.show);
@@ -1032,6 +1029,9 @@ function QTip(target, options, id, attr)
 					callback = $.Event('tooltipvisible');
 					callback.originalEvent = event ? cache.event : NULL;
 					tooltip.trigger(callback, [self]);
+
+					// If set, hide tooltip when inactive for delay period
+					opts.target.trigger('qtip-'+id+'-inactive');
 				}
 				else {
 					// Reset CSS states

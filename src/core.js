@@ -388,9 +388,6 @@ function QTip(target, options, id, attr)
 		{
 			if(tooltip.hasClass(disabled)) { return FALSE; }
 
-			// If set, hide tooltip when inactive for delay period
-			targets.show.trigger('qtip-'+id+'-inactive');
-
 			// Clear hide timers
 			clearTimeout(self.timers.show);
 			clearTimeout(self.timers.hide);
@@ -969,6 +966,9 @@ function QTip(target, options, id, attr)
 					callback = $.Event('tooltipvisible');
 					callback.originalEvent = event ? cache.event : NULL;
 					tooltip.trigger(callback, [self]);
+
+					// If set, hide tooltip when inactive for delay period
+					opts.target.trigger('qtip-'+id+'-inactive');
 				}
 				else {
 					// Reset CSS states
