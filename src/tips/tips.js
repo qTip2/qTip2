@@ -278,7 +278,7 @@ function Tip(qTip, command)
 				borderSide = 'border-' + precedance + '-color',
 				borderSideCamel = 'border' + precedance.charAt(0) + precedance.substr(1) + 'Color',
 
-				invalid = /rgba?\(0, 0, 0(, 0)?\)|transparent/i,
+				invalid = /rgba?\(0, 0, 0(, 0)?\)|transparent|#123456/i,
 				backgroundColor = 'background-color',
 				transparent = 'transparent',
 				important = ' !important',
