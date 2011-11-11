@@ -1087,6 +1087,7 @@ function QTip(target, options, id, attr)
 				fixed = tooltip.css('position') === 'fixed',
 				viewport = posOptions.viewport,
 				position = { left: 0, top: 0 },
+				container = posOptions.container,
 				flipoffset = FALSE,
 				tip = self.plugins.tip,
 				readjust = {
@@ -1098,7 +1099,7 @@ function QTip(target, options, id, attr)
 					// Reposition methods
 					left: function(posLeft) {
 						var isShift = readjust.horizontal === 'shift',
-							viewportScroll = viewport.offset.left + viewport.scrollLeft,
+							viewportScroll = -container.offset.left + viewport.offset.left + viewport.scrollLeft,
 							myWidth = my.x === 'left' ? elemWidth : my.x === 'right' ? -elemWidth : -elemWidth / 2,
 							atWidth = at.x === 'left' ? targetWidth : at.x === 'right' ? -targetWidth : -targetWidth / 2,
 							tipWidth = tip && tip.size ? tip.size.width || 0 : 0,
@@ -1116,10 +1117,10 @@ function QTip(target, options, id, attr)
 							// Adjust position but keep it within viewport dimensions
 							position.left += overflowLeft > 0 ? overflowLeft : overflowRight > 0 ? -overflowRight : 0;
 							position.left = Math.max(
-								viewport.offset.left + (tipAdjust && tip.corner.x === 'center' ? tip.offset : 0),
+								-container.offset.left + viewport.offset.left + (tipAdjust && tip.corner.x === 'center' ? tip.offset : 0),
 								posLeft - offset,
 								Math.min(
-									Math.max(viewport.offset.left + viewport.width, posLeft + offset),
+									Math.max(-container.offset.left + viewport.offset.left + viewport.width, posLeft + offset),
 									position.left
 								)
 							);
@@ -1143,7 +1144,7 @@ function QTip(target, options, id, attr)
 					},
 					top: function(posTop) {
 						var isShift = readjust.vertical === 'shift',
-							viewportScroll = viewport.offset.top + viewport.scrollTop,
+							viewportScroll = -container.offset.top + viewport.offset.top + viewport.scrollTop,
 							myHeight = my.y === 'top' ? elemHeight : my.y === 'bottom' ? -elemHeight : -elemHeight / 2,
 							atHeight = at.y === 'top' ? targetHeight : at.y === 'bottom' ? -targetHeight : -targetHeight / 2,
 							tipHeight = tip && tip.size ? tip.size.height || 0 : 0,
@@ -1161,10 +1162,10 @@ function QTip(target, options, id, attr)
 							// Adjust position but keep it within viewport dimensions
 							position.top += overflowTop > 0 ? overflowTop : overflowBottom > 0 ? -overflowBottom : 0;
 							position.top = Math.max(
-								viewport.offset.top + (tipAdjust && tip.corner.x === 'center' ? tip.offset : 0),
+								-container.offset.top + viewport.offset.top + (tipAdjust && tip.corner.x === 'center' ? tip.offset : 0),
 								posTop - offset,
 								Math.min(
-									Math.max(viewport.offset.top + viewport.height, posTop + offset),
+									Math.max(-container.offset.top + viewport.offset.top + viewport.height, posTop + offset),
 									position.top
 								)
 							);
@@ -1254,7 +1255,7 @@ function QTip(target, options, id, attr)
 					targetWidth = target.outerWidth();
 					targetHeight = target.outerHeight();
 
-					position = PLUGINS.offset(target, posOptions.container);
+					position = PLUGINS.offset(target, container);
 				}
 
 				// Parse returned plugin values into proper variables
@@ -1292,6 +1293,12 @@ function QTip(target, options, id, attr)
 					scrollTop: fixed ? 0 : viewport.scrollTop(),
 					offset: viewport.offset() || { left: 0, top: 0 }
 				};
+				container = {
+					elem: container,
+					scrollLeft: container.scrollLeft(),
+					scrollTop: container.scrollTop(),
+					offset: container.offset() || { left: 0, top: 0 }
+				};
 
 				// Adjust position based onviewport and adjustment options
 				position.adjusted = {
@@ -1301,9 +1308,7 @@ function QTip(target, options, id, attr)
 
 				// Set tooltip position class
 				if(position.adjusted.left + position.adjusted.top) {
-					tooltip.attr('class', function(i, val) {
-						return val.replace(/ui-tooltip-pos-\w+/i, uitooltip + '-pos-' + my.abbreviation());
-					});
+					tooltip.attr('class', tooltip[0].className.replace(/ui-tooltip-pos-\w+/i, uitooltip + '-pos-' + my.abbreviation()));
 				}
 
 				// Apply flip offsets supplied by positioning plugins
