@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Nov 7 19:26:26 2011 +0000
+* Date: Fri Nov 11 21:33:05 2011 +0000
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -68,14 +68,14 @@ function sanitizeOptions(opts)
 
 	if(!opts || 'object' !== typeof opts) { return FALSE; }
 
-	if('object' !== typeof opts.metadata) {
+	if(opts.metadata === NULL || 'object' !== typeof opts.metadata) {
 		opts.metadata = {
 			type: opts.metadata
 		};
 	}
 
 	if('content' in opts) {
-		if('object' !== typeof opts.content || opts.content.jquery) {
+		if(opts.content === NULL || 'object' !== typeof opts.content || opts.content.jquery) {
 			opts.content = {
 				text: opts.content
 			};
@@ -87,7 +87,7 @@ function sanitizeOptions(opts)
 		}
 
 		if('title' in opts.content) {
-			if('object' !== typeof opts.content.title) {
+			if(opts.content.title === NULL || 'object' !== typeof opts.content.title) {
 				opts.content.title = {
 					text: opts.content.title
 				};
@@ -101,7 +101,7 @@ function sanitizeOptions(opts)
 	}
 
 	if('position' in opts) {
-		if('object' !== typeof opts.position) {
+		if(opts.position === NULL || 'object' !== typeof opts.position) {
 			opts.position = {
 				my: opts.position,
 				at: opts.position
@@ -110,7 +110,7 @@ function sanitizeOptions(opts)
 	}
 
 	if('show' in opts) {
-		if('object' !== typeof opts.show) {
+		if(opts.show === NULL || 'object' !== typeof opts.show) {
 			if(opts.show.jquery) {
 				opts.show = { target: opts.show };
 			}
@@ -121,7 +121,7 @@ function sanitizeOptions(opts)
 	}
 
 	if('hide' in opts) {
-		if('object' !== typeof opts.hide) {
+		if(opts.hide === NULL || 'object' !== typeof opts.hide) {
 			if(opts.hide.jquery) {
 				opts.hide = { target: opts.hide };
 			}
@@ -132,7 +132,7 @@ function sanitizeOptions(opts)
 	}
 
 	if('style' in opts) {
-		if('object' !== typeof opts.style) {
+		if(opts.style === NULL || 'object' !== typeof opts.style) {
 			opts.style = {
 				classes: opts.style
 			};
