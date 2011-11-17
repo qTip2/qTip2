@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun Nov 13 19:22:15 2011 +0000
+* Date: Thu Nov 17 00:26:52 2011 +0000
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1613,7 +1613,7 @@ QTIP = $.fn.qtip = function(options, notation, newValue)
 {
 	var command = ('' + options).toLowerCase(), // Parse command
 		returned = NULL,
-		args = command === 'disable' ? [TRUE] : $.makeArray(arguments).slice(1),
+		args = $.makeArray(arguments).slice(1),
 		event = args[args.length - 1],
 		opts = this[0] ? $.data(this[0], 'qtip') : NULL;
 
