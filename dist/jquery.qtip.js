@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Fri Nov 11 21:33:05 2011 +0000
+* Date: Sun Nov 13 19:22:15 2011 +0000
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1300,8 +1300,8 @@ function QTip(target, options, id, attr)
 
 					if(target[0] === window) {
 						position = {
-							top: !fixed || PLUGINS.iOS ? (viewport || target).scrollTop() : 0,
-							left: !fixed || PLUGINS.iOS ? (viewport || target).scrollLeft() : 0
+							top: fixed || PLUGINS.iOS ? (viewport || target).scrollTop() : 0,
+							left: fixed || PLUGINS.iOS ? (viewport || target).scrollLeft() : 0
 						};
 					}
 				}
