@@ -466,7 +466,7 @@ function QTip(target, options, id, attr)
 		if(/mouse(out|leave)/i.test(options.hide.event)) {
 			// Hide tooltips when leaving current window/frame (but not select/option elements)
 			if(options.hide.leave === 'window') {
-				targets.window.bind('mouseout' + namespace, function(event) {
+				targets.window.bind('mouseout'+namespace+' blur'+namespace, function(event) {
 					if(/select|option/.test(event.target) && !event.relatedTarget) { self.hide(event); }
 				});
 			}
@@ -1690,7 +1690,8 @@ PLUGINS = QTIP.plugins = {
 		this.x = (corner.match(/left|right/i) || corner.match(/center/) || ['inherit'])[0].toLowerCase();
 		this.y = (corner.match(/top|bottom|center/i) || ['inherit'])[0].toLowerCase();
 
-		this.precedance = (corner.charAt(0).search(/^(t|b)/) > -1) ? 'y' : 'x';
+		var f = corner.charAt(0); this.precedance = (f === 't' || f === 'b' ? 'y' : 'x');
+
 		this.string = function() { return this.precedance === 'y' ? this.y+this.x : this.x+this.y; };
 		this.abbrev = function() { 
 			var x = this.x.substr(0,1), y = this.y.substr(0,1);
