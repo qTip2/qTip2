@@ -29,11 +29,7 @@ function Tip(qTip, command)
 		opts = qTip.options.style.tip,
 		elems = qTip.elements,
 		tooltip = elems.tooltip,
-		cache = { 
-			top: 0, 
-			left: 0, 
-			corner: ''
-		},
+		cache = { top: 0, left: 0 },
 		size = {
 			width: opts.width,
 			height: opts.height
@@ -82,7 +78,7 @@ function Tip(qTip, command)
 	function reposition(event, api, pos, viewport) {
 		if(!elems.tip) { return; }
 
-		var newCorner = $.extend({}, self.corner),
+		var newCorner = self.corner.clone(),
 			adjust = pos.adjusted,
 			method = qTip.options.position.adjust.method.split(' '),
 			horizontal = method[0],
@@ -109,7 +105,7 @@ function Tip(qTip, command)
 			}
 
 			// Update and redraw the tip if needed (check cached details of last drawn tip)
-			if(newCorner.string() !== cache.corner && (cache.top !== adjust.top || cache.left !== adjust.left)) {
+			if(newCorner.string() !== cache.corner.string() && (cache.top !== adjust.top || cache.left !== adjust.left)) {
 				self.update(newCorner, FALSE);
 			}
 		}
@@ -169,7 +165,7 @@ function Tip(qTip, command)
 
 		// Cache details
 		cache.left = adjust.left; cache.top = adjust.top;
-		cache.corner = newCorner.string();
+		cache.corner = newCorner.clone();
 	}
 
 	/* border width calculator */
@@ -353,7 +349,7 @@ function Tip(qTip, command)
 				precedance, context, coords, translate, newSize;
 
 			// Re-determine tip if not already set
-			if(!corner) { corner = self.corner; }
+			if(!corner) { corner = cache.corner || self.corner; }
 
 			// Use corner property if we detect an invalid mimic value
 			if(mimic === FALSE) { mimic = corner; }
@@ -539,8 +535,8 @@ function Tip(qTip, command)
 			tooltip.unbind(namespace);
 		}
 	});
-	
-	self.init();
+
+	cache.corner = new PLUGINS.Corner( self.init() );
 }
 
 PLUGINS.tip = function(api)

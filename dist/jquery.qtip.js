@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Nov 17 00:26:52 2011 +0000
+* Date: Thu Nov 17 20:02:58 2011 +0000
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -752,7 +752,7 @@ function QTip(target, options, id, attr)
 			// Create tooltip element
 			tooltip = elements.tooltip = $('<div/>', {
 					'id': tooltipID,
-					'class': uitooltip + ' qtip ui-helper-reset ' + defaultClass + ' ' + options.style.classes + ' '+ uitooltip + '-pos-' + options.position.my.abbreviation(),
+					'class': uitooltip + ' qtip ui-helper-reset ' + defaultClass + ' ' + options.style.classes + ' '+ uitooltip + '-pos-' + options.position.my.abbrev(),
 					'width': options.style.width || '',
 					'height': options.style.height || '',
 					'tracking': posOptions.target === 'mouse' && posOptions.adjust.mouse,
@@ -1371,7 +1371,7 @@ function QTip(target, options, id, attr)
 
 				// Set tooltip position class
 				if(position.adjusted.left + position.adjusted.top) {
-					tooltip.attr('class', tooltip[0].className.replace(/ui-tooltip-pos-\w+/i, uitooltip + '-pos-' + my.abbreviation()));
+					tooltip.attr('class', tooltip[0].className.replace(/ui-tooltip-pos-\w+/i, uitooltip + '-pos-' + my.abbrev()));
 				}
 
 				// Apply flip offsets supplied by positioning plugins
@@ -1755,9 +1755,13 @@ PLUGINS = QTIP.plugins = {
 
 		this.precedance = (corner.charAt(0).search(/^(t|b)/) > -1) ? 'y' : 'x';
 		this.string = function() { return this.precedance === 'y' ? this.y+this.x : this.x+this.y; };
-		this.abbreviation = function() { 
+		this.abbrev = function() { 
 			var x = this.x.substr(0,1), y = this.y.substr(0,1);
 			return x === y ? x : (x === 'c' || (x !== 'c' && y !== 'c')) ? y + x : x + y;
+		};
+
+		this.clone = function() {
+			return { x: this.x, y: this.y, precedance: this.precedance, string: this.string, abbrev: this.abbrev, clone: this.clone };
 		};
 	},
 
@@ -2658,11 +2662,7 @@ function Tip(qTip, command)
 		opts = qTip.options.style.tip,
 		elems = qTip.elements,
 		tooltip = elems.tooltip,
-		cache = { 
-			top: 0, 
-			left: 0, 
-			corner: ''
-		},
+		cache = { top: 0, left: 0 },
 		size = {
 			width: opts.width,
 			height: opts.height
@@ -2711,7 +2711,7 @@ function Tip(qTip, command)
 	function reposition(event, api, pos, viewport) {
 		if(!elems.tip) { return; }
 
-		var newCorner = $.extend({}, self.corner),
+		var newCorner = self.corner.clone(),
 			adjust = pos.adjusted,
 			method = qTip.options.position.adjust.method.split(' '),
 			horizontal = method[0],
@@ -2738,7 +2738,7 @@ function Tip(qTip, command)
 			}
 
 			// Update and redraw the tip if needed (check cached details of last drawn tip)
-			if(newCorner.string() !== cache.corner && (cache.top !== adjust.top || cache.left !== adjust.left)) {
+			if(newCorner.string() !== cache.corner.string() && (cache.top !== adjust.top || cache.left !== adjust.left)) {
 				self.update(newCorner, FALSE);
 			}
 		}
@@ -2798,7 +2798,7 @@ function Tip(qTip, command)
 
 		// Cache details
 		cache.left = adjust.left; cache.top = adjust.top;
-		cache.corner = newCorner.string();
+		cache.corner = newCorner.clone();
 	}
 
 	/* border width calculator */
@@ -2982,7 +2982,7 @@ function Tip(qTip, command)
 				precedance, context, coords, translate, newSize;
 
 			// Re-determine tip if not already set
-			if(!corner) { corner = self.corner; }
+			if(!corner) { corner = cache.corner || self.corner; }
 
 			// Use corner property if we detect an invalid mimic value
 			if(mimic === FALSE) { mimic = corner; }
@@ -3168,8 +3168,8 @@ function Tip(qTip, command)
 			tooltip.unbind(namespace);
 		}
 	});
-	
-	self.init();
+
+	cache.corner = new PLUGINS.Corner( self.init() );
 }
 
 PLUGINS.tip = function(api)
