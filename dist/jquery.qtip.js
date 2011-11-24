@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Nov 21 17:39:37 2011 +0000
+* Date: Mon Nov 21 21:18:24 2011 +0000
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -2172,8 +2172,8 @@ PLUGINS.imagemap = function(area, corner, flip)
 {
 	if(!area.jquery) { area = $(area); }
 
-	var shape = area.attr('shape').toLowerCase(),
-		baseCoords = area.attr('coords').split(','),
+	var shape = (area[0].shape || area.attr('shape')).toLowerCase(),
+		baseCoords = (area[0].coords || area.attr('coords')).split(','),
 		coords = [],
 		image = $('img[usemap="#'+area.parent('map').attr('name')+'"]'),
 		imageOffset = image.offset(),

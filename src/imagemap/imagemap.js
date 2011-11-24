@@ -2,8 +2,8 @@ PLUGINS.imagemap = function(area, corner, flip)
 {
 	if(!area.jquery) { area = $(area); }
 
-	var shape = area.attr('shape').toLowerCase(),
-		baseCoords = area.attr('coords').split(','),
+	var shape = (area[0].shape || area.attr('shape')).toLowerCase(),
+		baseCoords = (area[0].coords || area.attr('coords')).split(','),
 		coords = [],
 		image = $('img[usemap="#'+area.parent('map').attr('name')+'"]'),
 		imageOffset = image.offset(),
