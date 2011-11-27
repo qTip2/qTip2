@@ -88,7 +88,10 @@ PLUGINS.imagemap = function(area, corner, flip)
 			result = {
 				width: Math.abs(coords[2] - coords[0]),
 				height: Math.abs(coords[3] - coords[1]),
-				offset: { left: coords[0], top: coords[1] }
+				offset: {
+					left: Math.min(coords[0], coords[2]),
+					top: Math.min(coords[1], coords[3])
+				}
 			};
 		break;
 

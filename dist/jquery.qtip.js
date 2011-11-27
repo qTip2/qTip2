@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Nov 21 21:18:24 2011 +0000
+* Date: Thu Nov 24 17:54:34 2011 +0000
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -2258,7 +2258,10 @@ PLUGINS.imagemap = function(area, corner, flip)
 			result = {
 				width: Math.abs(coords[2] - coords[0]),
 				height: Math.abs(coords[3] - coords[1]),
-				offset: { left: coords[0], top: coords[1] }
+				offset: {
+					left: Math.min(coords[0], coords[2]),
+					top: Math.min(coords[1], coords[3])
+				}
 			};
 		break;
 
