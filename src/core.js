@@ -1509,7 +1509,7 @@ function init(id, opts)
 	}
 
 	// Setup target options
-	if(posOptions.container === FALSE) { posOptions.container = docBody; }
+	if(!posOptions.container.length) { posOptions.container = docBody; }
 	if(posOptions.target === FALSE) { posOptions.target = newTarget; }
 	if(config.show.target === FALSE) { config.show.target = newTarget; }
 	if(config.show.solo === TRUE) { config.show.solo = docBody; }

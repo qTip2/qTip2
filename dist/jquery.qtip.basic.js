@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Dec 8 18:11:21 2011 +0000
+* Date: Thu Dec 8 18:43:08 2011 +0000
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1572,7 +1572,7 @@ function init(id, opts)
 	}
 
 	// Setup target options
-	if(posOptions.container === FALSE) { posOptions.container = docBody; }
+	if(!posOptions.container.length) { posOptions.container = docBody; }
 	if(posOptions.target === FALSE) { posOptions.target = newTarget; }
 	if(config.show.target === FALSE) { config.show.target = newTarget; }
 	if(config.show.solo === TRUE) { config.show.solo = docBody; }
