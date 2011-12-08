@@ -333,6 +333,9 @@ function Tip(qTip, command)
 			else {
 				vml = '<vml:shape coordorigin="0,0" style="display:inline-block; position:absolute; behavior:url(#default#VML);"></vml:shape>';
 				elems.tip.html(vml + vml);
+
+				// Prevent mousing down on the tip since it causes problems with .live() handling in IE due to VML
+				$('*', elems.tip).bind('click mousedown', function(event) { event.stopPropagation(); });
 			}
 		},
 

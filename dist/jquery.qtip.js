@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Nov 24 17:54:34 2011 +0000
+* Date: Sun Nov 27 15:05:59 2011 +0000
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -2970,6 +2970,9 @@ function Tip(qTip, command)
 			else {
 				vml = '<vml:shape coordorigin="0,0" style="display:inline-block; position:absolute; behavior:url(#default#VML);"></vml:shape>';
 				elems.tip.html(vml + vml);
+
+				// Prevent mousing down on the tip since it causes problems with .live() handling in IE due to VML
+				$('*', elems.tip).bind('click mousedown', function(event) { event.stopPropagation(); });
 			}
 		},
 
