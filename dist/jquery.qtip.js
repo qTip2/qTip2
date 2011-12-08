@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun Nov 27 15:05:59 2011 +0000
+* Date: Thu Dec 8 18:11:21 2011 +0000
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -828,7 +828,7 @@ function QTip(target, options, id, attr)
 
 				// Show tooltip if needed
 				if(options.show.ready || show) {
-					self.toggle(TRUE, cache.event);
+					self.toggle(TRUE, cache.event, FALSE);
 				}
 
 				next(); // Move on to next method in queue
@@ -989,7 +989,7 @@ function QTip(target, options, id, attr)
 				}
 
 				// Update the tooltip position
-				self.reposition(event);
+				self.reposition(event, arguments[2]);
 
 				// Hide other tooltips if tooltip is solo, using it as the context
 				if((callback.solo = !!opts.solo)) { $(selector, opts.solo).not(tooltip).qtip('hide', callback); }
