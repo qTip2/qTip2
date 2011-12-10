@@ -265,7 +265,7 @@ PLUGINS.modal.sanitize = function(opts) {
 };
 
 // Base z-index for all modal tooltips (use qTip core z-index as a base)
-PLUGINS.modal.zindex = QTIP.zindex -= 200;
+PLUGINS.modal.zindex = QTIP.zindex + 1000;
 
 // Extend original api defaults
 $.extend(TRUE, QTIP.defaults, {
