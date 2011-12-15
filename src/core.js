@@ -1888,10 +1888,10 @@ QTIP.defaults = {
 	},
 	style: {
 		classes: '',
-		default: TRUE,
 		widget: FALSE,
 		width: FALSE,
-		height: FALSE
+		height: FALSE,
+		'default': TRUE
 	},
 	events: {
 		render: NULL,

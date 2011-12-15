@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sat Dec 10 10:31:16 2011 +0000
+* Date: Thu Dec 15 19:09:28 2011 +0000
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1951,10 +1951,10 @@ QTIP.defaults = {
 	},
 	style: {
 		classes: '',
-		default: TRUE,
 		widget: FALSE,
 		width: FALSE,
-		height: FALSE
+		height: FALSE,
+		'default': TRUE
 	},
 	events: {
 		render: NULL,
