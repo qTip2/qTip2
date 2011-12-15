@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Dec 8 19:20:55 2011 +0000
+* Date: Sat Dec 10 10:31:16 2011 +0000
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -198,7 +198,7 @@ function QTip(target, options, id, attr)
 	function setWidget() {
 		var on = options.style.widget;
 
-		tooltip.toggleClass(widget, on).toggleClass(defaultClass, !on);
+		tooltip.toggleClass(widget, on).toggleClass(defaultClass, options.style.default && !on);
 		elements.content.toggleClass(widget+'-content', on);
 		
 		if(elements.titlebar){
@@ -1951,6 +1951,7 @@ QTIP.defaults = {
 	},
 	style: {
 		classes: '',
+		default: TRUE,
 		widget: FALSE,
 		width: FALSE,
 		height: FALSE

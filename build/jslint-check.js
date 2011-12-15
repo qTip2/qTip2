@@ -10,6 +10,7 @@ JSLINT(src, { evil: true, forin: true, maxerr: 100 });
 var ok = {
 	"Expected an identifier and instead saw 'undefined' (a reserved word).": true,
 	"Expected a conditional expression and instead saw an assignment.": true,
+	"Expected an identifier and instead saw 'default' (a reserved word).": true,
 	"Insecure '.'.": true,
 	"Insecure '^'.": true,
 	'Missing "use strict" statement.': true

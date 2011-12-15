@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Dec 8 19:20:55 2011 +0000
+* Date: Sat Dec 10 10:31:16 2011 +0000
 */
 
 /* Core qTip styles */
@@ -38,10 +38,9 @@
 		position: relative;
 		padding: 5px 9px;
 		overflow: hidden;
-		
-		border-width: 1px;
-		border-style: solid;
-		
+
+		border: 1px solid #000001;
+
 		text-align: left;
 		word-wrap: break-word;
 		overflow: hidden;
@@ -52,9 +51,9 @@
 		min-height: 14px;
 		padding: 5px 35px 5px 10px;
 		overflow: hidden;
-		
+
+		border: 1px solid #000001;
 		border-width: 1px 1px 0;
-		border-style: solid;
 
 		font-weight: bold;
 	}
