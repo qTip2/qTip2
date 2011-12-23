@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Dec 15 19:17:35 2011 +0000
+* Date: Sat Dec 17 22:13:57 2011 +0000
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -222,9 +222,7 @@ function QTip(target, options, id, attr)
 
 	function createButton()
 	{
-		var button = options.content.title.button,
-			isString = typeof button === 'string',
-			close = isString ? button : 'Close tooltip';
+		var button = options.content.title.button;
 
 		if(elements.button) { elements.button.remove(); }
 
@@ -235,8 +233,8 @@ function QTip(target, options, id, attr)
 		else {
 			elements.button = $('<a />', {
 				'class': 'ui-state-default ui-tooltip-close ' + (options.style.widget ? '' : uitooltip+'-icon'),
-				'title': close,
-				'aria-label': close
+				'title': button,
+				'aria-label': button
 			})
 			.prepend(
 				$('<span />', {
@@ -1908,7 +1906,7 @@ QTIP.defaults = {
 		attr: 'title',
 		title: {
 			text: FALSE,
-			button: FALSE
+			button: 'Close tooltip'
 		}
 	},
 	position: {
