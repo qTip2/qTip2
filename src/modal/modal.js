@@ -127,13 +127,14 @@ function Modal(api)
 			.insertAfter( $(selector).last() );
 
 			// Update position on window resize or scroll
-			$(window).unbind(globalNamespace).bind('resize'+globalNamespace, function() {
+			function resize() {
 				overlay.css({
 					height: $(window).height(),
-					width: $(window).width()
+								width: $(window).width()
 				});
-			})
-			.triggerHandler('resize');
+			}
+			$(window).unbind(globalNamespace).bind('resize'+globalNamespace, resize);
+			resize(); // Fire it initially too
 
 			return overlay;
 		},
