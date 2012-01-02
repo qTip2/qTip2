@@ -130,7 +130,7 @@ function Modal(api)
 			function resize() {
 				overlay.css({
 					height: $(window).height(),
-								width: $(window).width()
+					width: $(window).width()
 				});
 			}
 			$(window).unbind(globalNamespace).bind('resize'+globalNamespace, resize);
