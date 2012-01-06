@@ -262,6 +262,9 @@ function Tip(qTip, command)
 				}
 			}
 
+			// Cache it
+			cache.corner = new PLUGINS.Corner( self.corner.string() );
+
 			return self.corner.string() !== 'centercenter';
 		},
 
@@ -539,7 +542,7 @@ function Tip(qTip, command)
 		}
 	});
 
-	cache.corner = new PLUGINS.Corner( self.init() );
+	self.init();
 }
 
 PLUGINS.tip = function(api)

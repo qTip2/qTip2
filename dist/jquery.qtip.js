@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Jan 2 16:29:48 2012 +0000
+* Date: Mon Jan 2 16:36:09 2012 +0000
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -2901,6 +2901,9 @@ function Tip(qTip, command)
 				}
 			}
 
+			// Cache it
+			cache.corner = new PLUGINS.Corner( self.corner.string() );
+
 			return self.corner.string() !== 'centercenter';
 		},
 
@@ -3178,7 +3181,7 @@ function Tip(qTip, command)
 		}
 	});
 
-	cache.corner = new PLUGINS.Corner( self.init() );
+	self.init();
 }
 
 PLUGINS.tip = function(api)
