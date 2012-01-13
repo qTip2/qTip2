@@ -111,7 +111,8 @@ function QTip(target, options, id, attr)
 		event: {},
 		target: $(),
 		disabled: FALSE,
-		attr: attr
+		attr: attr,
+		onTarget: FALSE
 	};
 
 	/*
@@ -557,15 +558,21 @@ function QTip(target, options, id, attr)
 			if(posOptions.adjust.mouse) {
 				// Apply a mouseleave event so we don't get problems with overlapping
 				if(options.hide.event) {
+					// Hide when we leave the tooltip and not onto the show target
 					tooltip.bind('mouseleave'+namespace, function(event) {
 						if((event.relatedTarget || event.target) !== targets.show[0]) { self.hide(event); }
+					});
+
+					// Track if we're on the target or not
+					elements.target.bind('mouseenter'+namespace+' mouseleave'+namespace, function(event) {
+						cache.onTarget = event.type === 'mouseenter';
 					});
 				}
 
 				// Update tooltip position on mousemove
 				targets.document.bind('mousemove'+namespace, function(event) {
 					// Update the tooltip position only if the tooltip is visible and adjustment is enabled
-					if(!tooltip.hasClass(disabled) && tooltip.is(':visible')) {
+					if(cache.onTarget && !tooltip.hasClass(disabled) && tooltip.is(':visible')) {
 						self.reposition(event || MOUSE);
 					}
 				});
@@ -1224,7 +1231,9 @@ function QTip(target, options, id, attr)
 						target = cache.target;
 					}
 				}
-				else { cache.target = $(target); }
+				else {
+					target = cache.target = $(target.nodeType ? target : elements.target);
+				}
 
 				// Parse the target into a jQuery object and make sure there's an element present
 				target = $(target).eq(0);
