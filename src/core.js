@@ -1232,7 +1232,7 @@ function QTip(target, options, id, attr)
 					}
 				}
 				else {
-					target = cache.target = $(target.nodeType ? target : elements.target);
+					target = cache.target = $(target.jquery ? target : elements.target);
 				}
 
 				// Parse the target into a jQuery object and make sure there's an element present
