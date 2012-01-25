@@ -1650,9 +1650,12 @@ QTIP.bind = function(opts, event)
 		/*
 		 * Also make sure initial mouse targetting works correctly by caching mousemove coords
 		 * on show targets before the tooltip has rendered.
+		 *
+		 * Also set onTarget when triggered to keep mouse tracking working
 		 */
 		targets.show.bind('mousemove'+namespace, function(event) {
 			MOUSE = { pageX: event.pageX, pageY: event.pageY, type: 'mousemove' };
+			api.cache.onTarget = TRUE;
 		});
 
 		// Define hoverIntent function
