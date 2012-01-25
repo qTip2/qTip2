@@ -1246,8 +1246,8 @@ function QTip(target, options, id, attr)
 
 					if(target[0] === window) {
 						position = {
-							top: !fixed || PLUGINS.iOS ? (viewport || target).scrollTop() : 0,
-							left: !fixed || PLUGINS.iOS ? (viewport || target).scrollLeft() : 0
+							top: (viewport || target).scrollTop(),
+							left: (viewport || target).scrollLeft()
 						};
 					}
 				}
