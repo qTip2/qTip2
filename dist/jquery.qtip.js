@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Jan 25 21:10:14 2012 +0000
+* Date: Wed Jan 25 23:59:15 2012 +0000
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1176,7 +1176,7 @@ function QTip(target, options, id, attr)
 							tipAdjust = tip && tip.corner && tip.corner.precedance === 'x' && !isShift ? tipWidth : 0,
 							overflowLeft = viewportScroll - posLeft + tipAdjust,
 							overflowRight = posLeft + elemWidth - viewport.width - viewportScroll + tipAdjust,
-							offset = myWidth - (my.precedance === 'x' || my.x === my.y ? atWidth : 0),
+							offset = myWidth - (my.precedance === 'x' || my.x === my.y ? atWidth : 0) - (at.x === 'center' ? targetWidth / 2 : 0),
 							isCenter = my.x === 'center';
 
 						// Optional 'shift' style repositioning
@@ -1221,7 +1221,7 @@ function QTip(target, options, id, attr)
 							tipAdjust = tip && tip.corner && tip.corner.precedance === 'y' && !isShift ? tipHeight : 0,
 							overflowTop = viewportScroll - posTop + tipAdjust,
 							overflowBottom = posTop + elemHeight - viewport.height - viewportScroll + tipAdjust,
-							offset = myHeight - (my.precedance === 'y' || my.x === my.y ? atHeight : 0),
+							offset = myHeight - (my.precedance === 'y' || my.x === my.y ? atHeight : 0) - (at.y === 'center' ? targetHeight / 2 : 0),
 							isCenter = my.y === 'center';
 							
 						// Optional 'shift' style repositioning
@@ -1247,6 +1247,7 @@ function QTip(target, options, id, attr)
 								position.top -= offset;
 							}
 							else if(overflowBottom > 0 && (my.y !== 'bottom' || overflowTop > 0)  ) {
+								console.log('test');
 								position.top -= isCenter ? -offset : offset;
 							}
 							if(position.top !== posTop && isCenter) { position.top -= adjust.y; }
