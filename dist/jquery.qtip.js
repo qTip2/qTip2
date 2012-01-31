@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Jan 25 23:59:15 2012 +0000
+* Date: Sun Jan 29 16:20:15 2012 +0000
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -2372,18 +2372,20 @@ function Modal(api)
 				var oEvent = event.originalEvent;
 
 				// Make sure mouseout doesn't trigger a hide when showing the modal and mousing onto backdrop
-				if(oEvent && event.type === 'tooltiphide' && /mouse(leave|enter)/.test(oEvent.type) && $(oEvent.relatedTarget).closest(overlay[0]).length) {
-					try { event.preventDefault(); } catch(e) {}
-				}
-				else if(!oEvent || (oEvent && !oEvent.solo)) {
-					self[ event.type.replace('tooltip', '') ](event, duration);
+				if(event.target === tooltip[0]) {
+					if(oEvent && event.type === 'tooltiphide' && /mouse(leave|enter)/.test(oEvent.type) && $(oEvent.relatedTarget).closest(overlay[0]).length) {
+						try { event.preventDefault(); } catch(e) {}
+					}
+					else if(!oEvent || (oEvent && !oEvent.solo)) {
+						self[ event.type.replace('tooltip', '') ](event, duration);
+					}
 				}
 			})
 
 			// Adjust modal z-index on tooltip focus
 			.bind('tooltipfocus'+globalNamespace, function(event) {
 				// If focus was cancelled before it reearch us, don't do anything
-				if(event.isDefaultPrevented()) { return; }
+				if(event.isDefaultPrevented() || event.target !== tooltip[0]) { return; }
 
 				var qtips = $(selector).filter('['+attr+']'),
 
@@ -2413,7 +2415,9 @@ function Modal(api)
 
 			// Focus any other visible modals when this one hides
 			.bind('tooltiphide'+globalNamespace, function(event) {
-				$('[' + attr + ']').filter(':visible').not(tooltip).last().qtip('focus', event);
+				if(event.target === tooltip[0]) {
+					$('[' + attr + ']').filter(':visible').not(tooltip).last().qtip('focus', event);
+				}
 			});
 
 			// Apply keyboard "Escape key" close handler
