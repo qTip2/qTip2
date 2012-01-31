@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun Jan 29 16:20:15 2012 +0000
+* Date: Tue Jan 31 18:07:46 2012 +0000
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1277,7 +1277,7 @@ function QTip(target, options, id, attr)
 				event = (event && (event.type === 'resize' || event.type === 'scroll') ? cache.event :
 					event && event.pageX && event.type === 'mousemove' ? event :
 					MOUSE && MOUSE.pageX && (adjust.mouse || !event || !event.pageX) ? { pageX: MOUSE.pageX, pageY: MOUSE.pageY } :
-					!adjust.mouse && cache.origin && cache.origin.pageX ? cache.origin :
+					!adjust.mouse && cache.origin && cache.origin.pageX && options.show.distance ? cache.origin :
 					event) || event || cache.event || MOUSE || {};
 
 				// Use event coordinates for position
