@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Jan 31 18:07:46 2012 +0000
+* Date: Tue Jan 31 18:16:37 2012 +0000
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1247,7 +1247,6 @@ function QTip(target, options, id, attr)
 								position.top -= offset;
 							}
 							else if(overflowBottom > 0 && (my.y !== 'bottom' || overflowTop > 0)  ) {
-								console.log('test');
 								position.top -= isCenter ? -offset : offset;
 							}
 							if(position.top !== posTop && isCenter) { position.top -= adjust.y; }

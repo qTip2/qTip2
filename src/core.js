@@ -1184,7 +1184,6 @@ function QTip(target, options, id, attr)
 								position.top -= offset;
 							}
 							else if(overflowBottom > 0 && (my.y !== 'bottom' || overflowTop > 0)  ) {
-								console.log('test');
 								position.top -= isCenter ? -offset : offset;
 							}
 							if(position.top !== posTop && isCenter) { position.top -= adjust.y; }
