@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Jan 31 18:16:37 2012 +0000
+* Date: Mon Feb 6 19:01:26 2012 +0000
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -552,7 +552,9 @@ function QTip(target, options, id, attr)
 				var $target = $(event.target),
 					enabled = !tooltip.hasClass(disabled) && tooltip.is(':visible');
 
-				if($target[0] !== tooltip[0] && $target.parents(selector).length === 0 && $target.add(target).length > 1 && !$target.attr('disabled')) {
+				if($target[0] !== tooltip[0] && $target.parents(selector).length === 0 && 
+					!$target.closest(target).length && !$target.attr('disabled')
+				) {
 					self.hide(event);
 				}
 			});
@@ -1803,7 +1805,9 @@ PLUGINS = QTIP.plugins = {
 					pos.top -= coffset.top + (parseInt(parent.css('borderTopWidth'), 10) || 0);
 
 					overflow = parent.css('overflow');
-					if(overflow === 'scroll' || overflow === 'auto') { deep++; }
+					if(overflow === 'scroll' || overflow === 'auto') {
+						scroll(parent, 1); deep++;
+					}
 				}
 				
 				if(parent[0] === docBody) { break; }

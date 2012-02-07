@@ -489,7 +489,9 @@ function QTip(target, options, id, attr)
 				var $target = $(event.target),
 					enabled = !tooltip.hasClass(disabled) && tooltip.is(':visible');
 
-				if($target[0] !== tooltip[0] && $target.parents(selector).length === 0 && $target.add(target).length > 1 && !$target.attr('disabled')) {
+				if($target[0] !== tooltip[0] && $target.parents(selector).length === 0 && 
+					!$target.closest(target).length && !$target.attr('disabled')
+				) {
 					self.hide(event);
 				}
 			});
@@ -1740,7 +1742,9 @@ PLUGINS = QTIP.plugins = {
 					pos.top -= coffset.top + (parseInt(parent.css('borderTopWidth'), 10) || 0);
 
 					overflow = parent.css('overflow');
-					if(overflow === 'scroll' || overflow === 'auto') { deep++; }
+					if(overflow === 'scroll' || overflow === 'auto') {
+						scroll(parent, 1); deep++;
+					}
 				}
 				
 				if(parent[0] === docBody) { break; }
