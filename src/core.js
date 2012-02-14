@@ -489,7 +489,9 @@ function QTip(target, options, id, attr)
 				var $target = $(event.target),
 					enabled = !tooltip.hasClass(disabled) && tooltip.is(':visible');
 
-				if($target[0] !== tooltip[0] && $target.parents(selector).length === 0 && 
+				var isAncestor = $target.parents(selector).filter(tooltip[0]).length > 0;
+				
+				if($target[0] !== tooltip[0] && !isAncestor &&
 					!$target.closest(target).length && !$target.attr('disabled')
 				) {
 					self.hide(event);
