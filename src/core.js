@@ -486,9 +486,10 @@ function QTip(target, options, id, attr)
 		if(('' + options.hide.event).indexOf('unfocus') > -1) {
 			targets.body.bind('mousedown'+namespace, function(event) {
 				var $target = $(event.target),
-					enabled = !tooltip.hasClass(disabled) && tooltip.is(':visible');
+					enabled = !tooltip.hasClass(disabled) && tooltip.is(':visible'),
+					isAncestor = $target.parents(selector).filter(tooltip[0]).length > 0;
 
-				if($target[0] !== tooltip[0] && $target.parents(selector).length === 0 && 
+				if($target[0] !== tooltip[0] && !isAncestor &&
 					!$target.closest(target).length && !$target.attr('disabled')
 				) {
 					self.hide(event);

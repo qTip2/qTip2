@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Feb 21 04:13:49 2012 +0000
+* Date: Tue Feb 21 04:19:40 2012 +0000
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -549,9 +549,10 @@ function QTip(target, options, id, attr)
 		if(('' + options.hide.event).indexOf('unfocus') > -1) {
 			targets.body.bind('mousedown'+namespace, function(event) {
 				var $target = $(event.target),
-					enabled = !tooltip.hasClass(disabled) && tooltip.is(':visible');
+					enabled = !tooltip.hasClass(disabled) && tooltip.is(':visible'),
+					isAncestor = $target.parents(selector).filter(tooltip[0]).length > 0;
 
-				if($target[0] !== tooltip[0] && $target.parents(selector).length === 0 && 
+				if($target[0] !== tooltip[0] && !isAncestor &&
 					!$target.closest(target).length && !$target.attr('disabled')
 				) {
 					self.hide(event);
