@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Feb 21 04:23:23 2012 +0000
+* Date: Tue Feb 21 04:31:31 2012 +0000
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -325,8 +325,8 @@ function QTip(target, options, id, attr)
 			content = content.call(target, cache.event, self);
 		}
 
-		// Remove title if callback returns false
-		if(content === FALSE) { return removeTitle(FALSE); }
+		// Remove title if callback returns false or null/undefined (but not '')
+		if(content === FALSE || (!content && content !== '')) { return removeTitle(FALSE); }
 
 		// Append new content if its a DOM array and show it if hidden
 		else if(content.jquery && content.length > 0) {
