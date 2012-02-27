@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Feb 27 01:41:07 2012 +0000
+* Date: Mon Feb 27 02:03:04 2012 +0000
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -557,12 +557,12 @@ function QTip(target, options, id, attr)
 		// Hide tooltip on document mousedown if unfocus events are enabled
 		if(('' + options.hide.event).indexOf('unfocus') > -1) {
 			posOptions.container.closest('html').bind('mousedown'+namespace, function(event) {
-				var $target = $(event.target),
+				var elem = $(event.target),
 					enabled = !tooltip.hasClass(disabled) && tooltip.is(':visible'),
-					isAncestor = $target.parents(selector).filter(tooltip[0]).length > 0;
+					isAncestor = elem.parents(selector).filter(tooltip[0]).length > 0;
 
-				if($target[0] !== tooltip[0] && !isAncestor &&
-					!$target.closest(target).length && !$target.attr('disabled')
+				if(elem[0] !== target[0] && elem[0] !== tooltip[0] && !isAncestor &&
+					!target.has(elem[0]).length && !elem.attr('disabled')
 				) {
 					self.hide(event);
 				}
