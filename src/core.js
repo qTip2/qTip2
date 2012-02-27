@@ -136,7 +136,7 @@ function QTip(target, options, id, attr)
 	function setWidget() {
 		var on = options.style.widget;
 
-		tooltip.toggleClass(widget, on).toggleClass(defaultClass, options.style['default'] && !on);
+		tooltip.toggleClass(widget, on).toggleClass(defaultClass, options.style.def && !on);
 		elements.content.toggleClass(widget+'-content', on);
 		
 		if(elements.titlebar){
@@ -1898,7 +1898,7 @@ QTIP.defaults = {
 		widget: FALSE,
 		width: FALSE,
 		height: FALSE,
-		'default': TRUE
+		def: TRUE
 	},
 	events: {
 		render: NULL,
