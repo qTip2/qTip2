@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Feb 21 17:23:25 2012 +0000
+* Date: Thu Feb 23 18:28:16 2012 +0000
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1792,7 +1792,7 @@ PLUGINS = QTIP.plugins = {
 	// Custom (more correct for qTip!) offset calculator
 	offset: function(elem, container) {
 		var pos = elem.offset(),
-			docBody = document.body,
+			docBody = elem.closest('body')[0],
 			parent = container, scrolled,
 			coffset, overflow;
 
@@ -1814,9 +1814,8 @@ PLUGINS = QTIP.plugins = {
 					// If this is the first parent element with an overflow of "scroll" or "auto", store it
 					if(!scrolled && (overflow = parent.css('overflow')) !== 'hidden' && overflow !== 'visible') { scrolled = parent; }
 				}
-				if(parent[0] === docBody) { break; }
 			}
-			while(parent = parent.offsetParent());
+			while((parent = $(parent[0].offsetParent)).length);
 
 			// Compensate for containers scroll if it also has an offsetParent
 			if(scrolled && scrolled[0] !== docBody) { scroll( scrolled, 1 ); }
