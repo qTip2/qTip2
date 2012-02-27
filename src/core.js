@@ -1550,8 +1550,8 @@ function init(id, opts)
 	obj = new QTip(elem, config, id, !!attr);
 	$.data(this, 'qtip', obj);
 
-	// Catch remove events on target element to destroy redundant tooltip
-	elem.bind('remove.qtip-'+id, function(){ obj.destroy(); });
+	// Catch remove/removeqtip events on target element to destroy redundant tooltip
+	elem.bind('remove.qtip-'+id+' removeqtip.qtip-'+id, function(){ obj.destroy(); });
 
 	return obj;
 }
@@ -1806,24 +1806,6 @@ PLUGINS = QTIP.plugins = {
 			}
 
 			return elems;
-		},
-
-		/* 
-		 * Taken directly from jQuery 1.8.2 widget source code
-		 * Trigger 'remove' event on all elements on removal
-		 */
-		remove: $.ui ? NULL : function( selector, keepData ) {
-			if($.ui) { return; } // We don't need to do this if jQuery UI is present!
-
-			$(this).each(function() {
-				if (!keepData) {
-					if (!selector || $.filter( selector, [ this ] ).length) {
-						$('*', this).add(this).each(function() {
-							$(this).triggerHandler('remove');
-						});
-					}
-				}
-			});
 		}
 	}
 };
@@ -1837,6 +1819,21 @@ $.each(PLUGINS.fn, function(name, func) {
 		return func.apply(this, arguments) || old.apply(this, arguments);
 	};
 });
+
+/* Fire off 'removeqtip' handler in $.cleanData if jQuery UI not present (it already does similar).
+ * This snippet is taken directly from jQuery UI source code found here:
+ *     http://code.jquery.com/ui/jquery-ui-git.js
+ */
+if(!$.ui) {
+	$['cleanData'+replaceSuffix] = $.cleanData;
+	$.cleanData = function( elems ) {
+		for(var i = 0, elem; (elem = elems[i]) !== undefined; i++) {
+			try { $( elem ).triggerHandler('removeqtip'); }
+			catch( e ) {}
+		}
+		$['cleanData'+replaceSuffix]( elems );
+	};
+}
 
 // Set global qTip properties
 QTIP.version = '@VERSION';
