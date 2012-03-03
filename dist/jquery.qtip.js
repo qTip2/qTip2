@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Mar 1 16:12:41 2012 +0000
+* Date: Thu Mar 1 16:13:34 2012 +0000
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1991,7 +1991,9 @@ function Ajax(api)
 		opts = api.options.content.ajax,
 		namespace = '.qtip-ajax',
 		rscript = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
-		first = TRUE;
+		first = TRUE,
+		destroyed = FALSE,
+		xhr;
 
 	api.checks.ajax = {
 		'^content.ajax': function(obj, name, v) {
@@ -2031,6 +2033,9 @@ function Ajax(api)
 
 			// Make sure default event hasn't been prevented
 			else if(event && event.isDefaultPrevented()) { return self; }
+
+			// Cancel old request
+			if(xhr && xhr.abort) { xhr.abort(); }
 			
 			// Check if user delcared a content selector like in .load()
 			if(hasSelector > -1) {
@@ -2040,6 +2045,8 @@ function Ajax(api)
 
 			// Define common after callback for both success/error handlers
 			function after() {
+				if(destroyed) { return; }
+
 				// Re-display tip if loading and first time, and reset first flag
 				if(hideFirst) { api.show(event.originalEvent); first = FALSE; }
 
@@ -2049,6 +2056,8 @@ function Ajax(api)
 
 			// Define success handler
 			function successHandler(content) {
+				if(destroyed) { return; }
+
 				if(selector) {
 					// Create a dummy div to hold the results and grab the selector element
 					content = $('<div/>')
@@ -2065,13 +2074,21 @@ function Ajax(api)
 			}
 
 			// Error handler
-			function errorHandler(xh, status, error) {
-				if (xh.status === 0) { return; }
+			function errorHandler(xhr, status, error) {
+				if (destroyed || xhr.status === 0) { return; }
 				api.set('content.text', status + ': ' + error);
 			}
 
 			// Setup $.ajax option object and process the request
-			$.ajax( $.extend({ success: successHandler, error: errorHandler, context: api }, opts, { url: url, complete: after }) );
+			xhr = $.ajax( $.extend({ success: successHandler, error: errorHandler, context: api }, opts, { url: url, complete: after }) );
+		},
+
+		destroy: function() {
+			// Cancel ajax request if possible
+			if(xhr && xhr.abort) { xhr.abort(); }
+
+			// Set destroyed flag
+			destroyed = TRUE;
 		}
 	});
 
