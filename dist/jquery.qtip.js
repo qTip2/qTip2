@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu Mar 1 16:13:34 2012 +0000
+* Date: Sat Mar 3 17:00:08 2012 +0000
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1505,7 +1505,7 @@ function QTip(target, options, id, attr)
 
 			// Destroy tooltip and  any associated plugins if rendered
 			if(self.rendered) {
-				tooltip.remove();
+				tooltip.stop(1,0).remove();
 				
 				$.each(self.plugins, function() {
 					if(this.destroy) { this.destroy(); }

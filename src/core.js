@@ -1433,7 +1433,7 @@ function QTip(target, options, id, attr)
 
 			// Destroy tooltip and  any associated plugins if rendered
 			if(self.rendered) {
-				tooltip.remove();
+				tooltip.stop(1,0).remove();
 				
 				$.each(self.plugins, function() {
 					if(this.destroy) { this.destroy(); }
