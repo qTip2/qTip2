@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sat Mar 3 17:00:08 2012 +0000
+* Date: Sat Mar 3 17:04:40 2012 +0000
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1064,7 +1064,7 @@ function QTip(target, options, id, attr)
 			}
 
 			// Clear animation queue if same target
-			if(sameTarget) { tooltip.stop(0, 1); }
+			if(sameTarget) { tooltip.stop(1, 0); }
 
 			// If no effect type is supplied, use a simple toggle
 			if(opts.effect === FALSE) {

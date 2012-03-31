@@ -992,7 +992,7 @@ function QTip(target, options, id, attr)
 			}
 
 			// Clear animation queue if same target
-			if(sameTarget) { tooltip.stop(0, 1); }
+			if(sameTarget) { tooltip.stop(1, 0); }
 
 			// If no effect type is supplied, use a simple toggle
 			if(opts.effect === FALSE) {

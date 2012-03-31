@@ -30,9 +30,9 @@ QTIP_CSS_MIN = ${DIST_DIR}/jquery.qtip.min.css
 QTIP_VER = `cat version.txt`
 VER = sed s/@VERSION/${QTIP_VER}/
 
-JS_ENGINE = `which nodejs node`
+JS_ENGINE = `which node`
 JS_LINT = ${JS_ENGINE} $(BUILD_DIR)/jslint-check.js
-JS_MINIFIER = ${JS_ENGINE} ${BUILD_DIR}/uglify.js --extra
+JS_MINIFIER = ${JS_ENGINE} ${BUILD_DIR}/uglify.js 
 CSS_MINIFIER = java -Xmx96m -jar ${BUILD_DIR}/yuicompressor.jar
 
 DATE=`git log --pretty=format:'%ad' -1`
