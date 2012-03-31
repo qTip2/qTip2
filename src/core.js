@@ -1527,6 +1527,9 @@ function init(id, opts)
 	if(config.hide.target === FALSE) { config.hide.target = newTarget; }
 	if(config.position.viewport === TRUE) { config.position.viewport = posOptions.container; }
 
+	// Ensure we only use a single container
+	posOptions.container = posOptions.container.eq(0);
+
 	// Convert position corner values into x and y strings
 	posOptions.at = new PLUGINS.Corner(posOptions.at);
 	posOptions.my = new PLUGINS.Corner(posOptions.my);

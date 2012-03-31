@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sat Mar 3 17:04:40 2012 +0000
+* Date: Sat Mar 31 19:19:39 2012 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1598,6 +1598,9 @@ function init(id, opts)
 	if(config.show.solo === TRUE) { config.show.solo = posOptions.container.closest('body'); }
 	if(config.hide.target === FALSE) { config.hide.target = newTarget; }
 	if(config.position.viewport === TRUE) { config.position.viewport = posOptions.container; }
+
+	// Ensure we only use a single container
+	posOptions.container = posOptions.container.eq(0);
 
 	// Convert position corner values into x and y strings
 	posOptions.at = new PLUGINS.Corner(posOptions.at);
