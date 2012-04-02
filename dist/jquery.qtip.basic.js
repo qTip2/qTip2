@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sat Mar 31 19:19:39 2012 +0100
+* Date: Sat Mar 31 19:36:54 2012 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -954,7 +954,8 @@ function QTip(target, options, id, attr)
 			var type = state ? 'show' : 'hide',
 				opts = options[type],
 				visible = tooltip.is(':visible'),
-				sameTarget = !event || options[type].target.length < 2 || cache.target[0] === event.target,
+				sameTarget = !event || opts.target.length < 2 || cache.target[0] === event.target,
+				eventAsTarget = event && opts.target.add(event.target).length !== opts.target.length,
 				posOptions = options.position,
 				contentOptions = options.content,
 				delay,
@@ -969,7 +970,8 @@ function QTip(target, options, id, attr)
 			// Try to prevent flickering when tooltip overlaps show element
 			if(event) {
 				if((/over|enter/).test(event.type) && (/out|leave/).test(cache.event.type) &&
-					event.target === options.show.target[0] && tooltip.has(event.relatedTarget).length) {
+					options.show.target.add(event.target).length === options.show.target.length &&
+					tooltip.has(event.relatedTarget).length) {
 					return self;
 				}
 
@@ -1063,8 +1065,8 @@ function QTip(target, options, id, attr)
 				}
 			}
 
-			// Clear animation queue if same target
-			if(sameTarget) { tooltip.stop(1, 0); }
+			// Clear/stop animation
+			tooltip.stop(eventAsTarget, !eventAsTarget);
 
 			// If no effect type is supplied, use a simple toggle
 			if(opts.effect === FALSE) {

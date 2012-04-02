@@ -1,0 +1,1 @@
+Add missing files and make sure to only use first element of a jquery object passed to position.container
