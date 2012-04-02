@@ -973,11 +973,6 @@ function QTip(target, options, id, attr)
 						$(opts.autofocus, tooltip).focus();
 					}
 
-					// Call API method
-					callback = $.Event('tooltipvisible');
-					callback.originalEvent = event ? cache.event : NULL;
-					tooltip.trigger(callback, [self]);
-
 					// If set, hide tooltip when inactive for delay period
 					opts.target.trigger('qtip-'+id+'-inactive');
 				}
@@ -991,6 +986,11 @@ function QTip(target, options, id, attr)
 						top: ''
 					});
 				}
+
+				// Call API method
+				callback = $.Event('tooltip'+(state ? 'visible' : 'hidden'));
+				callback.originalEvent = event ? cache.event : NULL;
+				tooltip.trigger(callback, [self]);
 			}
 
 			// Clear/stop animation
@@ -1912,6 +1912,7 @@ QTIP.defaults = {
 		hide: NULL,
 		toggle: NULL,
 		visible: NULL,
+		hidden: NULL,
 		focus: NULL,
 		blur: NULL
 	}

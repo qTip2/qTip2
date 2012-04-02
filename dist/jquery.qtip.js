@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sat Mar 31 19:36:54 2012 +0100
+* Date: Mon Apr 2 21:24:16 2012 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1045,11 +1045,6 @@ function QTip(target, options, id, attr)
 						$(opts.autofocus, tooltip).focus();
 					}
 
-					// Call API method
-					callback = $.Event('tooltipvisible');
-					callback.originalEvent = event ? cache.event : NULL;
-					tooltip.trigger(callback, [self]);
-
 					// If set, hide tooltip when inactive for delay period
 					opts.target.trigger('qtip-'+id+'-inactive');
 				}
@@ -1063,6 +1058,11 @@ function QTip(target, options, id, attr)
 						top: ''
 					});
 				}
+
+				// Call API method
+				callback = $.Event('tooltip'+(state ? 'visible' : 'hidden'));
+				callback.originalEvent = event ? cache.event : NULL;
+				tooltip.trigger(callback, [self]);
 			}
 
 			// Clear/stop animation
@@ -1984,6 +1984,7 @@ QTIP.defaults = {
 		hide: NULL,
 		toggle: NULL,
 		visible: NULL,
+		hidden: NULL,
 		focus: NULL,
 		blur: NULL
 	}
