@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Apr 2 21:24:16 2012 +0100
+* Date: Mon Apr 2 21:46:33 2012 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -347,7 +347,7 @@ function QTip(target, options, id, attr)
 
 		// Redraw and reposition
 		self.redraw();
-		if(reposition !== FALSE && self.rendered && tooltip.is(':visible')) {
+		if(reposition !== FALSE && self.rendered && tooltip[0].offsetWidth > 0) {
 			self.reposition(cache.event);
 		}
 	}
@@ -509,7 +509,7 @@ function QTip(target, options, id, attr)
 		}
 
 		function repositionMethod(event) {
-			if(tooltip.is(':visible')) { self.reposition(event); }
+			if(tooltip[0].offsetWidth > 0) { self.reposition(event); }
 		}
 
 		// On mouseenter/mouseleave...
@@ -558,7 +558,7 @@ function QTip(target, options, id, attr)
 		if(('' + options.hide.event).indexOf('unfocus') > -1) {
 			posOptions.container.closest('html').bind('mousedown'+namespace, function(event) {
 				var elem = $(event.target),
-					enabled = !tooltip.hasClass(disabled) && tooltip.is(':visible'),
+					enabled = !tooltip.hasClass(disabled) && tooltip[0].offsetWidth > 0,
 					isAncestor = elem.parents(selector).filter(tooltip[0]).length > 0;
 
 				if(elem[0] !== target[0] && elem[0] !== tooltip[0] && !isAncestor &&
@@ -589,7 +589,7 @@ function QTip(target, options, id, attr)
 			if((showIndex > -1 && targetHide.add(targets.show).length === targetHide.length) || type === 'unfocus')
 			{
 				targets.show.bind(type+namespace, function(event) {
-					if(tooltip.is(':visible')) { hideMethod(event); }
+					if(tooltip[0].offsetWidth > 0) { hideMethod(event); }
 					else { showMethod(event); }
 				});
 
@@ -646,7 +646,7 @@ function QTip(target, options, id, attr)
 				// Update tooltip position on mousemove
 				targets.document.bind('mousemove'+namespace, function(event) {
 					// Update the tooltip position only if the tooltip is visible and adjustment is enabled
-					if(cache.onTarget && !tooltip.hasClass(disabled) && tooltip.is(':visible')) {
+					if(cache.onTarget && !tooltip.hasClass(disabled) && tooltip[0].offsetWidth > 0) {
 						self.reposition(event || MOUSE);
 					}
 				});
@@ -936,7 +936,7 @@ function QTip(target, options, id, attr)
 			isPositioning = isDrawing = 1; $.each(option, callback); isPositioning = isDrawing = 0;
 
 			// Update position / redraw if needed
-			if(tooltip.is(':visible') && self.rendered) {
+			if(tooltip[0].offsetWidth > 0 && self.rendered) {
 				if(reposition) {
 					self.reposition( options.position.target === 'mouse' ? NULL : cache.event );
 				}
@@ -953,13 +953,13 @@ function QTip(target, options, id, attr)
 
 			var type = state ? 'show' : 'hide',
 				opts = options[type],
-				visible = tooltip.is(':visible'),
-				sameTarget = !event || opts.target.length < 2 || cache.target[0] === event.target,
-				eventAsTarget = event && opts.target.add(event.target).length !== opts.target.length,
+				otherOpts = options[ !state ? 'show' : 'hide' ],
 				posOptions = options.position,
 				contentOptions = options.content,
-				delay,
-				callback;
+				visible = tooltip[0].offsetWidth > 0,
+				animate = state || opts.target.length === 1,
+				sameTarget = !event || opts.target.length < 2 || cache.target[0] === event.target,
+				delay, callback;
 
 			// Detect state if valid one isn't provided
 			if((typeof state).search('boolean|number')) { state = !visible; }
@@ -1065,17 +1065,15 @@ function QTip(target, options, id, attr)
 				tooltip.trigger(callback, [self]);
 			}
 
-			// Clear/stop animation
-			tooltip.stop(eventAsTarget, !eventAsTarget);
-
 			// If no effect type is supplied, use a simple toggle
-			if(opts.effect === FALSE) {
+			if(opts.effect === FALSE || animate === FALSE) {
 				tooltip[ type ]();
 				after.call(tooltip);
 			}
 
 			// Use custom function if provided
 			else if($.isFunction(opts.effect)) {
+				tooltip.stop(1, 1);
 				opts.effect.call(tooltip, self);
 				tooltip.queue('fx', function(n){ after(); n(); });
 			}
@@ -1173,6 +1171,7 @@ function QTip(target, options, id, attr)
 				container = posOptions.container,
 				flipoffset = FALSE,
 				tip = self.plugins.tip,
+				visible = tooltip[0].offsetWidth > 0,
 				readjust = {
 					// Axis detection and readjustment indicator
 					horizontal: method[0],
@@ -1411,7 +1410,7 @@ function QTip(target, options, id, attr)
 			delete position.adjusted;
 
 			// If effect is disabled, target it mouse, no animation is defined or positioning gives NaN out, set CSS directly
-			if(effect === FALSE || isNaN(position.left) || isNaN(position.top) || target === 'mouse' || !$.isFunction(posOptions.effect)) {
+			if(effect === FALSE || !visible || isNaN(position.left) || isNaN(position.top) || target === 'mouse' || !$.isFunction(posOptions.effect)) {
 				tooltip.css(position);
 			}
 			
