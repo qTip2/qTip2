@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Apr 2 21:46:33 2012 +0100
+* Date: Mon Apr 9 16:30:10 2012 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1998,6 +1998,7 @@ function Ajax(api)
 		rscript = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
 		first = TRUE,
 		destroyed = FALSE,
+		stop = FALSE,
 		xhr;
 
 	api.checks.ajax = {
@@ -2027,11 +2028,13 @@ function Ajax(api)
 			return self;
 		},
 
-		load: function(event, first) {
+		load: function(event) {
+			if(stop) {stop = FALSE; return; }
+
 			var hasSelector = opts.url.indexOf(' '),
 				url = opts.url,
 				selector,
-				hideFirst = opts.once && !opts.loading && first;
+				hideFirst = !opts.loading && first;
 
 			// If loading option is disabled, prevent the tooltip showing until we've completed the request
 			if(hideFirst) { try{ event.preventDefault(); } catch(e) {} }
@@ -2052,8 +2055,11 @@ function Ajax(api)
 			function after() {
 				if(destroyed) { return; }
 
+				// Set first flag to false
+				first = FALSE;
+
 				// Re-display tip if loading and first time, and reset first flag
-				if(hideFirst) { api.show(event.originalEvent); first = FALSE; }
+				if(hideFirst) { stop = TRUE; api.show(event.originalEvent); }
 
 				// Call users complete if it was defined
 				if($.isFunction(opts.complete)) { opts.complete.apply(this, arguments); }
