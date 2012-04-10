@@ -437,7 +437,7 @@ function QTip(target, options, id, attr)
 		}
 
 		function repositionMethod(event) {
-			if(tooltip[0].offsetWidth > 0) { self.reposition(event); }
+			if(self.rendered && tooltip[0].offsetWidth > 0) { self.reposition(event); }
 		}
 
 		// On mouseenter/mouseleave...
@@ -486,7 +486,7 @@ function QTip(target, options, id, attr)
 		if(('' + options.hide.event).indexOf('unfocus') > -1) {
 			posOptions.container.closest('html').bind('mousedown'+namespace, function(event) {
 				var elem = $(event.target),
-					enabled = !tooltip.hasClass(disabled) && tooltip[0].offsetWidth > 0,
+					enabled = self.rendered && !tooltip.hasClass(disabled) && tooltip[0].offsetWidth > 0,
 					isAncestor = elem.parents(selector).filter(tooltip[0]).length > 0;
 
 				if(elem[0] !== target[0] && elem[0] !== tooltip[0] && !isAncestor &&
@@ -574,7 +574,7 @@ function QTip(target, options, id, attr)
 				// Update tooltip position on mousemove
 				targets.document.bind('mousemove'+namespace, function(event) {
 					// Update the tooltip position only if the tooltip is visible and adjustment is enabled
-					if(cache.onTarget && !tooltip.hasClass(disabled) && tooltip[0].offsetWidth > 0) {
+					if(self.rendered && cache.onTarget && !tooltip.hasClass(disabled) && tooltip[0].offsetWidth > 0) {
 						self.reposition(event || MOUSE);
 					}
 				});
@@ -864,7 +864,7 @@ function QTip(target, options, id, attr)
 			isPositioning = isDrawing = 1; $.each(option, callback); isPositioning = isDrawing = 0;
 
 			// Update position / redraw if needed
-			if(tooltip[0].offsetWidth > 0 && self.rendered) {
+			if(self.rendered && tooltip[0].offsetWidth > 0) {
 				if(reposition) {
 					self.reposition( options.position.target === 'mouse' ? NULL : cache.event );
 				}
