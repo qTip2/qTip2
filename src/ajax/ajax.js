@@ -3,10 +3,10 @@ function Ajax(api)
 	var self = this,
 		tooltip = api.elements.tooltip,
 		opts = api.options.content.ajax,
+		defaults = QTIP.defaults.content.ajax,
 		namespace = '.qtip-ajax',
 		rscript = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
 		first = TRUE,
-		destroyed = FALSE,
 		stop = FALSE,
 		xhr;
 
@@ -62,7 +62,10 @@ function Ajax(api)
 
 			// Define common after callback for both success/error handlers
 			function after() {
-				if(destroyed) { return; }
+				var complete;
+
+				// Don't proceed if tooltip is destroyed
+				if(api.destroyed) { return; }
 
 				// Set first flag to false
 				first = FALSE;
@@ -70,13 +73,18 @@ function Ajax(api)
 				// Re-display tip if loading and first time, and reset first flag
 				if(hideFirst) { stop = TRUE; api.show(event.originalEvent); }
 
-				// Call users complete if it was defined
-				if($.isFunction(opts.complete)) { opts.complete.apply(this, arguments); }
+				// Call users complete method if it was defined
+				if((complete = defaults.success || opts.success) && $.isFunction(complete)) {
+					complete.apply(opts.context || api, arguments);
+				}
 			}
 
 			// Define success handler
-			function successHandler(content) {
-				if(destroyed) { return; }
+			function successHandler(content, status, jqXHR) {
+				var success;
+
+				// Don't proceed if tooltip is destroyed
+				if(api.destroyed) { return; }
 
 				if(selector) {
 					// Create a dummy div to hold the results and grab the selector element
@@ -89,26 +97,37 @@ function Ajax(api)
 						.find(selector);
 				}
 
-				// Set the content
-				api.set('content.text', content);
+				// Call the success function if one is defined
+				if((success = defaults.success || opts.success) && $.isFunction(success)) {
+					success.call(opts.context || api, content, status, jqXHR);
+				}
+
+				// Otherwise set the content
+				else { api.set('content.text', content); }
 			}
 
 			// Error handler
 			function errorHandler(xhr, status, error) {
-				if (destroyed || xhr.status === 0) { return; }
+				if(api.destroyed || xhr.status === 0) { return; }
 				api.set('content.text', status + ': ' + error);
 			}
 
 			// Setup $.ajax option object and process the request
-			xhr = $.ajax( $.extend({ success: successHandler, error: errorHandler, context: api }, opts, { url: url, complete: after }) );
+			xhr = $.ajax(
+				$.extend({
+					error: defaults.error || errorHandler,
+					context: api
+				},
+				opts, { url: url, success: successHandler, complete: after })
+			);
 		},
 
 		destroy: function() {
 			// Cancel ajax request if possible
 			if(xhr && xhr.abort) { xhr.abort(); }
 
-			// Set destroyed flag
-			destroyed = TRUE;
+			// Set api.destroyed flag
+			api.destroyed = TRUE;
 		}
 	});
 

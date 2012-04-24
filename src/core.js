@@ -102,6 +102,7 @@ function QTip(target, options, id, attr)
 	// Setup class attributes
 	self.id = id;
 	self.rendered = FALSE;
+	self.destroyed = FALSE;
 	self.elements = elements = { target: target };
 	self.timers = { img: {} };
 	self.options = options;
@@ -1431,6 +1432,9 @@ function QTip(target, options, id, attr)
 			var t = target[0],
 				title = $.attr(t, oldtitle),
 				elemAPI = target.data('qtip');
+
+			// Set flag the signify destroy is taking place to plugins
+			self.destroyed = TRUE;
 
 			// Destroy tooltip and  any associated plugins if rendered
 			if(self.rendered) {

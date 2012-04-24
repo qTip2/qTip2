@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Apr 9 17:49:18 2012 +0100
+* Date: Tue Apr 10 19:58:28 2012 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -174,6 +174,7 @@ function QTip(target, options, id, attr)
 	// Setup class attributes
 	self.id = id;
 	self.rendered = FALSE;
+	self.destroyed = FALSE;
 	self.elements = elements = { target: target };
 	self.timers = { img: {} };
 	self.options = options;
@@ -1503,6 +1504,9 @@ function QTip(target, options, id, attr)
 			var t = target[0],
 				title = $.attr(t, oldtitle),
 				elemAPI = target.data('qtip');
+
+			// Set flag the signify destroy is taking place to plugins
+			self.destroyed = TRUE;
 
 			// Destroy tooltip and  any associated plugins if rendered
 			if(self.rendered) {
