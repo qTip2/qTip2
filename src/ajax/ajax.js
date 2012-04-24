@@ -74,7 +74,7 @@ function Ajax(api)
 				if(hideFirst) { stop = TRUE; api.show(event.originalEvent); }
 
 				// Call users complete method if it was defined
-				if((complete = defaults.success || opts.success) && $.isFunction(complete)) {
+				if((complete = defaults.complete || opts.complete) && $.isFunction(complete)) {
 					complete.apply(opts.context || api, arguments);
 				}
 			}

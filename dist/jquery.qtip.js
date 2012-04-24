@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Apr 24 21:24:48 2012 +0100
+* Date: Tue Apr 24 22:02:25 2012 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -2069,7 +2069,7 @@ function Ajax(api)
 				if(hideFirst) { stop = TRUE; api.show(event.originalEvent); }
 
 				// Call users complete method if it was defined
-				if((complete = defaults.success || opts.success) && $.isFunction(complete)) {
+				if((complete = defaults.complete || opts.complete) && $.isFunction(complete)) {
 					complete.apply(opts.context || api, arguments);
 				}
 			}
