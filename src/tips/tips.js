@@ -92,7 +92,7 @@ function Tip(qTip, command)
 			if(horizontal === 'shift' && newCorner.precedance === 'x' && adjust.left && newCorner.y !== 'center') {
 				newCorner.precedance = newCorner.precedance === 'x' ? 'y' : 'x';
 			}
-			else if(horizontal === 'flip' && adjust.left){
+			else if(horizontal !== 'shift' && adjust.left){
 				newCorner.x = newCorner.x === 'center' ? (adjust.left > 0 ? 'left' : 'right') : (newCorner.x === 'left' ? 'right' : 'left');
 			}
 
@@ -100,7 +100,7 @@ function Tip(qTip, command)
 			if(vertical === 'shift' && newCorner.precedance === 'y' && adjust.top && newCorner.x !== 'center') {
 				newCorner.precedance = newCorner.precedance === 'y' ? 'x' : 'y';
 			}
-			else if(vertical === 'flip' && adjust.top) {
+			else if(vertical !== 'shift' && adjust.top) {
 				newCorner.y = newCorner.y === 'center' ? (adjust.top > 0 ? 'top' : 'bottom') : (newCorner.y === 'top' ? 'bottom' : 'top');
 			}
 
