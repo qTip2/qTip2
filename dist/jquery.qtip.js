@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Apr 25 00:32:44 2012 +0100
+* Date: Thu Apr 26 20:17:29 2012 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -2779,7 +2779,7 @@ function Tip(qTip, command)
 			qTip.reposition();
 		},
 		'^content.title.text|style.(classes|widget)$': function() {
-			if(elems.tip) {
+			if(elems.tip && elems.tip.length) {
 				self.update();
 			}
 		}
@@ -3246,8 +3246,11 @@ function Tip(qTip, command)
 		
 		destroy: function()
 		{
-			// Remov tip and bound events
+			// Remove the tip element
 			if(elems.tip) { elems.tip.remove(); }
+			elems.tip = false;
+
+			// Unbind events
 			tooltip.unbind(namespace);
 		}
 	});

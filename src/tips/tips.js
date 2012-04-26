@@ -69,7 +69,7 @@ function Tip(qTip, command)
 			qTip.reposition();
 		},
 		'^content.title.text|style.(classes|widget)$': function() {
-			if(elems.tip) {
+			if(elems.tip && elems.tip.length) {
 				self.update();
 			}
 		}
@@ -536,8 +536,11 @@ function Tip(qTip, command)
 		
 		destroy: function()
 		{
-			// Remov tip and bound events
+			// Remove the tip element
 			if(elems.tip) { elems.tip.remove(); }
+			elems.tip = false;
+
+			// Unbind events
 			tooltip.unbind(namespace);
 		}
 	});
