@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Apr 24 22:02:25 2012 +0100
+* Date: Wed Apr 25 00:32:44 2012 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1182,7 +1182,7 @@ function QTip(target, options, id, attr)
 					// Reposition methods
 					left: function(posLeft) {
 						var isShift = readjust.horizontal === 'shift',
-							adjustx = adjust.x * (readjust.horizontal.substr(-6) === 'invert' ? 1 : 0),
+							adjustx = adjust.x * (readjust.horizontal.substr(-6) === 'invert' ? 2 : 0),
 							viewportScroll = -container.offset.left + viewport.offset.left + viewport.scrollLeft,
 							myWidth = my.x === 'left' ? elemWidth : my.x === 'right' ? -elemWidth : -elemWidth / 2,
 							atWidth = at.x === 'left' ? targetWidth : at.x === 'right' ? -targetWidth : -targetWidth / 2,
@@ -1213,10 +1213,10 @@ function QTip(target, options, id, attr)
 						// Default 'flip' repositioning
 						else {
 							if(overflowLeft > 0 && (my.x !== 'left' || overflowRight > 0)) {
-								position.left -= offset + (adjustx * 2);
+								position.left -= offset + adjustx;
 							}
 							else if(overflowRight > 0 && (my.x !== 'right' || overflowLeft > 0)  ) {
-								position.left -= (isCenter ? -offset : offset) + (adjustx * 2);
+								position.left -= (isCenter ? -offset : offset) + adjustx;
 							}
 
 							// Make sure we haven't made things worse with the adjustment and return the adjusted difference
@@ -1227,7 +1227,7 @@ function QTip(target, options, id, attr)
 					},
 					top: function(posTop) {
 						var isShift = readjust.vertical === 'shift',
-							adjusty = adjust.y * (readjust.vertical.substr(-6) === 'invert' ? 1 : 0),
+							adjusty = adjust.y * (readjust.vertical.substr(-6) === 'invert' ? 2 : 0),
 							viewportScroll = -container.offset.top + viewport.offset.top + viewport.scrollTop,
 							myHeight = my.y === 'top' ? elemHeight : my.y === 'bottom' ? -elemHeight : -elemHeight / 2,
 							atHeight = at.y === 'top' ? targetHeight : at.y === 'bottom' ? -targetHeight : -targetHeight / 2,
@@ -1258,10 +1258,10 @@ function QTip(target, options, id, attr)
 						// Default 'flip' repositioning
 						else {
 							if(overflowTop > 0 && (my.y !== 'top' || overflowBottom > 0)) {
-								position.top -= offset + (adjusty * 2);
+								position.top -= offset + adjusty;
 							}
 							else if(overflowBottom > 0 && (my.y !== 'bottom' || overflowTop > 0)  ) {
-								position.top -= (isCenter ? -offset : offset) + (adjusty * 2);
+								position.top -= (isCenter ? -offset : offset) + adjusty;
 							}
 
 							// Make sure we haven't made things worse with the adjustment and return the adjusted difference
