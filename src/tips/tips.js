@@ -75,6 +75,17 @@ function Tip(qTip, command)
 		}
 	};
 
+	function swapDimensions() {
+		var temp = size.width;
+		size.width = size.height;
+		size.height = temp;
+	}
+
+	function resetDimensions() {
+		size.width = opts.width;
+		size.height = opts.height;
+	}
+
 	function reposition(event, api, pos, viewport) {
 		if(!elems.tip) { return; }
 
@@ -372,6 +383,16 @@ function Tip(qTip, command)
 				}
 			}
 			precedance = mimic.precedance;
+
+			// Ensure the tip width.height are relative to the tip position
+			if(corner.precedance === 'x') { swapDimensions(); }
+			else { resetDimensions(); }
+
+			// Set the tip dimensions
+			elems.tip.css({
+				width: (width = size.width),
+				height: (height = size.height)
+			});
 
 			// Update our colours
 			self.detectColours(corner);
