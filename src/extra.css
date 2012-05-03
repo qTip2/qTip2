@@ -233,11 +233,73 @@
 		border: 2px solid #285589;
 		background: #285589;
 	}
-		
+
 		.ui-tooltip-tipped .ui-tooltip-icon .ui-icon{
 			background-color: #FBFBFB;
 			color: #555;
 		}
+
+
+/* Bootstrap style */
+.ui-tooltip, .qtip{
+	font-size: 13px;
+	line-height: 18px;
+}
+
+.ui-tooltip-bootstrap{
+	*border-right-width: 2px;
+	*border-bottom-width: 2px;
+
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+
+	-webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+	-moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+
+	-webkit-background-clip: padding-box;
+	-moz-background-clip: padding;
+	background-clip: padding-box;
+}
+
+.ui-tooltip-bootstrap .ui-tooltip-titlebar{
+	/*border-color: #ccc;*/
+	background-color: white;
+	color: #333;
+
+	font-size: 18px;
+	line-height: 27px;
+
+	border: 1px solid #ccc;
+	border: 1px solid rgba(0, 0, 0, 0.2);
+
+	border-bottom: 1px solid #eee;
+
+	-webkit-border-radius: 5px 5px 0 0;
+	-moz-border-radius: 5px 5px 0 0;
+	border-radius: 5px 5px 0 0;
+}
+
+.ui-tooltip-bootstrap .ui-tooltip-content{
+	/*border-color: #ccc;*/
+	background-color: white;
+	color: #333;
+
+	border: 1px solid #ccc;
+	border: 1px solid rgba(0, 0, 0, 0.2);
+
+	-webkit-border-radius: 0 0 5px 5px;
+	-moz-border-radius: 0 0 5px 5px;
+	border-radius: 0 0 5px 5px;
+}
+
+.ui-tooltip-bootstrap .ui-tooltip-icon{
+}
+
+.ui-tooltip-bootstrap .ui-tooltip-titlebar .ui-state-hover{
+}
+
 
 /* IE9 fix - removes all filters */
 .ui-tooltip:not(.ie9haxors) div.ui-tooltip-content,
