@@ -38,8 +38,8 @@ CSS_MINIFIER = java -Xmx96m -jar ${BUILD_DIR}/yuicompressor.jar
 DATE=`git log --pretty=format:'%ad' -1`
 
 all: clean qtip lint css min
-	@@printf ${PLUGIN_JS}
-	@@printf "qTip2 built successfully!\n"
+	@@printf "\n%s" ${PLUGIN_JS}
+	@@printf "qTip2 built successfully!\n\n"
 
 ${DIST_DIR}:
 	@@mkdir -p ${DIST_DIR}
