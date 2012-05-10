@@ -38,8 +38,8 @@ CSS_MINIFIER = java -Xmx96m -jar ${BUILD_DIR}/yuicompressor.jar
 DATE=`git log --pretty=format:'%ad' -1`
 
 all: clean qtip lint css min
-	@@echo ${PLUGIN_JS}
-	@@echo "qTip2 built successfully!\n"
+	@@printf ${PLUGIN_JS}
+	@@printf "qTip2 built successfully!\n"
 
 ${DIST_DIR}:
 	@@mkdir -p ${DIST_DIR}
@@ -47,44 +47,44 @@ ${DIST_DIR}:
 qtip: ${DIST_DIR} ${JS_MODULES}
 	@@mkdir -p ${DIST_DIR}
 
-	@@echo "Building qTip2... Success!"
-	@@echo "\tEnabled plugins: " $(if ${PLUGINS},"${PLUGINS:%/=%}", "None") "\n"
+	@@printf "Building qTip2... Success!\n"
+	@@printf "\tEnabled plugins: %s\n\n" $(if ${PLUGINS},"${PLUGINS:%/=%}", "None")
 
 	@@cat ${JS_MODULES} | \
 		sed 's/Date:./&'"${DATE}"'/' | \
 		${VER} > ${QTIP};
 
 css: ${DIST_DIR} ${CSS_MODULES}
-	@@echo -n "Building CSS... "
+	@@printf "Building CSS... "
 	@@cat ${CSS_MODULES} | \
 		sed 's/Date:./&'"${DATE}"'/' | \
 		${VER} > ${QTIP_CSS};
-	@@echo "Success!"
+	@@printf "Success!\n"
 
 min: qtip css
 	@@if test ! -z ${JS_ENGINE}; then \
-		echo -n "Minifying JS... "; \
+		printf "Minifying JS... "; \
 		head -18 ${QTIP} > ${QTIP_MIN}; \
 		${JS_MINIFIER} ${QTIP} > ${QTIP_MIN}.tmp; \
 		sed '$ s#^\( \*/\)\(.\+\)#\1\n\2;#' ${QTIP_MIN}.tmp > ${QTIP_MIN}; \
 		rm -rf $(QTIP_MIN).tmp; \
-		echo "Success!"; \
+		printf "Success!\n"; \
 	else \
-		echo "You must have NodeJS installed in order to minify qTip JS."; \
+		printf "You must have NodeJS installed in order to minify qTip JS.\n"; \
 	fi
 
-	@@echo -n "Minifying CSS... "
+	@@printf "Minifying CSS... "
 	@@${CSS_MINIFIER} ${QTIP_CSS} --type css -o ${QTIP_CSS_MIN}
-	@@echo "Success!"
+	@@printf "Success!\n"
 
 lint: qtip
 	@@if test ! -z ${JS_ENGINE}; then \
-		echo -n "Checking against JSLint... "; \
+		printf "Checking against JSLint... "; \
 		${JS_LINT}; \
 	else \
-		echo "You must have NodeJS installed in order to test qTip against JSLint."; \
+		printf "You must have NodeJS installed in order to test qTip against JSLint."; \
 	fi
 
 clean:
-	@@echo "Removing distribution directory:" ${DIST_DIR} "\n"
+	@@printf "Removing distribution directory: %s\n\n" ${DIST_DIR}
 	@@rm -rf ${DIST_DIR}
