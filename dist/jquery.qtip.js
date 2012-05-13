@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu May 10 01:18:14 2012 +0100
+* Date: Thu May 10 01:20:57 2012 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -3147,27 +3147,37 @@ function Tip(qTip, command)
 			if(hasCanvas) {
 				// Set the canvas size using calculated size
 				inner.attr(newSize);
-				
+
 				// Grab canvas context and clear/save it
 				context = inner[0].getContext('2d');
 				context.restore(); context.save();
 				context.clearRect(0,0,3000,3000);
-				
+
+				// Set properties
+				context.fillStyle = color.fill;
+				context.strokeStyle = color.border;
+				context.lineWidth = border * 2;
+				context.lineJoin = 'miter';
+				context.miterLimit = 100;
+
 				// Translate origin
 				context.translate(translate[0], translate[1]);
-				
+
 				// Draw the tip
 				context.beginPath();
 				context.moveTo(coords[0][0], coords[0][1]);
 				context.lineTo(coords[1][0], coords[1][1]);
 				context.lineTo(coords[2][0], coords[2][1]);
 				context.closePath();
-				context.fillStyle = color.fill;
-				context.strokeStyle = color.border;
-				context.lineWidth = border * 2;
-				context.lineJoin = 'miter';
-				context.miterLimit = 100;
-				if(border) { context.stroke(); }
+
+				// Make sure transparent borders are supported by doing a stroke
+				// of the background colour before the stroke colour
+				if(border) {
+					context.strokeStyle = color.fill;
+					context.stroke();
+					context.strokeStyle = color.border;
+					context.stroke();
+				}
 				context.fill();
 			}
 
