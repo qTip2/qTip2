@@ -321,8 +321,6 @@ function Tip(qTip, command)
 				}
 			}
 
-			console.log(color.border)
-
 			// Reset background and border colours
 			$('*', tip).add(tip).css('cssText', backgroundColor+':'+transparent+important+';border:0'+important+';');
 

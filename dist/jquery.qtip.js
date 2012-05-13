@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun May 13 16:05:55 2012 +0100
+* Date: Sun May 13 20:08:40 2012 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -3030,8 +3030,6 @@ function Tip(qTip, command)
 					color.border = tooltip.css(borderSide) || tooltip.css(borderSideCamel) || border;
 				}
 			}
-
-			console.log(color.border)
 
 			// Reset background and border colours
 			$('*', tip).add(tip).css('cssText', backgroundColor+':'+transparent+important+';border:0'+important+';');
