@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu May 10 01:20:57 2012 +0100
+* Date: Sun May 13 07:55:33 2012 -0700
 */
 
 /* Core qTip styles */
@@ -338,7 +338,8 @@
 
 .ui-tooltip-rounded .ui-tooltip-titlebar,
 .ui-tooltip-tipsy .ui-tooltip-titlebar,
-.ui-tooltip-youtube .ui-tooltip-titlebar{
+.ui-tooltip-youtube .ui-tooltip-titlebar,
+.ui-tooltip-bootstrap .ui-tooltip-titlebar{
 	-moz-border-radius: 5px 5px 0 0;
 	-webkit-border-radius: 5px 5px 0 0;
 	border-radius: 5px 5px 0 0;
@@ -346,7 +347,8 @@
 
 .ui-tooltip-rounded .ui-tooltip-titlebar + .ui-tooltip-content,
 .ui-tooltip-tipsy .ui-tooltip-titlebar + .ui-tooltip-content,
-.ui-tooltip-youtube .ui-tooltip-titlebar + .ui-tooltip-content{
+.ui-tooltip-youtube .ui-tooltip-titlebar + .ui-tooltip-content,
+.ui-tooltip-bootstrap .ui-tooltip-titlebar + .ui-tooltip-content{
 	-moz-border-radius: 0 0 5px 5px;
 	-webkit-border-radius: 0 0 5px 5px;
 	border-radius: 0 0 5px 5px;
@@ -542,11 +544,85 @@
 		border: 2px solid #285589;
 		background: #285589;
 	}
-		
+
 		.ui-tooltip-tipped .ui-tooltip-icon .ui-icon{
 			background-color: #FBFBFB;
 			color: #555;
 		}
+
+
+/**
+ * Twitter Bootstrap style.
+ *
+ * Tested with IE 8, IE 9, Chrome 18, Firefox 9, Opera 11.
+ * Does not work with IE 7.
+ */
+.ui-tooltip-bootstrap{
+	font-size: 13px;
+	line-height: 18px;
+
+	*border-right-width: 2px;
+	*border-bottom-width: 2px;
+
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+
+	-webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+	-moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+
+	-webkit-background-clip: padding-box;
+	-moz-background-clip: padding;
+	background-clip: padding-box;
+}
+
+	.ui-tooltip-bootstrap .ui-tooltip-titlebar,
+	.ui-tooltip-bootstrap .ui-tooltip-content{
+		color: #333333;
+		background-color: #ffffff;
+
+		border: 1px solid #ccc;
+		border: 1px solid rgba(0, 0, 0, 0.2);
+	}
+
+	.ui-tooltip-bootstrap .ui-tooltip-titlebar{
+		font-size: 18px;
+		line-height: 22px;
+
+		border-bottom: 1px solid #ccc;
+	}
+
+		.ui-tooltip-bootstrap .ui-tooltip-titlebar .ui-state-default{
+			right: 9px; top: 49%;
+			border-style: none;
+		}
+
+	.ui-tooltip-bootstrap .ui-tooltip-icon{
+		background: white;
+	}
+
+		.ui-tooltip-bootstrap .ui-tooltip-icon .ui-icon{
+			width: auto;
+			height: auto;
+			float: right;
+			font-size: 20px;
+			font-weight: bold;
+			line-height: 18px;
+			color: #000000;
+			text-shadow: 0 1px 0 #ffffff;
+			opacity: 0.2;
+			filter: alpha(opacity=20);
+		}
+
+		.ui-tooltip-bootstrap .ui-tooltip-icon .ui-icon:hover{
+			color: #000000;
+			text-decoration: none;
+			cursor: pointer;
+			opacity: 0.4;
+			filter: alpha(opacity=40);
+		}
+
 
 /* IE9 fix - removes all filters */
 .ui-tooltip:not(.ie9haxors) div.ui-tooltip-content,

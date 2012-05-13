@@ -460,11 +460,16 @@ function Tip(qTip, command)
 				context.lineTo(coords[2][0], coords[2][1]);
 				context.closePath();
 
-				// Make sure transparent borders are supported by doing a stroke
-				// of the background colour before the stroke colour
+				// Create borders
 				if(border) {
-					context.strokeStyle = color.fill;
-					context.stroke();
+					// Make sure transparent borders are supported by doing a stroke
+					// of the background colour before the stroke colour (border-box only)
+					if( elems.content.css('backgroundClip') === 'border-box' ) {
+						context.strokeStyle = color.fill;
+						context.stroke();
+					}
+
+					// Do our regular stroke
 					context.strokeStyle = color.border;
 					context.stroke();
 				}

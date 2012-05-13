@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Thu May 10 01:20:57 2012 +0100
+* Date: Sun May 13 07:55:33 2012 -0700
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -3170,11 +3170,16 @@ function Tip(qTip, command)
 				context.lineTo(coords[2][0], coords[2][1]);
 				context.closePath();
 
-				// Make sure transparent borders are supported by doing a stroke
-				// of the background colour before the stroke colour
+				// Create borders
 				if(border) {
-					context.strokeStyle = color.fill;
-					context.stroke();
+					// Make sure transparent borders are supported by doing a stroke
+					// of the background colour before the stroke colour (border-box only)
+					if( elems.content.css('backgroundClip') === 'border-box' ) {
+						context.strokeStyle = color.fill;
+						context.stroke();
+					}
+
+					// Do our regular stroke
 					context.strokeStyle = color.border;
 					context.stroke();
 				}
