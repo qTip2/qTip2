@@ -10,6 +10,9 @@
 	
 	font-size: 10.5px;
 	line-height: 12px;
+
+	border-width: 1px;
+	border-style: solid;
 }
 
 	/* Fluid class for determining actual width in IE */
@@ -25,8 +28,6 @@
 		padding: 5px 9px;
 		overflow: hidden;
 
-		border: 1px solid #000001;
-
 		text-align: left;
 		word-wrap: break-word;
 		overflow: hidden;
@@ -38,9 +39,7 @@
 		padding: 5px 35px 5px 10px;
 		overflow: hidden;
 
-		border: 1px solid #000001;
-		border-width: 1px 1px 0;
-
+		border-width: 0 0 1px;
 		font-weight: bold;
 	}
 
@@ -99,8 +98,7 @@
 
 
 /*! Default tooltip style */
-.ui-tooltip-default .ui-tooltip-titlebar,
-.ui-tooltip-default .ui-tooltip-content{
+.ui-tooltip-default{
 	border-color: #F1D031;
 	background-color: #FFFFA3;
 	color: #555;

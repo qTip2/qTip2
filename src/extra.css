@@ -17,56 +17,32 @@
 
 /*! Add rounded corners to your tooltips in: FF3+, Chrome 2+, Opera 10.6+, IE9+, Safari 2+ */
 .ui-tooltip-rounded,
-.ui-tooltip-rounded .ui-tooltip-content,
 .ui-tooltip-tipsy,
-.ui-tooltip-tipsy .ui-tooltip-content,
 .ui-tooltip-youtube,
-.ui-tooltip-youtube .ui-tooltip-content,
-.ui-tooltip-bootstrap,
-.ui-tooltip-bootstrap .ui-tooltip-content{
+.ui-tooltip-youtube > div,
+.ui-tooltip-bootstrap{
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 	border-radius: 5px;
 }
-
-.ui-tooltip-rounded .ui-tooltip-titlebar,
-.ui-tooltip-tipsy .ui-tooltip-titlebar,
-.ui-tooltip-youtube .ui-tooltip-titlebar,
-.ui-tooltip-bootstrap .ui-tooltip-titlebar{
-	-moz-border-radius: 5px 5px 0 0;
-	-webkit-border-radius: 5px 5px 0 0;
-	border-radius: 5px 5px 0 0;
-}
-
-.ui-tooltip-rounded .ui-tooltip-titlebar + .ui-tooltip-content,
-.ui-tooltip-tipsy .ui-tooltip-titlebar + .ui-tooltip-content,
-.ui-tooltip-youtube .ui-tooltip-titlebar + .ui-tooltip-content,
-.ui-tooltip-bootstrap .ui-tooltip-titlebar + .ui-tooltip-content{
-	-moz-border-radius: 0 0 5px 5px;
-	-webkit-border-radius: 0 0 5px 5px;
-	border-radius: 0 0 5px 5px;
-}
-
 
 /*! Youtube tooltip style */
 .ui-tooltip-youtube{
 	-webkit-box-shadow: 0 0 3px #333;
 	-moz-box-shadow: 0 0 3px #333;
 	box-shadow: 0 0 3px #333;
+
+	color: white;
+	border-color: #CCCCCC;
+
+	background: transparent;
+	background: rgba(0, 0, 0, 0.85);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#D9000000,endColorstr=#D9000000);
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#D9000000,endColorstr=#D9000000)";
 }
 
-	.ui-tooltip-youtube .ui-tooltip-titlebar,
-	.ui-tooltip-youtube .ui-tooltip-content{
-		_margin-bottom: 0; /* IE6 */
-		.margin-bottom: 0; /* IE7 */
-
-		background: transparent;
-		background: rgba(0, 0, 0, 0.85);
-		filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#D9000000,endColorstr=#D9000000);
-		-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#D9000000,endColorstr=#D9000000)";
-
-		color: white;
-		border-color: #CCCCCC;
+	.ui-tooltip-youtube .ui-tooltip-titlebar{
+		background-color: transparent;
 	}
 
 	.ui-tooltip-youtube .ui-tooltip-icon{
@@ -84,7 +60,7 @@
 	background: rgba(0, 0, 0, 0.7);
 	background-image: -moz-linear-gradient(top, #717171, #232323);
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#717171), to(#232323));
-	
+
 	border: 2px solid #ddd;
 	border: 2px solid rgba(241,241,241,1);
 
@@ -99,6 +75,7 @@
 
 	/* IE Specific */
 	.ui-tooltip-jtools .ui-tooltip-titlebar{
+		background-color: transparent;
 		filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#717171,endColorstr=#4A4A4A);
 		-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#717171,endColorstr=#4A4A4A)";
 	}
@@ -128,17 +105,15 @@
 	-webkit-box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.4);
 	-moz-box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.4);
 	box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.4);
+
+	background-color: #D9D9C2;
+	color: #111;
+	border: 0 dashed transparent;
 }
 
 	.ui-tooltip-cluetip .ui-tooltip-titlebar{
 		background-color: #87876A;
 		color: white;
-		border: 0 dashed transparent;
-	}
-
-	.ui-tooltip-cluetip .ui-tooltip-content{
-		background-color: #D9D9C2;
-		color: #111;
 		border: 0 dashed transparent;
 	}
 	
@@ -154,31 +129,22 @@
 
 /* Tipsy style */
 .ui-tooltip-tipsy{
-	border: 0;
+	background: black;
+	background: rgba(0, 0, 0, .87);
+
+	color: white;
+	border: 0px solid transparent;
+
+	font-size: 11px;
+	font-family: 'Lucida Grande', sans-serif;
+	font-weight: bold;
+	line-height: 16px;
+	text-shadow: 0 1px black;
 }
-
-	.ui-tooltip-tipsy .ui-tooltip-titlebar,
-	.ui-tooltip-tipsy .ui-tooltip-content{
-		_margin-bottom: 0; /* IE6 */
-		.margin-bottom: 0; /* IE7 */
-
-		background: transparent;
-		background: rgba(0, 0, 0, .87);
-		filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#D9000000,endColorstr=#D9000000);
-		-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#D9000000,endColorstr=#D9000000)";
-		
-		color: white;
-		border: 0px transparent;
-
-		font-size: 11px;
-		font-family: 'Lucida Grande', sans-serif;
-		font-weight: bold;
-		line-height: 16px;
-		text-shadow: 0 1px black;
-	}
 
 	.ui-tooltip-tipsy .ui-tooltip-titlebar{
 		padding: 6px 35px 0 10;
+		background-color: transparent;
 	}
 
 	.ui-tooltip-tipsy .ui-tooltip-content{
@@ -197,40 +163,28 @@
 
 /* Tipped style */
 .ui-tooltip-tipped{
+	border: 3px solid #959FA9;
 
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+
+	background-color: #F9F9F9;
+	color: #454545;
+
+	font-weight: normal;
+	font-family: serif;
 }
-	
-	.ui-tooltip-tipped .ui-tooltip-titlebar,
-	.ui-tooltip-tipped .ui-tooltip-content{
-		border: 3px solid #959FA9;
-
-		filter: none; -ms-filter: none;
-	}
 
 	.ui-tooltip-tipped .ui-tooltip-titlebar{
+		border-bottom-width: 0;
+
+		color: white;
 		background: #3A79B8;
 		background-image: -moz-linear-gradient(top, #3A79B8, #2E629D);
 		background-image: -webkit-gradient(linear, left top, left bottom, from(#3A79B8), to(#2E629D));
 		filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#3A79B8,endColorstr=#2E629D);
 		-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#3A79B8,endColorstr=#2E629D)";
-
-		color: white;
-		font-weight: normal;
-		font-family: serif;
-
-		border-bottom-width: 0;
-		-moz-border-radius: 3px 3px 0 0;
-		-webkit-border-radius: 3px 3px 0 0;
-		border-radius: 3px 3px 0 0;
-	}
-	
-	.ui-tooltip-tipped .ui-tooltip-content{
-		background-color: #F9F9F9;
-		color: #454545;
-
-		-moz-border-radius: 0 0 3px 3px;
-		-webkit-border-radius: 0 0 3px 3px;
-		border-radius: 0 0 3px 3px;
 	}
 
 	.ui-tooltip-tipped .ui-tooltip-icon{
@@ -254,6 +208,13 @@
 	font-size: 13px;
 	line-height: 18px;
 
+	color: #333333;
+	background-color: #ffffff;
+
+
+	border: 1px solid #ccc;
+	border: 1px solid rgba(0, 0, 0, 0.2);
+
 	*border-right-width: 2px;
 	*border-bottom-width: 2px;
 
@@ -270,20 +231,12 @@
 	background-clip: padding-box;
 }
 
-	.ui-tooltip-bootstrap .ui-tooltip-titlebar,
-	.ui-tooltip-bootstrap .ui-tooltip-content{
-		color: #333333;
-		background-color: #ffffff;
-
-		border: 1px solid #ccc;
-		border: 1px solid rgba(0, 0, 0, 0.2);
-	}
-
 	.ui-tooltip-bootstrap .ui-tooltip-titlebar{
 		font-size: 18px;
 		line-height: 22px;
 
 		border-bottom: 1px solid #ccc;
+		background-color: transparent;
 	}
 
 		.ui-tooltip-bootstrap .ui-tooltip-titlebar .ui-state-default{

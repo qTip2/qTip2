@@ -97,7 +97,7 @@ function Tip(qTip, command)
 			shift = { left: FALSE, top: FALSE, x: 0, y: 0 },
 			offset, css = {}, props;
 
-		// Make sure our tip position isn't fixed e.g. doesn't adjust with viewport
+		// If our tip position isn't fixed e.g. doesn't adjust with viewport...
 		if(self.corner.fixed !== TRUE) {
 			// Horizontal - Shift or flip method
 			if(horizontal === 'shift' && newCorner.precedance === 'x' && adjust.left && newCorner.y !== 'center') {
@@ -123,6 +123,10 @@ function Tip(qTip, command)
 
 		// Setup tip offset properties
 		offset = self.position(newCorner, adjust);
+		offset[ newCorner.x ] += borderWidth(newCorner, newCorner.x, TRUE);
+		offset[ newCorner.y ] += borderWidth(newCorner, newCorner.y, TRUE);
+
+		// Readjust offset object to make it left/top
 		if(offset.right !== undefined) { offset.left = -offset.right; }
 		if(offset.bottom !== undefined) { offset.top = -offset.bottom; }
 		offset.user = Math.max(0, opts.offset);
@@ -185,7 +189,7 @@ function Tip(qTip, command)
 		
 		var isFluid = tooltip.hasClass(fluidClass),
 			isTitleTop = elems.titlebar && corner.y === 'top',
-			elem = isTitleTop ? elems.titlebar : elems.content,
+			elem = isTitleTop ? elems.titlebar : elems.tooltip,
 			css = 'border-' + side + '-width',
 			val;
 
@@ -293,11 +297,8 @@ function Tip(qTip, command)
 				transparent = 'transparent',
 				important = ' !important',
 
-				bodyBorder = $(document.body).css('color'),
-				contentColour = qTip.elements.content.css('color'),
-
 				useTitle = elems.titlebar && (corner.y === 'top' || (corner.y === 'center' && tip.position().top + (size.height / 2) + opts.offset < elems.titlebar.outerHeight(1))),
-				colorElem = useTitle ? elems.titlebar : elems.content;
+				colorElem = useTitle ? elems.titlebar : elems.tooltip;
 
 			// Apply the fluid class so we can see our CSS values properly
 			tooltip.addClass(fluidClass);
@@ -313,12 +314,14 @@ function Tip(qTip, command)
 					color.fill = tooltip.css(backgroundColor) || fill;
 				}
 			}
-			if(!border || invalid.test(border) || border === bodyBorder) {
+			if(!border || invalid.test(border) || border === $(document.body).css('color')) {
 				color.border = colorElem.css(borderSide) || transparent;
-				if(invalid.test(color.border)) {
-					color.border = border;
+				if(invalid.test(color.border) || color.border === colorElem.css('color')) {
+					color.border = tooltip.css(borderSide) || tooltip.css(borderSideCamel) || border;
 				}
 			}
+
+			console.log(color.border)
 
 			// Reset background and border colours
 			$('*', tip).add(tip).css('cssText', backgroundColor+':'+transparent+important+';border:0'+important+';');
@@ -398,7 +401,7 @@ function Tip(qTip, command)
 			self.detectColours(corner);
 
 			// Detect border width, taking into account colours
-			if(color.border !== 'transparent' && color.border !== '#123456') {
+			if(color.border !== 'transparent') {
 				// Grab border width
 				border = borderWidth(corner, NULL, TRUE);
 
@@ -460,16 +463,14 @@ function Tip(qTip, command)
 				context.lineTo(coords[2][0], coords[2][1]);
 				context.closePath();
 
-				// Create borders
+				// Apply fill and border
 				if(border) {
 					// Make sure transparent borders are supported by doing a stroke
-					// of the background colour before the stroke colour (border-box only)
-					if( elems.content.css('backgroundClip') === 'border-box' ) {
+					// of the background colour before the stroke colour
+					if(tooltip.css('background-clip') === 'border-box') {
 						context.strokeStyle = color.fill;
 						context.stroke();
 					}
-
-					// Do our regular stroke
 					context.strokeStyle = color.border;
 					context.stroke();
 				}
@@ -503,7 +504,7 @@ function Tip(qTip, command)
 						path: coords,
 						fillcolor: color.fill,
 						filled: !!i,
-						stroked: !!!i
+						stroked: !i
 					})
 					.css({ display: border || i ? 'block' : 'none' });
 
@@ -555,10 +556,10 @@ function Tip(qTip, command)
 				else {
 					b = borderWidth(corner, side, TRUE);
 					br = borderRadius(corner);
-					
+
 					position[ side ] = i ?
 						border ? borderWidth(corner, side) : 0 : 
-						userOffset + (br > b ? br : 0);
+						userOffset + (br > b ? br : -b);
 				}
 			});
 

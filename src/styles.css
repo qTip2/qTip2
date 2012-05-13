@@ -1,13 +1,9 @@
 /*! Light tooltip style */
-.ui-tooltip-light .ui-tooltip-titlebar,
-.ui-tooltip-light .ui-tooltip-content{
+.ui-tooltip-light{
+	background-color: white;
 	border-color: #E2E2E2;
 	color: #454545;
 }
-
-	.ui-tooltip-light .ui-tooltip-content{
-		background-color: white;
-	}
 
 	.ui-tooltip-light .ui-tooltip-titlebar{
 		background-color: #f1f1f1;
@@ -15,15 +11,11 @@
 
 
 /*! Dark tooltip style */
-.ui-tooltip-dark .ui-tooltip-titlebar,
-.ui-tooltip-dark .ui-tooltip-content{
+.ui-tooltip-dark{
+	background-color: #505050;
 	border-color: #303030;
 	color: #f3f3f3;
 }
-
-	.ui-tooltip-dark .ui-tooltip-content{
-		background-color: #505050;
-	}
 
 	.ui-tooltip-dark .ui-tooltip-titlebar{
 		background-color: #404040;
@@ -39,15 +31,11 @@
 
 
 /*! Cream tooltip style */
-.ui-tooltip-cream .ui-tooltip-titlebar,
-.ui-tooltip-cream .ui-tooltip-content{
+.ui-tooltip-cream{
+	background-color: #FBF7AA;
 	border-color: #F9E98E;
 	color: #A27D35;
 }
-
-	.ui-tooltip-cream .ui-tooltip-content{
-		background-color: #FBF7AA;
-	}
 
 	.ui-tooltip-cream .ui-tooltip-titlebar{
 		background-color: #F0DE7D;
@@ -59,15 +47,11 @@
 
 
 /*! Red tooltip style */
-.ui-tooltip-red .ui-tooltip-titlebar,
-.ui-tooltip-red .ui-tooltip-content{
+.ui-tooltip-red{
+	background-color: #F78B83;
 	border-color: #D95252;
 	color: #912323;
 }
-
-	.ui-tooltip-red .ui-tooltip-content{
-		background-color: #F78B83;
-	}
 
 	.ui-tooltip-red .ui-tooltip-titlebar{
 		background-color: #F06D65;
@@ -87,15 +71,11 @@
 
 
 /*! Green tooltip style */
-.ui-tooltip-green .ui-tooltip-titlebar,
-.ui-tooltip-green .ui-tooltip-content{
+.ui-tooltip-green{
+	background-color: #CAED9E;
 	border-color: #90D93F;
 	color: #3F6219;
 }
-
-	.ui-tooltip-green .ui-tooltip-content{
-		background-color: #CAED9E;
-	}
 
 	.ui-tooltip-green .ui-tooltip-titlebar{
 		background-color: #B0DE78;
@@ -107,15 +87,11 @@
 
 
 /*! Blue tooltip style */
-.ui-tooltip-blue .ui-tooltip-titlebar,
-.ui-tooltip-blue .ui-tooltip-content{
+.ui-tooltip-blue{
+	background-color: #E5F6FE;
 	border-color: #ADD9ED;
 	color: #5E99BD;
 }
-
-	.ui-tooltip-blue .ui-tooltip-content{
-		background-color: #E5F6FE;
-	}
 
 	.ui-tooltip-blue .ui-tooltip-titlebar{
 		background-color: #D0E9F5;
