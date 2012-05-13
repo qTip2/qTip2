@@ -21,10 +21,12 @@
 .ui-tooltip-tipsy,
 .ui-tooltip-tipsy .ui-tooltip-content,
 .ui-tooltip-youtube,
-.ui-tooltip-youtube .ui-tooltip-content{
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
-	border-radius: 4px;
+.ui-tooltip-youtube .ui-tooltip-content,
+.ui-tooltip-bootstrap,
+.ui-tooltip-bootstrap .ui-tooltip-content{
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
 }
 
 .ui-tooltip-rounded .ui-tooltip-titlebar,

@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun May 13 07:55:33 2012 -0700
+* Date: Sun May 13 16:01:37 2012 +0100
 */
 
 /* Core qTip styles */
@@ -330,10 +330,12 @@
 .ui-tooltip-tipsy,
 .ui-tooltip-tipsy .ui-tooltip-content,
 .ui-tooltip-youtube,
-.ui-tooltip-youtube .ui-tooltip-content{
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
-	border-radius: 4px;
+.ui-tooltip-youtube .ui-tooltip-content,
+.ui-tooltip-bootstrap,
+.ui-tooltip-bootstrap .ui-tooltip-content{
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
 }
 
 .ui-tooltip-rounded .ui-tooltip-titlebar,
