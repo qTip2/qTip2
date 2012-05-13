@@ -233,11 +233,187 @@
 		border: 2px solid #285589;
 		background: #285589;
 	}
-		
+
 		.ui-tooltip-tipped .ui-tooltip-icon .ui-icon{
 			background-color: #FBFBFB;
 			color: #555;
 		}
+
+
+/**
+ * Twitter Bootstrap style.
+ *
+ * Tested with IE 8, IE 9, Chrome 18, Firefox 9, Opera 11.
+ * Does not work with IE 7.
+ */
+.ui-tooltip-bootstrap{
+	/**
+	 * Overrides qTip2:
+	 * .ui-tooltip, .qtip { font-size: 10.5px; line-height: 12px; }
+	 * Taken from Bootstrap:
+	 * body { font-size: 13px; line-height: 18px; }
+	 */
+	font-size: 13px;
+	line-height: 18px;
+
+	/* Taken from Bootstrap .dropdown-menu */
+
+	*border-right-width: 2px;
+	*border-bottom-width: 2px;
+
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+
+	-webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+	-moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+
+	-webkit-background-clip: padding-box;
+	-moz-background-clip: padding;
+	background-clip: padding-box;
+}
+
+	.ui-tooltip-bootstrap .ui-tooltip-titlebar,
+	.ui-tooltip-bootstrap .ui-tooltip-content{
+		/**
+		 * Overrides qTip2:
+		 * .ui-tooltip-default .ui-tooltip-titlebar,
+		 * .ui-tooltip-default .ui-tooltip-content{
+		 *   border-color: #F1D031;
+		 *   background-color: #FFFFA3;
+		 *   color: #555;
+		 * }
+		 * Taken from Bootstrap body
+		 */
+		color: #333333;
+
+		/**
+		 * Overrides qTip2:
+		 * .ui-tooltip-default .ui-tooltip-titlebar { background-color: #FFEF93; }
+		 * Taken from Bootstrap body
+		 */
+		background-color: #ffffff;
+
+		/**
+		 * Taken from Bootstrap .dropdown-menu
+		 */
+		border: 1px solid #ccc;
+		border: 1px solid rgba(0, 0, 0, 0.2); /* Transparency does not work */
+	}
+
+	.ui-tooltip-bootstrap .ui-tooltip-titlebar{
+		/**
+		 * Taken from Bootstrap h3
+		 */
+		font-size: 18px;
+		line-height: 22px; /* 22px instead of 27px */
+
+		/**
+		 * Taken and adapted from Bootstrap:
+		 * .modal-header {
+		 *   padding: 9px 15px;
+		 *   border-bottom: 1px solid #eee;
+		 * }
+		 */
+		border-bottom: 1px solid #ccc; /* #ccc instead of #eee */
+
+		/**
+		 * Taken and adapted from Bootstrap .dropdown-menu
+		 *
+		 * border transparency does not work
+		 * border-radius should not be done for the titlebar and the content
+		 * but only once for .ui-tooltip-*
+		 * This is because of the little ^ shape
+		 * If border-radius is done at .ui-tooltip-* then the little ^ shape is white
+		 */
+		-webkit-border-radius: 5px 5px 0 0;
+		-moz-border-radius: 5px 5px 0 0;
+		border-radius: 5px 5px 0 0;
+	}
+
+		.ui-tooltip-bootstrap .ui-tooltip-titlebar .ui-state-default{
+			/**
+			 * Overrides qTip2:
+			 * .ui-tooltip-titlebar .ui-state-default{
+			 *   position: absolute;
+			 *   right: 4px;
+			 *   top: 50%;
+			 *   margin-top: -9px;
+			 *
+			 *   cursor: pointer;
+			 *   outline: medium none;
+			 *
+			 *   border-width: 1px;
+			 *   border-style: solid;
+			 * }
+			 */
+			right: 9px;
+			top: 49%;
+
+			border-style: none; /* No border */
+		}
+
+	.ui-tooltip-bootstrap .ui-tooltip-content{
+		/**
+		 * Taken and adapted from Bootstrap .dropdown-menu
+		 */
+		-webkit-border-radius: 0 0 5px 5px;
+		-moz-border-radius: 0 0 5px 5px;
+		border-radius: 0 0 5px 5px;
+	}
+
+		.ui-tooltip-bootstrap .ui-tooltip-content form{
+			/**
+			 * Overrides Boostrap:
+			 * form { margin: 0 0 18px; }
+			 */
+			margin: 0 0 5px;
+		}
+
+	.ui-tooltip-bootstrap .ui-tooltip-icon{
+		/**
+		 * Overrides qTip2:
+		 * .ui-tooltip-default .ui-tooltip-icon {
+		 *   border-color: #CCC;
+		 *   background: #F1F1F1;
+		 *   color: #777;
+		 * }
+		 */
+		background: white;
+	}
+
+		.ui-tooltip-bootstrap .ui-tooltip-icon .ui-icon{
+			/**
+			 * Overrides qTip2:
+			 * .ui-tooltip-icon .ui-icon{
+			 *   width: 18px;
+			 *   height: 14px;
+			 * }
+			 */
+			width: auto;
+			height: auto;
+
+			/* Taken from Bootstrap .close */
+			float: right;
+			font-size: 20px;
+			font-weight: bold;
+			line-height: 18px;
+			color: #000000;
+			text-shadow: 0 1px 0 #ffffff;
+			opacity: 0.2;
+			filter: alpha(opacity=20);
+		}
+
+		.ui-tooltip-bootstrap .ui-tooltip-icon .ui-icon:hover{
+			/* Taken from Bootstrap .close:hover */
+			color: #000000;
+			text-decoration: none;
+			cursor: pointer;
+			opacity: 0.4;
+			filter: alpha(opacity=40);
+		}
+
 
 /* IE9 fix - removes all filters */
 .ui-tooltip:not(.ie9haxors) div.ui-tooltip-content,
