@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun May 13 20:08:40 2012 +0100
+* Date: Sun May 13 20:10:51 2012 +0100
 */
 
 /* Core qTip styles */
@@ -281,28 +281,16 @@
 		background-position: -2px 0;
 	}
 
-/*! Add shadows to your tooltips in: FF3+, Chrome 2+, Opera 10.6+, IE6+, Safari 2+ */
+/*! Add shadows to your tooltips in: FF3+, Chrome 2+, Opera 10.6+, IE9+, Safari 2+ */
 .ui-tooltip-shadow{
 	-webkit-box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.15);
 	-moz-box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.15);
 	box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.15);
 }
 
-	.ui-tooltip-shadow .ui-tooltip-titlebar,
-	.ui-tooltip-shadow .ui-tooltip-content{
-		filter: progid:DXImageTransform.Microsoft.Shadow(Color='gray', Direction=135, Strength=3);
-		-ms-filter:"progid:DXImageTransform.Microsoft.Shadow(Color='gray', Direction=135, Strength=3)";
-
-		_margin-bottom: -3px; /* IE6 */
-		.margin-bottom: -3px; /* IE7 */
-	}
-
-
 /*! Add rounded corners to your tooltips in: FF3+, Chrome 2+, Opera 10.6+, IE9+, Safari 2+ */
 .ui-tooltip-rounded,
 .ui-tooltip-tipsy,
-.ui-tooltip-youtube,
-.ui-tooltip-youtube > div,
 .ui-tooltip-bootstrap{
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
@@ -311,21 +299,37 @@
 
 /*! Youtube tooltip style */
 .ui-tooltip-youtube{
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	border-radius: 2px;
+	
 	-webkit-box-shadow: 0 0 3px #333;
 	-moz-box-shadow: 0 0 3px #333;
 	box-shadow: 0 0 3px #333;
 
 	color: white;
-	border-color: #CCCCCC;
+	border-width: 0;
 
-	background: transparent;
-	background: rgba(0, 0, 0, 0.85);
-	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#D9000000,endColorstr=#D9000000);
-	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#D9000000,endColorstr=#D9000000)";
+	background: #4A4A4A;
+	background-image: -moz-linear-gradient(top,#4A4A4A 0,black 100%);
+	background-image: -ms-linear-gradient(top,#4A4A4A 0,black 100%);
+	background-image: -o-linear-gradient(top,#4A4A4A 0,black 100%);
+	background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0,#4A4A4A),color-stop(100%,black));
+	background-image: -webkit-linear-gradient(top,#4A4A4A 0,black 100%);
+	background-image: linear-gradient(to bottom,#4A4A4A 0,black 100%);
 }
 
 	.ui-tooltip-youtube .ui-tooltip-titlebar{
-		background-color: transparent;
+		background-color: #4A4A4A;
+		background-color: rgba(0,0,0,0);
+	}
+	
+	.ui-tooltip-youtube .ui-tooltip-content{
+		padding: .75em;
+		font: 12px arial,sans-serif;
+		
+		filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr=#4a4a4a,EndColorStr=#000000);
+		-ms-filter: "progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr=#4a4a4a,EndColorStr=#000000);";
 	}
 
 	.ui-tooltip-youtube .ui-tooltip-icon{
