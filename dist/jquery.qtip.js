@@ -1622,8 +1622,9 @@ function init(id, opts)
 	}
 
 	// Remove title attribute and store it if present
+	// Added empty title, IE displays default browser title on dynamic tooltips
 	if(config.suppress && (title = $.attr(this, 'title'))) {
-		$(this).removeAttr('title').attr(oldtitle, title);
+		$(this).removeAttr('title').attr(oldtitle, title).attr('title','');
 	}
 
 	// Initialize the tooltip and add API reference
