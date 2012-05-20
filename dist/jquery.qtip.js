@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sat May 19 09:43:33 2012 -0700
+* Date: Sat May 19 17:45:55 2012 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -2449,7 +2449,7 @@ function Modal(api)
 				curIndex = parseInt(tooltip[0].style.zIndex, 10);
 
 				// Set overlay z-index
-				overlay[0].style.zIndex = newIndex - 1;
+				overlay[0].style.zIndex = newIndex - 2;
 
 				// Reduce modal z-index's and keep them properly ordered
 				qtips.each(function() {

@@ -67,7 +67,7 @@ function Modal(api)
 				curIndex = parseInt(tooltip[0].style.zIndex, 10);
 
 				// Set overlay z-index
-				overlay[0].style.zIndex = newIndex - 1;
+				overlay[0].style.zIndex = newIndex - 2;
 
 				// Reduce modal z-index's and keep them properly ordered
 				qtips.each(function() {
