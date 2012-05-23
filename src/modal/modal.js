@@ -95,7 +95,7 @@ function Modal(api)
 
 			// Apply keyboard "Escape key" close handler
 			if(options.escape) {
-				$(window).unbind(namespace).bind('keydown'+namespace, function(event) {
+				$(document).unbind(namespace).bind('keydown'+namespace, function(event) {
 					if(event.keyCode === 27 && tooltip.hasClass(focusClass)) {
 						api.hide(event);
 					}
@@ -234,7 +234,7 @@ function Modal(api)
 				// Remove overlay if needed
 				if(delBlanket) {
 					elems.overlay.remove();
-					$(window).unbind(globalNamespace);
+					$(document).unbind(globalNamespace);
 				}
 				else {
 					elems.overlay.unbind(globalNamespace+api.id);

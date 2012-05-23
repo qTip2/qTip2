@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sat May 19 17:45:55 2012 +0100
+* Date: Sun May 20 16:24:07 2012 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -2477,7 +2477,7 @@ function Modal(api)
 
 			// Apply keyboard "Escape key" close handler
 			if(options.escape) {
-				$(window).unbind(namespace).bind('keydown'+namespace, function(event) {
+				$(document).unbind(namespace).bind('keydown'+namespace, function(event) {
 					if(event.keyCode === 27 && tooltip.hasClass(focusClass)) {
 						api.hide(event);
 					}
@@ -2616,7 +2616,7 @@ function Modal(api)
 				// Remove overlay if needed
 				if(delBlanket) {
 					elems.overlay.remove();
-					$(window).unbind(globalNamespace);
+					$(document).unbind(globalNamespace);
 				}
 				else {
 					elems.overlay.unbind(globalNamespace+api.id);
