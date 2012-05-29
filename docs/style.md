@@ -1,12 +1,11 @@
-#Style
+# Style
 
-The style object allows you to assign custom classes to the main qTip element, as well as [Themeroller](http://jqueryui.com/themeroller/) and
-tip options when using the [tips plugin](./plugins/tips.md)
+The style object allows you to assign custom classes to the main qTip element, as well as [Themeroller](http://jqueryui.com/themeroller/) and tip options when using the [tips plugin](./plugins/tips.md)
 
-## style.classes: *""*
+## style.classes
 
 ### Values
-"String", false
+"String", false *(Default: "")*
 
 ### Overview
 A *space separated* string containing all class names which should be added to the main qTip element.
@@ -48,22 +47,22 @@ $('.selector').qtip({
 ```
 
 
-## style.def: *true*
+## style.def
 
 ### Values
-true, false
+true, false *(Default: true)*
 
 ### Overview
 This propery allows you to prevent the .ui-tooltip-default class from being applied to the main tooltip element.
 
 ### Notes
-* Setting this to false will cause the tooltip to have no visual styling if you haven't applied any [custom classes](#style.classes)</li>
+* Setting this to false will cause the tooltip to have no visual styling if you haven't applied any [custom classes](#styleclasses)</li>
 
 
-## style.widget: *false*
+## style.widget
 
 ### Values
-true, false
+true, false *(Default: false)*
 
 ### Overview
 Determines whether or not the ui-widget classes of the [Themeroller](http://jqueryui.com/themeroller/) UI styles are applied to your tooltip
@@ -72,36 +71,34 @@ Determines whether or not the ui-widget classes of the [Themeroller](http://jque
 * For more information on Themeroller classes checkout their [documentation](http://docs.jquery.com/UI/)
 
 ### See also
-* [Classes](#classes)
+* [style.classes](#styleclasses)
 
 
-## style.width: *false*
+## style.width
 
 ### Values
-"String", Integer, false
+"String", Integer, false *(Default: false)*
 
 ### Overview
-This property allows you to override all applied CSS width styles for the tooltip. Can be any valid width CSS value. Please note that this
-**does not override max/min width styles!** Change those in the CSS file provided.
+This property allows you to override all applied CSS width styles for the tooltip. Can be any valid width CSS value. Please note that this **does not override max/min width styles!** Change those in the CSS file provided.
 
 ### Notes
 * Again, this **does not override max/min width styles!**
 
 
-## style.height: *false*
+## style.height
 
 ### Values
-"String", Integer, false
+"String", Integer, false *(Default: false)*
 
 ### Overview
-This propery allows you to override all applied CSS height styles for the tooltip. Can be any valid width CSS value. Please note that this
-**does not override max/min height styles!** Change those in the CSS file provided.
+This propery allows you to override all applied CSS height styles for the tooltip. Can be any valid width CSS value. Please note that this **does not override max/min height styles!** Change those in the CSS file provided.
 
 ### Notes
 * Again, this **does not override max/min height styles!**
 
 
-## style.tip: *false*
+## style.tip
 
 ### Overview
 Defines the tooltip's [tip](./plugins/tips.md) properties. See the [plugin documentation](./plugins/tips.md) for more information.

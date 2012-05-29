@@ -1,4 +1,4 @@
-#Content
+# Content
 
 ## content.text: *""*
 
@@ -45,11 +45,11 @@ $('.selector').qtip({
 ```
 
 ### Notes
-* If no valid content can be detected in both this and the below [content.attr](#attr) option, no tooltip will be rendered.
+* If no valid content can be detected in both this and the below [content.attr](#contentattr) option, no tooltip will be rendered.
 * Custom functions that return no valid content **will still cause the tooltip to be created**! Replace these with an [each()](http://api.jquery.com/each/) loop if this is not the desired behaviour.
 
 ### See also
-* [content.title.text](#title.text)
+* [content.title.text](#contenttitletext)
 
 
 ## content.attr: *"title"*
@@ -58,7 +58,7 @@ $('.selector').qtip({
 "String"
 
 ### Overview
-Attribute of the target element to use for content if none is provided with the above [content.text](#text) option, or no valid content can be found.
+Attribute of the target element to use for content if none is provided with the above [content.text](#contenttext) option, or no valid content can be found.
 
 
 ### Examples
@@ -75,10 +75,10 @@ $('img[alt]').qtip({
 This is useful for image galleries and other image-oriented sites that need to provide nice visual cues of their context.
 
 ### Notes
-* If no valid content is found within the elements attribute, and [content.text](#text) is not defined, no tooltip will be rendered.
+* If no valid content is found within the elements attribute, and [content.text](#contenttext) is not defined, no tooltip will be rendered.
 
 ### See also
-* [content.text](#content.text)
+* [content.text](#contenttext)
 
 
 ## content.title.text: false
@@ -137,7 +137,7 @@ $('.selector').qtip({
 * Custom functions that return no valid content **will still cause the tooltip to be created**! Replace these with an [each()](http://api.jquery.com/each/) loop if this is not the desired behaviour.
 
 ### See Also
-* [content.text](#text)
+* [content.text](#contenttext)
 
 
 
@@ -168,7 +168,7 @@ $('.selector').qtip({
 ```
 
 ### Notes
-* Button only appears if a title is present e.g. [title.text](#title.text) is defined and valid.
+* Button only appears if a title is present e.g. [title.text](#contenttitletext) is defined and valid.
 * If no valid content is provided, the button will not be created.
 
 

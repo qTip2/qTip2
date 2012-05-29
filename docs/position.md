@@ -2,7 +2,7 @@
 
 ## Basics
 
-qTip utilises a special positioning system using corners. The basic concept behind it is pretty simple, in fact it turns out to be plain English when read aloud! For example, let's say we want to position <b>my</b> tooltips top left corner <b>at</b> the bottom right of my <b>target</b>. Simple enough... let's see the code involved in this:
+qTip utilises a special positioning system using corners. The basic concept behind it is pretty simple, in fact it turns out to be plain English when read aloud! For example, let's say we want to position **my** tooltips top left corner **at** the bottom right of my **target**. Simple enough... let's see the code involved in this:
 
 ![Corner string types](http://media2.juggledesign.com/qtip2/images/corners.jpg "Corner string types")
 
@@ -20,18 +20,18 @@ $('.selector').qtip({
 Notice how reading down the object you begin to see a logical plain English pattern emerge. Much easier than using x and y coordinates! Here's a diagram of all valid corner values for use with [position.my](#my) and  [position.at](#at) options as well as the tips plugin [corner](./plugins/tips.md#corner) and [mimic](./plugins/tips.md#mimic) options.
 
 ### Notes
-* This system is heavily based upon the <a href="http://docs.jquery.com/UI/Position">jQuery UI Position plugin
+* This system is heavily based upon the [jQuery UI Position plugin](http://docs.jquery.com/UI/Position">)
 
 
-## position.target: *false*
+## position.target:
 
 ### Values
-jQuery([ ]), [x, y], "mouse", "event", false
+jQuery([ ]), [x, y], "mouse", "event", false *(Default: false)*
 
 ### Overview
 HTML element the tooltip will be positioned in relation to. Can also be set to 'mouse' or the 'event' (position at target that triggered the tooltip), or an array containing an absolute x/y position on the page.
 
-If you also have [position.adjust.mouse](#adjust.mouse) set to true, the qTip will follow the mouse until a [hide event](./hide.md#event) is triggered on the [hide target](./api.md/#target)
+If you also have [position.adjust.mouse](#positionadjustmouse) set to true, the qTip will follow the mouse until a [hide event](./hide.md#hideevent) is triggered on the [hide.target](./api.md/#target)
 
 ### Examples
 Let's position our tooltip in relation to the last LI element of the first UL element in our document:
@@ -47,7 +47,7 @@ $('.selector').qtip({
 });
 ```
 
-We can also position the tooltip <b>in relation to the mouse</b>, so that the tooltip is given the x/y coordinates of the mouse on show
+We can also position the tooltip **in relation to the mouse**, so that the tooltip is given the x/y coordinates of the mouse on show
 
 ```js
 $('.selector').qtip({
@@ -93,20 +93,20 @@ $('.selector').qtip({
 ```
 ## Notes
 * Setting this to false causes the tooltip is positioned in relation to the element .qtip() was called upon.
-* When using absolute positioning ([x, y]) is used, [position.viewport](#viewport) still works!
+* When using absolute positioning ([x, y]) is used, [position.viewport](#positionviewport) still works!
 
 ### See also
-* [position.viewport](#viewport)
+* [position.viewport](#positionviewport)
 
 
 
-## position.my: 'top left'
+## position.my
 
 ### Values
-["Corner"](#basics), false
+["Corner"](#basics), false *(Default: "top left")*
 
 ### Overview
-The corner of the tooltip to position in relation to the [position.at](#at). See the [Basics section](#basics) for all possible corner values.
+The corner of the tooltip to position in relation to the [position.at](#positionat). See the [Basics section](#basics) for all possible corner values.
 
 ### Examples
 Let's create a tooltip that's positioned to the left center of our target:
@@ -125,18 +125,18 @@ $('.selector').qtip({
 * See the [Basics section](#basics) for all possible corner values.
 
 ### See Also
-* [position.at](#at)
-* [position.target](#target)
+* [position.at](#positionat)
+* [position.target](#positiontarget)
 
 
 
-## position.at: 'bottom right'
+## position.at
 
 ### Values
-["Corner"](#basics), false
+["Corner"](#basics), false  *(Default: "bottom right")*
 
 ### Overview
-The corner of the [position.target](#target) element to position the tooltips corner at. See the [Basics section](#basics) for all possible corner values.
+The corner of the [position.target](#positiontarget) element to position the tooltips corner at. See the [Basics section](#basics) for all possible corner values.
 
 ### Examples
 Let's create a tooltip thats positioned to the top left of our target:
@@ -156,14 +156,14 @@ $('.selector').qtip({
 * See the [Basics section](#basics) for all possible corner values.
 
 ### See Also
-* [position.at](#at)
-* [position.target](#target)
+* [position.at](#positionat)
+* [position.target](#positiontarget)
 
 
-## position.container: $(document.body)
+## position.container
 
 ### Values
-jQuery([ ]), false
+jQuery([ ]), false *(Default:  document.body)*
 
 ### Overview
 Determines the HTML element which the tooltip is appended to e.g. it's containing element.
@@ -183,16 +183,17 @@ $('.selector').qtip({
 ```
 
 ### Notes
+* By default all tooltips are appended to the *document.body element*
 * If the containing element has overflow set to anything other than "visible" this will confine the qTip's visibility to the containers boundaries.
 
 
-## position.viewport: false
+## position.viewport
 
 ### Values
-jQuery([ ]), true, false
+jQuery([ ]), true, false *(Default: false)*
 
 ### Overview
-Determines the viewport used to keep the tooltip visible i.e. the element whose boundaries the tooltip must stay visible within at all times if possible. If <b>true</b> it's value will be inherited from the [position.container](#container) property.
+Determines the viewport used to keep the tooltip visible i.e. the element whose boundaries the tooltip must stay visible within at all times if possible. If **true** it's value will be inherited from the [position.container](#positioncontainer) property.
 
 ### Examples
 Make a tooltip that will attempt to stay within the window viewport, adjusting the positioning corners as needed:
@@ -209,13 +210,13 @@ $('.selector').qtip({
 ```
 
 ### Notes
-* Your [position.corner](#corner) options will be temporarily adjusted when using this functionality.
+* Your [position.my/at](#basics) options will be temporarily adjusted when using this functionality.
 
 
-## position.effect: function slide(){}
+## position.effect
 
 ### Values
-Function, false
+Function, false *(Default: function slide(){})*
 
 ### Overview
 Determines the type of effect that takes place when animating a tooltips position. A custom method can also be used, which is passed the new position as one of its parameters, and whose scope is the tooltip element.
@@ -241,7 +242,7 @@ $('.selector').qtip({
 });
 ```
 
-We can also disable the default slide animation by passing false:
+We can also disable the **default slide animation** by passing false:
 
 ```js
 $('.selector').qtip({
@@ -268,13 +269,13 @@ function(api, pos, viewport) {
 
 
 
-## position.adjust.x: 0
+## position.adjust.x
 
 ### Values
-Integer
+Integer *(Default: 0)*
 
 ### Overview
-A positive or negative pixel value by which to offset the tooltip in the horizontal plane e.g. the x-axis. Negative values cause a reduction in the value e.g. moves tooltip to the <i>left</i>.
+A positive or negative pixel value by which to offset the tooltip in the horizontal plane e.g. the x-axis. Negative values cause a reduction in the value e.g. moves tooltip to the *left*.
 
 ### Examples
 Let's fine tune our tooltips position by offsetting it 10 pixels to the right:
@@ -295,16 +296,16 @@ $('.selector').qtip({
 * Currently this option only supports pixel values. All other unit values are ignored
 
 ### See also
-* [position.adjust.y](#position.adjust.y)
+* [position.adjust.y](#positionadjusty)
 
 
-## position.adjust.y: 0
+## position.adjust.y
 
 ### Values
-Integer
+Integer *(Default: 0)*
 
 ### Overview
-A positive or negative pixel value by which to offset the tooltip in the vertical plane e.g. the y-axis. Negative values cause a reduction in the value e.g. moves tooltip <i>upwards</i>.
+A positive or negative pixel value by which to offset the tooltip in the vertical plane e.g. the y-axis. Negative values cause a reduction in the value e.g. moves tooltip *upwards*.
 
 ### Examples
 Let's fine tune our tooltips position by offsetting it 12 pixels upwards:
@@ -325,16 +326,16 @@ $('.selector').qtip({
 * Currently this option only supports pixel values. All other unit values are ignored
 
 ### See also
-* [position.adjust.x](#position.adjust.x)
+* [position.adjust.x](#positionadjustx)
 
 
-## position.adjust.method: "flip"
+## position.adjust.method
 
 ### Values
-"<flip|flipinvert|shift|none> <flip|flipinvert|shift|none>"
+"{flip|flipinvert|shift|none} {flip|flipinvert|shift|none}" *(Default: "flip")*
 
 ### Overview
-This option determines the kind of [viewport positioning](#viewport) that takes place.
+This option determines the kind of [viewport positioning](#positionviewport) that takes place.
 
 The default "flip" type basically flips the tooltip when it goes off-screen i.e. from top-right, to bottom-right etc. The "flipinvert" type works the same way, except when the flip happens it inverts the [adjust.x](adjust.x) and [adjust.y](adjust.y) properties. The "shift" type attempts to keep the tooltip on screen by adjusting only by the amount needed to keep it within the viewport boundaries.
 
@@ -357,21 +358,21 @@ $('.selector').qtip({
 ```
 
 ### Notes
-* Supplying a single string such as "flip", "flipinvert" or "shift" will cause qTip2 to use that method for <b>both</b> axis'.
+* Supplying a single string such as "flip", "flipinvert" or "shift" will cause qTip2 to use that method for **both** axis'.
 * This system is very similar to that used in the [jQuery UI Position plugin](http://jqueryui.com/demos/position/).
-* Both flip and shift methods also adjusts the [tip](./plugins/tips) position, if enabled.
+* Both flip and shift methods also adjusts the [tip](./plugins/tips.md) position, if enabled.
 
 ### See also
 * [position.viewport](#viewport)
 
 
-## position.adjust.mouse: true
+## position.adjust.mouse
 
 ### Values
-true, false
+true, false *(Default: true)*
 
 ### Overview
-When the [position.target](#target) is set to <b>mouse</b>, this option determines whether the tooltip  follows the mouse when hovering over the [show.target](./show.md#target).
+When the [position.target](#positiontarget) is set to **mouse**, this option determines whether the tooltip  follows the mouse when hovering over the [show.target](./show.md#showtarget).
 
 ### Examples
 Let's make a tooltip which follows our mouse when visible
@@ -390,7 +391,7 @@ $('.selector').qtip({
 });
 ```
 
-Alternatively, we can set it to false and make the tooltip assume the position of the mouse when shown, but <b> <i>not</i> follow it</b>, similar to how a right-click or "context" menu is positioned.
+Alternatively, we can set it to false and make the tooltip assume the position of the mouse when shown, but ** *not* follow it**, similar to how a right-click or "context" menu is positioned.
 
 ```js
 $('.selector').qtip({
@@ -407,16 +408,16 @@ $('.selector').qtip({
 ```
 
 ### Notes
-* Only applies when the [position.target](#target) is set to <b>mouse</b>
+* Only applies when the [position.target](#positiontarget) is set to **mouse**
 
 ### See also
-* [position.target](#target)
+* [position.target](#positiontarget)
 
 
-### position.adjust.resize: true
+### position.adjust.resize
 
 ### Values
-true, false
+true, false *(Default: true)*
 
 ### Overview
 Determines if the tooltips position is adjusted when the window is resized.
@@ -455,7 +456,7 @@ $('.selector').qtip({
 ```
 
 ## Notes
-* Only takes effect when [position.target](#target) is the window or document element.
+* Only takes effect when [position.target](#positiontarget) is the window or document element.
 
 ### See also
-* [position.target](#target)
+* [position.target](#positiontarget)
