@@ -169,20 +169,27 @@ function Modal(api)
 				overlay.toggleClass('blurs', options.blur);
 
 				// Make sure we can't focus anything outside the tooltip
-				docBody.bind('focusin'+namespace, function(event) {
-					var target = $(event.target),
-						container = target.closest('.qtip'),
+				if(options.stealfocus !== FALSE) {
+					docBody.bind('focusin'+namespace, function(event) {
+						var target = $(event.target),
+							container = target.closest('.qtip'),
+							targetOnTop, inputs;
 
-					// Determine if input container target is above this
-					targetOnTop = container.length < 1 ? FALSE : 
-						(parseInt(container[0].style.zIndex, 10) > parseInt(tooltip[0].style.zIndex, 10)); 
+						// Determine if input container target is above this
+						targetOnTop = container.length < 1 ? FALSE :
+							(parseInt(container[0].style.zIndex, 10) > parseInt(tooltip[0].style.zIndex, 10));
 
-					// If we're showing a modal, but focus has landed on an input below
-					// this modal, divert focus to the first visible input in this modal
-					if(!targetOnTop && ($(event.target).closest(selector)[0] !== tooltip[0])) {
-						tooltip.find('input:visible').filter(':first').focus();
-					}
-				});
+						// If we're showing a modal, but focus has landed on an input below
+						// this modal, divert focus to the first visible input in this modal
+						// or if we can't find one... the tooltip itself
+						if(!targetOnTop && ($(event.target).closest(selector)[0] !== tooltip[0])) {
+							inputs = tooltip.find('input:visible')
+
+							if(inputs.length < 1) { target.blur(); }
+							else { inputs.first().focus(); }
+						}
+					});
+				}
 			}
 			else {
 				// Undelegate focus handler
@@ -279,6 +286,7 @@ $.extend(TRUE, QTIP.defaults, {
 			on: FALSE,
 			effect: TRUE,
 			blur: TRUE,
+			stealfocus: TRUE,
 			escape: TRUE
 		}
 	}
