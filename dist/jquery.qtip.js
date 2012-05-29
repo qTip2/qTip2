@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue May 29 19:43:44 2012 +0100
+* Date: Tue May 29 20:04:37 2012 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -2407,6 +2407,30 @@ function Modal(api)
 		}
 	};
 
+	function focusInputs(elems) {
+		var inputs = tooltip.find('input:visible');
+
+		if(inputs.length < 1) { elems.blur(); }
+		else { inputs.first().focus(); }
+	}
+
+	function stealFocus(event) {
+		var target = $(event.target),
+			container = target.closest('.qtip'),
+			targetOnTop;
+
+		// Determine if input container target is above this
+		targetOnTop = container.length < 1 ? FALSE :
+			(parseInt(container[0].style.zIndex, 10) > parseInt(tooltip[0].style.zIndex, 10));
+
+		// If we're showing a modal, but focus has landed on an input below
+		// this modal, divert focus to the first visible input in this modal
+		// or if we can't find one... the tooltip itself
+		if(!targetOnTop && ($(event.target).closest(selector)[0] !== tooltip[0])) {
+			focusInputs(target);
+		}
+	}
+
 	$.extend(self, {
 		init: function()
 		{
@@ -2553,32 +2577,18 @@ function Modal(api)
 				// Toggle backdrop cursor style on show
 				overlay.toggleClass('blurs', options.blur);
 
-				// Make sure we can't focus anything outside the tooltip
+				// IF the modal can steal the focus
 				if(options.stealfocus !== FALSE) {
-					docBody.bind('focusin'+namespace, function(event) {
-						var target = $(event.target),
-							container = target.closest('.qtip'),
-							targetOnTop, inputs;
+					// Make sure we can't focus anything outside the tooltip
+					docBody.bind('focusin'+namespace, stealFocus);
 
-						// Determine if input container target is above this
-						targetOnTop = container.length < 1 ? FALSE :
-							(parseInt(container[0].style.zIndex, 10) > parseInt(tooltip[0].style.zIndex, 10));
-
-						// If we're showing a modal, but focus has landed on an input below
-						// this modal, divert focus to the first visible input in this modal
-						// or if we can't find one... the tooltip itself
-						if(!targetOnTop && ($(event.target).closest(selector)[0] !== tooltip[0])) {
-							inputs = tooltip.find('input:visible')
-
-							if(inputs.length < 1) { target.blur(); }
-							else { inputs.first().focus(); }
-						}
-					});
+					// Blur the current item and focus anything in the modal we an
+					focusInputs( $('*') );
 				}
 			}
 			else {
 				// Undelegate focus handler
-				docBody.undelegate('*', 'focusin'+namespace);
+				docBody.unbind('focusin'+namespace);
 			}
 
 			// Stop all animations
