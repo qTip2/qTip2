@@ -168,7 +168,7 @@ $('.selector').qtip({
 ```
 
 ### Notes
-* Button only appears if a title is present e.g. [title.text](#contenttitletext) is defined and valid.
+* Button only appears if a title is present e.g. [content.title.text](#contenttitletext) is defined and valid.
 * If no valid content is provided, the button will not be created.
 
 

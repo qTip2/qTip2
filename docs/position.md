@@ -17,7 +17,7 @@ $('.selector').qtip({
 });
 ```
 
-Notice how reading down the object you begin to see a logical plain English pattern emerge. Much easier than using x and y coordinates! Here's a diagram of all valid corner values for use with [position.my](#my) and  [position.at](#at) options as well as the tips plugin [corner](./plugins/tips.md#corner) and [mimic](./plugins/tips.md#mimic) options.
+Notice how reading down the object you begin to see a logical plain English pattern emerge. Much easier than using x and y coordinates! Here's a diagram of all valid corner values for use with [position.my](#positionmy) and  [position.at](#positionat) options as well as the tips plugin [corner](./plugins/tips.md#corner) and [mimic](./plugins/tips.md#styletipmimic) options.
 
 ### Notes
 * This system is heavily based upon the [jQuery UI Position plugin](http://docs.jquery.com/UI/Position">)
@@ -31,7 +31,7 @@ jQuery([ ]), [x, y], "mouse", "event", false *(Default: false)*
 ### Overview
 HTML element the tooltip will be positioned in relation to. Can also be set to 'mouse' or the 'event' (position at target that triggered the tooltip), or an array containing an absolute x/y position on the page.
 
-If you also have [position.adjust.mouse](#positionadjustmouse) set to true, the qTip will follow the mouse until a [hide event](./hide.md#hideevent) is triggered on the [hide.target](./api.md/#target)
+If you also have [position.adjust.mouse](#positionadjustmouse) set to true, the qTip2 will follow the mouse until a [hide event](./hide.md#hideevent) is triggered on the [hide.target](./hide.md#hidetarget)
 
 ### Examples
 Let's position our tooltip in relation to the last LI element of the first UL element in our document:
