@@ -1,9 +1,9 @@
 # Content
 
-## content.text: *""*
+## content.text
 
 ### Values
-function(), jQuery([ ]), "String", true
+function(), jQuery([ ]), "String", true *(Default: true)*
 
 ### Overview
 Text/HTML which will appear inside the tooltip initially. If set to *true* the title attribute of the target will be used, if available. Can also specify
@@ -52,10 +52,10 @@ $('.selector').qtip({
 * [content.title.text](#contenttitletext)
 
 
-## content.attr: *"title"*
+## content.attr
 
 ### Values
-"String"
+"String" *(Default: "title")*
 
 ### Overview
 Attribute of the target element to use for content if none is provided with the above [content.text](#contenttext) option, or no valid content can be found.
@@ -81,10 +81,10 @@ This is useful for image galleries and other image-oriented sites that need to p
 * [content.text](#contenttext)
 
 
-## content.title.text: false
+## content.title.text
 
 ### Values
-function(), jQuery([ ]), "String", false
+function(), jQuery([ ]), "String", false *(Default: false)*
 
 ### Overview
 Text/HTML which will appear inside the title element of the content. If set to false, no title will be created. An anonymous function can also be used to return
@@ -141,10 +141,10 @@ $('.selector').qtip({
 
 
 
-## content.title.button: false
+## content.title.button
 
 ### Values
-jQuery([ ]), "String", true
+jQuery([ ]), "String", true *(Default: false)*
 
 ### Overview
 Text/HTML which will appear inside the title's button element (e.g. close link) located to the right of the title content. The button will close the tooltip when clicked.
@@ -173,9 +173,6 @@ $('.selector').qtip({
 
 
 ## content.ajax
-
-### Values
-jQuery([ ]), "String", true
 
 ### Overview
 Defines the tooltip's [AJAX](./plugins/ajax.md) content properties. See the [plugin documentation](./plugins/ajax.md) for more information.
