@@ -8,6 +8,10 @@ PLUGINS.svg = function(svg, corner)
 		},
 		box, mtx, root, point, tPoint;
 
+	// Ascend the parentNode chain until we find an element with getBBox()
+	while(!elem.getBBox) { elem = elem.parentNode; }
+
+	// Check for a valid bounding box method
 	if (elem.getBBox && elem.parentNode) {
 		box = elem.getBBox();
 		mtx = elem.getScreenCTM();

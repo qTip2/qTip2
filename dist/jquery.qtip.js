@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sun May 20 16:24:07 2012 +0100
+* Date: Wed May 23 18:10:39 2012 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -2676,6 +2676,10 @@ PLUGINS.svg = function(svg, corner)
 		},
 		box, mtx, root, point, tPoint;
 
+	// Ascend the parentNode chain until we find an element with getBBox()
+	while(!elem.getBBox) { elem = elem.parentNode; }
+
+	// Check for a valid bounding box method
 	if (elem.getBBox && elem.parentNode) {
 		box = elem.getBBox();
 		mtx = elem.getScreenCTM();
