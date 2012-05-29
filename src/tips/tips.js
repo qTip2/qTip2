@@ -552,12 +552,10 @@ function Tip(qTip, command)
 					position['margin-' + b] = -Math.round(dimensions[ precedance === 'y' ? 'width' : 'height' ] / 2) + userOffset;
 				}
 				else {
-					b = borderWidth(corner, side, TRUE);
+					b = borderWidth(corner, side);
 					br = borderRadius(corner);
 
-					position[ side ] = i ?
-						border ? borderWidth(corner, side) : 0 : 
-						userOffset + (br > b ? br : -b);
+					position[ side ] = i ? 0 : (userOffset + (br > b ? br : -b));
 				}
 			});
 

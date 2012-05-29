@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue May 29 20:04:37 2012 +0100
+* Date: Tue May 29 21:02:22 2012 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -3288,12 +3288,10 @@ function Tip(qTip, command)
 					position['margin-' + b] = -Math.round(dimensions[ precedance === 'y' ? 'width' : 'height' ] / 2) + userOffset;
 				}
 				else {
-					b = borderWidth(corner, side, TRUE);
+					b = borderWidth(corner, side);
 					br = borderRadius(corner);
 
-					position[ side ] = i ?
-						border ? borderWidth(corner, side) : 0 : 
-						userOffset + (br > b ? br : -b);
+					position[ side ] = i ? 0 : (userOffset + (br > b ? br : -b));
 				}
 			});
 
