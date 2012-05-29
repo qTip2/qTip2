@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue May 29 21:02:22 2012 +0100
+* Date: Tue May 29 21:18:09 2012 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -2537,6 +2537,7 @@ function Modal(api)
 				html: '<div></div>',
 				mousedown: function() { return FALSE; }
 			})
+			.hide()
 			.insertAfter( $(selector).last() );
 
 			// Update position on window resize or scroll

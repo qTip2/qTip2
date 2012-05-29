@@ -152,6 +152,7 @@ function Modal(api)
 				html: '<div></div>',
 				mousedown: function() { return FALSE; }
 			})
+			.hide()
 			.insertAfter( $(selector).last() );
 
 			// Update position on window resize or scroll
