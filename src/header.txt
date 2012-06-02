@@ -1,4 +1,4 @@
-/*
+/*!
 * qTip2 - Pretty powerful tooltips
 * http://craigsworks.com/projects/qtip2/
 *
