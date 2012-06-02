@@ -2,6 +2,7 @@
 
 The style object allows you to assign custom classes to the main qTip element, as well as [Themeroller](http://jqueryui.com/themeroller/) and tip options when using the [tips plugin](./plugins/tips.md)
 
+<a name="classes"></a>
 ## style.classes
 
 ### Values
@@ -47,6 +48,7 @@ $('.selector').qtip({
 ```
 
 
+<a name="def"></a>
 ## style.def
 
 ### Values
@@ -56,9 +58,10 @@ true, false *(Default: true)*
 This propery allows you to prevent the .ui-tooltip-default class from being applied to the main tooltip element.
 
 ### Notes
-* Setting this to false will cause the tooltip to have no visual styling if you haven't applied any [custom classes](#styleclasses)</li>
+* Setting this to false will cause the tooltip to have no visual styling if you haven't applied any [custom classes](#classes)</li>
 
 
+<a name="widget"></a>
 ## style.widget
 
 ### Values
@@ -71,9 +74,10 @@ Determines whether or not the ui-widget classes of the [Themeroller](http://jque
 * For more information on Themeroller classes checkout their [documentation](http://docs.jquery.com/UI/)
 
 ### See also
-* [style.classes](#styleclasses)
+* [style.classes](#classes)
 
 
+<a name="width"></a>
 ## style.width
 
 ### Values
@@ -86,6 +90,7 @@ This property allows you to override all applied CSS width styles for the toolti
 * Again, this **does not override max/min width styles!**
 
 
+<a name="height"></a>
 ## style.height
 
 ### Values
@@ -98,6 +103,7 @@ This propery allows you to override all applied CSS height styles for the toolti
 * Again, this **does not override max/min height styles!**
 
 
+<a name="tip"></a>
 ## style.tip
 
 ### Overview
