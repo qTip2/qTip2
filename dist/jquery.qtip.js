@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Tue Jun 5 20:50:45 2012 +0100
+* Date: Tue Jun 5 21:18:16 2012 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -2410,7 +2410,8 @@ function Modal(api)
 	function focusInputs(elems) {
 		var inputs = tooltip.find('input:visible');
 
-		if(inputs.length < 1) { elems.blur(); }
+		// Blurring body element in IE causes window.open windows to unfocus!
+		if(inputs.length < 1 && elems.length) { elems.not('body').blur(); }
 		else { inputs.first().focus(); }
 	}
 

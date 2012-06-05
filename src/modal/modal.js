@@ -25,7 +25,8 @@ function Modal(api)
 	function focusInputs(elems) {
 		var inputs = tooltip.find('input:visible');
 
-		if(inputs.length < 1) { elems.blur(); }
+		// Blurring body element in IE causes window.open windows to unfocus!
+		if(inputs.length < 1 && elems.length) { elems.not('body').blur(); }
 		else { inputs.first().focus(); }
 	}
 
