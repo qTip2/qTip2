@@ -1,103 +1,67 @@
-# [qTip2](http://craigsworks.com/projects/qtip2/) - Pretty powerful tooltips
+[qTip<sup>2</sup>](http://craigsworks.com/projects/qtip2/) - Pretty powerful tooltips
 ================================
 
-Pre-compiled scripts
---------------------
-If you're not interested in compiling your own version of qTip2, you can grab the pre-compiled scripts from the
-[dist](http://github.com/Craga89/qTip2/tree/master/dist/) directory and get started quickly. If you want more options
+Introducing&hellip; qTip<sup>2</sup>. The second generation of the advanced qTip plugin for the ever popular jQuery framework.
+
+Building on 1.0's user friendly, yet feature rich base, qTip2 provides you with tonnes of features like
+[speech bubble tips](docs/plugins/tips.md) and [imagemap support](docs/plugins/imagemap.md), and best of all...
+**it's completely free under the MIT/GPLv2 licenses!**
+
+More documentation and information is available at the [official site](http://craigsworks.com/projects/qtip2).
+
+## Browser support
+<div style="text-transform: sub; text-align: center;">
+<img src="http://media1.juggledesign.com/qtip2/images/browsers/64-chrome.png" title="Chrome 8+" /> 8+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<img src="http://media1.juggledesign.com/qtip2/images/browsers/64-firefox.png" title="Firefox 3+" /> 3+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<img src="http://media1.juggledesign.com/qtip2/images/browsers/64-ie.png" title="Internet Explorer 6+" /> 6+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<img src="http://media1.juggledesign.com/qtip2/images/browsers/64-opera.png" title="Opera 9+" /> 9+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<img src="http://media1.juggledesign.com/qtip2/images/browsers/64-safari.png" title="Safari 2+, iOS 4+" /> 2+, iOS 4+
+</div>
+
+
+## Getting qTip<sup>2</sup>
+
+### Stable releases
+You can grab the *latest stable releases* from the [download page](http://craigsworks.com/projects/qtip2/download) of the [official site](http://craigsworks.com/projects/qtip2). This also lets
+you choose what [plugins](/docs/plugins/) you'd like included in your download, as well as other things.
+
+### Bleeding edge
+You can grab the latest and greatest qTip<sup>2</sup> nightly from the [dist](http://github.com/Craga89/qTip2/tree/master/dist/) directory and get started quickly. If you want more options
 over what plugins are included in your build, take a look below.
 
-
-What you need to build qTip2
-----------------------------
-In order to build qTip, you need to have GNU make 3.8 or later, Node.js 0.2 or later, and git 1.7 or later.
-(Earlier versions might work OK, but are not tested.)
-
-Windows users have two options:
-
-1. Install [msysgit](https://code.google.com/p/msysgit/) (Full installer for official Git),
-   [GNU make for Windows](http://gnuwin32.sourceforge.net/packages/make.htm), and a
-   [binary version of Node.js](http://node-js.prcn.co.cc/). Make sure all three packages are installed to the same
-   location (by default, this is C:\Program Files\Git).
-2. Install [Cygwin](http://cygwin.com/) (make sure you install the git, make, and which packages), then either follow
-   the [Node.js build instructions](https://github.com/ry/node/wiki/Building-node.js-on-Cygwin-%28Windows%29) or install
-   the [binary version of Node.js](http://node-js.prcn.co.cc/).
-
-Linux/BSD users should use their appropriate package managers to install make, git, and node, or build from source
-if you swing that way. Easy-peasy.
-
-Mac OS users should install Xcode (comes on your Mac OS install DVD, or downloadable from
-[Apple's Xcode site](http://developer.apple.com/technologies/xcode.html)) and
-[http://mxcl.github.com/homebrew/](Homebrew). Once Homebrew is installed, run `brew install git` to install git,
-and `brew install node` to install Node.js.
+### Custom builds
+You can also build your own qTip<sup>2</sup> script that includes select [plugins](docs/plugins/) and [styles](docs/style.md) to reduce the overall file size and remove features
+you don't plan on using. Find more information about this [here](docs/build.md)
 
 
-How to build qTip2
-------------------
-First, clone a copy of the main qTip2 git repo by running `git clone git://github.com/Craga89/qTip2.git`.
+## Installation
+Now you have the jQuery library and qTip<sup>2</sup> files, it's time to include them within your HTML. I **highly recommend** that all JavaScript includes be placed just before the end *&lt;/body&gt;*
+tag as this ensures the DOM is loaded before manipulation of it occurs. This is not a requirement, simply an insiders tip!
 
-Then, in the main directory of the distribution (the one that this file is in), type
-the following to build qTip2 and its accompanying CSS:
+```html
+<html>
+<head>
+<title>My site</title>
+<!-- css file -->
+<link type="text/css" rel="stylesheet" href="/path/to/jquery.qtip-2.0.0.css" />
+</head>
+<body>
+<!-- content here -->
+<script type="text/javascript" src="/path/to/jquery.1.4.2.min.js"></script>
 
-	make
+<!-- Notice we only include the minified script here. You can include the non-minified version, just don't include both! -->
+<script type="text/javascript" src="/path/to/jquery.qtip-2.0.0.min.js"></script>
+</body>
+</html>
+```
 
-You can also create each individually using these commands:
-
-	make qtip		# Build non-minified qTip2 source
-	make css 		# Build CSS files
-	make min 		# Build minified JS and CSS (Smaller filesize)
-
-To build and test the source code against JSLint type this:
-
-	make lint
-
-Finally, you can remove all the built files using the command:
-
-	make clean
-
-
-Submitting a pull request to the qTip2 repository
--------------------------------------------------
-If you're planning on submitting a pull request to the GitHub repository, you'll need to make sure your local git repo rebuilds the `dist/` directory on each commit. To do this,
-simply copy the `hooks` folder into the `.git` directory. Inside here is a pre-commit script that will run `make` for you prior to each commit call. Make sure to make MAke installed as
-detailed above
+**Note:** Make sure to include either the non-minified *or* the un-minified script, **not both!** <br/>
+**Note:** Notice *the jQuery library is included **before** qTip<sup>2</sup>*. This is absolutely essential for correct functioning of the plugin!
 
 
-Building to a different directory
----------------------------------
-If you want to build qTip2 to a directory that is different from the default location, you can specify the PREFIX
-directory: `make PREFIX=/home/craig/qtip/ [command]`
+## Questions or problems?
+If you have any questions, please feel free to post on the [support forums](http://craigsworks.com/projects/forums), but before you do make sure to
+check out the (thorough documentation)[docs/] both here in the repo and on the [official site](http://craigsworks.com/projects/qtip2).
 
-With this example, the output files would end up in `/home/craig/qtip/dist/`.
-
-
-Choosing which features are included in your qTip2 build
---------------------------------------------------------
-By default qTip2 is built with all plugins enabled. You can see an example of this in the [dist](http://github.com/Craga89/qTip2/tree/master/dist/jquery.qtip.js) file.
-If you want more control over what plugins are included, you can do so by adding some extra parameters to your build commands.
-
-For example, if you plan on using only the tips plugin, you'd specify the plugins variable as so:
-
-	make PLUGINS="tips" [command]
-
-Notice the only thing that was added was the PLUGINS parameter. This tells the compiler which files to include in the final qTip2 build. You can specify multiple
-plugins by separating them with a space:
-
-	make PLUGINS="tips ajax modal" [command]
-
-By default all plugins are included in the build, so the regular `[make all]` command is actually equivilent to:
-
-	make PLUGINS="ajax tips imagemap svg modal bgiframe" [command]
-
-* Note: The above was correct at the time of writing. Subsequent revisions may change file names or add new plugins, so checkout the Makefile for a full up-to-date list of all plugins*
-
-
-Questions or problems?
-----------------------
-If you have any questions, please feel free to post on the support forums:
-[http://craigsworks.com/projects/forums](http://craigsworks.com/projects/forums)
-
-
-Special thanks
---------------
+## Special thanks
 Big shout-out to the jQuery team for providing the directory structure and base files for the git repo, as well as the base-files for the new NodeJS build system!
