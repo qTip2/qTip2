@@ -198,7 +198,7 @@ $('.selector').qtip({
 * Primarily for use in conjunction with mouseout and similar mouse-orientated hide events.
 
 
-<a name="fixed"></a>
+<a name="leave"></a>
 ## hide.leave
 
 ### Values
