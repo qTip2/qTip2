@@ -14,6 +14,7 @@ $('.selector').qtip({
 		}
 	}
 });
+```
 
 That's great! Simple and easy to integrate. However, what if we need want to not only to update the coordinates, but integrate say, another plugin with the qTip? One
 that might be in a different file and hard to call within our existing move callback?
