@@ -9,7 +9,6 @@ Stores the version of qTip2 library included on the page in the format "2.x.x".
 ## $.fn.qtip.defaults
 Holds all the default qTip values inherited by your .qtip() calls.
 
-### Value
 ```js
 $.fn.qtip.defaults = {
 	prerender: false,

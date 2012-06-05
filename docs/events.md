@@ -182,7 +182,7 @@ $('.selector').qtip({
 * [Hide options](./hide.md)
 
 ### Notes
-Using [event.preventDefault()](#preventDefault) described above, will prevent the tooltip from hiding.
+* Using [event.preventDefault()](#preventDefault) described above, will prevent the tooltip from hiding.
 
 
 
