@@ -1,5 +1,7 @@
 # Content
 
+The content object defines what content will be displayed within the tooltip, as well as the the title of the tooltip and various other aspects.
+
 <a name="text"></a>
 ## content.text
 

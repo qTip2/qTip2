@@ -1,5 +1,7 @@
 # Core options
 
+The core options are the options which have no parent object i.e. they are all located in the upper configuration object, as detailed below.
+
 ## id
 
 ### Values

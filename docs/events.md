@@ -1,5 +1,7 @@
 # Events
 
+The events object determines the initial event handlers which are bound to the tooltip.
+
 <a name="binding"></a>
 ## Binding
 The API triggers several special events (detailed below) that allow you to bind multiple event handlers to a single qTip and react to certain events. For example,
@@ -34,7 +36,7 @@ $('.selector').qtip({
 			// Notice the 'tooltip' prefix of the event name!
 			tooltip.bind('tooltipmove', function(event, api) {
 				anotherPlugin.update(event); // Update our other plugin and pass our event object
-			})
+			});
 
 		},
 		// Regular old move option still applies
@@ -152,7 +154,7 @@ $('.selector').qtip({
 * [Show options](./show.md)
 
 ### Notes
-* Using (event.preventDefault())(#preventDefault) described above, will prevent the tooltip from showing.
+* Using [event.preventDefault()](#preventDefault) described above, will prevent the tooltip from showing.
 
 
 
@@ -216,7 +218,7 @@ $('.selector').qtip({
 
 ### Notes
 * **There is no tooltiptoggle event**! This is a shortcut for binding to both [tooltipshow](#show) and [tooltiphide](#hide).
-* Using (event.preventDefault())(#preventDefault) described above, will prevent the tooltip from showing/hiding, depending on the event type being triggered.
+* Using [event.preventDefault()](#preventDefault) described above, will prevent the tooltip from showing/hiding, depending on the event type being triggered.
 
 
 
@@ -227,7 +229,7 @@ $('.selector').qtip({
 Fired when the tooltip becomes visible i.e. immediately after the [show.effect](./show.md#effect) has finished and the qTip is visible and has dimensions. This
 is most useful for plugins and code which requires the tooltip to have layout, that is to be visible and have dimensions, if it is to function correctly.
 
-Because this event is fired **after** the tooltip is already shown, the (event.preventDefault())(#preventDefault) call will do nothing within this event, since it
+Because this event is fired **after** the tooltip is already shown, the [event.preventDefault()](#preventDefault) call will do nothing within this event, since it
 is already shown when this event is triggered.
 
 ### Examples
@@ -262,7 +264,7 @@ $('.selector').qtip({
 Fired when the tooltip becomes hidden i.e. immediately after the [hide.effect](./hide.md#effect) has finished, the qTip is hidden (display:none). This
 is most useful for plugins and code which requires the tooltip to be completely hidden, if it is to function correctly.
 
-Because this event is fired **after** the tooltip is already hidden, the (event.preventDefault())(#preventDefault) call will do nothing within this event, since it
+Because this event is fired **after** the tooltip is already hidden, the [event.preventDefault()](#preventDefault) call will do nothing within this event, since it
 is already hidden when this event is triggered.
 
 ### Examples
@@ -317,7 +319,7 @@ $('.selector').qtip({
 * [Position options](./position.md)
 
 ### Notes
-* Using (event.preventDefault())(#preventDefault) described above, will prevent the tooltips position from being updated.
+* Using [event.preventDefault()](#preventDefault) described above, will prevent the tooltips position from being updated.
 
 
 <a name="focus"></a>
@@ -347,7 +349,7 @@ $('.selector').qtip({
 * [Blur event](#blur)
 
 ### Notes
-* Using (event.preventDefault())(#preventDefault) described above, will prevent the tooltip from becoming focused.
+* Using [event.preventDefault()](#preventDefault) described above, will prevent the tooltip from becoming focused.
 
 
 <a name="blur"></a>
@@ -377,4 +379,4 @@ $('.selector').qtip({
 * [Focus event](#focus)
 
 ### Notes
-* The blurring process cannot be prevented using the (event.preventDefault())(#preventDefault) described above.
+* The blurring process cannot be prevented using the [event.preventDefault()](#preventDefault) described above.

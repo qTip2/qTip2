@@ -1,4 +1,5 @@
 # Global
+
 This section covers qTips **global options**, which effect every qTip created on the page, both past and future.
 
 <a name="version"></a>

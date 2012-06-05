@@ -1,5 +1,7 @@
 # Hide
 
+The hide object defines what events trigger the tooltip to hide on which elements, as well as the initial delay and several other properties.
+
 ## Special events
 qTip<sup>2</sup> implements some custom hide and show events for you so you don't have to code the manually. At the moment there's only one: **unfocus**. This event allows you to hide the
 tooltip when anything other then the tooltip is clicked.
@@ -17,6 +19,7 @@ $('.selector').qtip({
 
 **Note:** This is a qTip only event, *it will not work with any normal jQuery bind/live/delegate calls*.
 
+--------------
 
 <a name="target"></a>
 ## hide.target
@@ -25,7 +28,7 @@ $('.selector').qtip({
 jQuery([]), false *(Default: false)*
 
 ### Overview
-Defines the HTML element(s) which will trigger your specified (hide.event(s))(#hideevent). When set to false, the element the .qtip() method was called upon is used.
+Defines the HTML element(s) which will trigger your specified [hide.event](#hideevent). When set to false, the element the .qtip() method was called upon is used.
 
 ### Examples
 This example will cause the first H1 element to hide the tooltip when the [hide.event](#event) is triggered (in this case mouseleave):

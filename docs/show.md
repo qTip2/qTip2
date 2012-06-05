@@ -1,5 +1,7 @@
 # Show
 
+The show object defines what events trigger the tooltip to show on which elements, as well as the initial delay and several other properties.
+
 <a name="target"></a>
 ## show.target
 

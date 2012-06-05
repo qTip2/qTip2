@@ -1,5 +1,7 @@
 # Position
 
+The position object defines various attributes of the tooltip position, including the element it is positioned in relation to, and when the position is adjusted within defined viewports.
+
 ## Basics
 
 qTip utilises a special positioning system using corners. The basic concept behind it is pretty simple, in fact it turns out to be plain English when read aloud! For example, let's say we want to position **my** tooltips top left corner **at** the bottom right of my **target**. Simple enough... let's see the code involved in this:
