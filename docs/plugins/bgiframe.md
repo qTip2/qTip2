@@ -3,7 +3,7 @@
 <a name="overview"></a>
 ## Overview
 This plugin is simply a wrapper around the [BGIFrame jquery plugin](http://plugins.jquery.com/project/bgiframe) by Brandon Aaron,
-utilising qTips [API events](../api.md) to keep the plugin updated and compatible.
+utilising qTip<sup>2</sup>'s [API](../api.md) to keep the plugin updated and compatible.
 
 <a name="usage"></a>
 ## Usage
@@ -11,7 +11,7 @@ This particular plugin requires no additional user configuration. In order to ut
 
 <a name="elements"></a>
 ## Elements
-In IE6 <b>only</b>, the created BGIframe element is available through the API's elements object:
+**In IE6 only**, the created BGIframe element is available through the API's elements object:
 
 ```js
 $('.selector').qtip({
