@@ -1,4 +1,4 @@
-# Global
+# qTip<sup>2</sup> - Global properties
 
 This section covers qTips **global options**, which effect every qTip created on the page, both past and future.
 

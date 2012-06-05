@@ -1,4 +1,4 @@
-# Content
+# qTip<sup>2</sup> - Options - Content
 
 The content object defines what content will be displayed within the tooltip, as well as the the title of the tooltip and various other aspects.
 

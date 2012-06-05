@@ -1,4 +1,4 @@
-# Hide
+# qTip<sup>2</sup> - Options - Hide
 
 The hide object defines what events trigger the tooltip to hide on which elements, as well as the initial delay and several other properties.
 

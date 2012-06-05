@@ -1,4 +1,4 @@
-# Style
+# qTip<sup>2</sup> - Options - Style
 
 The style object allows you to assign custom classes to the main qTip element, as well as [Themeroller](http://jqueryui.com/themeroller/) and tip options when using the [tips plugin](./plugins/tips.md)
 

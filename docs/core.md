@@ -1,4 +1,4 @@
-# Core options
+# qTip<sup>2</sup> - Options - Core
 
 The core options are the options which have no parent object i.e. they are all located in the upper configuration object, as detailed below.
 

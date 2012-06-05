@@ -1,4 +1,4 @@
-# Position
+# qTip<sup>2</sup> - Options - Position
 
 The position object defines various attributes of the tooltip position, including the element it is positioned in relation to, and when the position is adjusted within defined viewports.
 

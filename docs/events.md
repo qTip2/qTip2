@@ -1,4 +1,4 @@
-# Events
+# qTip<sup>2</sup> - Events
 
 The events object determines the initial event handlers which are bound to the tooltip.
 
