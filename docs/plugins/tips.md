@@ -3,6 +3,7 @@
 The speech bubble tips plugin allows you to add nifty callout pointers to your tooltips. A wide range of options are available to style the tips, including height and width,
 colour and orientation/position on the tooltip. They even adjust with your tooltip when [viewport adjustment](../position.md#viewport) is enabled!
 
+<a name="elements"></a>
 ## Elements
 When the tip plugin is in use on a tooltip, a new element becomes available within the API elements object, which references the newly created tip:
 
@@ -20,15 +21,18 @@ $('.selector').qtip({
 })
 ```
 
+<a name="styling"></a>
 ## Styling
 Styling the tip's background and border colours is done via CSS, not the options below. These are detected from the styles set on the *ui-tooltip-tip* element listed above. If
 no valid style can be found for the background or border colour properties, qTip will look for styles on specific elements, depending on what it's looking for:
 
+<a name="bordercolor"></a>
 #### border-color
 * ui-tooltip-tip element
 * ui-tooltip-titlebar element - If present and tip overlaps
 * ui-tooltip-content element
 
+<a name="bgcolor"></a>
 #### background-color
 * ui-tooltip-tip element
 * ui-tooltip-titlebar element - If present and tip overlaps
@@ -40,14 +44,15 @@ property, which can be used to override the detected CSS border-width.
 
 --------------------
 
+<a name="000000"></a>
 ### #000000 = Invalid style!
 Since, by default, most browsers default to using pure black (rgb(0,0,0), #000 etc.) as the default colour, if qTip<sup>2</sup> detects
 this it will look elsewhere for the styles as listed above. If you need to use pure black, the best work around is to use something very close
 to it visually, such as rgb(0,0,1) or #000001.
 
-
 --------------------
 
+<a name="corner"></a>
 ## style.tip.corner
 
 ### Values
@@ -96,6 +101,7 @@ $('.selector').qtip({
 * The positioning values of 'center' and 'center center' are not valid positioning values in this plugin.
 
 
+<a name="mimic"></a>
 ## style.tip.mimic
 
 ### Values
@@ -151,6 +157,7 @@ $('.selector').qtip({
 * This option overrides the **presentation** of the tip only. It does **not effect the tips position!**
 
 
+<a name="border"></a>
 ## style.tip.border
 
 ### Values
@@ -186,6 +193,7 @@ $('.selector').qtip({
 * See the [styling section](#styling) for more information on border-width detection
 
 
+<a name="width"></a>
 ## style.tip.width
 
 ### Values
@@ -221,7 +229,8 @@ $('.selector').qtip({
 the x axis. This was changed and you should update your code if you relied on this fact.
 
 
-## style.tip.width
+<a name="height"></a>
+## style.tip.height
 
 ### Values
 Integer *(Default: 6)*
@@ -256,6 +265,7 @@ $('.selector').qtip({
 the x axis. This was changed and you should update your code if you relied on this fact.
 
 
+<a name="offset"></a>
 ## style.tip.offset
 
 ### Values

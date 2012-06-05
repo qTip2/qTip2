@@ -49,7 +49,7 @@ $('.selector').qtip({
 
 **Note:** If you wish to simply filter the returned content before it gets set as the content, use the [dataFilter](http://api.jquery.com/jQuery.ajax/) callback.
 
-
+<a name="html"></a>
 ## HTML
 Now that we know how to setup our basic AJAX call, let's look at the different types of data that can be returned, and how to deal with them. First up is the HTML content.
 This is the simplest of the lot, since the HTML is simply appended to the tooltip contents.
@@ -57,6 +57,7 @@ This is the simplest of the lot, since the HTML is simply appended to the toolti
 All you have to do is supply the URL and request type, as well as any data you need to send along with the request, and the returned data automatically replaces the tooltip contents.
 If an error occurs during the response, the tooltip contents are replaced with a description of the error that occurred.
 
+<a name="json"></a>
 ## JSON
 Nowadays the preferred method to return data from an AJAX request is via [JSON](http://www.json.org), or *J*ava*S*cript *O*bject *N*otation. This is
 basically a fancy way of saying a JavaScript object.
