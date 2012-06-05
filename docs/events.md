@@ -111,6 +111,7 @@ $('.selector').qtip({
 		}
 	}
 });
+```
 
 ### Examples
 Update another element e.g. a cart total, when this tooltip is rendered
