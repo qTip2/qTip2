@@ -86,7 +86,7 @@ This is useful for image galleries and other image-oriented sites that need to p
 
 
 <a name="titletext"></a>
-## content.title
+## content.title.text
 
 ### Values
 function(), jQuery([ ]), "String", false *(Default: false)*
@@ -147,7 +147,7 @@ $('.selector').qtip({
 
 
 <a name="titlebutton"></a>
-## content.title
+## content.title.button
 
 ### Values
 jQuery([ ]), "String", true *(Default: false)*
