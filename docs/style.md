@@ -47,6 +47,7 @@ $('.selector').qtip({
 });
 ```
 
+------------------
 
 <a name="def"></a>
 ## style.def
