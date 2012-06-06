@@ -56,7 +56,7 @@ tag as this ensures the DOM is loaded before manipulation of it occurs. This is 
 ```
 
 **Note:** Make sure to include either the non-minified *or* the un-minified script, **not both!** <br/>
-**Note:** Notice *the jQuery library is included **before** qTip<sup>2</sup>*. This is absolutely essential for correct functioning of the plugin!
+**Note:** Notice *the jQuery library is included ***before** qTip<sup>2</sup>*. This is absolutely essential for correct functioning of the plugin!
 
 
 ## Questions or problems?
