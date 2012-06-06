@@ -253,8 +253,8 @@ $('.selector').qtip({
 * [Show options](./show.md)
 
 ### Notes
-* This is distinct from the [show event](#show) since it is fired before the show animation is complete, not after.
-* Because of the above, the (event.preventDefault();)(#preventDefault) call will do nothing within this event, since it is already shown when this event is triggered
+* This is distinct from the [show event](#show) since it is fired *after* the show animation is complete, not before.
+* Because of the above, the [event.preventDefault()](#preventDefault) call will do nothing within this event, since it is already shown when this event is triggered
 
 
 <a name="hidden"></a>
@@ -288,8 +288,8 @@ $('.selector').qtip({
 * [Hide options](./hide.md)
 
 ### Notse
-* This is distinct from the [hide event](#hide) since it is fired before the hide animation is complete, not after.
-* Because of the above, the (event.preventDefault();)(#preventDefault) call will do nothing within this event, since it is already shown when this event is triggered.
+* This is distinct from the [hide event](#hide) since it is fired *after* the hide animation is complete, not before.
+* Because of the above, the [event.preventDefault()](#preventDefault) call will do nothing within this event, since it is already shown when this event is triggered.
 
 
 <a name="move"></a>
