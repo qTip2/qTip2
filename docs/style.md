@@ -56,7 +56,7 @@ $('.selector').qtip({
 true, false *(Default: true)*
 
 ### Overview
-This propery allows you to prevent the .ui-tooltip-default class from being applied to the main tooltip element.
+This property allows you to prevent the .ui-tooltip-default class from being applied to the main tooltip element.
 
 ### Notes
 * Setting this to false will cause the tooltip to have no visual styling if you haven't applied any [custom classes](#classes)</li>
