@@ -62,7 +62,7 @@ true, [&quot;Corner&quot;](../position.md#basics), false *(Default: true)*
 Defines where in relation to the **tooltip** the speech bubble tip is applied. Check-out the [positioning docs](../position.md#basics) for a full set of corner strings.
 
 ### Examples
-Let's create a regular qTip with a tip whose corner is inherited from the [position.my](<?=WEB_DIR;?>/docs/position.md#my) option:
+Let's create a regular qTip with a tip whose corner is inherited from the [position.my](../position.md#my) option:
 
 ```js
 $('.selector').qtip({
@@ -77,7 +77,7 @@ $('.selector').qtip({
 });
 ```
 
-We can also manually specify a different corner like so (if [viewport adjustment](<?=WEB_DIR;?>/docs/position.md#viewport) is enabled, the tip position *will not* be adjusted):
+We can also manually specify a different corner like so (if [viewport adjustment](../position.md#viewport) is enabled, the tip position *will not* be adjusted):
 
 ```js
 $('.selector').qtip({
@@ -93,8 +93,8 @@ $('.selector').qtip({
 ```
 
 ### See also
-* [position.viewport](<?=WEB_DIR;?>/docs/position.md#viewport)
-* [position.my](<?=WEB_DIR;?>/docs/position.md#my)
+* [position.viewport](../position.md#viewport)
+* [position.my](../position.md#my)
 
 ### Notes
 * When set to true, the tip position will be inherited from the [position.my](../position.md#my) property and adjusted automatically if [viewport adjustment](../position.md#viewport) is enabled.

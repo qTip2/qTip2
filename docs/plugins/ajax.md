@@ -216,3 +216,4 @@ $('.selector').qtip({
 
 ### Notes
 * Even though the content.text will not be used, it must be set to something valid i.e. non-blank, so that the qTip will be considered valid and rendered.
+* This option an extension of the regular [jQuery.ajax](http://api.jquery.com/jQuery.ajax/) object and **is not** a core jQuery.ajax option. It will only work with qTip<sup>2</sup>!
