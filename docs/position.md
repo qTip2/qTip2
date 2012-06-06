@@ -127,6 +127,7 @@ $('.selector').qtip({
 		my: 'left center'
 	}
 });
+```
 
 ### Notes
 * See the [Basics section](#basics) for all possible corner values.
