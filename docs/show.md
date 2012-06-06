@@ -190,8 +190,8 @@ $('.selector').qtip({
 ```
 
 ### See also
-* [content.prerender](./content.md/#contentprerender)
-* (document.ready())(http://docs.jquery.com/Events/ready)
+* [content.prerender](./content.md#prerender)
+* [document.ready()](http://docs.jquery.com/Events/ready)
 
 ### Notes
 * This option obeys your [show.delay](#delay) setting, so set it to zero if you want it to show instantly on page load!
@@ -224,7 +224,7 @@ $('.selector').qtip({
 ```
 
 ### See also
-* [hide.effect](./hide.md#hideeffect)
+* [hide.effect](./hide.md#effect)
 
 ### Notes
 * By default a fadeIn animation takes place with a duration of 90ms.
