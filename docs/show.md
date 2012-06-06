@@ -172,7 +172,8 @@ $('.selector').qtip({
 true, false *(Default: false)*
 
 ### Overview
-Determines whether or not the tooltip is shown once the document is loaded e.g. when the (document.ready())(http://docs.jquery.com/Events/ready) event is triggered.
+Determines whether or not the tooltip is shown as soon as it is bound to the element i.e. when the .qtip() call is fired. This is useful for tooltips
+which are created inside event handlers, as without it they won't show up immediately.
 
 ### Examples
 Create a tooltip that's shown on document load. This could be handy for things like step-by-step tutorials.
@@ -194,11 +195,11 @@ $('.selector').qtip({
 
 ### Notes
 * This option obeys your [show.delay](#delay) setting, so set it to zero if you want it to show instantly on page load!
-* Enabling this option on multiple tooltips can slow down your page load times.
+* Enabling this option on multiple tooltips which are bound on document.ready or window.load, can slow down your page load times.
 
 
-<a name="ready"></a>
-## show.ready
+<a name="effect"></a>
+## show.effect
 
 ### Values
 function(){}, true, false *(Default: true)*
