@@ -3,7 +3,7 @@
 
 Introducing&hellip; qTip<sup>2</sup>. The second generation of the advanced qTip plugin for the ever popular jQuery framework.
 
-Building on 1.0's user friendly, yet feature rich base, qTip2 provides you with tonnes of features like
+Building on 1.0's user friendly, yet feature rich base, qTip<sup>2</sup> provides you with tonnes of features like
 [speech bubble tips](tree/master/docs/plugins/tips.md) and [imagemap support](tree/master/docs/plugins/imagemap.md), and best of all...
 **it's completely free under the MIT/GPLv2 licenses!**
 
