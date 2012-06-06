@@ -31,6 +31,7 @@ $('#ui-tooltip-myTooltip');
 ### Notes
 * By default, this is a unique positive integer.
 * Value must be unique and contain no special characters.
+* If a qTip is already present with this ID, the ID will be discarded and a numeric ID used instead.
 
 
 
@@ -40,7 +41,8 @@ $('#ui-tooltip-myTooltip');
 true, false *(Default: false)*
 
 ### Overview
-By default, tooltips are rendered on thier first show event, rather than on page load. Setting this to true will cause tooltips to be created on page load.
+By default, tooltips are rendered when they are first triggered, rather than on page load. Setting this to true will cause tooltips to be created on page load, which can have
+significant page load increases if a large set of elements are being targeted.
 
 ### Examples
 Create a simple tooltip and create it on page load
@@ -68,7 +70,8 @@ $('.selector').qtip({
 true, false *(Default: false)*
 
 ### Overview
-Determines if, then the .qtip() method is called on an element with a qTip already present, the new one overrides (i.e. destroys) the old one. By default this is true.
+Determines if, when the .qtip() method is called on an element with a qTip already present, the new one overrides (i.e. destroys) the old one. By default this is true i.e.
+calling .qtip() on an element will always destory any previous bound qTips by default.
 
 ### Examples
 Create a tooltip that will not overridde (destroy) the previous qTip, but fail silently:

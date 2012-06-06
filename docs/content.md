@@ -89,7 +89,7 @@ This is useful for image galleries and other image-oriented sites that need to p
 ## content.title.text
 
 ### Values
-function(), jQuery([ ]), "String", false *(Default: false)*
+function(){}, jQuery([ ]), "String", false *(Default: false)*
 
 ### Overview
 Text/HTML which will appear inside the title element of the content. If set to false, no title will be created. An anonymous function can also be used to return
@@ -150,10 +150,13 @@ $('.selector').qtip({
 ## content.title.button
 
 ### Values
-jQuery([ ]), "String", true *(Default: false)*
+jQuery([ ]), "String", true, false *(Default: false)*
 
 ### Overview
 Text/HTML which will appear inside the title's button element (e.g. close link) located to the right of the title content. The button will close the tooltip when clicked.
+
+If it is set to *true* the default styled icon will be used. If a jQuery element is provided it will be used as the button and appended to the titlebar element. Finally, if a
+string is provided it will be used as the buttons innerText and title/aria-title attributes.
 
 ### Examples
 Create another "About me" tooltip which opens on click and only hides when the title button is clicked

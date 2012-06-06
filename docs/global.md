@@ -4,11 +4,11 @@ This section covers qTips **global options**, which effect every qTip created on
 
 <a name="version"></a>
 ## $.fn.qtip.version
-Stores the version of qTip2 library included on the page in the format "2.x.x".
+Stores the version of qTip<sup>2</sup> library included on the page in the format "2.x.x".
 
 <a name="defaults"></a>
 ## $.fn.qtip.defaults
-Holds all the default qTip values inherited by your .qtip() calls.
+Holds all the default qTip<sup>2</sup> values inherited by your .qtip() calls.
 
 ```js
 $.fn.qtip.defaults = {
@@ -95,7 +95,7 @@ $.fn.qtip.defaults = {
 ```
 
 ### Notes
-* Take a look at the [Override defaults](./tutorials/advanced#override) tutorial for details on how to edit this object properly.
+* Take a look at the [Override defaults](http://craigsworks.com/projects/qtip2/tutorials/advanced#override) tutorial for details on how to edit this object properly.
 
 
 <a name="nextid"></a>
@@ -123,7 +123,7 @@ $('.selector').qtip({
 ```
 
 ### See also
-* [id option](./docs/core/#id)
+* [id option](./core.md#id)
 
 ### Notes
 * This **MUST** be an *integer only!* If you want to assign a string as an identifier, check-out the individual [id option](./core.md#id).
@@ -159,7 +159,7 @@ $('.selector').qtip({
 ```
 
 ### See also
-* [hide.inactive](./docs/hide/#inactive)
+* [hide.inactive](./hide.md#inactive)
 
 ### Notes
 * This effects all qTips on the page, included those already created (but only if you happen to update a setting which cause the event handlers to be rebound).

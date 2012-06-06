@@ -28,7 +28,7 @@ $('.selector').qtip({
 jQuery([]), false *(Default: false)*
 
 ### Overview
-Defines the HTML element(s) which will trigger your specified [hide.event](#hideevent). When set to false, the element the .qtip() method was called upon is used.
+Defines the HTML element(s) which will trigger your specified [hide.event](#event). When set to false, the element the .qtip() method was called upon is used.
 
 ### Examples
 This example will cause the first H1 element to hide the tooltip when the [hide.event](#event) is triggered (in this case mouseleave):
@@ -61,7 +61,7 @@ $('.selector').qtip({
 ```
 
 ### See also
-* [hide.event](#hideevent)
+* [hide.event](#event)
 
 ### Notes
 * Setting a different hide target **does not** effect the positioning, which is controlled via the [position.target](./position.md/#target) option.
@@ -91,7 +91,7 @@ $('.selector').qtip({
 });
 ```
 
-You can also specify multiple events using a space separated string. This example will make your tooltips appear when the [hide.target](#hidetarget) is clicked or a mouseout occurs:
+You can also specify multiple events using a space separated string. This example will make your tooltips appear when the [hide.target](#target) is clicked or a mouseout occurs:
 
 ```js
 $('.selector').qtip({
@@ -118,10 +118,10 @@ $('.selector').qtip({
 Integer *(Default: 0)*
 
 ### Overview
-Time in milliseconds by which to delay hiding of the tooltip when the [hide.event](#hideevent) is triggered on the [hide.target](#hidetarget)
+Time in milliseconds by which to delay hiding of the tooltip when the [hide.event](#event) is triggered on the [hide.target](#target)
 
 ### Examples
-This tooltip will only hide after hovering the [hide.target](#hidetarget) for 1000ms (1 second):
+This tooltip will only hide after hovering the [hide.target](#target) for 1000ms (1 second):
 
 ```js
 $('.selector').qtip({
@@ -161,10 +161,10 @@ $('.selector').qtip({
 ```
 
 ### See also
-* [hide.event](#hideevent)
+* [hide.event](#event)
 
 ### Notes
-* In 1.0 the inactive event was applied via the [hide.event](#hideevent) option and used the [hide.delay](#hidedelay) to define the duration of inactivity needed.
+* In 1.0 the inactive event was applied via the [hide.event](#event) option and used the [hide.delay](#delay) to define the duration of inactivity needed.
 
 
 <a name="fixed"></a>
@@ -191,7 +191,7 @@ $('.selector').qtip({
 ```
 
 ### See also
-* [hide.event](#hideevent)
+* [hide.event](#event)
 
 ### Notes
 * Adding a [hide delay](#delay) is generally done when this is enabled to give the user time to mouseover the tooltip before hiding
@@ -223,7 +223,7 @@ $('.selector').qtip({
 ```
 
 ### See also
-* [hide.event](#hideevent)
+* [hide.event](#event)
 
 ### Notes
 * **This only applies when using mouseout or mouseleave as (one of) your hide event(s)**
