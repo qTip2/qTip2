@@ -37,7 +37,7 @@ jQuery([ ]), [x, y], "mouse", "event", false *(Default: false)*
 ### Overview
 HTML element the tooltip will be positioned in relation to. Can also be set to 'mouse' or the 'event' (position at target that triggered the tooltip), or an array containing an absolute x/y position on the page.
 
-If you also have [position.adjust.mouse](#adjustmouse) set to true, the qTip2 will follow the mouse until a [hide event](./hide.md#hideevent) is triggered on the [hide.target](./hide.md#hidetarget)
+If you also have [position.adjust.mouse](#adjustmouse) set to true, the qTip will follow the mouse until a [hide event](./hide.md#hideevent) is triggered on the [hide.target](./hide.md#hidetarget)
 
 ### Examples
 Let's position our tooltip in relation to the last LI element of the first UL element in our document:
@@ -99,7 +99,7 @@ $('.selector').qtip({
 ```
 ### Notes
 * Setting this to false causes the tooltip is positioned in relation to the element .qtip() was called upon.
-* When using absolute positioning ([x, y]) is used, [position.viewport](#viewport) still works!
+* When using absolute positioning ([x, y]) the [position.viewport](#viewport) adjustment still works as expected.
 
 ### See also
 * [position.viewport](#viewport)
@@ -222,16 +222,25 @@ $('.selector').qtip({
 
 ### Notes
 * Your [position.my/at](#basics) options will be temporarily adjusted when using this functionality.
-
+* If set to **true** this value will be inherited from the [position.container](#container) property.
 
 <a name="effect"></a>
 ## position.effect
 
 ### Values
-Function, false *(Default: function slide(){})*
+Function, false *(Default: see below)*
 
 ### Overview
-Determines the type of effect that takes place when animating a tooltips position. A custom method can also be used, which is passed the new position as one of its parameters, and whose scope is the tooltip element.
+Determines the type of effect that takes place when animating a tooltips position. A custom method can also be used, which is passed the
+new position as one of its parameters, and whose scope is the tooltip element.
+
+The default animation callback is:
+
+```js
+function(api, pos, viewport) {
+	$(this).animate(pos, { duration: 200, queue: FALSE });
+}
+```
 
 ### Examples
 Let's create a tooltip that slides into its position on screen with linear easing
@@ -267,13 +276,6 @@ $('.selector').qtip({
 });
 ```
 
-The default animation callback is:
-
-```js
-function(api, pos, viewport) {
-	$(this).animate(pos, { duration: 200, queue: FALSE });
-}
-```
 
 ### Notes
 * By default a custom, slide animation takes place using the custom function listed above.
@@ -373,7 +375,7 @@ $('.selector').qtip({
 ```
 
 ### Notes
-* Supplying a single string such as "flip", "flipinvert" or "shift" will cause qTip2 to use that method for **both** axis'.
+* Supplying a single string such as "flip", "flipinvert" or "shift" will cause qTip<sup>2</sup> to use that method for **both** axis'.
 * This system is very similar to that used in the [jQuery UI Position plugin](http://jqueryui.com/demos/position/).
 * Both flip and shift methods also adjusts the [tip](./plugins/tips.md) position, if enabled.
 
@@ -407,7 +409,7 @@ $('.selector').qtip({
 });
 ```
 
-Alternatively, we can set it to false and make the tooltip assume the position of the mouse when shown, but ** *not* follow it**, similar to how a right-click or "context" menu is positioned.
+Alternatively, we can set it to false and make the tooltip assume the position of the mouse when shown, but ***not* follow it**, similar to how a right-click or "context" menu is positioned.
 
 ```js
 $('.selector').qtip({
@@ -448,8 +450,8 @@ $('.selector').qtip({
 		text: 'If you resize your window while I\'m visible, I\'ll adjust my position accordingly.'
 	},
 	position: {
+		target: $(document),
 		adjust: {
-			target: $(document),
 			resize: true // Can be ommited (e.g. default behaviour)
 		}
 	}
@@ -471,9 +473,6 @@ $('.selector').qtip({
 	}
 });
 ```
-
-### Notes
-* Only takes effect when [position.target](#target) is the window or document element.
 
 ### See also
 * [position.target](#target)

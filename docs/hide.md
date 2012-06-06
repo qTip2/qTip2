@@ -161,9 +161,11 @@ $('.selector').qtip({
 ```
 
 ### See also
+* [inactiveEvents](./global.md#inactiveEvents)
 * [hide.event](#event)
 
 ### Notes
+* Inactivity is judged by the absense of any of the defined [inactive events](./global.md#inactiveEvents), which are a global property.
 * In 1.0 the inactive event was applied via the [hide.event](#event) option and used the [hide.delay](#delay) to define the duration of inactivity needed.
 
 
