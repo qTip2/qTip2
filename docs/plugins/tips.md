@@ -225,8 +225,8 @@ $('.selector').qtip({
 
 ### Notes
 * Make sure this is a **number only**, don't include any units e.g. 'px'!
-* (Prior to the **26th April 2012 nightly**, this was an absolute value)[http://blog.craigsworks.com/qtip2-tips-plugins-dimension-options-changed/] i.e. it determined the width of the tooltip along
-the x axis. This was changed and you should update your code if you relied on this fact.
+* [Prior to the **26th April 2012 nightly**, this was an absolute value](http://blog.craigsworks.com/qtip2-tips-plugins-dimension-options-changed/) i.e. it determined the width of the tooltipin relation to the window.
+This was changed and you should update your code if you relied on this fact.
 
 
 <a name="height"></a>
@@ -261,8 +261,8 @@ $('.selector').qtip({
 
 ### Notes
 * Make sure this is a **number only**, don't include any units e.g. 'px'!
-* (Prior to the **26th April 2012 nightly**, this was an absolute value)[http://blog.craigsworks.com/qtip2-tips-plugins-dimension-options-changed/] i.e. it determined the width of the tooltip along
-the x axis. This was changed and you should update your code if you relied on this fact.
+* [Prior to the **26th April 2012 nightly**, this was an absolute value](http://blog.craigsworks.com/qtip2-tips-plugins-dimension-options-changed/) i.e. it determined the height of the tooltipin relation to the window.
+This was changed and you should update your code if you relied on this fact.
 
 
 <a name="offset"></a>
