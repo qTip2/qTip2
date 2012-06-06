@@ -61,7 +61,7 @@ tag as this ensures the DOM is loaded before manipulation of it occurs. This is 
 
 ## Questions or problems?
 If you have any questions, please feel free to post on the [support forums](http://craigsworks.com/projects/forums), but before you do make sure to
-check out the (thorough documentation)[tree/master/docs/] both here in the repo and on the [official site](http://craigsworks.com/projects/qtip2).
+check out the [thorough documentation](tree/master/docs/) both here in the repo and on the [official site](http://craigsworks.com/projects/qtip2).
 
 ## Special thanks
 Big shout-out to the jQuery team for providing the directory structure and base files for the git repo, as well as the base-files for the new NodeJS build system!
