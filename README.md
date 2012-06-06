@@ -4,7 +4,7 @@
 Introducing&hellip; qTip<sup>2</sup>. The second generation of the advanced qTip plugin for the ever popular jQuery framework.
 
 Building on 1.0's user friendly, yet feature rich base, qTip2 provides you with tonnes of features like
-[speech bubble tips](docs/plugins/tips.md) and [imagemap support](docs/plugins/imagemap.md), and best of all...
+[speech bubble tips](tree/master/docs/plugins/tips.md) and [imagemap support](tree/master/docs/plugins/imagemap.md), and best of all...
 **it's completely free under the MIT/GPLv2 licenses!**
 
 More documentation and information is available at the [official site](http://craigsworks.com/projects/qtip2).
@@ -23,15 +23,15 @@ More documentation and information is available at the [official site](http://cr
 
 ### Stable releases
 You can grab the *latest stable releases* from the [download page](http://craigsworks.com/projects/qtip2/download) of the [official site](http://craigsworks.com/projects/qtip2). This also lets
-you choose what [plugins](/docs/plugins/) you'd like included in your download, as well as other things.
+you choose what [plugins](tree/master/docs/plugins/) you'd like included in your download, as well as other things.
 
 ### Bleeding edge
 You can grab the latest and greatest qTip<sup>2</sup> nightly from the [dist](http://github.com/Craga89/qTip2/tree/master/dist/) directory and get started quickly. If you want more options
 over what plugins are included in your build, take a look below.
 
 ### Custom builds
-You can also build your own qTip<sup>2</sup> script that includes select [plugins](docs/plugins/) and [styles](docs/style.md) to reduce the overall file size and remove features
-you don't plan on using. Find more information about this [here](docs/build.md)
+You can also build your own qTip<sup>2</sup> script that includes select [plugins](tree/master/docs/plugins/) and [styles](tree/master/docs/style.md) to reduce the overall file size and remove features
+you don't plan on using. Find more information about this [here](tree/master/docs/build.md)
 
 
 ## Installation
@@ -61,7 +61,7 @@ tag as this ensures the DOM is loaded before manipulation of it occurs. This is 
 
 ## Questions or problems?
 If you have any questions, please feel free to post on the [support forums](http://craigsworks.com/projects/forums), but before you do make sure to
-check out the (thorough documentation)[docs/] both here in the repo and on the [official site](http://craigsworks.com/projects/qtip2).
+check out the (thorough documentation)[tree/master/docs/] both here in the repo and on the [official site](http://craigsworks.com/projects/qtip2).
 
 ## Special thanks
 Big shout-out to the jQuery team for providing the directory structure and base files for the git repo, as well as the base-files for the new NodeJS build system!
