@@ -65,6 +65,7 @@
 		.ui-tooltip-icon .ui-icon{
 			display: block;
 			text-indent: -1000em;
+			text-decoration: none;
 		}
 
 		.ui-tooltip-icon, .ui-tooltip-icon .ui-icon{
