@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Wed Jun 6 03:11:24 2012 +0100
+* Date: Mon Jun 18 08:06:12 2012 -0700
 */
 
 /* Core qTip styles */
@@ -85,6 +85,7 @@
 			-moz-border-radius: 3px;
 			-webkit-border-radius: 3px;
 			border-radius: 3px;
+			text-decoration: none;
 		}
 
 			.ui-tooltip-icon .ui-icon{
