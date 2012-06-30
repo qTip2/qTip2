@@ -76,9 +76,8 @@ function Tip(qTip, command)
 	};
 
 	function swapDimensions() {
-		var temp = size.width;
-		size.width = size.height;
-		size.height = temp;
+		size.width = opts.height;
+		size.height = opts.width;
 	}
 
 	function resetDimensions() {
