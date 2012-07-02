@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Sat Jun 30 15:10:38 2012 +0100
+* Date: Mon Jul 2 23:15:33 2012 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -33,7 +33,20 @@
 		FALSE = false,
 		NULL = null,
 		undefined,
-		
+
+		// Side names and other stuff
+		X = 'x', Y = 'y',
+		WIDTH = 'width',
+		HEIGHT = 'height',
+		TOP = 'top',
+		LEFT = 'left',
+		BOTTOM = 'bottom',
+		RIGHT = 'right',
+		CENTER = 'center',
+		FLIP = 'flip',
+		FLIPINVERT = 'flipinvert',
+		SHIFT = 'shift',
+
 		// Shortcut vars
 		QTIP, PLUGINS, MOUSE,
 		usedIDs = {},
@@ -185,7 +198,8 @@ function QTip(target, options, id, attr)
 		target: $(),
 		disabled: FALSE,
 		attr: attr,
-		onTarget: FALSE
+		onTarget: FALSE,
+		lastClass: ''
 	};
 
 	/*
@@ -1173,6 +1187,7 @@ function QTip(target, options, id, attr)
 				flipoffset = FALSE,
 				tip = self.plugins.tip,
 				visible = tooltip[0].offsetWidth > 0,
+				newMy, win,
 				readjust = {
 					// Axis detection and readjustment indicator
 					horizontal: method[0],
@@ -1180,110 +1195,82 @@ function QTip(target, options, id, attr)
 					enabled: viewport.jquery && target[0] !== window && target[0] !== docBody && adjust.method !== 'none',
 
 					// Reposition methods
-					left: function(posLeft) {
-						var isShift = readjust.horizontal === 'shift',
-							adjustx = adjust.x * (readjust.horizontal.substr(4,6) === 'invert' ? 2 : 0),
-							viewportScroll = -container.offset.left + viewport.offset.left + viewport.scrollLeft,
-							myWidth = my.x === 'left' ? elemWidth : my.x === 'right' ? -elemWidth : -elemWidth / 2,
-							atWidth = at.x === 'left' ? targetWidth : at.x === 'right' ? -targetWidth : -targetWidth / 2,
-							tipWidth = tip && tip.size ? tip.size.width || 0 : 0,
-							tipAdjust = tip && tip.corner && tip.corner.precedance === 'x' && !isShift ? tipWidth : 0,
-							overflowLeft = viewportScroll - posLeft + tipAdjust,
-							overflowRight = posLeft + elemWidth - viewport.width - viewportScroll + tipAdjust,
-							offset = myWidth - (my.precedance === 'x' || my.x === my.y ? atWidth : 0) - (at.x === 'center' ? targetWidth / 2 : 0),
-							isCenter = my.x === 'center';
+					generic: function(initialPos, position, side, otherSide, type, side1, side2, lengthName, targetLength, elemLength) {
+						var mySide = my[side],
+							atSide = at[side],
+							isShift = type === SHIFT,
+							adjustx = adjust[side] * (type === FLIPINVERT ? 2 : 0),
+							viewportScroll = -container.offset[side1] + viewport.offset[side1] + viewport['scroll'+side1.substr(0,1)+side1.substr(1)],
+							myLength = mySide === side1 ? elemLength : mySide === side2 ? -elemLength : -elemLength / 2,
+							atLength = atSide === side1 ? targetLength : atSide === side2 ? -targetLength : -targetLength / 2,
+							tipLength = tip && tip.size ? tip.size[lengthName] || 0 : 0,
+							tipAdjust = tip && tip.corner && tip.corner.precedance === side && !isShift ? tipLength : 0,
+							overflow1 = viewportScroll - initialPos + tipAdjust,
+							overflow2 = initialPos + elemLength - viewport[lengthName] - viewportScroll + tipAdjust,
+							offset = myLength - (my.precedance === side || mySide === my[otherSide] ? atLength : 0) - (atSide === CENTER ? targetLength / 2 : 0);
 
-						// Optional 'shift' style repositioning
+						// Optional shift style repositioning
 						if(isShift) {
-							tipAdjust = tip && tip.corner && tip.corner.precedance === 'y' ? tipWidth : 0;
-							offset = (my.x === 'left' ? 1 : -1) * myWidth - tipAdjust;
+							tipAdjust = tip && tip.corner && tip.corner.precedance === otherSide ? tipLength : 0;
+							offset = (mySide === side1 ? 1 : -1) * myLength - tipAdjust;
 
 							// Adjust position but keep it within viewport dimensions
-							position.left += overflowLeft > 0 ? overflowLeft : overflowRight > 0 ? -overflowRight : 0;
-							position.left = Math.max(
-								-container.offset.left + viewport.offset.left + (tipAdjust && tip.corner.x === 'center' ? tip.offset : 0),
-								posLeft - offset,
+							position[side1] += overflow1 > 0 ? overflow1 : overflow2 > 0 ? -overflow2 : 0;
+							position[side1] = Math.max(
+								-container.offset[side1] + viewport.offset[side1] + (tipAdjust && tip.corner[side] === CENTER ? tip.offset : 0),
+								initialPos - offset,
 								Math.min(
-									Math.max(-container.offset.left + viewport.offset.left + viewport.width, posLeft + offset),
-									position.left
+									Math.max(-container.offset[side1] + viewport.offset[side1] + viewport[lengthName], initialPos + offset),
+									position[side1]
 								)
 							);
 						}
 
-						// Default 'flip' repositioning
+						// Default flip repositioning
 						else {
-							if(overflowLeft > 0 && (my.x !== 'left' || overflowRight > 0)) {
-								position.left -= offset + adjustx;
-							}
-							else if(overflowRight > 0 && (my.x !== 'right' || overflowLeft > 0)  ) {
-								position.left -= (isCenter ? -offset : offset) + adjustx;
+							// Check for overflow on the left/top
+							if(overflow1 > 0 && (mySide !== side1 || overflow2 > 0)) {
+								position[side1] -= offset + adjustx;
+								newMy['invert'+side]();
 							}
 
-							// Make sure we haven't made things worse with the adjustment and return the adjusted difference
-							if(position.left < viewportScroll && -position.left > overflowRight) { position.left = posLeft; }
+							// Check for overflow on the bottom/right
+							else if(overflow2 > 0 && (mySide !== side2 || overflow1 > 0)  ) {
+								position[side1] -= (mySide === CENTER ? -offset : offset) + adjustx;
+								newMy['invert'+side](side1);
+							}
+
+							// Make sure we haven't made things worse with the adjustment and reset if so
+							if(position[side1] < viewportScroll && -position[side1] > overflow2) {
+								position[side1] = initialPos; newMy = undefined;
+							}
 						}
 
-						return position.left - posLeft;
+						return position[side1] - initialPos;
+					},
+					left: function(posLeft) {
+						return readjust.generic(
+							posLeft, position, X, Y, readjust.horizontal, LEFT, RIGHT, WIDTH, targetWidth, elemWidth
+						);
 					},
 					top: function(posTop) {
-						var isShift = readjust.vertical === 'shift',
-							adjusty = adjust.y * (readjust.vertical.substr(4,6) === 'invert' ? 2 : 0),
-							viewportScroll = -container.offset.top + viewport.offset.top + viewport.scrollTop,
-							myHeight = my.y === 'top' ? elemHeight : my.y === 'bottom' ? -elemHeight : -elemHeight / 2,
-							atHeight = at.y === 'top' ? targetHeight : at.y === 'bottom' ? -targetHeight : -targetHeight / 2,
-							tipHeight = tip && tip.size ? tip.size.height || 0 : 0,
-							tipAdjust = tip && tip.corner && tip.corner.precedance === 'y' && !isShift ? tipHeight : 0,
-							overflowTop = viewportScroll - posTop + tipAdjust,
-							overflowBottom = posTop + elemHeight - viewport.height - viewportScroll + tipAdjust,
-							offset = myHeight - (my.precedance === 'y' || my.x === my.y ? atHeight : 0) - (at.y === 'center' ? targetHeight / 2 : 0),
-							isCenter = my.y === 'center';
-
-						// Optional 'shift' style repositioning
-						if(isShift) {
-							tipAdjust = tip && tip.corner && tip.corner.precedance === 'x' ? tipHeight : 0;
-							offset = (my.y === 'top' ? 1 : -1) * myHeight - tipAdjust;
-
-							// Adjust position but keep it within viewport dimensions
-							position.top += overflowTop > 0 ? overflowTop : overflowBottom > 0 ? -overflowBottom : 0;
-							position.top = Math.max(
-								-container.offset.top + viewport.offset.top + (tipAdjust && tip.corner.x === 'center' ? tip.offset : 0),
-								posTop - offset,
-								Math.min(
-									Math.max(-container.offset.top + viewport.offset.top + viewport.height, posTop + offset),
-									position.top
-								)
-							);
-						}
-
-						// Default 'flip' repositioning
-						else {
-							if(overflowTop > 0 && (my.y !== 'top' || overflowBottom > 0)) {
-								position.top -= offset + adjusty;
-							}
-							else if(overflowBottom > 0 && (my.y !== 'bottom' || overflowTop > 0)  ) {
-								position.top -= (isCenter ? -offset : offset) + adjusty;
-							}
-
-							// Make sure we haven't made things worse with the adjustment and return the adjusted difference
-							if(position.top < 0 && -position.top > overflowBottom) { position.top = posTop; }
-						}
-
-						return position.top - posTop;
+						return readjust.generic(
+							posTop, position, Y, X, readjust.vertical, TOP, BOTTOM, HEIGHT, targetHeight, elemHeight
+						);
 					}
-				},
-				win;
+				};
 
 			// Check if absolute position was passed
 			if($.isArray(target) && target.length === 2) {
 				// Force left top and set position
-				at = { x: 'left', y: 'top' };
+				at = { x: LEFT, y: TOP };
 				position = { left: target[0], top: target[1] };
 			}
 
 			// Check if mouse was the target
 			else if(target === 'mouse' && ((event && event.pageX) || cache.event.pageX)) {
 				// Force left top to allow flipping
-				at = { x: 'left', y: 'top' };
+				at = { x: LEFT, y: TOP };
 
 				// Use cached event if one isn't available for positioning
 				event = (event && (event.type === 'resize' || event.type === 'scroll') ? cache.event :
@@ -1362,13 +1349,13 @@ function QTip(target, options, id, attr)
 				}
 
 				// Adjust position relative to target
-				position.left += at.x === 'right' ? targetWidth : at.x === 'center' ? targetWidth / 2 : 0;
-				position.top += at.y === 'bottom' ? targetHeight : at.y === 'center' ? targetHeight / 2 : 0;
+				position.left += at.x === RIGHT ? targetWidth : at.x === CENTER ? targetWidth / 2 : 0;
+				position.top += at.y === BOTTOM ? targetHeight : at.y === CENTER ? targetHeight / 2 : 0;
 			}
 
 			// Adjust position relative to tooltip
-			position.left += adjust.x + (my.x === 'right' ? -elemWidth : my.x === 'center' ? -elemWidth / 2 : 0);
-			position.top += adjust.y + (my.y === 'bottom' ? -elemHeight : my.y === 'center' ? -elemHeight / 2 : 0);
+			position.left += adjust.x + (my.x === RIGHT ? -elemWidth : my.x === CENTER ? -elemWidth / 2 : 0);
+			position.top += adjust.y + (my.y === BOTTOM ? -elemHeight : my.y === CENTER ? -elemHeight / 2 : 0);
 
 			// Calculate collision offset values if viewport positioning is enabled
 			if(readjust.enabled) {
@@ -1388,15 +1375,18 @@ function QTip(target, options, id, attr)
 					offset: container.offset() || { left: 0, top: 0 }
 				};
 
+				// Set a new 'my' var to enable viewport-based corner classes
+				newMy = my.clone();
+
 				// Adjust position based onviewport and adjustment options
 				position.adjusted = {
 					left: readjust.horizontal !== 'none' ? readjust.left(position.left) : 0,
 					top: readjust.vertical !== 'none' ? readjust.top(position.top) : 0
 				};
 
-				// Set tooltip position class
-				if(position.adjusted.left + position.adjusted.top) {
-					tooltip.attr('class', tooltip[0].className.replace(/ui-tooltip-pos-\w+/i, uitooltip + '-pos-' + my.abbrev()));
+				// Set tooltip position class if it's changed
+				if(cache.lastClass !== (newMy = uitooltip + '-pos-' + newMy.abbrev())) {
+					tooltip.removeClass(cache.lastClass).addClass( (cache.lastClass = newMy) );
 				}
 
 				// Apply flip offsets supplied by positioning plugins
@@ -1448,15 +1438,15 @@ function QTip(target, options, id, attr)
 			isDrawing = 1;
 
 			// If tooltip has a set height, just set it... like a boss!
-			if(options.style.height) { tooltip.css('height', options.style.height); }
+			if(options.style.height) { tooltip.css(HEIGHT, options.style.height); }
 
 			// If tooltip has a set width, just set it... like a boss!
-			if(options.style.width) { tooltip.css('width', options.style.width); }
+			if(options.style.width) { tooltip.css(WIDTH, options.style.width); }
 
 			// Otherwise simualte max/min width...
 			else {
 				// Reset width and add fluid class
-				tooltip.css('width', '').addClass(fluidClass);
+				tooltip.css(WIDTH, '').addClass(fluidClass);
 
 				// Grab our tooltip width (add 1 so we don't get wrapping problems.. huzzah!)
 				width = tooltip.width() + 1;
@@ -1474,7 +1464,7 @@ function QTip(target, options, id, attr)
 				width = max + min ? Math.min(Math.max(width, min), max) : width;
 
 				// Set the newly calculated width and remvoe fluid class
-				tooltip.css('width', Math.round(width)).removeClass(fluidClass);
+				tooltip.css(WIDTH, Math.round(width)).removeClass(fluidClass);
 			}
 
 			// Set drawing flag
@@ -1784,20 +1774,27 @@ QTIP.bind = function(opts, event)
 PLUGINS = QTIP.plugins = {
 	// Corner object parser
 	Corner: function(corner) {
-		corner = ('' + corner).replace(/([A-Z])/, ' $1').replace(/middle/gi, 'center').toLowerCase();
+		corner = ('' + corner).replace(/([A-Z])/, ' $1').replace(/middle/gi, CENTER).toLowerCase();
 		this.x = (corner.match(/left|right/i) || corner.match(/center/) || ['inherit'])[0].toLowerCase();
 		this.y = (corner.match(/top|bottom|center/i) || ['inherit'])[0].toLowerCase();
 
-		var f = corner.charAt(0); this.precedance = (f === 't' || f === 'b' ? 'y' : 'x');
+		var f = corner.charAt(0); this.precedance = (f === 't' || f === 'b' ? Y : X);
 
-		this.string = function() { return this.precedance === 'y' ? this.y+this.x : this.x+this.y; };
+		this.string = function() { return this.precedance === Y ? this.y+this.x : this.x+this.y; };
 		this.abbrev = function() {
 			var x = this.x.substr(0,1), y = this.y.substr(0,1);
 			return x === y ? x : (x === 'c' || (x !== 'c' && y !== 'c')) ? y + x : x + y;
 		};
 
+		this.invertx = function(center) { this.x = this.x === LEFT ? RIGHT : this.x === RIGHT ? LEFT : center || this.x; };
+		this.inverty = function(center) { this.y = this.y === TOP ? BOTTOM : this.y === BOTTOM ? TOP : center || this.y; };
+
 		this.clone = function() {
-			return { x: this.x, y: this.y, precedance: this.precedance, string: this.string, abbrev: this.abbrev, clone: this.clone };
+			return {
+				x: this.x, y: this.y, precedance: this.precedance,
+				string: this.string, abbrev: this.abbrev, clone: this.clone,
+				invertx: this.invertx, inverty: this.inverty
+			};
 		};
 	},
 

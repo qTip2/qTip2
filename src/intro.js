@@ -19,7 +19,20 @@
 		FALSE = false,
 		NULL = null,
 		undefined,
-		
+
+		// Side names and other stuff
+		X = 'x', Y = 'y',
+		WIDTH = 'width',
+		HEIGHT = 'height',
+		TOP = 'top',
+		LEFT = 'left',
+		BOTTOM = 'bottom',
+		RIGHT = 'right',
+		CENTER = 'center',
+		FLIP = 'flip',
+		FLIPINVERT = 'flipinvert',
+		SHIFT = 'shift',
+
 		// Shortcut vars
 		QTIP, PLUGINS, MOUSE,
 		usedIDs = {},

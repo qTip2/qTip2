@@ -99,19 +99,19 @@ function Tip(qTip, command)
 		// If our tip position isn't fixed e.g. doesn't adjust with viewport...
 		if(self.corner.fixed !== TRUE) {
 			// Horizontal - Shift or flip method
-			if(horizontal === 'shift' && newCorner.precedance === 'x' && adjust.left && newCorner.y !== 'center') {
-				newCorner.precedance = newCorner.precedance === 'x' ? 'y' : 'x';
+			if(horizontal === SHIFT && newCorner.precedance === X && adjust.left && newCorner.y !== CENTER) {
+				newCorner.precedance = newCorner.precedance === X ? Y : X;
 			}
-			else if(horizontal !== 'shift' && adjust.left){
-				newCorner.x = newCorner.x === 'center' ? (adjust.left > 0 ? 'left' : 'right') : (newCorner.x === 'left' ? 'right' : 'left');
+			else if(horizontal !== SHIFT && adjust.left){
+				newCorner.x = newCorner.x === CENTER ? (adjust.left > 0 ? LEFT : RIGHT) : (newCorner.x === LEFT ? RIGHT : LEFT);
 			}
 
 			// Vertical - Shift or flip method
-			if(vertical === 'shift' && newCorner.precedance === 'y' && adjust.top && newCorner.x !== 'center') {
-				newCorner.precedance = newCorner.precedance === 'y' ? 'x' : 'y';
+			if(vertical === SHIFT && newCorner.precedance === Y && adjust.top && newCorner.x !== CENTER) {
+				newCorner.precedance = newCorner.precedance === Y ? X : Y;
 			}
-			else if(vertical !== 'shift' && adjust.top) {
-				newCorner.y = newCorner.y === 'center' ? (adjust.top > 0 ? 'top' : 'bottom') : (newCorner.y === 'top' ? 'bottom' : 'top');
+			else if(vertical !== SHIFT && adjust.top) {
+				newCorner.y = newCorner.y === CENTER ? (adjust.top > 0 ? TOP : BOTTOM) : (newCorner.y === TOP ? BOTTOM : TOP);
 			}
 
 			// Update and redraw the tip if needed (check cached details of last drawn tip)
@@ -131,8 +131,8 @@ function Tip(qTip, command)
 		offset.user = Math.max(0, opts.offset);
 
 		// Viewport "shift" specific adjustments
-		if(shift.left = (horizontal === 'shift' && !!adjust.left)) {
-			if(newCorner.x === 'center') {
+		if(shift.left = (horizontal === SHIFT && !!adjust.left)) {
+			if(newCorner.x === CENTER) {
 				css['margin-left'] = shift.x = offset['margin-left'] - adjust.left;
 			}
 			else {
@@ -144,11 +144,11 @@ function Tip(qTip, command)
 					shift.left = FALSE;
 				}
 				
-				css[ offset.right !== undefined ? 'right' : 'left' ] = shift.x;
+				css[ offset.right !== undefined ? RIGHT : LEFT ] = shift.x;
 			}
 		}
-		if(shift.top = (vertical === 'shift' && !!adjust.top)) {
-			if(newCorner.y === 'center') {
+		if(shift.top = (vertical === SHIFT && !!adjust.top)) {
+			if(newCorner.y === CENTER) {
 				css['margin-top'] = shift.y = offset['margin-top'] - adjust.top;
 			}
 			else {
@@ -160,7 +160,7 @@ function Tip(qTip, command)
 					shift.top = FALSE;
 				}
 
-				css[ offset.bottom !== undefined ? 'bottom' : 'top' ] = shift.y;
+				css[ offset.bottom !== undefined ? BOTTOM : TOP ] = shift.y;
 			}
 		}
 
@@ -170,12 +170,12 @@ function Tip(qTip, command)
 		 * outer border, hide it!
 		 */
 		elems.tip.css(css).toggle(
-			!((shift.x && shift.y) || (newCorner.x === 'center' && shift.y) || (newCorner.y === 'center' && shift.x))
+			!((shift.x && shift.y) || (newCorner.x === CENTER && shift.y) || (newCorner.y === CENTER && shift.x))
 		);
 
 		// Adjust position to accomodate tip dimensions
-		pos.left -= offset.left.charAt ? offset.user : horizontal !== 'shift' || shift.top || !shift.left && !shift.top ? offset.left : 0;
-		pos.top -= offset.top.charAt ? offset.user : vertical !== 'shift' || shift.left || !shift.left && !shift.top ? offset.top : 0;
+		pos.left -= offset.left.charAt ? offset.user : horizontal !== SHIFT || shift.top || !shift.left && !shift.top ? offset.left : 0;
+		pos.top -= offset.top.charAt ? offset.user : vertical !== SHIFT || shift.left || !shift.left && !shift.top ? offset.top : 0;
 
 		// Cache details
 		cache.left = adjust.left; cache.top = adjust.top;
@@ -187,7 +187,7 @@ function Tip(qTip, command)
 		side = !side ? corner[corner.precedance] : side;
 		
 		var isFluid = tooltip.hasClass(fluidClass),
-			isTitleTop = elems.titlebar && corner.y === 'top',
+			isTitleTop = elems.titlebar && corner.y === TOP,
 			elem = isTitleTop ? elems.titlebar : elems.tooltip,
 			css = 'border-' + side + '-width',
 			val;
@@ -202,7 +202,7 @@ function Tip(qTip, command)
 	}
 
 	function borderRadius(corner) {
-		var isTitleTop = elems.titlebar && corner.y === 'top',
+		var isTitleTop = elems.titlebar && corner.y === TOP,
 			elem = isTitleTop ? elems.titlebar : elems.content,
 			moz = $.browser.mozilla,
 			prefix = moz ? '-moz-' : $.browser.webkit ? '-webkit-' : '',
@@ -213,10 +213,10 @@ function Tip(qTip, command)
 	}
 
 	function calculateSize(corner) {
-		var y = corner.precedance === 'y',
-			width = size [ y ? 'width' : 'height' ],
-			height = size [ y ? 'height' : 'width' ],
-			isCenter = corner.string().indexOf('center') > -1,
+		var y = corner.precedance === Y,
+			width = size [ y ? WIDTH : HEIGHT ],
+			height = size [ y ? HEIGHT : WIDTH ],
+			isCenter = corner.string().indexOf(CENTER) > -1,
 			base = width * (isCenter ? 0.5 : 1),
 			pow = Math.pow,
 			round = Math.round,
@@ -296,7 +296,7 @@ function Tip(qTip, command)
 				transparent = 'transparent',
 				important = ' !important',
 
-				useTitle = elems.titlebar && (corner.y === 'top' || (corner.y === 'center' && tip.position().top + (size.height / 2) + opts.offset < elems.titlebar.outerHeight(1))),
+				useTitle = elems.titlebar && (corner.y === TOP || (corner.y === CENTER && tip.position().top + (size.height / 2) + opts.offset < elems.titlebar.outerHeight(1))),
 				colorElem = useTitle ? elems.titlebar : elems.tooltip;
 
 			// Apply the fluid class so we can see our CSS values properly
@@ -385,7 +385,7 @@ function Tip(qTip, command)
 			precedance = mimic.precedance;
 
 			// Ensure the tip width.height are relative to the tip position
-			if(corner.precedance === 'x') { swapDimensions(); }
+			if(corner.precedance === X) { swapDimensions(); }
 			else { resetDimensions(); }
 
 			// Set the tip dimensions
@@ -420,16 +420,16 @@ function Tip(qTip, command)
 			tip.css(newSize);
 
 			// Calculate tip translation
-			if(corner.precedance === 'y') {
+			if(corner.precedance === Y) {
 				translate = [
-					round(mimic.x === 'left' ? border : mimic.x === 'right' ? newSize.width - width - border : (newSize.width - width) / 2),
-					round(mimic.y === 'top' ?  newSize.height - height : 0)
+					round(mimic.x === LEFT ? border : mimic.x === RIGHT ? newSize.width - width - border : (newSize.width - width) / 2),
+					round(mimic.y === TOP ?  newSize.height - height : 0)
 				];
 			}
 			else {
 				translate = [
-					round(mimic.x === 'left' ? newSize.width - width : 0),
-					round(mimic.y === 'top' ? border : mimic.y === 'bottom' ? newSize.height - height - border : (newSize.height - height) / 2)
+					round(mimic.x === LEFT ? newSize.width - width : 0),
+					round(mimic.y === TOP ? border : mimic.y === BOTTOM ? newSize.height - height - border : (newSize.height - height) / 2)
 				];
 			}
 
@@ -486,9 +486,9 @@ function Tip(qTip, command)
 
 				// Set initial CSS
 				inner.css({
-					antialias: ''+(mimic.string().indexOf('center') > -1),
-					left: translate[0] - (translate[2] * Number(precedance === 'x')),
-					top: translate[1] - (translate[2] * Number(precedance === 'y')),
+					antialias: ''+(mimic.string().indexOf(CENTER) > -1),
+					left: translate[0] - (translate[2] * Number(precedance === X)),
+					top: translate[1] - (translate[2] * Number(precedance === Y)),
 					width: width + border,
 					height: height + border
 				})
@@ -539,16 +539,16 @@ function Tip(qTip, command)
 
 			// Setup corners and offset array
 			corners = [ corner.x, corner.y ];
-			if(precedance === 'x') { corners.reverse(); }
+			if(precedance === X) { corners.reverse(); }
 
 			// Calculate tip position
 			$.each(corners, function(i, side) {
 				var b, br;
 
-				if(side === 'center') {
-					b = precedance === 'y' ? 'left' : 'top';
+				if(side === CENTER) {
+					b = precedance === Y ? LEFT : TOP;
 					position[ b ] = '50%';
-					position['margin-' + b] = -Math.round(dimensions[ precedance === 'y' ? 'width' : 'height' ] / 2) + userOffset;
+					position['margin-' + b] = -Math.round(dimensions[ precedance === Y ? WIDTH : HEIGHT ] / 2) + userOffset;
 				}
 				else {
 					b = borderWidth(corner, side);
@@ -559,7 +559,7 @@ function Tip(qTip, command)
 			});
 
 			// Adjust for tip dimensions
-			position[ corner[precedance] ] -= dimensions[ precedance === 'x' ? 'width' : 'height' ];
+			position[ corner[precedance] ] -= dimensions[ precedance === X ? WIDTH : HEIGHT ];
 
 			// Set and return new position
 			tip.css({ top: '', bottom: '', left: '', right: '', margin: '' }).css(position);
