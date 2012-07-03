@@ -99,7 +99,7 @@ $('.selector').qtip({
 ```
 ### Notes
 * Setting this to false causes the tooltip is positioned in relation to the element .qtip() was called upon.
-* When using absolute positioning ([x, y]) the [position.viewport](#viewport) adjustment still works as expected.
+* When using absolute positioning ([x, y]) the [Viewport plugin](#viewport) adjustment still works as expected.
 
 ### See also
 * [position.viewport](#viewport)
@@ -200,29 +200,9 @@ $('.selector').qtip({
 <a name="viewport"></a>
 ## position.viewport
 
-### Values
-jQuery([ ]), true, false *(Default: false)*
-
 ### Overview
-Determines the viewport used to keep the tooltip visible i.e. the element whose boundaries the tooltip must stay visible within at all times if possible. If **true** it's value will be inherited from the [position.container](#container) property.
+Allows the tooltip to adjust it's position to keep within a set viewport element. See the [plugin documentation](./plugins/viewport.md) for more information.
 
-### Examples
-Make a tooltip that will attempt to stay within the window viewport, adjusting the positioning corners as needed:
-
-```js
-$('.selector').qtip({
-	content: {
-		text: 'If I go off-screen, my positioning corners will adjust. Resize your browser window to see!'
-	},
-	position: {
-		viewport: $(window)
-	}
-});
-```
-
-### Notes
-* Your [position.my/at](#basics) options will be temporarily adjusted when using this functionality.
-* If set to **true** this value will be inherited from the [position.container](#container) property.
 
 <a name="effect"></a>
 ## position.effect
@@ -237,7 +217,7 @@ new position as one of its parameters, and whose scope is the tooltip element.
 The default animation callback is:
 
 ```js
-function(api, pos, viewport) {
+function(api, pos) {
 	$(this).animate(pos, { duration: 200, queue: FALSE });
 }
 ```
@@ -345,44 +325,6 @@ $('.selector').qtip({
 * [position.adjust.x](#adjustx)
 
 
-<a name="adjustmethod"></a>
-## position.adjust.method
-
-### Values
-"{flip|flipinvert|shift|none} {flip|flipinvert|shift|none}" *(Default: "flip")*
-
-### Overview
-This option determines the kind of [viewport positioning](#viewport) that takes place.
-
-The default "flip" type basically flips the tooltip when it goes off-screen i.e. from top-right, to bottom-right etc. The "flipinvert" type works the same way, except when the flip happens it inverts the [adjust.x](adjust.x) and [adjust.y](adjust.y) properties. The "shift" type attempts to keep the tooltip on screen by adjusting only by the amount needed to keep it within the viewport boundaries.
-
-You can specify the behaviour of each axis (i.e. horizontal and vertical) separately, for example a value of "flip none" will cause the tooltip to flip across the horizontal axis when it extends out the viewport, but do nothing when it extends out the viewport vertically. There are a number of combinations.
-
-### Examples
-Instead of the default flip repositioning, let's use the shift repositioning, but only shift it horizontally
-
-```js
-$('.selector').qtip({
-	content: {
-		text: 'My position is adjusted just enough to keep me within the viewport, but only along the x axis (horizontally)'
-	},
-	position: {
-		adjust: {
-			method: 'shift none'
-		}
-	}
-});
-```
-
-### Notes
-* Supplying a single string such as "flip", "flipinvert" or "shift" will cause qTip<sup>2</sup> to use that method for **both** axis'.
-* This system is very similar to that used in the [jQuery UI Position plugin](http://jqueryui.com/demos/position/).
-* Both flip and shift methods also adjusts the [tip](./plugins/tips.md) position, if enabled.
-
-### See also
-* [position.viewport](#viewport)
-
-
 <a name="adjustmouse"></a>
 ## position.adjust.mouse
 
@@ -476,3 +418,10 @@ $('.selector').qtip({
 
 ### See also
 * [position.target](#target)
+
+
+<a name="adjustmethod"></a>
+## position.adjust.method
+
+### Overview
+Determines the type of [viewport positioning](./plugins/viewport.md) used. See the [plugin documentation](./plugins/viewport.md) for more information.

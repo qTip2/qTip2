@@ -1,15 +1,20 @@
-PLUGINS.imagemap = function(area, corner, flip)
+PLUGINS.imagemap = function(api, area, corner, adjustMethod)
 {
 	if(!area.jquery) { area = $(area); }
 
-	var shape = (area[0].shape || area.attr('shape')).toLowerCase(),
-		baseCoords = (area[0].coords || area.attr('coords')).split(','),
+	var cache = (api.cache.areas = {}),
+		shape = (area[0].shape || area.attr('shape')).toLowerCase(),
+		coordsString = area[0].coords || area.attr('coords'),
+		baseCoords = coordsString.split(','),
 		coords = [],
 		image = $('img[usemap="#'+area.parent('map').attr('name')+'"]'),
 		imageOffset = image.offset(),
 		result = {
 			width: 0, height: 0,
-			offset: { top: 1e10, right: 0, bottom: 0, left: 1e10 }
+			position: {
+				top: 1e10, right: 0,
+				bottom: 0, left: 1e10
+			}
 		},
 		i = 0, next = 0, dimensions;
 
@@ -30,27 +35,27 @@ PLUGINS.imagemap = function(area, corner, flip)
 			newWidth = Math.floor(newWidth / 2);
 			newHeight = Math.floor(newHeight / 2);
 
-			if(corner.x === 'left'){ compareX = newWidth; }
-			else if(corner.x === 'right'){ compareX = result.width - newWidth; }
+			if(corner.x === LEFT){ compareX = newWidth; }
+			else if(corner.x === RIGHT){ compareX = result.width - newWidth; }
 			else{ compareX += Math.floor(newWidth / 2); }
 
-			if(corner.y === 'top'){ compareY = newHeight; }
-			else if(corner.y === 'bottom'){ compareY = result.height - newHeight; }
+			if(corner.y === TOP){ compareY = newHeight; }
+			else if(corner.y === BOTTOM){ compareY = result.height - newHeight; }
 			else{ compareY += Math.floor(newHeight / 2); }
 
 			i = coords.length; while(i--)
 			{
 				if(coords.length < 2){ break; }
 
-				realX = coords[i][0] - result.offset.left;
-				realY = coords[i][1] - result.offset.top;
+				realX = coords[i][0] - result.position.left;
+				realY = coords[i][1] - result.position.top;
 
-				if((corner.x === 'left' && realX >= compareX) ||
-				(corner.x === 'right' && realX <= compareX) ||
-				(corner.x === 'center' && (realX < compareX || realX > (result.width - compareX))) ||
-				(corner.y === 'top' && realY >= compareY) ||
-				(corner.y === 'bottom' && realY <= compareY) ||
-				(corner.y === 'center' && (realY < compareY || realY > (result.height - compareY)))) {
+				if((corner.x === LEFT && realX >= compareX) ||
+				(corner.x === RIGHT && realX <= compareX) ||
+				(corner.x === CENTER && (realX < compareX || realX > (result.width - compareX))) ||
+				(corner.y === TOP && realY >= compareY) ||
+				(corner.y === BOTTOM && realY <= compareY) ||
+				(corner.y === CENTER && (realY < compareY || realY > (result.height - compareY)))) {
 					coords.splice(i, 1);
 				}
 			}
@@ -69,16 +74,18 @@ PLUGINS.imagemap = function(area, corner, flip)
 		{
 			next = [ parseInt(baseCoords[--i], 10), parseInt(baseCoords[i+1], 10) ];
 
-			if(next[0] > result.offset.right){ result.offset.right = next[0]; }
-			if(next[0] < result.offset.left){ result.offset.left = next[0]; }
-			if(next[1] > result.offset.bottom){ result.offset.bottom = next[1]; }
-			if(next[1] < result.offset.top){ result.offset.top = next[1]; }
+			if(next[0] > result.position.right){ result.position.right = next[0]; }
+			if(next[0] < result.position.left){ result.position.left = next[0]; }
+			if(next[1] > result.position.bottom){ result.position.bottom = next[1]; }
+			if(next[1] < result.position.top){ result.position.top = next[1]; }
 
 			coords.push(next);
 		}
 	}
 	else {
-		coords = $.map(baseCoords, function(coord){ return parseInt(coord, 10); });
+		i = -1; while(i++ < baseCoords) {
+			coords.push( parseInt(baseCoords[i], 10) );
+		}
 	}
 
 	// Calculate details
@@ -88,7 +95,7 @@ PLUGINS.imagemap = function(area, corner, flip)
 			result = {
 				width: Math.abs(coords[2] - coords[0]),
 				height: Math.abs(coords[3] - coords[1]),
-				offset: {
+				position: {
 					left: Math.min(coords[0], coords[2]),
 					top: Math.min(coords[1], coords[3])
 				}
@@ -99,35 +106,42 @@ PLUGINS.imagemap = function(area, corner, flip)
 			result = {
 				width: coords[2] + 2,
 				height: coords[2] + 2,
-				offset: { left: coords[0], top: coords[1] }
+				position: { left: coords[0], top: coords[1] }
 			};
 		break;
 
 		case 'poly':
-			$.extend(result, {
-				width: Math.abs(result.offset.right - result.offset.left),
-				height: Math.abs(result.offset.bottom - result.offset.top)
-			});
+			result.width = Math.abs(result.position.right - result.position.left);
+			result.height = Math.abs(result.position.bottom - result.position.top)
 
-			if(corner.string() === 'centercenter') {
-				result.offset = {
-					left: result.offset.left + (result.width / 2),
-					top: result.offset.top + (result.height / 2)
+			if(corner.abbrev() === 'c') {
+				result.position = {
+					left: result.position.left + (result.width / 2),
+					top: result.position.top + (result.height / 2)
 				};
 			}
 			else {
-				result.offset = polyCoordinates(result, coords.slice(), corner);
+				// Calculate if we can't find a cached value
+				if(!cache[corner+coordsString]) {
+					result.position = polyCoordinates(result, coords.slice(), corner);
 
-				// If flip adjustment is enabled, also calculate the closest opposite point
-				if(flip && (flip[0] === 'flip' || flip[1] === 'flip')) {
-					result.flipoffset = polyCoordinates(result, coords.slice(), {
-						x: corner.x === 'left' ? 'right' : corner.x === 'right' ? 'left' : 'center',
-						y: corner.y === 'top' ? 'bottom' : corner.y === 'bottom' ? 'top' : 'center'
-					});
+					// If flip adjustment is enabled, also calculate the closest opposite point
+					if(adjustMethod && (adjustMethod[0] === 'flip' || adjustMethod[1] === 'flip')) {
+						result.offset = polyCoordinates(result, coords.slice(), {
+							x: corner.x === LEFT ? RIGHT : corner.x === RIGHT ? LEFT : CENTER,
+							y: corner.y === TOP ? BOTTOM : corner.y === BOTTOM ? TOP : CENTER
+						});
 
-					result.flipoffset.left -= result.offset.left;
-					result.flipoffset.top -= result.offset.top;
+						result.offset.left -= result.position.left;
+						result.offset.top -= result.position.top;
+					}
+
+					// Store the result
+					cache[corner+coordsString] = result;
 				}
+
+				// Grab the cached result
+				result = cache[corner+coordsString];
 			}
 
 			result.width = result.height = 0;
@@ -135,8 +149,8 @@ PLUGINS.imagemap = function(area, corner, flip)
 	}
 
 	// Add image position to offset coordinates
-	result.offset.left += imageOffset.left;
-	result.offset.top += imageOffset.top;
+	result.position.left += imageOffset.left;
+	result.position.top += imageOffset.top;
 
 	return result;
 };

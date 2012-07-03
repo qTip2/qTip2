@@ -1,10 +1,10 @@
-PLUGINS.svg = function(svg, corner)
+PLUGINS.svg = function(api, svg, corner, adjustMethod)
 {
 	var doc = $(document),
 		elem = svg[0],
 		result = {
 			width: 0, height: 0,
-			offset: { top: 1e10, left: 1e10 }
+			position: { top: 1e10, left: 1e10 }
 		},
 		box, mtx, root, point, tPoint;
 
@@ -27,19 +27,19 @@ PLUGINS.svg = function(svg, corner)
 		point.x = box.x;
 		point.y = box.y;
 		tPoint = point.matrixTransform(mtx);
-		result.offset.left = tPoint.x;
-		result.offset.top = tPoint.y;
+		result.position.left = tPoint.x;
+		result.position.top = tPoint.y;
 
 		// Adjust width and height
 		point.x += box.width;
 		point.y += box.height;
 		tPoint = point.matrixTransform(mtx);
-		result.width = tPoint.x - result.offset.left;
-		result.height = tPoint.y - result.offset.top;
+		result.width = tPoint.x - result.position.left;
+		result.height = tPoint.y - result.position.top;
 
 		// Adjust by scroll offset
-		result.offset.left += doc.scrollLeft();
-		result.offset.top += doc.scrollTop();
+		result.position.left += doc.scrollLeft();
+		result.position.top += doc.scrollTop();
 	}
 
 	return result;

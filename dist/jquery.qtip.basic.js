@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Jul 2 23:15:33 2012 +0100
+* Date: Tue Jul 3 00:41:07 2012 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1184,81 +1184,8 @@ function QTip(target, options, id, attr)
 				viewport = posOptions.viewport,
 				position = { left: 0, top: 0 },
 				container = posOptions.container,
-				flipoffset = FALSE,
-				tip = self.plugins.tip,
 				visible = tooltip[0].offsetWidth > 0,
-				newMy, win,
-				readjust = {
-					// Axis detection and readjustment indicator
-					horizontal: method[0],
-					vertical: (method[1] = method[1] || method[0]),
-					enabled: viewport.jquery && target[0] !== window && target[0] !== docBody && adjust.method !== 'none',
-
-					// Reposition methods
-					generic: function(initialPos, position, side, otherSide, type, side1, side2, lengthName, targetLength, elemLength) {
-						var mySide = my[side],
-							atSide = at[side],
-							isShift = type === SHIFT,
-							adjustx = adjust[side] * (type === FLIPINVERT ? 2 : 0),
-							viewportScroll = -container.offset[side1] + viewport.offset[side1] + viewport['scroll'+side1.substr(0,1)+side1.substr(1)],
-							myLength = mySide === side1 ? elemLength : mySide === side2 ? -elemLength : -elemLength / 2,
-							atLength = atSide === side1 ? targetLength : atSide === side2 ? -targetLength : -targetLength / 2,
-							tipLength = tip && tip.size ? tip.size[lengthName] || 0 : 0,
-							tipAdjust = tip && tip.corner && tip.corner.precedance === side && !isShift ? tipLength : 0,
-							overflow1 = viewportScroll - initialPos + tipAdjust,
-							overflow2 = initialPos + elemLength - viewport[lengthName] - viewportScroll + tipAdjust,
-							offset = myLength - (my.precedance === side || mySide === my[otherSide] ? atLength : 0) - (atSide === CENTER ? targetLength / 2 : 0);
-
-						// Optional shift style repositioning
-						if(isShift) {
-							tipAdjust = tip && tip.corner && tip.corner.precedance === otherSide ? tipLength : 0;
-							offset = (mySide === side1 ? 1 : -1) * myLength - tipAdjust;
-
-							// Adjust position but keep it within viewport dimensions
-							position[side1] += overflow1 > 0 ? overflow1 : overflow2 > 0 ? -overflow2 : 0;
-							position[side1] = Math.max(
-								-container.offset[side1] + viewport.offset[side1] + (tipAdjust && tip.corner[side] === CENTER ? tip.offset : 0),
-								initialPos - offset,
-								Math.min(
-									Math.max(-container.offset[side1] + viewport.offset[side1] + viewport[lengthName], initialPos + offset),
-									position[side1]
-								)
-							);
-						}
-
-						// Default flip repositioning
-						else {
-							// Check for overflow on the left/top
-							if(overflow1 > 0 && (mySide !== side1 || overflow2 > 0)) {
-								position[side1] -= offset + adjustx;
-								newMy['invert'+side]();
-							}
-
-							// Check for overflow on the bottom/right
-							else if(overflow2 > 0 && (mySide !== side2 || overflow1 > 0)  ) {
-								position[side1] -= (mySide === CENTER ? -offset : offset) + adjustx;
-								newMy['invert'+side](side1);
-							}
-
-							// Make sure we haven't made things worse with the adjustment and reset if so
-							if(position[side1] < viewportScroll && -position[side1] > overflow2) {
-								position[side1] = initialPos; newMy = undefined;
-							}
-						}
-
-						return position[side1] - initialPos;
-					},
-					left: function(posLeft) {
-						return readjust.generic(
-							posLeft, position, X, Y, readjust.horizontal, LEFT, RIGHT, WIDTH, targetWidth, elemWidth
-						);
-					},
-					top: function(posTop) {
-						return readjust.generic(
-							posTop, position, Y, X, readjust.vertical, TOP, BOTTOM, HEIGHT, targetHeight, elemHeight
-						);
-					}
-				};
+				adjusted, offset, win;
 
 			// Check if absolute position was passed
 			if($.isArray(target) && target.length === 2) {
@@ -1286,17 +1213,13 @@ function QTip(target, options, id, attr)
 			// Target wasn't mouse or absolute...
 			else {
 				// Check if event targetting is being used
-				if(target === 'event') {
-					if(event && event.target && event.type !== 'scroll' && event.type !== 'resize') {
-						target = cache.target = $(event.target);
-					}
-					else {
-						target = cache.target;
-					}
+				if(target === 'event' && event && event.target && event.type !== 'scroll' && event.type !== 'resize') {
+					cache.target = $(event.target);
 				}
-				else {
-					target = cache.target = $(target.jquery ? target : elements.target);
+				else if(target !== 'event'){
+					cache.target = $(target.jquery ? target : elements.target);
 				}
+				target = cache.target;
 
 				// Parse the target into a jQuery object and make sure there's an element present
 				target = $(target).eq(0);
@@ -1316,11 +1239,11 @@ function QTip(target, options, id, attr)
 				}
 
 				// Use Imagemap/SVG plugins if needed
-				else if(target.is('area') && PLUGINS.imagemap) {
-					position = PLUGINS.imagemap(target, at, readjust.enabled ? method : FALSE);
+				else if(PLUGINS.imagemap && target.is('area')) {
+					adjusted = PLUGINS.imagemap(self, target, at, PLUGINS.viewport ? method : FALSE);
 				}
-				else if(target[0].namespaceURI === 'http://www.w3.org/2000/svg' && PLUGINS.svg) {
-					position = PLUGINS.svg(target, at);
+				else if(PLUGINS.svg && typeof target[0].xmlbase === 'string') {
+					adjusted = PLUGINS.svg(self, target, at, PLUGINS.viewport ? method : FALSE);
 				}
 
 				else {
@@ -1331,11 +1254,11 @@ function QTip(target, options, id, attr)
 				}
 
 				// Parse returned plugin values into proper variables
-				if(position.offset) {
-					targetWidth = position.width;
-					targetHeight = position.height;
-					flipoffset = position.flipoffset;
-					position = position.offset;
+				if(adjusted) {
+					targetWidth = adjusted.width;
+					targetHeight = adjusted.height;
+					offset = adjusted.offset;
+					position = adjusted.position;
 				}
 
 				// Adjust for position.fixed tooltips (and also iOS scroll bug in v3.2-4.0 & v4.3-4.3.2)
@@ -1357,44 +1280,18 @@ function QTip(target, options, id, attr)
 			position.left += adjust.x + (my.x === RIGHT ? -elemWidth : my.x === CENTER ? -elemWidth / 2 : 0);
 			position.top += adjust.y + (my.y === BOTTOM ? -elemHeight : my.y === CENTER ? -elemHeight / 2 : 0);
 
-			// Calculate collision offset values if viewport positioning is enabled
-			if(readjust.enabled) {
-				// Cache our viewport details
-				viewport = {
-					elem: viewport,
-					height: viewport[ (viewport[0] === window ? 'h' : 'outerH') + 'eight' ](),
-					width: viewport[ (viewport[0] === window ? 'w' : 'outerW') + 'idth' ](),
-					scrollLeft: fixed ? 0 : viewport.scrollLeft(),
-					scrollTop: fixed ? 0 : viewport.scrollTop(),
-					offset: viewport.offset() || { left: 0, top: 0 }
-				};
-				container = {
-					elem: container,
-					scrollLeft: container.scrollLeft(),
-					scrollTop: container.scrollTop(),
-					offset: container.offset() || { left: 0, top: 0 }
-				};
+			// Use viewport adjustment plugin if enabled
+			if(PLUGINS.viewport) {
+				position.adjusted = PLUGINS.viewport(
+					self, position, posOptions, targetWidth, targetHeight, elemWidth, elemHeight
+				);
 
-				// Set a new 'my' var to enable viewport-based corner classes
-				newMy = my.clone();
-
-				// Adjust position based onviewport and adjustment options
-				position.adjusted = {
-					left: readjust.horizontal !== 'none' ? readjust.left(position.left) : 0,
-					top: readjust.vertical !== 'none' ? readjust.top(position.top) : 0
-				};
-
-				// Set tooltip position class if it's changed
-				if(cache.lastClass !== (newMy = uitooltip + '-pos-' + newMy.abbrev())) {
-					tooltip.removeClass(cache.lastClass).addClass( (cache.lastClass = newMy) );
-				}
-
-				// Apply flip offsets supplied by positioning plugins
-				if(flipoffset && position.adjusted.left) { position.left += flipoffset.left; }
-				if(flipoffset && position.adjusted.top) {  position.top += flipoffset.top; }
+				// Apply offsets supplied by positioning plugin (if used)
+				if(offset && position.adjusted.left) { position.left += offset.left; }
+				if(offset && position.adjusted.top) {  position.top += offset.top; }
 			}
 
-			//Viewport adjustment is disabled, set values to zero
+			// Viewport adjustment is disabled, set values to zero
 			else { position.adjusted = { left: 0, top: 0 }; }
 
 			// Call API method
@@ -1783,7 +1680,7 @@ PLUGINS = QTIP.plugins = {
 		this.string = function() { return this.precedance === Y ? this.y+this.x : this.x+this.y; };
 		this.abbrev = function() {
 			var x = this.x.substr(0,1), y = this.y.substr(0,1);
-			return x === y ? x : (x === 'c' || (x !== 'c' && y !== 'c')) ? y + x : x + y;
+			return x === y ? x : this.precedance === Y ? y + x : x + y;
 		};
 
 		this.invertx = function(center) { this.x = this.x === LEFT ? RIGHT : this.x === RIGHT ? LEFT : center || this.x; };
@@ -1834,7 +1731,7 @@ PLUGINS = QTIP.plugins = {
 	},
 
 	/*
-	 * iOS 3.2 - 4.0 scroll fix detection used in offset() function.
+	 * iOS version detection
 	 */
 	iOS: parseFloat( 
 		('' + (/CPU.*OS ([0-9_]{1,5})|(CPU like).*AppleWebKit.*Mobile/i.exec(navigator.userAgent) || [0,''])[1])

@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Jul 2 23:15:33 2012 +0100
+* Date: Tue Jul 3 00:41:07 2012 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -1184,81 +1184,8 @@ function QTip(target, options, id, attr)
 				viewport = posOptions.viewport,
 				position = { left: 0, top: 0 },
 				container = posOptions.container,
-				flipoffset = FALSE,
-				tip = self.plugins.tip,
 				visible = tooltip[0].offsetWidth > 0,
-				newMy, win,
-				readjust = {
-					// Axis detection and readjustment indicator
-					horizontal: method[0],
-					vertical: (method[1] = method[1] || method[0]),
-					enabled: viewport.jquery && target[0] !== window && target[0] !== docBody && adjust.method !== 'none',
-
-					// Reposition methods
-					generic: function(initialPos, position, side, otherSide, type, side1, side2, lengthName, targetLength, elemLength) {
-						var mySide = my[side],
-							atSide = at[side],
-							isShift = type === SHIFT,
-							adjustx = adjust[side] * (type === FLIPINVERT ? 2 : 0),
-							viewportScroll = -container.offset[side1] + viewport.offset[side1] + viewport['scroll'+side1.substr(0,1)+side1.substr(1)],
-							myLength = mySide === side1 ? elemLength : mySide === side2 ? -elemLength : -elemLength / 2,
-							atLength = atSide === side1 ? targetLength : atSide === side2 ? -targetLength : -targetLength / 2,
-							tipLength = tip && tip.size ? tip.size[lengthName] || 0 : 0,
-							tipAdjust = tip && tip.corner && tip.corner.precedance === side && !isShift ? tipLength : 0,
-							overflow1 = viewportScroll - initialPos + tipAdjust,
-							overflow2 = initialPos + elemLength - viewport[lengthName] - viewportScroll + tipAdjust,
-							offset = myLength - (my.precedance === side || mySide === my[otherSide] ? atLength : 0) - (atSide === CENTER ? targetLength / 2 : 0);
-
-						// Optional shift style repositioning
-						if(isShift) {
-							tipAdjust = tip && tip.corner && tip.corner.precedance === otherSide ? tipLength : 0;
-							offset = (mySide === side1 ? 1 : -1) * myLength - tipAdjust;
-
-							// Adjust position but keep it within viewport dimensions
-							position[side1] += overflow1 > 0 ? overflow1 : overflow2 > 0 ? -overflow2 : 0;
-							position[side1] = Math.max(
-								-container.offset[side1] + viewport.offset[side1] + (tipAdjust && tip.corner[side] === CENTER ? tip.offset : 0),
-								initialPos - offset,
-								Math.min(
-									Math.max(-container.offset[side1] + viewport.offset[side1] + viewport[lengthName], initialPos + offset),
-									position[side1]
-								)
-							);
-						}
-
-						// Default flip repositioning
-						else {
-							// Check for overflow on the left/top
-							if(overflow1 > 0 && (mySide !== side1 || overflow2 > 0)) {
-								position[side1] -= offset + adjustx;
-								newMy['invert'+side]();
-							}
-
-							// Check for overflow on the bottom/right
-							else if(overflow2 > 0 && (mySide !== side2 || overflow1 > 0)  ) {
-								position[side1] -= (mySide === CENTER ? -offset : offset) + adjustx;
-								newMy['invert'+side](side1);
-							}
-
-							// Make sure we haven't made things worse with the adjustment and reset if so
-							if(position[side1] < viewportScroll && -position[side1] > overflow2) {
-								position[side1] = initialPos; newMy = undefined;
-							}
-						}
-
-						return position[side1] - initialPos;
-					},
-					left: function(posLeft) {
-						return readjust.generic(
-							posLeft, position, X, Y, readjust.horizontal, LEFT, RIGHT, WIDTH, targetWidth, elemWidth
-						);
-					},
-					top: function(posTop) {
-						return readjust.generic(
-							posTop, position, Y, X, readjust.vertical, TOP, BOTTOM, HEIGHT, targetHeight, elemHeight
-						);
-					}
-				};
+				adjusted, offset, win;
 
 			// Check if absolute position was passed
 			if($.isArray(target) && target.length === 2) {
@@ -1286,17 +1213,13 @@ function QTip(target, options, id, attr)
 			// Target wasn't mouse or absolute...
 			else {
 				// Check if event targetting is being used
-				if(target === 'event') {
-					if(event && event.target && event.type !== 'scroll' && event.type !== 'resize') {
-						target = cache.target = $(event.target);
-					}
-					else {
-						target = cache.target;
-					}
+				if(target === 'event' && event && event.target && event.type !== 'scroll' && event.type !== 'resize') {
+					cache.target = $(event.target);
 				}
-				else {
-					target = cache.target = $(target.jquery ? target : elements.target);
+				else if(target !== 'event'){
+					cache.target = $(target.jquery ? target : elements.target);
 				}
+				target = cache.target;
 
 				// Parse the target into a jQuery object and make sure there's an element present
 				target = $(target).eq(0);
@@ -1316,11 +1239,11 @@ function QTip(target, options, id, attr)
 				}
 
 				// Use Imagemap/SVG plugins if needed
-				else if(target.is('area') && PLUGINS.imagemap) {
-					position = PLUGINS.imagemap(target, at, readjust.enabled ? method : FALSE);
+				else if(PLUGINS.imagemap && target.is('area')) {
+					adjusted = PLUGINS.imagemap(self, target, at, PLUGINS.viewport ? method : FALSE);
 				}
-				else if(target[0].namespaceURI === 'http://www.w3.org/2000/svg' && PLUGINS.svg) {
-					position = PLUGINS.svg(target, at);
+				else if(PLUGINS.svg && typeof target[0].xmlbase === 'string') {
+					adjusted = PLUGINS.svg(self, target, at, PLUGINS.viewport ? method : FALSE);
 				}
 
 				else {
@@ -1331,11 +1254,11 @@ function QTip(target, options, id, attr)
 				}
 
 				// Parse returned plugin values into proper variables
-				if(position.offset) {
-					targetWidth = position.width;
-					targetHeight = position.height;
-					flipoffset = position.flipoffset;
-					position = position.offset;
+				if(adjusted) {
+					targetWidth = adjusted.width;
+					targetHeight = adjusted.height;
+					offset = adjusted.offset;
+					position = adjusted.position;
 				}
 
 				// Adjust for position.fixed tooltips (and also iOS scroll bug in v3.2-4.0 & v4.3-4.3.2)
@@ -1357,44 +1280,18 @@ function QTip(target, options, id, attr)
 			position.left += adjust.x + (my.x === RIGHT ? -elemWidth : my.x === CENTER ? -elemWidth / 2 : 0);
 			position.top += adjust.y + (my.y === BOTTOM ? -elemHeight : my.y === CENTER ? -elemHeight / 2 : 0);
 
-			// Calculate collision offset values if viewport positioning is enabled
-			if(readjust.enabled) {
-				// Cache our viewport details
-				viewport = {
-					elem: viewport,
-					height: viewport[ (viewport[0] === window ? 'h' : 'outerH') + 'eight' ](),
-					width: viewport[ (viewport[0] === window ? 'w' : 'outerW') + 'idth' ](),
-					scrollLeft: fixed ? 0 : viewport.scrollLeft(),
-					scrollTop: fixed ? 0 : viewport.scrollTop(),
-					offset: viewport.offset() || { left: 0, top: 0 }
-				};
-				container = {
-					elem: container,
-					scrollLeft: container.scrollLeft(),
-					scrollTop: container.scrollTop(),
-					offset: container.offset() || { left: 0, top: 0 }
-				};
+			// Use viewport adjustment plugin if enabled
+			if(PLUGINS.viewport) {
+				position.adjusted = PLUGINS.viewport(
+					self, position, posOptions, targetWidth, targetHeight, elemWidth, elemHeight
+				);
 
-				// Set a new 'my' var to enable viewport-based corner classes
-				newMy = my.clone();
-
-				// Adjust position based onviewport and adjustment options
-				position.adjusted = {
-					left: readjust.horizontal !== 'none' ? readjust.left(position.left) : 0,
-					top: readjust.vertical !== 'none' ? readjust.top(position.top) : 0
-				};
-
-				// Set tooltip position class if it's changed
-				if(cache.lastClass !== (newMy = uitooltip + '-pos-' + newMy.abbrev())) {
-					tooltip.removeClass(cache.lastClass).addClass( (cache.lastClass = newMy) );
-				}
-
-				// Apply flip offsets supplied by positioning plugins
-				if(flipoffset && position.adjusted.left) { position.left += flipoffset.left; }
-				if(flipoffset && position.adjusted.top) {  position.top += flipoffset.top; }
+				// Apply offsets supplied by positioning plugin (if used)
+				if(offset && position.adjusted.left) { position.left += offset.left; }
+				if(offset && position.adjusted.top) {  position.top += offset.top; }
 			}
 
-			//Viewport adjustment is disabled, set values to zero
+			// Viewport adjustment is disabled, set values to zero
 			else { position.adjusted = { left: 0, top: 0 }; }
 
 			// Call API method
@@ -1783,7 +1680,7 @@ PLUGINS = QTIP.plugins = {
 		this.string = function() { return this.precedance === Y ? this.y+this.x : this.x+this.y; };
 		this.abbrev = function() {
 			var x = this.x.substr(0,1), y = this.y.substr(0,1);
-			return x === y ? x : (x === 'c' || (x !== 'c' && y !== 'c')) ? y + x : x + y;
+			return x === y ? x : this.precedance === Y ? y + x : x + y;
 		};
 
 		this.invertx = function(center) { this.x = this.x === LEFT ? RIGHT : this.x === RIGHT ? LEFT : center || this.x; };
@@ -1834,7 +1731,7 @@ PLUGINS = QTIP.plugins = {
 	},
 
 	/*
-	 * iOS 3.2 - 4.0 scroll fix detection used in offset() function.
+	 * iOS version detection
 	 */
 	iOS: parseFloat( 
 		('' + (/CPU.*OS ([0-9_]{1,5})|(CPU like).*AppleWebKit.*Mobile/i.exec(navigator.userAgent) || [0,''])[1])
@@ -2237,18 +2134,23 @@ PLUGINS.bgiframe = function(api)
 // Plugin needs to be initialized on render
 PLUGINS.bgiframe.initialize = 'render';
 
-PLUGINS.imagemap = function(area, corner, flip)
+PLUGINS.imagemap = function(api, area, corner, adjustMethod)
 {
 	if(!area.jquery) { area = $(area); }
 
-	var shape = (area[0].shape || area.attr('shape')).toLowerCase(),
-		baseCoords = (area[0].coords || area.attr('coords')).split(','),
+	var cache = (api.cache.areas = {}),
+		shape = (area[0].shape || area.attr('shape')).toLowerCase(),
+		coordsString = area[0].coords || area.attr('coords'),
+		baseCoords = coordsString.split(','),
 		coords = [],
 		image = $('img[usemap="#'+area.parent('map').attr('name')+'"]'),
 		imageOffset = image.offset(),
 		result = {
 			width: 0, height: 0,
-			offset: { top: 1e10, right: 0, bottom: 0, left: 1e10 }
+			position: {
+				top: 1e10, right: 0,
+				bottom: 0, left: 1e10
+			}
 		},
 		i = 0, next = 0, dimensions;
 
@@ -2269,27 +2171,27 @@ PLUGINS.imagemap = function(area, corner, flip)
 			newWidth = Math.floor(newWidth / 2);
 			newHeight = Math.floor(newHeight / 2);
 
-			if(corner.x === 'left'){ compareX = newWidth; }
-			else if(corner.x === 'right'){ compareX = result.width - newWidth; }
+			if(corner.x === LEFT){ compareX = newWidth; }
+			else if(corner.x === RIGHT){ compareX = result.width - newWidth; }
 			else{ compareX += Math.floor(newWidth / 2); }
 
-			if(corner.y === 'top'){ compareY = newHeight; }
-			else if(corner.y === 'bottom'){ compareY = result.height - newHeight; }
+			if(corner.y === TOP){ compareY = newHeight; }
+			else if(corner.y === BOTTOM){ compareY = result.height - newHeight; }
 			else{ compareY += Math.floor(newHeight / 2); }
 
 			i = coords.length; while(i--)
 			{
 				if(coords.length < 2){ break; }
 
-				realX = coords[i][0] - result.offset.left;
-				realY = coords[i][1] - result.offset.top;
+				realX = coords[i][0] - result.position.left;
+				realY = coords[i][1] - result.position.top;
 
-				if((corner.x === 'left' && realX >= compareX) ||
-				(corner.x === 'right' && realX <= compareX) ||
-				(corner.x === 'center' && (realX < compareX || realX > (result.width - compareX))) ||
-				(corner.y === 'top' && realY >= compareY) ||
-				(corner.y === 'bottom' && realY <= compareY) ||
-				(corner.y === 'center' && (realY < compareY || realY > (result.height - compareY)))) {
+				if((corner.x === LEFT && realX >= compareX) ||
+				(corner.x === RIGHT && realX <= compareX) ||
+				(corner.x === CENTER && (realX < compareX || realX > (result.width - compareX))) ||
+				(corner.y === TOP && realY >= compareY) ||
+				(corner.y === BOTTOM && realY <= compareY) ||
+				(corner.y === CENTER && (realY < compareY || realY > (result.height - compareY)))) {
 					coords.splice(i, 1);
 				}
 			}
@@ -2308,16 +2210,18 @@ PLUGINS.imagemap = function(area, corner, flip)
 		{
 			next = [ parseInt(baseCoords[--i], 10), parseInt(baseCoords[i+1], 10) ];
 
-			if(next[0] > result.offset.right){ result.offset.right = next[0]; }
-			if(next[0] < result.offset.left){ result.offset.left = next[0]; }
-			if(next[1] > result.offset.bottom){ result.offset.bottom = next[1]; }
-			if(next[1] < result.offset.top){ result.offset.top = next[1]; }
+			if(next[0] > result.position.right){ result.position.right = next[0]; }
+			if(next[0] < result.position.left){ result.position.left = next[0]; }
+			if(next[1] > result.position.bottom){ result.position.bottom = next[1]; }
+			if(next[1] < result.position.top){ result.position.top = next[1]; }
 
 			coords.push(next);
 		}
 	}
 	else {
-		coords = $.map(baseCoords, function(coord){ return parseInt(coord, 10); });
+		i = -1; while(i++ < baseCoords) {
+			coords.push( parseInt(baseCoords[i], 10) );
+		}
 	}
 
 	// Calculate details
@@ -2327,7 +2231,7 @@ PLUGINS.imagemap = function(area, corner, flip)
 			result = {
 				width: Math.abs(coords[2] - coords[0]),
 				height: Math.abs(coords[3] - coords[1]),
-				offset: {
+				position: {
 					left: Math.min(coords[0], coords[2]),
 					top: Math.min(coords[1], coords[3])
 				}
@@ -2338,35 +2242,42 @@ PLUGINS.imagemap = function(area, corner, flip)
 			result = {
 				width: coords[2] + 2,
 				height: coords[2] + 2,
-				offset: { left: coords[0], top: coords[1] }
+				position: { left: coords[0], top: coords[1] }
 			};
 		break;
 
 		case 'poly':
-			$.extend(result, {
-				width: Math.abs(result.offset.right - result.offset.left),
-				height: Math.abs(result.offset.bottom - result.offset.top)
-			});
+			result.width = Math.abs(result.position.right - result.position.left);
+			result.height = Math.abs(result.position.bottom - result.position.top)
 
-			if(corner.string() === 'centercenter') {
-				result.offset = {
-					left: result.offset.left + (result.width / 2),
-					top: result.offset.top + (result.height / 2)
+			if(corner.abbrev() === 'c') {
+				result.position = {
+					left: result.position.left + (result.width / 2),
+					top: result.position.top + (result.height / 2)
 				};
 			}
 			else {
-				result.offset = polyCoordinates(result, coords.slice(), corner);
+				// Calculate if we can't find a cached value
+				if(!cache[corner+coordsString]) {
+					result.position = polyCoordinates(result, coords.slice(), corner);
 
-				// If flip adjustment is enabled, also calculate the closest opposite point
-				if(flip && (flip[0] === 'flip' || flip[1] === 'flip')) {
-					result.flipoffset = polyCoordinates(result, coords.slice(), {
-						x: corner.x === 'left' ? 'right' : corner.x === 'right' ? 'left' : 'center',
-						y: corner.y === 'top' ? 'bottom' : corner.y === 'bottom' ? 'top' : 'center'
-					});
+					// If flip adjustment is enabled, also calculate the closest opposite point
+					if(adjustMethod && (adjustMethod[0] === 'flip' || adjustMethod[1] === 'flip')) {
+						result.offset = polyCoordinates(result, coords.slice(), {
+							x: corner.x === LEFT ? RIGHT : corner.x === RIGHT ? LEFT : CENTER,
+							y: corner.y === TOP ? BOTTOM : corner.y === BOTTOM ? TOP : CENTER
+						});
 
-					result.flipoffset.left -= result.offset.left;
-					result.flipoffset.top -= result.offset.top;
+						result.offset.left -= result.position.left;
+						result.offset.top -= result.position.top;
+					}
+
+					// Store the result
+					cache[corner+coordsString] = result;
 				}
+
+				// Grab the cached result
+				result = cache[corner+coordsString];
 			}
 
 			result.width = result.height = 0;
@@ -2374,8 +2285,8 @@ PLUGINS.imagemap = function(area, corner, flip)
 	}
 
 	// Add image position to offset coordinates
-	result.offset.left += imageOffset.left;
-	result.offset.top += imageOffset.top;
+	result.position.left += imageOffset.left;
+	result.position.top += imageOffset.top;
 
 	return result;
 };
@@ -2701,13 +2612,13 @@ $.extend(TRUE, QTIP.defaults, {
 	}
 });
 
-PLUGINS.svg = function(svg, corner)
+PLUGINS.svg = function(api, svg, corner, adjustMethod)
 {
 	var doc = $(document),
 		elem = svg[0],
 		result = {
 			width: 0, height: 0,
-			offset: { top: 1e10, left: 1e10 }
+			position: { top: 1e10, left: 1e10 }
 		},
 		box, mtx, root, point, tPoint;
 
@@ -2730,19 +2641,19 @@ PLUGINS.svg = function(svg, corner)
 		point.x = box.x;
 		point.y = box.y;
 		tPoint = point.matrixTransform(mtx);
-		result.offset.left = tPoint.x;
-		result.offset.top = tPoint.y;
+		result.position.left = tPoint.x;
+		result.position.top = tPoint.y;
 
 		// Adjust width and height
 		point.x += box.width;
 		point.y += box.height;
 		tPoint = point.matrixTransform(mtx);
-		result.width = tPoint.x - result.offset.left;
-		result.height = tPoint.y - result.offset.top;
+		result.width = tPoint.x - result.position.left;
+		result.height = tPoint.y - result.position.top;
 
 		// Adjust by scroll offset
-		result.offset.left += doc.scrollLeft();
-		result.offset.top += doc.scrollTop();
+		result.position.left += doc.scrollLeft();
+		result.position.top += doc.scrollTop();
 	}
 
 	return result;
@@ -3369,5 +3280,116 @@ $.extend(TRUE, QTIP.defaults, {
 	}
 });
 
+PLUGINS.viewport = function(api, position, posOptions, targetWidth, targetHeight, elemWidth, elemHeight)
+{
+	var target = posOptions.target,
+		tooltip = api.elements.tooltip,
+		my = posOptions.my,
+		at = posOptions.at,
+		adjust = posOptions.adjust,
+		method = adjust.method.split(' '),
+		methodX = method[0],
+		methodY = method[1] || method[0],
+		viewport = posOptions.viewport,
+		container = posOptions.container,
+		cache = api.cache,
+		tip = api.plugins.tip,
+		adjusted = { left: 0, top: 0 },
+		fixed, newMy, newClass;
 
+	// If viewport is not a jQuery element, or it's the window/document or no adjustment method is used... return
+	if(!viewport.jquery || target[0] === window || target[0] === document.body || adjust.method === 'none') {
+		return adjusted;
+	}
+
+	// Cache our viewport details
+	fixed = tooltip.css('position') === 'fixed';
+	viewport = {
+		elem: viewport,
+		height: viewport[ (viewport[0] === window ? 'h' : 'outerH') + 'eight' ](),
+		width: viewport[ (viewport[0] === window ? 'w' : 'outerW') + 'idth' ](),
+		scrollleft: fixed ? 0 : viewport.scrollLeft(),
+		scrolltop: fixed ? 0 : viewport.scrollTop(),
+		offset: viewport.offset() || { left: 0, top: 0 }
+	};
+	container = {
+		elem: container,
+		scrollLeft: container.scrollLeft(),
+		scrollTop: container.scrollTop(),
+		offset: container.offset() || { left: 0, top: 0 }
+	};
+
+	// Generic calculation method
+	function calculate(side, otherSide, type, adjust, side1, side2, lengthName, targetLength, elemLength) {
+		var initialPos = position[side1],
+			mySide = my[side], atSide = at[side],
+			isShift = type === SHIFT,
+			viewportScroll = -container.offset[side1] + viewport.offset[side1] + viewport['scroll'+side1],
+			myLength = mySide === side1 ? elemLength : mySide === side2 ? -elemLength : -elemLength / 2,
+			atLength = atSide === side1 ? targetLength : atSide === side2 ? -targetLength : -targetLength / 2,
+			tipLength = tip && tip.size ? tip.size[lengthName] || 0 : 0,
+			tipAdjust = tip && tip.corner && tip.corner.precedance === side && !isShift ? tipLength : 0,
+			overflow1 = viewportScroll - initialPos + tipAdjust,
+			overflow2 = initialPos + elemLength - viewport[lengthName] - viewportScroll + tipAdjust,
+			offset = myLength - (my.precedance === side || mySide === my[otherSide] ? atLength : 0) - (atSide === CENTER ? targetLength / 2 : 0);
+
+		// shift
+		if(isShift) {
+			tipAdjust = tip && tip.corner && tip.corner.precedance === otherSide ? tipLength : 0;
+			offset = (mySide === side1 ? 1 : -1) * myLength - tipAdjust;
+
+			// Adjust position but keep it within viewport dimensions
+			position[side1] += overflow1 > 0 ? overflow1 : overflow2 > 0 ? -overflow2 : 0;
+			position[side1] = Math.max(
+				-container.offset[side1] + viewport.offset[side1] + (tipAdjust && tip.corner[side] === CENTER ? tip.offset : 0),
+				initialPos - offset,
+				Math.min(
+					Math.max(-container.offset[side1] + viewport.offset[side1] + viewport[lengthName], initialPos + offset),
+					position[side1]
+				)
+			);
+		}
+
+		// flip/flipinvert
+		else {
+			// Update adjustment amount depending on if using flipinvert or flip
+			adjust *= (type === FLIPINVERT ? 2 : 0);
+
+			// Check for overflow on the left/top
+			if(overflow1 > 0 && (mySide !== side1 || overflow2 > 0)) {
+				position[side1] -= offset + adjust;
+				newMy['invert'+side](side1);
+			}
+
+			// Check for overflow on the bottom/right
+			else if(overflow2 > 0 && (mySide !== side2 || overflow1 > 0)  ) {
+				position[side1] -= (mySide === CENTER ? -offset : offset) + adjust;
+				newMy['invert'+side](side2);
+			}
+
+			// Make sure we haven't made things worse with the adjustment and reset if so
+			if(position[side1] < viewportScroll && -position[side1] > overflow2) {
+				position[side1] = initialPos; newMy = undefined;
+			}
+		}
+
+		return position[side1] - initialPos;
+	}
+
+	// Set newMy if using flip or flipinvert methods
+	if(methodX !== 'shift' || methodY !== 'shift') { newMy = my.clone(); }
+
+	// Adjust position based onviewport and adjustment options
+	adjusted = {
+		left: methodX !== 'none' ? calculate( X, Y, methodX, adjust.x, LEFT, RIGHT, WIDTH, targetWidth, elemWidth ) : 0,
+		top: methodY !== 'none' ? calculate( Y, X, methodY, adjust.y, TOP, BOTTOM, HEIGHT, targetHeight, elemHeight ) : 0
+	};
+
+	// Set tooltip position class if it's changed
+	if(newMy && cache.lastClass !== (newClass = uitooltip + '-pos-' + newMy.abbrev())) {
+		tooltip.removeClass(api.cache.lastClass).addClass( (api.cache.lastClass = newClass) );
+	}
+
+	return adjusted;
+};
 }));
