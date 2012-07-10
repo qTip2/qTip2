@@ -2,7 +2,7 @@
 
 <a name="overview"></a>
 ## Overview
-The imagemap plugin adds additional positioning logic for &lt;map&gt; and &lt;area&gt; elements, allowing you to use qTips special [corner positioning](../position#md)
+The imagemap plugin adds additional positioning logic for &lt;map&gt; and &lt;area&gt; elements, allowing you to use qTips special [corner positioning](../position.md)
 system with your imagemaps.
 
 <a name="usage"></a>
