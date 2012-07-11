@@ -83,7 +83,7 @@ PLUGINS.imagemap = function(api, area, corner, adjustMethod)
 		}
 	}
 	else {
-		i = -1; while(i++ < baseCoords) {
+		i = -1; while(i++ < baseCoords.length) {
 			coords.push( parseInt(baseCoords[i], 10) );
 		}
 	}
