@@ -304,7 +304,7 @@ PLUGINS.modal.zindex = QTIP.zindex + 1000;
 
 // Defines the selector used to select all 'focusable' elements within the modal when using the show.modal.stealfocus option.
 // 	Selectors initially taken from http://stackoverflow.com/questions/7668525/is-there-a-jquery-selector-to-get-all-elements-that-can-get-focus
-PLUGINS.modal.focusable = ['a[href]', 'area[href]', 'input', 'select', 'textarea', 'button', 'iframe', 'object', 'embed', '[tabindex]', '[contenteditable]']
+PLUGINS.modal.focusable = ['a[href]', 'area[href]', 'input', 'select', 'textarea', 'button', 'iframe', 'object', 'embed', '[tabindex]', '[contenteditable]'];
 
 // Extend original api defaults
 $.extend(TRUE, QTIP.defaults, {
