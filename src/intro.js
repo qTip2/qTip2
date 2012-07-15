@@ -6,7 +6,7 @@
 	if(typeof define === 'function' && define.amd) {
 		define(['jquery'], factory);
 	}
-	else {
+	else if(jQuery && !jQuery.fn.qtip) {
 		factory(jQuery);
 	}
 }
