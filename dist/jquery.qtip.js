@@ -9,7 +9,7 @@
 *   http://en.wikipedia.org/wiki/MIT_License
 *   http://en.wikipedia.org/wiki/GNU_General_Public_License
 *
-* Date: Mon Jul 16 00:57:01 2012 +0100
+* Date: Mon Jul 16 00:59:55 2012 +0100
 */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
@@ -27,7 +27,7 @@
 (function($) {
 
 	"use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
-	
+
 	// Munge the primitives - Paul Irish tip
 	var TRUE = true,
 		FALSE = false,
@@ -62,12 +62,16 @@
 		replaceSuffix = '_replacedByqTip',
 		oldtitle = 'oldtitle',
 		trackingBound;
-		
+
 	/* Thanks to Paul Irish for this one: http://paulirish.com/2009/log-a-lightweight-wrapper-for-consolelog/ */
 	function log() {
+		// if we don't want to log anything, exit
+		if (QTIP.defaults.suppressLogs) {
+			return;
+		}
 		log.history = log.history || [];
 		log.history.push(arguments);
-		
+
 		// Make sure console is present
 		if('object' === typeof console) {
 
@@ -1262,8 +1266,8 @@ function QTip(target, options, id, attr)
 				}
 
 				// Adjust for position.fixed tooltips (and also iOS scroll bug in v3.2-4.0 & v4.3-4.3.2)
-				if((PLUGINS.iOS > 3.1 && PLUGINS.iOS < 4.1) || 
-					(PLUGINS.iOS >= 4.3 && PLUGINS.iOS < 4.33) || 
+				if((PLUGINS.iOS > 3.1 && PLUGINS.iOS < 4.1) ||
+					(PLUGINS.iOS >= 4.3 && PLUGINS.iOS < 4.33) ||
 					(!PLUGINS.iOS && fixed)
 				){
 					win = $(window);
@@ -1733,7 +1737,7 @@ PLUGINS = QTIP.plugins = {
 	/*
 	 * iOS version detection
 	 */
-	iOS: parseFloat( 
+	iOS: parseFloat(
 		('' + (/CPU.*OS ([0-9_]{1,5})|(CPU like).*AppleWebKit.*Mobile/i.exec(navigator.userAgent) || [0,''])[1])
 		.replace('undefined', '3_2').replace('_', '.').replace('_', '')
 	) || FALSE,
@@ -1824,6 +1828,7 @@ QTIP.defaults = {
 	prerender: FALSE,
 	id: FALSE,
 	overwrite: TRUE,
+	suppressLogs: FALSE,
 	suppress: TRUE,
 	content: {
 		text: TRUE,

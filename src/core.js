@@ -1177,8 +1177,8 @@ function QTip(target, options, id, attr)
 				}
 
 				// Adjust for position.fixed tooltips (and also iOS scroll bug in v3.2-4.0 & v4.3-4.3.2)
-				if((PLUGINS.iOS > 3.1 && PLUGINS.iOS < 4.1) || 
-					(PLUGINS.iOS >= 4.3 && PLUGINS.iOS < 4.33) || 
+				if((PLUGINS.iOS > 3.1 && PLUGINS.iOS < 4.1) ||
+					(PLUGINS.iOS >= 4.3 && PLUGINS.iOS < 4.33) ||
 					(!PLUGINS.iOS && fixed)
 				){
 					win = $(window);
@@ -1648,7 +1648,7 @@ PLUGINS = QTIP.plugins = {
 	/*
 	 * iOS version detection
 	 */
-	iOS: parseFloat( 
+	iOS: parseFloat(
 		('' + (/CPU.*OS ([0-9_]{1,5})|(CPU like).*AppleWebKit.*Mobile/i.exec(navigator.userAgent) || [0,''])[1])
 		.replace('undefined', '3_2').replace('_', '.').replace('_', '')
 	) || FALSE,
@@ -1739,6 +1739,7 @@ QTIP.defaults = {
 	prerender: FALSE,
 	id: FALSE,
 	overwrite: TRUE,
+	suppressLogs: FALSE,
 	suppress: TRUE,
 	content: {
 		text: TRUE,

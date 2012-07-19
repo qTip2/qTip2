@@ -13,7 +13,7 @@
 (function($) {
 
 	"use strict"; // Enable ECMAScript "strict" operation for this function. See more: http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
-	
+
 	// Munge the primitives - Paul Irish tip
 	var TRUE = true,
 		FALSE = false,
@@ -48,12 +48,16 @@
 		replaceSuffix = '_replacedByqTip',
 		oldtitle = 'oldtitle',
 		trackingBound;
-		
+
 	/* Thanks to Paul Irish for this one: http://paulirish.com/2009/log-a-lightweight-wrapper-for-consolelog/ */
 	function log() {
+		// if we don't want to log anything, exit
+		if (QTIP.defaults.suppressLogs) {
+			return;
+		}
 		log.history = log.history || [];
 		log.history.push(arguments);
-		
+
 		// Make sure console is present
 		if('object' === typeof console) {
 
