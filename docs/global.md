@@ -14,6 +14,7 @@ Holds all the default qTip<sup>2</sup> values inherited by your .qtip() calls.
 $.fn.qtip.defaults = {
 	prerender: false,
 	id: false,
+	supressLogs: false,
 	overwrite: true,
 	suppress: true,
 	content: {
