@@ -6,10 +6,6 @@ The position object defines various attributes of the tooltip position, includin
 
 qTip utilises a special positioning system using corners. The basic concept behind it is pretty simple, in fact it turns out to be plain English when read aloud! For example, let's say we want to position **my** tooltips top left corner **at** the bottom right of my **target**. Simple enough... let's see the code involved in this:
 
-<center>
-![Corner string types](http://media2.juggledesign.com/qtip2/images/corners.jpg "Corner string types")
-</center>
-
 ```js
 $('.selector').qtip({
 	content: 'I\'m positioned using corner values!',
@@ -22,6 +18,10 @@ $('.selector').qtip({
 ```
 
 Notice how reading down the object you begin to see a logical plain English pattern emerge. Much easier than using x and y coordinates! Here's a diagram of all valid corner values for use with [position.my](#my) and  [position.at](#at) options as well as the tips plugin [corner](./plugins/tips.md#corner) and [mimic](./plugins/tips.md#styletipmimic) options.
+
+<div style="text-align: center;">
+![Corner string types](http://media2.juggledesign.com/qtip2/images/corners.jpg "Corner string types")
+</center>
 
 ### Notes
 * This system is heavily based upon the [jQuery UI Position plugin](http://docs.jquery.com/UI/Position)

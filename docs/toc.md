@@ -9,7 +9,7 @@
 
 ## Guides
 
-* [Content](guide-content.md) - Learn how to load anduse textual and HTML content within your qTip's
+* [Content](guide-content.md) - Learn how to load and use textual and HTML content within your qTip's
 * _(more documentation coming soon)_
 
 ## API reference

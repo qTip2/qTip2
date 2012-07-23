@@ -40,7 +40,7 @@ _(Nothing yet)_
 
 ## Questions or problems?
 If you have any questions, please feel free to post on the [support forums][forums], but before you do make sure to
-check out the [thorough documentation]() both here in the repo and on the [official site][site].
+check out the [thorough documentation][docs] both here in the repo and on the [official site][site].
 
 ## License
 Copyright (c) 2012 Craig Michael Thompson. Licensed under the MIT, GPL licenses. *See [here][license] for more details.*
