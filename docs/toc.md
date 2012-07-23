@@ -20,11 +20,3 @@
 * [hide](hide.md) - Hide properties and effects
 * [style](style.md) - Styling properties
 * [events](events.md) - Events API
-
-## Other built-ins
-
-* [Helpers and Directives](helpers_directives.md) - Ones not specifically covered in other task documentation.
-
-## Development <a name="development" href="#development" title="Link to this section">⚑</a>
-
-* [Contributing to grunt](contributing.md) - Development advice.
