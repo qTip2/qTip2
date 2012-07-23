@@ -112,7 +112,7 @@ PLUGINS.imagemap = function(api, area, corner, adjustMethod)
 
 		case 'poly':
 			result.width = Math.abs(result.position.right - result.position.left);
-			result.height = Math.abs(result.position.bottom - result.position.top)
+			result.height = Math.abs(result.position.bottom - result.position.top);
 
 			if(corner.abbrev() === 'c') {
 				result.position = {

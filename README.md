@@ -18,7 +18,6 @@ More documentation and information is available at the [official site](http://cr
 <img src="http://media1.juggledesign.com/qtip2/images/browsers/64-safari.png" title="Safari 2+, iOS 4+" /> 2+, iOS 4+
 </div>
 
-
 ## Getting qTip<sup>2</sup>
 
 ### Stable releases
@@ -29,10 +28,14 @@ you choose what [plugins](/Craga89/qTip2/tree/master/docs/plugins/) you'd like i
 You can grab the latest and greatest qTip<sup>2</sup> nightly from the [dist](/Craga89/qTip2/tree/master/dist/) directory and get started quickly. If you want more options
 over what plugins are included in your build, take a look below.
 
+Download the [production version][min] or the [development version][max].
+
+[min]: https://raw.github.com/Craga89/qtip2/master/dist/jquery.qtip.min.js
+[max]: https://raw.github.com/Craga89/qtip2/master/dist/jquery.qtip.js
+
 ### Custom builds
 You can also build your own qTip<sup>2</sup> script that includes select [plugins](/Craga89/qTip2/tree/master/docs/plugins/) and [styles](/Craga89/qTip2/tree/master/docs/style.md) to reduce the overall file size and remove features
 you don't plan on using. Find more information about this [here](/Craga89/qTip2/tree/master/docs/build.md)
-
 
 ## Installation
 Now you have the jQuery library and qTip<sup>2</sup> files, it's time to include them within your HTML. I **highly recommend** that all JavaScript includes be placed just before the end *&lt;/body&gt;*
@@ -58,10 +61,15 @@ tag as this ensures the DOM is loaded before manipulation of it occurs. This is 
 **Note:** Make sure to include either the non-minified *or* the un-minified script, **not both!** <br/>
 **Note:** Notice *the jQuery library is included ***before** qTip<sup>2</sup>*. This is absolutely essential for correct functioning of the plugin!
 
+## Release History
+_(Nothing yet)_
 
 ## Questions or problems?
 If you have any questions, please feel free to post on the [support forums](http://craigsworks.com/projects/forums), but before you do make sure to
 check out the [thorough documentation](/Craga89/qTip2/tree/master/docs/) both here in the repo and on the [official site](http://craigsworks.com/projects/qtip2).
 
+## License
+Copyright (c) 2012 Craig Michael Thompson. Licensed under the MIT, GPL licenses. *See [here](http://jquery.org/license/) for more details.*
+
 ## Special thanks
-Big shout-out to the jQuery team for providing the directory structure and base files for the git repo, as well as the base-files for the new NodeJS build system!
+Big shout-out to ["Cowboy" Ben Alman](https://github.com/cowboy/) for providing the [grunt](https://github.com/cowboy/grunt) build system used by qTip<sup>2</sup>

@@ -30,7 +30,6 @@
 
 		text-align: left;
 		word-wrap: break-word;
-		overflow: hidden;
 	}
 
 	.ui-tooltip-titlebar{
@@ -43,9 +42,9 @@
 		font-weight: bold;
 	}
 
-	.ui-tooltip-titlebar + .ui-tooltip-content{ border-top-width: 0px !important; }
+	.ui-tooltip-titlebar + .ui-tooltip-content{ border-top-width: 0 !important; }
 
-		/*! Default close button class */
+		/* Default close button class */
 		.ui-tooltip-titlebar .ui-state-default{
 			position: absolute;
 			right: 4px;
@@ -65,6 +64,7 @@
 		.ui-tooltip-icon .ui-icon{
 			display: block;
 			text-indent: -1000em;
+			direction: ltr;
 		}
 
 		.ui-tooltip-icon, .ui-tooltip-icon .ui-icon{
@@ -88,17 +88,12 @@
 
 
 /* Applied to 'focused' tooltips e.g. most recently displayed/interacted with */
-.ui-tooltip-focus{
-
-}
+.ui-tooltip-focus{}
 
 /* Applied on hover of tooltips i.e. added/removed on mouseenter/mouseleave respectively */
-.ui-tooltip-hover{
-	
-}
+.ui-tooltip-hover{}
 
-
-/*! Default tooltip style */
+/* Default tooltip style */
 .ui-tooltip-default{
 	border-color: #F1D031;
 	background-color: #FFFFA3;

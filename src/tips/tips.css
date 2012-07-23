@@ -14,7 +14,7 @@
 		color: #123456;
 
 		background: transparent;
-		border: 0px dashed transparent;
+		border: 0 dashed transparent;
 	}
 	
 	.ui-tooltip .ui-tooltip-tip canvas{ top: 0; left: 0; }

@@ -1,11 +1,11 @@
-/*! Add shadows to your tooltips in: FF3+, Chrome 2+, Opera 10.6+, IE9+, Safari 2+ */
+/* Add shadows to your tooltips in: FF3+, Chrome 2+, Opera 10.6+, IE9+, Safari 2+ */
 .ui-tooltip-shadow{
 	-webkit-box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.15);
 	-moz-box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.15);
 	box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.15);
 }
 
-/*! Add rounded corners to your tooltips in: FF3+, Chrome 2+, Opera 10.6+, IE9+, Safari 2+ */
+/* Add rounded corners to your tooltips in: FF3+, Chrome 2+, Opera 10.6+, IE9+, Safari 2+ */
 .ui-tooltip-rounded,
 .ui-tooltip-tipsy,
 .ui-tooltip-bootstrap{
@@ -14,7 +14,7 @@
 	border-radius: 5px;
 }
 
-/*! Youtube tooltip style */
+/* Youtube tooltip style */
 .ui-tooltip-youtube{
 	-moz-border-radius: 2px;
 	-webkit-border-radius: 2px;
@@ -28,12 +28,11 @@
 	border-width: 0;
 
 	background: #4A4A4A;
+	background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0,#4A4A4A),color-stop(100%,black));
+	background-image: -webkit-linear-gradient(top,#4A4A4A 0,black 100%);
 	background-image: -moz-linear-gradient(top,#4A4A4A 0,black 100%);
 	background-image: -ms-linear-gradient(top,#4A4A4A 0,black 100%);
 	background-image: -o-linear-gradient(top,#4A4A4A 0,black 100%);
-	background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0,#4A4A4A),color-stop(100%,black));
-	background-image: -webkit-linear-gradient(top,#4A4A4A 0,black 100%);
-	background-image: linear-gradient(to bottom,#4A4A4A 0,black 100%);
 }
 
 	.ui-tooltip-youtube .ui-tooltip-titlebar{
@@ -62,8 +61,11 @@
 .ui-tooltip-jtools{
 	background: #232323;
 	background: rgba(0, 0, 0, 0.7);
-	background-image: -moz-linear-gradient(top, #717171, #232323);
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#717171), to(#232323));
+	background-image: -moz-linear-gradient(top, #717171, #232323);
+	background-image: -webkit-linear-gradient(top, #717171, #232323);
+	background-image: -ms-linear-gradient(top, #717171, #232323);
+	background-image: -o-linear-gradient(top, #717171, #232323);
 
 	border: 2px solid #ddd;
 	border: 2px solid rgba(241,241,241,1);
@@ -137,7 +139,7 @@
 	background: rgba(0, 0, 0, .87);
 
 	color: white;
-	border: 0px solid transparent;
+	border: 0 solid transparent;
 
 	font-size: 11px;
 	font-family: 'Lucida Grande', sans-serif;
@@ -185,8 +187,11 @@
 
 		color: white;
 		background: #3A79B8;
-		background-image: -moz-linear-gradient(top, #3A79B8, #2E629D);
 		background-image: -webkit-gradient(linear, left top, left bottom, from(#3A79B8), to(#2E629D));
+		background-image: -webkit-linear-gradient(top, #3A79B8, #2E629D);
+		background-image: -moz-linear-gradient(top, #3A79B8, #2E629D);
+		background-image: -ms-linear-gradient(top, #3A79B8, #2E629D);
+		background-image: -o-linear-gradient(top, #3A79B8, #2E629D);
 		filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#3A79B8,endColorstr=#2E629D);
 		-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#3A79B8,endColorstr=#2E629D)";
 	}

@@ -3,6 +3,7 @@
 
 // Uses AMD or browser globals to create a jQuery plugin.
 (function(factory) {
+	"use strict";
 	if(typeof define === 'function' && define.amd) {
 		define(['jquery'], factory);
 	}
@@ -18,7 +19,6 @@
 	var TRUE = true,
 		FALSE = false,
 		NULL = null,
-		undefined,
 
 		// Side names and other stuff
 		X = 'x', Y = 'y',

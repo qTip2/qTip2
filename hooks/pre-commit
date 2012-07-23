@@ -1,9 +1,6 @@
 #!/bin/sh
-if [ -f Makefile ]; then
-	# Make qTip2 with all plugins, and a basic version with none
-	make all
-	make PLUGINS="None" QTIP="dist/jquery.qtip.basic.js" qtip
+# Make qTip2 with all plugins, and a basic version with none
+grunt default basic
 
-	# Re-add dist folder
-	git add dist/*
-fi	
+# Re-add dist folder
+git add dist/*

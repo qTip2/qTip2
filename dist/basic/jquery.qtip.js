@@ -1,22 +1,13 @@
-/*!
-* qTip2 - Pretty powerful tooltips
+/*! qTip2 - Pretty powerful tooltips - v2.0.0 - 2012-07-19
 * http://craigsworks.com/projects/qtip2/
-*
-* Version: 2.0.0pre
-* Copyright 2009-2010 Craig Michael Thompson - http://craigsworks.com
-*
-* Dual licensed under MIT or GPLv2 licenses
-*   http://en.wikipedia.org/wiki/MIT_License
-*   http://en.wikipedia.org/wiki/GNU_General_Public_License
-*
-* Date: Mon Jul 16 00:57:01 2012 +0100
-*/
+* Copyright (c) 2012 Craig Michael Thompson; Licensed MIT, GPL */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
 /*global window: false, jQuery: false, console: false, define: false */
 
 // Uses AMD or browser globals to create a jQuery plugin.
 (function(factory) {
+	"use strict";
 	if(typeof define === 'function' && define.amd) {
 		define(['jquery'], factory);
 	}
@@ -32,7 +23,6 @@
 	var TRUE = true,
 		FALSE = false,
 		NULL = null,
-		undefined,
 
 		// Side names and other stuff
 		X = 'x', Y = 'y',
@@ -82,6 +72,7 @@
 			a = c.apply ? c.apply(console, args) : c(args);
 		}
 	}
+
 
 // Option object sanitizer
 function sanitizeOptions(opts)
@@ -441,10 +432,10 @@ function QTip(target, options, id, attr)
 		}
 
 		/*
-		 * If we're still rendering... insert into 'fx' queue our image dimension
-		 * checker which will halt the showing of the tooltip until image dimensions
-		 * can be detected properly.
-		 */
+		* If we're still rendering... insert into 'fx' queue our image dimension
+		* checker which will halt the showing of the tooltip until image dimensions
+		* can be detected properly.
+		*/
 		if(self.rendered < 0) { tooltip.queue('fx', detectImages); }
 
 		// We're fully rendered, so reset isDrawing flag and proceed without queue delay
@@ -560,9 +551,9 @@ function QTip(target, options, id, attr)
 		}
 
 		/*
-		 * Make sure hoverIntent functions properly by using mouseleave to clear show timer if
-		 * mouseenter/mouseout is used for show.event, even if it isn't in the users options.
-		 */
+		* Make sure hoverIntent functions properly by using mouseleave to clear show timer if
+		* mouseenter/mouseout is used for show.event, even if it isn't in the users options.
+		*/
 		else if(/mouse(over|enter)/i.test(options.show.event)) {
 			targets.hide.bind('mouseleave'+namespace, function(event) {
 				clearTimeout(self.timers.show);
@@ -844,9 +835,9 @@ function QTip(target, options, id, attr)
 			assignEvents();
 
 			/* Queue this part of the render process in our fx queue so we can
-			 * load images before the tooltip renders fully.
-			 *
-			 * See: updateContent method
+			* load images before the tooltip renders fully.
+			*
+			* See: updateContent method
 			*/
 			tooltip.queue('fx', function(next) {
 				// Trigger tooltiprender event and pass original triggering event as original
@@ -944,10 +935,10 @@ function QTip(target, options, id, attr)
 			sanitizeOptions(options);
 
 			/*
-			 * Execute any valid callbacks for the set options
-			 * Also set isPositioning/isDrawing so we don't get loads of redundant repositioning
-			 * and redraw calls.
-			 */
+			* Execute any valid callbacks for the set options
+			* Also set isPositioning/isDrawing so we don't get loads of redundant repositioning
+			* and redraw calls.
+			*/
 			isPositioning = isDrawing = 1; $.each(option, callback); isPositioning = isDrawing = 0;
 
 			// Update position / redraw if needed
@@ -1460,7 +1451,7 @@ function init(id, opts)
 	html5 = elem.data(opts.metadata.name || 'qtipopts');
 
 	// If we don't get an object returned attempt to parse it manualyl without parseJSON
-	try { html5 = typeof html5 === 'string' ? (new Function("return " + html5))() : html5; }
+	try { html5 = typeof html5 === 'string' ? $.parseJSON(html5) : html5; }
 	catch(e) { log('Unable to parse HTML5 attribute data: ' + html5); }
 
 	// Merge in and sanitize metadata
@@ -1613,19 +1604,19 @@ QTIP.bind = function(opts, event)
 		};
 
 		/*
-		 * Make sure hoverIntent functions properly by using mouseleave as a hide event if
-		 * mouseenter/mouseout is used for show.event, even if it isn't in the users options.
-		 */
+		* Make sure hoverIntent functions properly by using mouseleave as a hide event if
+		* mouseenter/mouseout is used for show.event, even if it isn't in the users options.
+		*/
 		if(/mouse(over|enter)/i.test(events.show) && !/mouse(out|leave)/i.test(events.hide)) {
 			events.hide += ' mouseleave' + namespace;
 		}
 
 		/*
-		 * Also make sure initial mouse targetting works correctly by caching mousemove coords
-		 * on show targets before the tooltip has rendered.
-		 *
-		 * Also set onTarget when triggered to keep mouse tracking working
-		 */
+		* Also make sure initial mouse targetting works correctly by caching mousemove coords
+		* on show targets before the tooltip has rendered.
+		*
+		* Also set onTarget when triggered to keep mouse tracking working
+		*/
 		targets.show.bind('mousemove'+namespace, function(event) {
 			MOUSE = { pageX: event.pageX, pageY: event.pageY, type: 'mousemove' };
 			api.cache.onTarget = TRUE;
@@ -1731,16 +1722,16 @@ PLUGINS = QTIP.plugins = {
 	},
 
 	/*
-	 * iOS version detection
-	 */
+	* iOS version detection
+	*/
 	iOS: parseFloat( 
 		('' + (/CPU.*OS ([0-9_]{1,5})|(CPU like).*AppleWebKit.*Mobile/i.exec(navigator.userAgent) || [0,''])[1])
 		.replace('undefined', '3_2').replace('_', '.').replace('_', '')
 	) || FALSE,
 
 	/*
-	 * jQuery-specific $.fn overrides
-	 */
+	* jQuery-specific $.fn overrides
+	*/
 	fn: {
 		/* Allow other plugins to successfully retrieve the title of an element with a qTip applied */
 		attr: function(attr, val) {
@@ -1814,7 +1805,7 @@ if(!$.ui) {
 }
 
 // Set global qTip properties
-QTIP.version = '2.0.0pre';
+QTIP.version = '@VERSION';
 QTIP.nextid = 0;
 QTIP.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleave mouseenter'.split(' ');
 QTIP.zindex = 15000;
@@ -1890,6 +1881,7 @@ QTIP.defaults = {
 		blur: NULL
 	}
 };
+
 
 
 }));

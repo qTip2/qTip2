@@ -165,10 +165,10 @@ function Tip(qTip, command)
 		}
 
 		/*
-		 * If the tip is adjusted in both dimensions, or in a
-		 * direction that would cause it to be anywhere but the
-		 * outer border, hide it!
-		 */
+		* If the tip is adjusted in both dimensions, or in a
+		* direction that would cause it to be anywhere but the
+		* outer border, hide it!
+		*/
 		elems.tip.css(css).toggle(
 			!((shift.x && shift.y) || (newCorner.x === CENTER && shift.y) || (newCorner.y === CENTER && shift.x))
 		);
@@ -423,7 +423,7 @@ function Tip(qTip, command)
 			if(corner.precedance === Y) {
 				translate = [
 					round(mimic.x === LEFT ? border : mimic.x === RIGHT ? newSize.width - width - border : (newSize.width - width) / 2),
-					round(mimic.y === TOP ?  newSize.height - height : 0)
+					round(mimic.y === TOP ? newSize.height - height : 0)
 				];
 			}
 			else {
