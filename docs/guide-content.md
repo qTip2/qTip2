@@ -30,7 +30,7 @@ $('[data-tooltip!=""]').qtip({ // Grab all elements with a non-blank data-toolti
 ## HTML
 
 ### A note on "this" variable
-For those of you new to JavaScript/jQuery land, we'll take a small side-track here to describe a unique property of JavaScript: *the **this** variable*. Feel free to skip this is you're already familiar with it.
+For those of you new to JavaScript/jQuery land, we'll take a small side-track here to describe a unique property of JavaScript: *the "this" variable*. Feel free to skip this is you're already familiar with it.
 
 This `this` variable in JavaScript is *scope-dependant*, meaning it's value with change depending upon where abouts you access it within your code. For example, accessing the `this` keyword within the "global" scope i.e. outside any functions, t will refer the `window` element.
 
