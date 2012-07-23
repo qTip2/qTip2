@@ -1,7 +1,8 @@
 /*global module:false*/
 module.exports = function(grunt) {
-	// Load grunt CSS helper
+	// Load grunt helpers
 	grunt.loadNpmTasks('grunt-css');
+	grunt.loadNpmTasks('grunt-clean');
 
 	// Project configuration.
 	grunt.initConfig({
@@ -28,7 +29,7 @@ module.exports = function(grunt) {
 			bgiframe: { js: 'src/bgiframe/bgiframe.js' }
 		},
 		clean: {
-			
+			dist: 'dist/'
 		},
 		concat: {
 			basic: {
@@ -129,15 +130,29 @@ module.exports = function(grunt) {
 		// Update config
 		grunt.config.set('concat.dist.src', js.concat(['src/outro.js']));
 		grunt.config.set('concat.dist_css.src', css);
+	});
 
-		// Clean up dist folder
-		grunt.helper.clean('dist/');
+	// Grab latest git commit message and output to "comment" file
+	grunt.registerTask('commitmsg', 'Output latest git commit message', function() {
+		var dist = grunt.file.expand(['dist']),
+			cmd = 'git log --pretty=format:\'%s\' -1 > ' + dist + '/comment';
+
+		require('child_process').exec(cmd, function(err, stdout, stderr){
+			grunt.file.write('dist/comment', gzipSrc.length);
+		});
+	});
+
+	// Output gzip file size task
+	grunt.registerTask('gzip', 'Calculate size of gzipped minified file', function() {
+		var src = grunt.file.read( grunt.config('min.dist.dest') ),
+			gzipSrc = grunt.helper('gzip', src);
+
+		grunt.file.write('dist/gziplength', gzipSrc.length);
 	});
 
 	// Setup all other tasks
-	grunt.registerTask('css', 'init csslint concat:dist_css cssmin:dist');
-	grunt.registerTask('full', 'init lint csslint concat:dist concat:dist_css min:dist cssmin:dist');
-	grunt.registerTask('basic', 'init lint csslint concat:basic concat:basic_css min:basic cssmin:basic');
-	grunt.registerTask('default', 'full');
-	grunt.registerTask('dev', 'basic full');
+	grunt.registerTask('css', 'init clean csslint concat:dist_css cssmin:dist');
+	grunt.registerTask('basic', 'init clean lint csslint concat:basic concat:basic_css min:basic cssmin:basic');
+	grunt.registerTask('default', 'init clean lint csslint concat:dist concat:dist_css min:dist cssmin:dist');
+	grunt.registerTask('dev', 'init clean lint csslint concat min cssmin gzip commitmsg');
 };

@@ -1,1 +1,1 @@
-Fixed issue with non-poly shapes not correctly getting coordinates. Thanks sambowler.
+Remove old Makefile system in favou of grunt.js and update documentation
