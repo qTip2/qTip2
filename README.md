@@ -1,13 +1,12 @@
-[qTip<sup>2</sup>](http://craigsworks.com/projects/qtip2/) - Pretty powerful tooltips
+[qTip<sup>2</sup>][site] - Pretty powerful tooltips
 ================================
 
 Introducing&hellip; qTip<sup>2</sup>. The second generation of the advanced qTip plugin for the ever popular jQuery framework.
 
 Building on 1.0's user friendly, yet feature rich base, qTip<sup>2</sup> provides you with tonnes of features like
-[speech bubble tips](/Craga89/qTip2/tree/master/docs/plugins/tips.md) and [imagemap support](/Craga89/qTip2/tree/master/docs/plugins/imagemap.md), and best of all...
-**it's completely free under the MIT/GPLv2 licenses!**
+[speech bubble tips][tips] and [imagemap support][imgmap], and best of all... **it's completely free under the MIT/GPLv2 licenses!**
 
-More documentation and information is available at the [official site](http://craigsworks.com/projects/qtip2).
+More documentation and information is available at the [official site][site].
 
 ## Browser support
 <div style="text-transform: sub; text-align: center;">
@@ -21,55 +20,50 @@ More documentation and information is available at the [official site](http://cr
 ## Getting qTip<sup>2</sup>
 
 ### Stable releases
-You can grab the *latest stable releases* from the [download page](http://craigsworks.com/projects/qtip2/download) of the [official site](http://craigsworks.com/projects/qtip2). This also lets
-you choose what [plugins](/Craga89/qTip2/tree/master/docs/plugins/) you'd like included in your download, as well as other things.
+You can grab the *latest stable releases* from the [download page][download] of the [official site][site]. This also lets
+you choose what [plugins][plugins] you'd like included in your download, as well as other things.
 
 ### Bleeding edge
-You can grab the latest and greatest qTip<sup>2</sup> nightly from the [dist](/Craga89/qTip2/tree/master/dist/) directory and get started quickly. If you want more options
-over what plugins are included in your build, take a look below.
-
+You can grab the latest and greatest qTip<sup>2</sup> nightly from the [dist][dist] directory and get started quickly.
 Download the [production version][min] or the [development version][max].
 
-[min]: https://raw.github.com/Craga89/qtip2/master/dist/jquery.qtip.min.js
-[max]: https://raw.github.com/Craga89/qtip2/master/dist/jquery.qtip.js
 
 ### Custom builds
-You can also build your own qTip<sup>2</sup> script that includes select [plugins](/Craga89/qTip2/tree/master/docs/plugins/) and [styles](/Craga89/qTip2/tree/master/docs/style.md) to reduce the overall file size and remove features
-you don't plan on using. Find more information about this [here](/Craga89/qTip2/tree/master/docs/build.md)
+You can also build your own qTip<sup>2</sup> script that includes select [plugins][plugins] and [styles][style] to reduce the overall file size and remove features
+you don't plan on using. Find more information about this [here][build]
 
-## Installation
-Now you have the jQuery library and qTip<sup>2</sup> files, it's time to include them within your HTML. I **highly recommend** that all JavaScript includes be placed just before the end *&lt;/body&gt;*
-tag as this ensures the DOM is loaded before manipulation of it occurs. This is not a requirement, simply an insiders tip!
-
-```html
-<html>
-<head>
-<title>My site</title>
-<!-- css file -->
-<link type="text/css" rel="stylesheet" href="/path/to/jquery.qtip-2.0.0.css" />
-</head>
-<body>
-<!-- content here -->
-<script type="text/javascript" src="/path/to/jquery.1.4.2.min.js"></script>
-
-<!-- Notice we only include the minified script here. You can include the non-minified version, just don't include both! -->
-<script type="text/javascript" src="/path/to/jquery.qtip-2.0.0.min.js"></script>
-</body>
-</html>
-```
-
-**Note:** Make sure to include either the non-minified *or* the un-minified script, **not both!** <br/>
-**Note:** Notice *the jQuery library is included ***before** qTip<sup>2</sup>*. This is absolutely essential for correct functioning of the plugin!
+## Documentation
+Take a look at the [documentation table of contents][toc] for extensive docs and guides.
 
 ## Release History
 _(Nothing yet)_
 
 ## Questions or problems?
-If you have any questions, please feel free to post on the [support forums](http://craigsworks.com/projects/forums), but before you do make sure to
-check out the [thorough documentation](/Craga89/qTip2/tree/master/docs/) both here in the repo and on the [official site](http://craigsworks.com/projects/qtip2).
+If you have any questions, please feel free to post on the [support forums][forums], but before you do make sure to
+check out the [thorough documentation]() both here in the repo and on the [official site][site].
 
 ## License
-Copyright (c) 2012 Craig Michael Thompson. Licensed under the MIT, GPL licenses. *See [here](http://jquery.org/license/) for more details.*
+Copyright (c) 2012 Craig Michael Thompson. Licensed under the MIT, GPL licenses. *See [here][license] for more details.*
 
 ## Special thanks
-Big shout-out to ["Cowboy" Ben Alman](https://github.com/cowboy/) for providing the [grunt](https://github.com/cowboy/grunt) build system used by qTip<sup>2</sup>
+Big shout-out to ["Cowboy" Ben Alman][cowboy] for providing the [grunt][grunt] build system used by qTip<sup>2</sup>
+
+[min]: https://raw.github.com/Craga89/qtip2/master/dist/jquery.qtip.min.js
+[max]: https://raw.github.com/Craga89/qtip2/master/dist/jquery.qtip.js
+
+[dist]: /Craga89/qTip2/tree/master/dist/
+[docs]: /Craga89/qTip2/tree/master/docs/
+[toc]: /Craga89/qTip2/blob/master/docs/toc.md
+[build]: /Craga89/qTip2/tree/master/docs/build.md
+[style]: /Craga89/qTip2/tree/master/docs/style.md
+[plugins]: /Craga89/qTip2/tree/master/docs/plugins/
+[tips]: /Craga89/qTip2/tree/master/docs/plugins/tips.md
+[imgmap]: /Craga89/qTip2/tree/master/docs/plugins/imagemap.md
+
+[site]: http://craigsworks.com/projects/qtip2/
+[download]: http://craigsworks.com/projects/qtip2/download
+[forums]: http://craigsworks.com/projects/forums
+[license]: http://jquery.org/license/
+
+[cowboy]: https://github.com/cowboy/
+[grunt]: https://github.com/cowboy/grunt
