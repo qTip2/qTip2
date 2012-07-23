@@ -4,7 +4,7 @@
 
 ## Getting started
 
-* [Getting started](getting_started.md) - A guide to configuring grunt for your project.
+* [Getting started](gettingstarted.md) - A guide to configuring grunt for your project.
 * [FAQ](faq.md) - Frequently asked questions, along with their answers.
 
 ## Guides
