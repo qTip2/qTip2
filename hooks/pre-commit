@@ -1,6 +1,6 @@
 #!/bin/sh
-# Make qTip2 with all plugins, and a basic version with none
-grunt default basic
+# Generate dist/ files
+grunt dev
 
 # Re-add dist folder
 git add dist/*
