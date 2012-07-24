@@ -19,62 +19,69 @@ module.exports = function(grunt) {
 					'Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */'
 			}
 		},
+		dirs: {
+			src: 'src',
+			dist: 'dist'
+		},
 		plugins: {
-			svg: { js: 'src/svg/svg.js' },
-			ajax: { js: 'src/ajax/ajax.js' },
-			tips: { js: 'src/tips/tips.js', css: 'src/tips/tips.css' },
-			modal: { js: 'src/modal/modal.js', css: 'src/modal/modal.js' },
-			viewport: { js: 'src/viewport.js' },
-			imagemap: { js: 'src/imagemap/imagemap.js' },
-			bgiframe: { js: 'src/bgiframe/bgiframe.js' }
+			svg: { js: '<%=dirs.src%>/svg/svg.js' },
+			ajax: { js: '<%=dirs.src%>/ajax/ajax.js' },
+			tips: { js: '<%=dirs.src%>/tips/tips.js', css: '<%=dirs.src%>/tips/tips.css' },
+			modal: { js: '<%=dirs.src%>/modal/modal.js', css: '<%=dirs.src%>/modal/modal.js' },
+			viewport: { js: '<%=dirs.src%>/viewport.js' },
+			imagemap: { js: '<%=dirs.src%>/imagemap/imagemap.js' },
+			bgiframe: { js: '<%=dirs.src%>/bgiframe/bgiframe.js' }
 		},
 		clean: {
 			dist: 'dist/'
 		},
 		concat: {
 			basic: {
-				src: [ '<banner:meta.banners.full>', 'src/intro.js', 'src/core.js', 'src/outro.js' ],
-				dest: 'dist/basic/jquery.qtip.js'
+				src: [
+					'<banner:meta.banners.full>', '<%=dirs.src%>/intro.js',
+					'<%=dirs.src%>/core.js', '<%=dirs.src%>/outro.js'
+				],
+				dest: '<%=dirs.dist%>/basic/jquery.qtip.js'
 			},
 			basic_css: {
 				src: [ '<banner:meta.banners.full>', 'core.css', 'styles.css' ],
-				dest: 'dist/basic/jquery.qtip.css'
+				dest: '<%=dirs.dist%>/basic/jquery.qtip.css'
 			},
 			dist: {
 				// See "set_plugins" task for src
-				dest: 'dist/jquery.qtip.js'
+				dest: '<%=dirs.dist%>/jquery.qtip.js'
 			},
 			dist_css: {
 				// See "set_plugins" task for src
-				dest: 'dist/jquery.qtip.css'
+				dest: '<%=dirs.dist%>/jquery.qtip.css'
 			}
 		},
 		min: {
 			basic: {
-				src: ['<banner:meta.banners.min>', '<file_strip_banner:dist/basic/jquery.qtip.js:block>'],
-				dest: 'dist/basic/jquery.qtip.min.js'
+				src: ['<banner:meta.banners.min>', '<file_strip_banner:<%=dirs.dist%>/basic/jquery.qtip.js:block>'],
+				dest: '<%=dirs.dist%>/basic/jquery.qtip.min.js'
 			},
 			dist: {
 				src: ['<banner:meta.banners.min>', '<file_strip_banner:dist/jquery.qtip.js:block>'],
-				dest: 'dist/jquery.qtip.min.js'
+				dest: '<%=dirs.dist%>/jquery.qtip.min.js'
 			}
 		},
 		cssmin: {
 			basic: {
-				src: ['<banner:meta.banners.min>', '<file_strip_banner:dist/basic/jquery.qtip.css:block>'],
-				dest: 'dist/basic/jquery.qtip.min.css'
+				src: ['<banner:meta.banners.min>', '<file_strip_banner:<%=dirs.dist%>/basic/jquery.qtip.css:block>'],
+				dest: '<%=dirs.dist%>/basic/jquery.qtip.min.css'
 			},
 			dist: {
-				src: ['<banner:meta.banners.min>', '<file_strip_banner:dist/jquery.qtip.css:block>'],
-				dest: 'dist/jquery.qtip.min.css'
+				src: ['<banner:meta.banners.min>', '<file_strip_banner:<%=dirs.dist%>/jquery.qtip.css:block>'],
+				dest: '<%=dirs.dist%>/jquery.qtip.min.css'
 			}
 		},
 		lint: {
-			beforeconcat: ['grunt.js', 'src/core.js', 'src/*/*.js']
+			beforeconcat: ['grunt.js', '<%=dirs.src%>/core.js', '<%=dirs.src%>/*/*.js']
 		},
 		csslint: {
 			src: {
-				src: ['*.css', 'src/**/*.css'],
+				src: ['*.css', '<%=dirs.src%>/**/*.css'],
 				rules: {
 					ids: false,
 					important: false,
@@ -115,39 +122,40 @@ module.exports = function(grunt) {
 		if(grunt.config('concat.dist.src')) { return; } // Only do it once
 
 		var plugins = (grunt.option('plugins') || 'ajax viewport tips modal imagemap svg bgiframe').split(' '),
-			js = ['<banner:meta.banners.full>', 'src/intro.js', 'src/core.js'],
-			css = ['<banner:meta.banners.full>', 'src/core.css', 'src/extra.css'];
+			js = ['<banner:meta.banners.full>', '<%=dirs.src%>/intro.js', '<%=dirs.src%>/core.js'],
+			css = ['<banner:meta.banners.full>', '<%=dirs.src%>/core.css', '<%=dirs.src%>/extra.css'];
 
 		// Console out
 		grunt.log.write("\nBuilding qTip2 with plugins: " + plugins.join(' ') + "\n");
 
 		// Setup include strings
 		plugins.forEach(function(plugin) {
-			js.push('src/'+plugin+'/'+plugin+'.js');
-			css.push('src/'+plugin+'/'+plugin+'.css');
+			js.push('<%=dirs.src%>/'+plugin+'/'+plugin+'.js');
+			css.push('<%=dirs.src%>/'+plugin+'/'+plugin+'.css');
 		});
 
 		// Update config
-		grunt.config.set('concat.dist.src', js.concat(['src/outro.js']));
+		grunt.config.set('concat.dist.src', js.concat(['<%=dirs.src%>/outro.js']));
 		grunt.config.set('concat.dist_css.src', css);
 	});
 
 	// Grab latest git commit message and output to "comment" file
 	grunt.registerTask('commitmsg', 'Output latest git commit message', function() {
-		var dist = grunt.file.expand(['dist']),
+		var dist = grunt.config('dirs.dist'),
 			cmd = 'git log --pretty=format:\'%s\' -1 > ' + dist + '/comment';
 
 		require('child_process').exec(cmd, function(err, stdout, stderr){
-			grunt.file.write('dist/comment', gzipSrc.length);
+			grunt.file.write(dist+'/comment', gzipSrc.length);
 		});
 	});
 
 	// Output gzip file size task
 	grunt.registerTask('gzip', 'Calculate size of gzipped minified file', function() {
-		var src = grunt.file.read( grunt.config('min.dist.dest') ),
+		var dist = grunt.config('dirs.dist'),
+			src = grunt.file.read( grunt.file.expand( grunt.config('min.dist.dest') ) ),
 			gzipSrc = grunt.helper('gzip', src);
 
-		grunt.file.write('dist/gziplength', gzipSrc.length);
+		grunt.file.write(dist+'/gziplength', gzipSrc.length);
 	});
 
 	// Setup all other tasks
