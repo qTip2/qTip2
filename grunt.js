@@ -1,8 +1,7 @@
 /*global module:false*/
 module.exports = function(grunt) {
 	// Load grunt helpers
-	grunt.loadNpmTasks('grunt-css');
-	grunt.loadNpmTasks('grunt-clean');
+	grunt.loadNpmTasks('grunt-contrib');
 
 	// Project configuration.
 	grunt.initConfig({
@@ -21,7 +20,8 @@ module.exports = function(grunt) {
 		},
 		dirs: {
 			src: 'src',
-			dist: 'dist'
+			dist: 'dist',
+			zip: 'dist'
 		},
 		plugins: {
 			svg: { js: '<%=dirs.src%>/svg/svg.js' },
@@ -66,28 +66,30 @@ module.exports = function(grunt) {
 				dest: '<%=dirs.dist%>/jquery.qtip.min.js'
 			}
 		},
-		cssmin: {
+		mincss: {
 			basic: {
-				src: ['<banner:meta.banners.min>', '<file_strip_banner:<%=dirs.dist%>/basic/jquery.qtip.css:block>'],
-				dest: '<%=dirs.dist%>/basic/jquery.qtip.min.css'
+				'<%=dirs.dist%>/basic/jquery.qtip.min.css': [
+					'<banner:meta.banners.min>', '<file_strip_banner:<%=dirs.dist%>/basic/jquery.qtip.css:block>'
+				]
 			},
 			dist: {
-				src: ['<banner:meta.banners.min>', '<file_strip_banner:<%=dirs.dist%>/jquery.qtip.css:block>'],
-				dest: '<%=dirs.dist%>/jquery.qtip.min.css'
+				'<%=dirs.dist%>/jquery.qtip.min.css': [
+					'<banner:meta.banners.min>', '<file_strip_banner:<%=dirs.dist%>/jquery.qtip.css:block>'
+				]
 			}
 		},
 		lint: {
 			beforeconcat: ['grunt.js', '<%=dirs.src%>/core.js', '<%=dirs.src%>/*/*.js']
 		},
-		csslint: {
-			src: {
-				src: ['*.css', '<%=dirs.src%>/**/*.css'],
-				rules: {
-					ids: false,
-					important: false,
-					'empty-rules': false,
-					'star-property-hack': false,
-					'universal-selector': false
+		compress: {
+			basic: {
+				options: {
+					mode: 'zip',
+					basePath: '<%=dirs.zip%>',
+					level: 1
+				},
+				files: {
+					'<%=dirs.zip%>/jquery.qtip.zip': [ '<%=dirs.dist%>/**/*.js', '<%=dirs.dist%>/**/*.css' ]
 				}
 			}
 		},
@@ -159,8 +161,8 @@ module.exports = function(grunt) {
 	});
 
 	// Setup all other tasks
-	grunt.registerTask('css', 'init clean csslint concat:dist_css cssmin:dist');
-	grunt.registerTask('basic', 'init clean lint csslint concat:basic concat:basic_css min:basic cssmin:basic');
-	grunt.registerTask('default', 'init clean lint csslint concat:dist concat:dist_css min:dist cssmin:dist');
-	grunt.registerTask('dev', 'init clean lint csslint concat min cssmin gzip commitmsg');
+	grunt.registerTask('css', 'init clean concat:dist_css mincss:dist');
+	grunt.registerTask('basic', 'init clean lint concat:basic concat:basic_css min:basic mincss:basic');
+	grunt.registerTask('default', 'init clean lint concat:dist concat:dist_css min:dist mincss:dist');
+	grunt.registerTask('dev', 'init clean lint concat min mincss gzip commitmsg');
 };

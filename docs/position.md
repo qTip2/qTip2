@@ -21,7 +21,7 @@ Notice how reading down the object you begin to see a logical plain English patt
 
 <div style="text-align: center;">
 ![Corner string types](http://media2.juggledesign.com/qtip2/images/corners.jpg "Corner string types")
-</center>
+</div>
 
 ### Notes
 * This system is heavily based upon the [jQuery UI Position plugin](http://docs.jquery.com/UI/Position)
