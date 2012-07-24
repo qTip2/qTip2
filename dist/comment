@@ -1,1 +1,1 @@
-Update grunt with dirs object for easy changing for directory structure
+Remove node_modules and need for grunt-css. Update grunt.js with compress task and documentation

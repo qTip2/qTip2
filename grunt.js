@@ -125,7 +125,7 @@ module.exports = function(grunt) {
 
 		var plugins = (grunt.option('plugins') || 'ajax viewport tips modal imagemap svg bgiframe').split(' '),
 			js = ['<banner:meta.banners.full>', '<%=dirs.src%>/intro.js', '<%=dirs.src%>/core.js'],
-			css = ['<banner:meta.banners.full>', '<%=dirs.src%>/core.css', '<%=dirs.src%>/extra.css'];
+			css = ['<banner:meta.banners.full>', '<%=dirs.src%>/core.css', '<%=dirs.src%>/styles.css', '<%=dirs.src%>/extra.css'];
 
 		// Console out
 		grunt.log.write("\nBuilding qTip2 with plugins: " + plugins.join(' ') + "\n");
