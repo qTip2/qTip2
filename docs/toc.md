@@ -4,7 +4,7 @@
 
 ## Getting started
 
-* [Getting started](gettingstarted.md) - A guide to configuring grunt for your project.
+* [Getting started](gettingstarted.md) - A guide to installing and configuring qTip<sup>2</sup> in your projects
 * [FAQ](faq.md) - Frequently asked questions, along with their answers.
 
 ## Guides
