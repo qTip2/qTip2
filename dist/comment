@@ -1,1 +1,1 @@
-Remove node_modules and need for grunt-css. Update grunt.js with compress task and documentation
+Fixed missing styles.css in grunt.js file
