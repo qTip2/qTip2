@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# Generate gzip size and commit message
+grunt gzip commitmsg

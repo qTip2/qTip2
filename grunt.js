@@ -33,7 +33,7 @@ module.exports = function(grunt) {
 			bgiframe: { js: '<%=dirs.src%>/bgiframe/bgiframe.js' }
 		},
 		clean: {
-			dist: 'dist/'
+			dist: 'dist/**/*'
 		},
 		concat: {
 			basic: {
@@ -68,14 +68,18 @@ module.exports = function(grunt) {
 		},
 		mincss: {
 			basic: {
-				'<%=dirs.dist%>/basic/jquery.qtip.min.css': [
-					'<banner:meta.banners.min>', '<file_strip_banner:<%=dirs.dist%>/basic/jquery.qtip.css:block>'
-				]
+				files: {
+					'<%=dirs.dist%>/basic/jquery.qtip.min.css': [
+						'<banner:meta.banners.min>', '<file_strip_banner:<%=dirs.dist%>/basic/jquery.qtip.css:block>'
+					]
+				}
 			},
 			dist: {
-				'<%=dirs.dist%>/jquery.qtip.min.css': [
-					'<banner:meta.banners.min>', '<file_strip_banner:<%=dirs.dist%>/jquery.qtip.css:block>'
-				]
+				files: {
+					'<%=dirs.dist%>/jquery.qtip.min.css': [
+						'<banner:meta.banners.min>', '<file_strip_banner:<%=dirs.dist%>/jquery.qtip.css:block>'
+					]
+				}
 			}
 		},
 		lint: {
@@ -164,5 +168,5 @@ module.exports = function(grunt) {
 	grunt.registerTask('css', 'init clean concat:dist_css mincss:dist');
 	grunt.registerTask('basic', 'init clean lint concat:basic concat:basic_css min:basic mincss:basic');
 	grunt.registerTask('default', 'init clean lint concat:dist concat:dist_css min:dist mincss:dist');
-	grunt.registerTask('dev', 'init clean lint concat min mincss gzip commitmsg');
+	grunt.registerTask('dev', 'init clean lint concat min mincss');
 };
