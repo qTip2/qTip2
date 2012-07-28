@@ -206,10 +206,11 @@ function Tip(qTip, command)
 			elem = isTitleTop ? elems.titlebar : elems.content,
 			moz = $.browser.mozilla,
 			prefix = moz ? '-moz-' : $.browser.webkit ? '-webkit-' : '',
-			side = corner.y + (moz ? '' : '-') + corner.x,
-			css = prefix + (moz ? 'border-radius-' + side : 'border-' + side + '-radius');
+			nonStandard = 'border-radius-' + corner.y + corner.x,
+			standard = 'border-' + corner.y + '-' + corner.x + '-radius';
 
-		return parseInt(elem.css(css), 10) || parseInt(tooltip.css(css), 10) || 0;
+		function r(c) { console.log(c); return parseInt(elem.css(c), 10) || parseInt(tooltip.css(c), 10); }
+		return r(standard) || r(prefix + standard) || r(prefix + nonStandard) || r(nonStandard) || 0;
 	}
 
 	function calculateSize(corner) {
