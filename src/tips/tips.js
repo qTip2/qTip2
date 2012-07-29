@@ -209,7 +209,7 @@ function Tip(qTip, command)
 			nonStandard = 'border-radius-' + corner.y + corner.x,
 			standard = 'border-' + corner.y + '-' + corner.x + '-radius';
 
-		function r(c) { console.log(c); return parseInt(elem.css(c), 10) || parseInt(tooltip.css(c), 10); }
+		function r(c) { return parseInt(elem.css(c), 10) || parseInt(tooltip.css(c), 10); }
 		return r(standard) || r(prefix + standard) || r(prefix + nonStandard) || r(nonStandard) || 0;
 	}
 

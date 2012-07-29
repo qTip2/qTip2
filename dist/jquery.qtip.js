@@ -1,4 +1,4 @@
-/*! qTip2 - Pretty powerful tooltips - v2.0.0 - 2012-07-28
+/*! qTip2 - Pretty powerful tooltips - v2.0.0 - 2012-07-29
 * http://craigsworks.com/projects/qtip2/
 * Copyright (c) 2012 Craig Michael Thompson; Licensed MIT, GPL */
 
@@ -2374,7 +2374,7 @@ function Tip(qTip, command)
 			nonStandard = 'border-radius-' + corner.y + corner.x,
 			standard = 'border-' + corner.y + '-' + corner.x + '-radius';
 
-		function r(c) { console.log(c); return parseInt(elem.css(c), 10) || parseInt(tooltip.css(c), 10); }
+		function r(c) { return parseInt(elem.css(c), 10) || parseInt(tooltip.css(c), 10); }
 		return r(standard) || r(prefix + standard) || r(prefix + nonStandard) || r(nonStandard) || 0;
 	}
 
