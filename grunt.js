@@ -62,7 +62,7 @@ module.exports = function(grunt) {
 				dest: '<%=dirs.dist%>/basic/jquery.qtip.min.js'
 			},
 			dist: {
-				src: ['<banner:meta.banners.min>', '<file_strip_banner:dist/jquery.qtip.js:block>'],
+				src: ['<banner:meta.banners.min>', '<file_strip_banner:<%=dirs.dist%>/jquery.qtip.js:block>'],
 				dest: '<%=dirs.dist%>/jquery.qtip.min.js'
 			}
 		},
@@ -129,7 +129,8 @@ module.exports = function(grunt) {
 
 		var plugins = (grunt.option('plugins') || 'ajax viewport tips modal imagemap svg bgiframe').split(' '),
 			js = ['<banner:meta.banners.full>', '<%=dirs.src%>/intro.js', '<%=dirs.src%>/core.js'],
-			css = ['<banner:meta.banners.full>', '<%=dirs.src%>/core.css', '<%=dirs.src%>/styles.css', '<%=dirs.src%>/extra.css'];
+			css = ['<banner:meta.banners.full>', '<%=dirs.src%>/core.css', '<%=dirs.src%>/styles.css', '<%=dirs.src%>/extra.css'],
+			dist = grunt.option('dist');
 
 		// Console out
 		grunt.log.write("\nBuilding qTip2 with plugins: " + plugins.join(' ') + "\n");
@@ -143,6 +144,12 @@ module.exports = function(grunt) {
 		// Update config
 		grunt.config.set('concat.dist.src', js.concat(['<%=dirs.src%>/outro.js']));
 		grunt.config.set('concat.dist_css.src', css);
+
+		// Alos set dist directory if set
+		if(dist) {
+			grunt.config.set('dirs.dist', dist);
+			grunt.config.set('clean.dist', dist + '/**/*');
+		}
 	});
 
 	// Grab latest git commit message and output to "comment" file
