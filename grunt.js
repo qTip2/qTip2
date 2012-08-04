@@ -40,7 +40,7 @@ module.exports = function(grunt) {
 
 		// Actual tasks
 		clean: {
-			dist: 'dist/**/*'
+			dist: 'dist/**/*' // Changed by the 'dist' command-line option (see "init" task)
 		},
 		concat: {
 			basic: {
@@ -123,8 +123,8 @@ module.exports = function(grunt) {
 		if(grunt.config('concat.dist.src')) { return; } // Only do it once
 
 		// Grab command-line options, using valid defaults if not given
-		var plugins = (grunt.option('plugins') || Object.keys( grunt.config('plugins')).join(' ')).split(' '),
-			styles = (grunt.option('styles') || Object.keys( grunt.config('styles')).join(' ')).split(' '),
+		var plugins = (grunt.option('plugins') || Object.keys( grunt.config('plugins')).join(' ')).replace(/ /g, ' ').split(' '),
+			styles = (grunt.option('styles') || Object.keys( grunt.config('styles')).join(' ')).replace(/ /g, ' ').split(' '),
 			valid;
 
 		// Setup JS/CSS arrays
@@ -141,7 +141,7 @@ module.exports = function(grunt) {
 				else { styles[i] = style+('*'.red); }
 			});
 		}
-		else { styles = 'None'; }
+		else { styles = ['None']; }
 
 		// Parse 'plugins' option (decides which plugins are included)
 		if(grunt.option('plugins') !== 0) {
@@ -153,7 +153,7 @@ module.exports = function(grunt) {
 				else { plugins[i] = plugin+('*'.red); }
 			});
 		}
-		else { plugins = 'None'; }
+		else { plugins = ['None']; }
 
 		// Update config
 		grunt.config('concat.dist.src', js.concat(['<%=dirs.src%>/outro.js']));
