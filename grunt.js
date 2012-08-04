@@ -5,6 +5,7 @@ module.exports = function(grunt) {
 
 	// Project configuration.
 	grunt.initConfig({
+		// Meta properties
 		pkg: '<json:qtip2.jquery.json>',
 		meta: {
 			banners: {
@@ -18,20 +19,26 @@ module.exports = function(grunt) {
 					'Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */'
 			}
 		},
-		dirs: {
-			src: 'src',
-			dist: 'dist',
-			zip: 'dist'
+
+		// Directories
+		dirs: { src: 'src', dist: 'dist' },
+
+		// Styles and plugins map
+		styles: {
+			basic: '<%=dirs.src%>/basic.css',
+			css3: '<%=dirs.src%>/css3.css'
 		},
 		plugins: {
 			svg: { js: '<%=dirs.src%>/svg/svg.js' },
 			ajax: { js: '<%=dirs.src%>/ajax/ajax.js' },
 			tips: { js: '<%=dirs.src%>/tips/tips.js', css: '<%=dirs.src%>/tips/tips.css' },
-			modal: { js: '<%=dirs.src%>/modal/modal.js', css: '<%=dirs.src%>/modal/modal.js' },
+			modal: { js: '<%=dirs.src%>/modal/modal.js', css: '<%=dirs.src%>/modal/modal.css' },
 			viewport: { js: '<%=dirs.src%>/viewport.js' },
 			imagemap: { js: '<%=dirs.src%>/imagemap/imagemap.js' },
 			bgiframe: { js: '<%=dirs.src%>/bgiframe/bgiframe.js' }
 		},
+
+		// Actual tasks
 		clean: {
 			dist: 'dist/**/*'
 		},
@@ -44,15 +51,15 @@ module.exports = function(grunt) {
 				dest: '<%=dirs.dist%>/basic/jquery.qtip.js'
 			},
 			basic_css: {
-				src: [ '<banner:meta.banners.full>', 'core.css', 'styles.css' ],
+				src: [ '<banner:meta.banners.full>', '<%=dirs.src%>/core.css', '<%=styles.basic%>' ],
 				dest: '<%=dirs.dist%>/basic/jquery.qtip.css'
 			},
 			dist: {
-				// See "set_plugins" task for src
+				// See "init" task for src
 				dest: '<%=dirs.dist%>/jquery.qtip.js'
 			},
 			dist_css: {
-				// See "set_plugins" task for src
+				// See "init" task for src
 				dest: '<%=dirs.dist%>/jquery.qtip.css'
 			}
 		},
@@ -85,18 +92,6 @@ module.exports = function(grunt) {
 		lint: {
 			beforeconcat: ['grunt.js', '<%=dirs.src%>/core.js', '<%=dirs.src%>/*/*.js']
 		},
-		compress: {
-			basic: {
-				options: {
-					mode: 'zip',
-					basePath: '<%=dirs.zip%>',
-					level: 1
-				},
-				files: {
-					'<%=dirs.zip%>/jquery.qtip.zip': [ '<%=dirs.dist%>/**/*.js', '<%=dirs.dist%>/**/*.css' ]
-				}
-			}
-		},
 		watch: {
 			files: '<config:lint.beforeconcat.files>',
 			tasks: 'lint'
@@ -123,33 +118,58 @@ module.exports = function(grunt) {
 		uglify: {}
 	});
 
-	// Set extras and extras_css "src" based on defined plugins
+	// Parse command line options
 	grunt.registerTask('init', 'Default build', function() {
 		if(grunt.config('concat.dist.src')) { return; } // Only do it once
 
-		var plugins = (grunt.option('plugins') || 'ajax viewport tips modal imagemap svg bgiframe').split(' '),
-			js = ['<banner:meta.banners.full>', '<%=dirs.src%>/intro.js', '<%=dirs.src%>/core.js'],
-			css = ['<banner:meta.banners.full>', '<%=dirs.src%>/core.css', '<%=dirs.src%>/styles.css', '<%=dirs.src%>/extra.css'],
+		// Grab command-line options, using valid defaults if not given
+		var plugins = (grunt.option('plugins') || Object.keys( grunt.config('plugins')).join(' ')).split(' '),
+			styles = (grunt.option('styles') || Object.keys( grunt.config('styles')).join(' ')).split(' '),
+			valid;
+
+		// Setup JS/CSS arrays
+		var js = ['<banner:meta.banners.full>', '<%=dirs.src%>/intro.js', '<%=dirs.src%>/core.js'],
+			css = ['<banner:meta.banners.full>', '<%=dirs.src%>/core.css'],
 			dist = grunt.option('dist');
 
-		// Console out
-		grunt.log.write("\nBuilding qTip2 with plugins: " + plugins.join(' ') + "\n");
+		// Parse 'styles' option (decides which stylesheets are included)
+		if(grunt.option('styles') !== 0) {
+			styles.forEach(function(style, i) {
+				if( (valid = grunt.config('styles.'+style)) ) {
+					css.push(valid);
+				}
+				else { styles[i] = style+('*'.red); }
+			});
+		}
+		else { styles = 'None'; }
 
-		// Setup include strings
-		plugins.forEach(function(plugin) {
-			js.push('<%=dirs.src%>/'+plugin+'/'+plugin+'.js');
-			css.push('<%=dirs.src%>/'+plugin+'/'+plugin+'.css');
-		});
+		// Parse 'plugins' option (decides which plugins are included)
+		if(grunt.option('plugins') !== 0) {
+			plugins.forEach(function(plugin, i) {
+				if( (valid = grunt.config('plugins.'+plugin)) ) {
+					if(valid.js) { js.push(valid.js); }
+					if(valid.css) { css.push(valid.css); }
+				}
+				else { plugins[i] = plugin+('*'.red); }
+			});
+		}
+		else { plugins = 'None'; }
 
 		// Update config
-		grunt.config.set('concat.dist.src', js.concat(['<%=dirs.src%>/outro.js']));
-		grunt.config.set('concat.dist_css.src', css);
+		grunt.config('concat.dist.src', js.concat(['<%=dirs.src%>/outro.js']));
+		grunt.config('concat.dist_css.src', css);
 
-		// Alos set dist directory if set
+		// Parse 'dist' option (decides which directory to build into)
 		if(dist) {
-			grunt.config.set('dirs.dist', dist);
-			grunt.config.set('clean.dist', dist + '/**/*');
+			grunt.config('dirs.dist', dist);
+			grunt.config('clean.dist', dist + '/**/*');
 		}
+
+		// Output current build properties
+		grunt.log.write("\nBuilding " + "qTip2".green + " with " +
+			"plugins " + plugins.join(' ').green + " and " +
+			"styles "  +styles.join(' ').green + "\n"
+		);
 	});
 
 	// Grab latest git commit message and output to "comment" file
