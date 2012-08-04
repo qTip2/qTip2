@@ -33,7 +33,7 @@ module.exports = function(grunt) {
 			ajax: { js: '<%=dirs.src%>/ajax/ajax.js' },
 			tips: { js: '<%=dirs.src%>/tips/tips.js', css: '<%=dirs.src%>/tips/tips.css' },
 			modal: { js: '<%=dirs.src%>/modal/modal.js', css: '<%=dirs.src%>/modal/modal.css' },
-			viewport: { js: '<%=dirs.src%>/viewport.js' },
+			viewport: { js: '<%=dirs.src%>/viewport/viewport.js' },
 			imagemap: { js: '<%=dirs.src%>/imagemap/imagemap.js' },
 			bgiframe: { js: '<%=dirs.src%>/bgiframe/bgiframe.js' }
 		},
