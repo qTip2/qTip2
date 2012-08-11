@@ -78,7 +78,7 @@
 function sanitizeOptions(opts)
 {
 	var invalid = function(a) { return a === NULL || 'object' !== typeof a; },
-		invalidContent = function(c) { return $.isFunction(c) && ((!c && !c.attr) || c.length < 1 || ('object' === typeof c && !c.jquery)); };
+		invalidContent = function(c) { return !$.isFunction(c) && ((!c && !c.attr) || c.length < 1 || ('object' === typeof c && !c.jquery)); };
 
 	if(!opts || 'object' !== typeof opts) { return FALSE; }
 
@@ -91,7 +91,7 @@ function sanitizeOptions(opts)
 			opts.content = { text: opts.content };
 		}
 
-		if(!invalidContent(opts.content.text || FALSE)) {
+		if(invalidContent(opts.content.text || FALSE)) {
 			opts.content.text = FALSE;
 		}
 
@@ -100,7 +100,7 @@ function sanitizeOptions(opts)
 				opts.content.title = { text: opts.content.title };
 			}
 
-			if(!invalidContent(opts.content.title.text || FALSE)) {
+			if(invalidContent(opts.content.title.text || FALSE)) {
 				opts.content.title.text = FALSE;
 			}
 		}
