@@ -2,7 +2,7 @@
 function sanitizeOptions(opts)
 {
 	var invalid = function(a) { return a === NULL || 'object' !== typeof a; },
-		invalidContent = function(c) { $.isFunction(c) && ((!c && !c.attr) || c.length < 1 || ('object' === typeof c && !c.jquery)) };
+		invalidContent = function(c) { return $.isFunction(c) && ((!c && !c.attr) || c.length < 1 || ('object' === typeof c && !c.jquery)); };
 
 	if(!opts || 'object' !== typeof opts) { return FALSE; }
 
