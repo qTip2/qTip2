@@ -1,79 +1,49 @@
 // Option object sanitizer
 function sanitizeOptions(opts)
 {
-	var content;
+	var invalid = function(a) { return a === NULL || 'object' !== typeof a; },
+		invalidContent = function(c) { $.isFunction(c) && ((!c && !c.attr) || c.length < 1 || ('object' === typeof c && !c.jquery)) };
 
 	if(!opts || 'object' !== typeof opts) { return FALSE; }
 
-	if(opts.metadata === NULL || 'object' !== typeof opts.metadata) {
-		opts.metadata = {
-			type: opts.metadata
-		};
+	if(invalid(opts.metadata)) {
+		opts.metadata = { type: opts.metadata };
 	}
 
 	if('content' in opts) {
-		if(opts.content === NULL || 'object' !== typeof opts.content || opts.content.jquery) {
-			opts.content = {
-				text: opts.content
-			};
+		if(invalid(opts.content) || opts.content.jquery) {
+			opts.content = { text: opts.content };
 		}
 
-		content = opts.content.text || FALSE;
-		if(!$.isFunction(content) && ((!content && !content.attr) || content.length < 1 || ('object' === typeof content && !content.jquery))) {
+		if(!invalidContent(opts.content.text || FALSE)) {
 			opts.content.text = FALSE;
 		}
 
 		if('title' in opts.content) {
-			if(opts.content.title === NULL || 'object' !== typeof opts.content.title) {
-				opts.content.title = {
-					text: opts.content.title
-				};
+			if(invalid(opts.content.title)) {
+				opts.content.title = { text: opts.content.title };
 			}
 
-			content = opts.content.title.text || FALSE;
-			if(!$.isFunction(content) && ((!content && !content.attr) || content.length < 1 || ('object' === typeof content && !content.jquery))) {
+			if(!invalidContent(opts.content.title.text || FALSE)) {
 				opts.content.title.text = FALSE;
 			}
 		}
 	}
 
-	if('position' in opts) {
-		if(opts.position === NULL || 'object' !== typeof opts.position) {
-			opts.position = {
-				my: opts.position,
-				at: opts.position
-			};
-		}
+	if('position' in opts && invalid(opts.position)) {
+		opts.position = { my: opts.position, at: opts.position };
 	}
 
-	if('show' in opts) {
-		if(opts.show === NULL || 'object' !== typeof opts.show) {
-			if(opts.show.jquery) {
-				opts.show = { target: opts.show };
-			}
-			else {
-				opts.show = { event: opts.show };
-			}
-		}
+	if('show' in opts && invalid(opts.show)) {
+		opts.show = opts.show.jquery ? { target: opts.show } : { event: opts.show };
 	}
 
-	if('hide' in opts) {
-		if(opts.hide === NULL || 'object' !== typeof opts.hide) {
-			if(opts.hide.jquery) {
-				opts.hide = { target: opts.hide };
-			}
-			else {
-				opts.hide = { event: opts.hide };
-			}
-		}
+	if('hide' in opts && invalid(opts.hide)) {
+		opts.hide = opts.hide.jquery ? { target: opts.hide } : { event: opts.hide };
 	}
 
-	if('style' in opts) {
-		if(opts.style === NULL || 'object' !== typeof opts.style) {
-			opts.style = {
-				classes: opts.style
-			};
-		}
+	if('style' in opts && invalid(opts.style)) {
+		opts.style = { classes: opts.style };
 	}
 
 	// Sanitize plugin options
