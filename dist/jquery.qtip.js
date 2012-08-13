@@ -2996,7 +2996,7 @@ PLUGINS.modal.sanitize = function(opts) {
 };
 
 // Base z-index for all modal tooltips (use qTip core z-index as a base)
-PLUGINS.modal.zindex = QTIP.zindex + 1000;
+PLUGINS.modal.zindex = QTIP.zindex - 200;
 
 // Defines the selector used to select all 'focusable' elements within the modal when using the show.modal.stealfocus option.
 // Selectors initially taken from http://stackoverflow.com/questions/7668525/is-there-a-jquery-selector-to-get-all-elements-that-can-get-focus
