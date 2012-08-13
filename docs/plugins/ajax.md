@@ -45,7 +45,7 @@ $('.selector').qtip({
 });
 ```
 **Note:** Access to the API inside $.ajax callbacks is achieved via the 'this' variable e.g. this.set(), as opposed to it being passed as an argument like in the API
-[events]../events.md).
+[events](../events.md).
 
 **Note:** If you wish to simply filter the returned content before it gets set as the content, use the [dataFilter](http://api.jquery.com/jQuery.ajax/) callback.
 
