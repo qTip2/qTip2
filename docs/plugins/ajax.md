@@ -65,6 +65,7 @@ basically a fancy way of saying a JavaScript object.
 Many popular server-side languages such as [Ruby](http://ruby-lang.org) and [PHP](http://php.net) provide ways of encoding their native data structures into JSON syntax.
 Once you have your JSON being spat out correctly (example below), take a look at how to retrieve and use the JSON using qTip:
 
+<div class="left">
 ```js
 /* JSON string returned by the server */
 {
@@ -85,7 +86,11 @@ Once you have your JSON being spat out correctly (example below), take a look at
 		"(X)HTML", "PHP", "MySQL"
 	]
 }
+```
+</div>
 
+<div class="right">
+```js
 /* qTip2 call below will grab this JSON and use the firstName as the content */
 $('.selector').qtip({
 	content: {
@@ -109,6 +114,7 @@ $('.selector').qtip({
 	}
 });
 ```
+</div>
 
 As you can see, processing the data is very simple. We take the parsed JSON string returned from the server, use its attributes to create the
 new [content](../content.md#text) of the tooltip, and call the API's [set](../api.md#set) method to replace the tooltip contents with it. Easy peasy!
