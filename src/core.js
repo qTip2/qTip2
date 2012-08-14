@@ -572,6 +572,7 @@ function QTip(target, options, id, attr)
 				self.rendered && elements.tooltip[0],
 				options.position.container[0],
 				options.position.viewport[0],
+				options.position.container.closest('html')[0], // unfocus
 				window,
 				document
 			];
