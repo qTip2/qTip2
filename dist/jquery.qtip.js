@@ -2908,7 +2908,7 @@ function Modal(api)
 					docBody.bind('focusin'+namespace, stealFocus);
 
 					// Blur the current item and focus anything in the modal we an
-					focusInputs( $('body *') );
+					focusInputs( $('body :focus') );
 				}
 			}
 			else {
