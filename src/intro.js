@@ -43,29 +43,15 @@
 		defaultClass = uitooltip + '-default',
 		focusClass = uitooltip + '-focus',
 		hoverClass = uitooltip + '-hover',
-		fluidClass = uitooltip + '-fluid',
-		hideOffset = '-31000px',
 		replaceSuffix = '_replacedByqTip',
 		oldtitle = 'oldtitle',
-		trackingBound;
-		
-	/* Thanks to Paul Irish for this one: http://paulirish.com/2009/log-a-lightweight-wrapper-for-consolelog/ */
-	function log() {
-		log.history = log.history || [];
-		log.history.push(arguments);
-		
-		// Make sure console is present
-		if('object' === typeof console) {
+		trackingBound,
+		redrawContainer;
 
-			// Setup console and arguments
-			var c = console[ console.warn ? 'warn' : 'log' ],
-			args = Array.prototype.slice.call(arguments), a;
+	/*
+	* redraw() container for width/height calculations
+	*/
+	redrawContainer = $('<div/>', { id: 'qtip-rcontainer' });
+	$(function() { redrawContainer.appendTo(document.body); });
 
-			// Add qTip2 marker to first argument if it's a string
-			if(typeof arguments[0] === 'string') { args[0] = 'qTip2: ' + args[0]; }
-
-			// Apply console.warn or .log if not supported
-			a = c.apply ? c.apply(console, args) : c(args);
-		}
-	}
 

@@ -75,6 +75,11 @@ function Tip(qTip, command)
 		}
 	};
 
+	function whileVisible(callback) {
+		var visible = tooltip.is(':visible');
+		tooltip.show(); callback(); tooltip.toggle(visible);
+	}
+
 	function swapDimensions() {
 		size.width = opts.height;
 		size.height = opts.width;
@@ -186,17 +191,16 @@ function Tip(qTip, command)
 	function borderWidth(corner, side, backup) {
 		side = !side ? corner[corner.precedance] : side;
 		
-		var isFluid = tooltip.hasClass(fluidClass),
-			isTitleTop = elems.titlebar && corner.y === TOP,
+		var isTitleTop = elems.titlebar && corner.y === TOP,
 			elem = isTitleTop ? elems.titlebar : elems.tooltip,
 			css = 'border-' + side + '-width',
 			val;
 
-		// Grab the border-width value (add fluid class if needed)
-		tooltip.addClass(fluidClass);
-		val = parseInt(elem.css(css), 10);
-		val = (backup ? val || parseInt(tooltip.css(css), 10) : val) || 0;
-		tooltip.toggleClass(fluidClass, isFluid);
+		// Grab the border-width value
+		whileVisible(function() {
+			val = parseInt(elem.css(css), 10);
+			val = (backup ? val || parseInt(tooltip.css(css), 10) : val) || 0;
+		});
 
 		return val;
 	}
@@ -300,32 +304,29 @@ function Tip(qTip, command)
 				useTitle = elems.titlebar && (corner.y === TOP || (corner.y === CENTER && tip.position().top + (size.height / 2) + opts.offset < elems.titlebar.outerHeight(1))),
 				colorElem = useTitle ? elems.titlebar : elems.tooltip;
 
-			// Apply the fluid class so we can see our CSS values properly
-			tooltip.addClass(fluidClass);
+			// Ensure tooltip is visible then...
+			whileVisible(function() {
+				// Detect tip colours from CSS styles
+				color.fill = fill = tip.css(backgroundColor);
+				color.border = border = tip[0].style[ borderSideCamel ] || tip.css(borderSide) || tooltip.css(borderSide);
 
-			// Detect tip colours from CSS styles
-			color.fill = fill = tip.css(backgroundColor);
-			color.border = border = tip[0].style[ borderSideCamel ] || tip.css(borderSide) || tooltip.css(borderSide);
-
-			// Make sure colours are valid
-			if(!fill || invalid.test(fill)) {
-				color.fill = colorElem.css(backgroundColor) || transparent;
-				if(invalid.test(color.fill)) {
-					color.fill = tooltip.css(backgroundColor) || fill;
+				// Make sure colours are valid
+				if(!fill || invalid.test(fill)) {
+					color.fill = colorElem.css(backgroundColor) || transparent;
+					if(invalid.test(color.fill)) {
+						color.fill = tooltip.css(backgroundColor) || fill;
+					}
 				}
-			}
-			if(!border || invalid.test(border) || border === $(document.body).css('color')) {
-				color.border = colorElem.css(borderSide) || transparent;
-				if(invalid.test(color.border) || color.border === colorElem.css('color')) {
-					color.border = tooltip.css(borderSide) || tooltip.css(borderSideCamel) || border;
+				if(!border || invalid.test(border) || border === $(document.body).css('color')) {
+					color.border = colorElem.css(borderSide) || transparent;
+					if(invalid.test(color.border) || color.border === colorElem.css('color')) {
+						color.border = tooltip.css(borderSide) || tooltip.css(borderSideCamel) || border;
+					}
 				}
-			}
 
-			// Reset background and border colours
-			$('*', tip).add(tip).css('cssText', backgroundColor+':'+transparent+important+';border:0'+important+';');
-
-			// Remove fluid class
-			tooltip.removeClass(fluidClass);
+				// Reset background and border colours
+				$('*', tip).add(tip).css('cssText', backgroundColor+':'+transparent+important+';border:0'+important+';');
+			});
 		},
 
 		create: function()

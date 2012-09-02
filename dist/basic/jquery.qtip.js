@@ -47,31 +47,17 @@
 		defaultClass = uitooltip + '-default',
 		focusClass = uitooltip + '-focus',
 		hoverClass = uitooltip + '-hover',
-		fluidClass = uitooltip + '-fluid',
-		hideOffset = '-31000px',
 		replaceSuffix = '_replacedByqTip',
 		oldtitle = 'oldtitle',
-		trackingBound;
-		
-	/* Thanks to Paul Irish for this one: http://paulirish.com/2009/log-a-lightweight-wrapper-for-consolelog/ */
-	function log() {
-		log.history = log.history || [];
-		log.history.push(arguments);
-		
-		// Make sure console is present
-		if('object' === typeof console) {
+		trackingBound,
+		redrawContainer;
 
-			// Setup console and arguments
-			var c = console[ console.warn ? 'warn' : 'log' ],
-			args = Array.prototype.slice.call(arguments), a;
+	/*
+	* redraw() container for width/height calculations
+	*/
+	redrawContainer = $('<div/>', { id: 'qtip-rcontainer' });
+	$(function() { redrawContainer.appendTo(document.body); });
 
-			// Add qTip2 marker to first argument if it's a string
-			if(typeof arguments[0] === 'string') { args[0] = 'qTip2: ' + args[0]; }
-
-			// Apply console.warn or .log if not supported
-			a = c.apply ? c.apply(console, args) : c(args);
-		}
-	}
 
 
 // Option object sanitizer
@@ -1290,25 +1276,25 @@ function QTip(target, options, id, attr)
 		{
 			if(self.rendered < 1 || isDrawing) { return self; }
 
-			var container = options.position.container,
+			var style = options.style,
+				container = options.position.container,
 				perc, width, max, min;
 
 			// Set drawing flag
 			isDrawing = 1;
 
-			// If tooltip has a set height, just set it... like a boss!
-			if(options.style.height) { tooltip.css(HEIGHT, options.style.height); }
+			// If tooltip has a set height/width, just set it... like a boss!
+			if(style.height) { tooltip.css(HEIGHT, style.height); }
+			if(style.width) { tooltip.css(WIDTH, style.width); }
 
-			// If tooltip has a set width, just set it... like a boss!
-			if(options.style.width) { tooltip.css(WIDTH, options.style.width); }
-
-			// Otherwise simualte max/min width...
+			// Simulate max/min width if not set width present...
 			else {
 				// Reset width and add fluid class
-				tooltip.css(WIDTH, '').addClass(fluidClass);
+				tooltip.css(WIDTH, '').appendTo(redrawContainer);
 
-				// Grab our tooltip width (add 1 so we don't get wrapping problems.. huzzah!)
-				width = tooltip.width() + 1;
+				// Grab our tooltip width (add 1 if odd so we don't get wrapping problems.. huzzah!)
+				width = tooltip.width();
+				if(width % 2) { width += 1; }
 
 				// Grab our max/min properties
 				max = tooltip.css('max-width') || '';
@@ -1323,7 +1309,7 @@ function QTip(target, options, id, attr)
 				width = max + min ? Math.min(Math.max(width, min), max) : width;
 
 				// Set the newly calculated width and remvoe fluid class
-				tooltip.css(WIDTH, Math.round(width)).removeClass(fluidClass);
+				tooltip.css(WIDTH, Math.round(width)).appendTo(container);
 			}
 
 			// Set drawing flag
@@ -1422,8 +1408,7 @@ function init(id, opts)
 	html5 = elem.data(opts.metadata.name || 'qtipopts');
 
 	// If we don't get an object returned attempt to parse it manualyl without parseJSON
-	try { html5 = typeof html5 === 'string' ? $.parseJSON(html5) : html5; }
-	catch(e) { log('Unable to parse HTML5 attribute data: ' + html5); }
+	try { html5 = typeof html5 === 'string' ? $.parseJSON(html5) : html5; } catch(e) {}
 
 	// Merge in and sanitize metadata
 	config = $.extend(TRUE, {}, QTIP.defaults, opts,
@@ -1442,10 +1427,7 @@ function init(id, opts)
 		if(config.content.attr !== FALSE && attr) { config.content.text = attr; }
 
 		// No valid content was found, abort render
-		else {
-			log('Unable to locate content for tooltip! Aborting render of tooltip on element: ', elem);
-			return FALSE;
-		}
+		else { return FALSE; }
 	}
 
 	// Setup target options
