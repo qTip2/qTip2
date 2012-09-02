@@ -167,16 +167,20 @@ function QTip(target, options, id, attr)
 		return [obj || options, levels.pop()];
 	}
 
-	function setWidget() {
+	function setWidget()
+	{
 		var on = options.style.widget;
 
 		tooltip.toggleClass('ui-helper-reset '+widget, on).toggleClass(defaultClass, options.style.def && !on);
-		elements.content.toggleClass(widget+'-content', on);
 
-		if(elements.titlebar){
+		if(elements.content) {
+			elements.content.toggleClass(widget+'-content', on);
+		}
+
+		if(elements.titlebar) {
 			elements.titlebar.toggleClass(widget+'-header', on);
 		}
-		if(elements.button){
+		if(elements.button) {
 			elements.button.toggleClass(uitooltip+'-icon', !on);
 		}
 	}
