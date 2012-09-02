@@ -40,7 +40,7 @@ function Ajax(api)
 		load: function(event) {
 			if(stop) {stop = FALSE; return; }
 
-			var hasSelector = opts.url.indexOf(' '),
+			var hasSelector = opts.url.lastIndexOf(' '),
 				url = opts.url,
 				selector,
 				hideFirst = !opts.loading && first;
@@ -86,7 +86,8 @@ function Ajax(api)
 				// Don't proceed if tooltip is destroyed
 				if(api.destroyed) { return; }
 
-				if(selector) {
+				// If URL contains a selector
+				if(selector && 'string' === typeof content) {
 					// Create a dummy div to hold the results and grab the selector element
 					content = $('<div/>')
 						// inject the contents of the document in, removing the scripts
