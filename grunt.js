@@ -172,25 +172,6 @@ module.exports = function(grunt) {
 		);
 	});
 
-	// Grab latest git commit message and output to "comment" file
-	grunt.registerTask('commitmsg', 'Output latest git commit message', function() {
-		var dist = grunt.config('dirs.dist'),
-			cmd = 'git log --pretty=format:\'%s\' -1 > ' + dist + '/comment';
-
-		require('child_process').exec(cmd, function(err, stdout, stderr){
-			grunt.file.write(dist+'/comment', gzipSrc.length);
-		});
-	});
-
-	// Output gzip file size task
-	grunt.registerTask('gzip', 'Calculate size of gzipped minified file', function() {
-		var dist = grunt.config('dirs.dist'),
-			src = grunt.file.read( grunt.file.expand( grunt.config('min.dist.dest') ) ),
-			gzipSrc = grunt.helper('gzip', src);
-
-		grunt.file.write(dist+'/gziplength', gzipSrc.length);
-	});
-
 	// Setup all other tasks
 	grunt.registerTask('css', 'init clean concat:dist_css mincss:dist');
 	grunt.registerTask('basic', 'init clean lint concat:basic concat:basic_css min:basic mincss:basic');
