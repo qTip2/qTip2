@@ -2,6 +2,23 @@
 * http://craigsworks.com/projects/qtip2/
 * Copyright (c) 2012 Craig Michael Thompson; Licensed MIT, GPL */
 
+/* Fluid class for determining actual width in IE */
+#qtip-rcontainer{
+	position: absolute;
+	left: -28000px;
+	top: -28000px;
+	display: block;
+	visibility: hidden;
+}
+
+	/* Fluid class for determining actual width in IE */
+	#qtip-rcontainer .ui-tooltip{
+		display: block !important;
+		visibility: hidden !important;
+		position: static !important;
+		float: left !important;
+	}
+
 /* Core qTip styles */
 .ui-tooltip, .qtip{
 	position: absolute;
@@ -18,14 +35,6 @@
 	border-width: 1px;
 	border-style: solid;
 }
-
-	/* Fluid class for determining actual width in IE */
-	.ui-tooltip-fluid{
-		display: block;
-		visibility: hidden;
-		position: static !important;
-		float: left !important;
-	}
 
 	.ui-tooltip-content{
 		position: relative;
