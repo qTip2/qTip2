@@ -1,8 +1,11 @@
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
 /*global window: false, jQuery: false, console: false, define: false */
 
+/* Cache window, document, undefined */
+(function( window, document, undefined ) {
+
 // Uses AMD or browser globals to create a jQuery plugin.
-(function( factory, window, document, undefined ) {
+(function( factory ) {
 	"use strict";
 	if(typeof define === 'function' && define.amd) {
 		define(['jquery'], factory);
