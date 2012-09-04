@@ -1639,6 +1639,7 @@ PLUGINS = QTIP.plugins = {
 					if(arguments.length < 2) {
 						return $.attr(self, oldtitle);
 					}
+
 					// If qTip is rendered and title was originally used as content, update it
 					if(api && api.options.content.attr === title && api.cache.attr) {
 						api.set('content.text', val);

@@ -1,12 +1,15 @@
-/*! qTip2 - Pretty powerful tooltips - v2.0.0 - 2012-09-02
+/*! qTip2 - Pretty powerful tooltips - v2.0.0 - 2012-09-04
 * http://craigsworks.com/projects/qtip2/
 * Copyright (c) 2012 Craig Michael Thompson; Licensed MIT, GPL */
 
 /*jslint browser: true, onevar: true, undef: true, nomen: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: true */
 /*global window: false, jQuery: false, console: false, define: false */
 
+/* Cache window, document, undefined */
+(function( window, document, undefined ) {
+
 // Uses AMD or browser globals to create a jQuery plugin.
-(function( factory, window, document, undefined ) {
+(function( factory ) {
 	"use strict";
 	if(typeof define === 'function' && define.amd) {
 		define(['jquery'], factory);
@@ -1701,15 +1704,14 @@ PLUGINS = QTIP.plugins = {
 					if(arguments.length < 2) {
 						return $.attr(self, oldtitle);
 					}
-					else {
-						// If qTip is rendered and title was originally used as content, update it
-						if(api && api.options.content.attr === title && api.cache.attr) {
-							api.set('content.text', val);
-						}
 
-						// Use the regular attr method to set, then cache the result
-						return this.attr(oldtitle, val);
+					// If qTip is rendered and title was originally used as content, update it
+					if(api && api.options.content.attr === title && api.cache.attr) {
+						api.set('content.text', val);
 					}
+
+					// Use the regular attr method to set, then cache the result
+					return this.attr(oldtitle, val);
 				}
 			}
 
@@ -1840,4 +1842,5 @@ QTIP.defaults = {
 };
 
 
-}), window, document, undefined );
+}));
+}( window, document ));
