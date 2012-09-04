@@ -2319,7 +2319,7 @@ function Tip(qTip, command)
 
 			titlebar = elems.titlebar,
 			useTitle = titlebar && (corner.y === TOP || (corner.y === CENTER && tip.position().top + (size.height / 2) + opts.offset < titlebar.outerHeight(TRUE))),
-			colorElem = useTitle ? titlebar : elems.tooltip;
+			colorElem = useTitle ? titlebar : elems.content;
 
 		function css(elem, prop, compare) {
 			var val = elem.css(prop) || transparent;
@@ -2330,12 +2330,12 @@ function Tip(qTip, command)
 		// Ensure tooltip is visible then...
 		whileVisible(function() {
 			// Attempt to detect the background colour from various elements, left-to-right precedance
-			color.fill = css(tip, bgColor) || css(elems.content, bgColor) || css(colorElem, bgColor) || 
+			color.fill = css(tip, bgColor) || css(colorElem, bgColor) || css(elems.content, bgColor) || 
 				css(tooltip, bgColor) || tip.css(bgColor);
 
 			// Attempt to detect the correct border side colour from various elements, left-to-right precedance
-			color.border = css(tip, borderSide, 'color') || css(elems.content, borderSide, 'color') ||
-				css(colorElem, borderSide, 'color') || css(tooltip, borderSide, 'color') || tooltip.css(borderSide);
+			color.border = css(tip, borderSide, 'color') || css(colorElem, borderSide, 'color') || 
+				css(elems.content, borderSide, 'color') || css(tooltip, borderSide, 'color') || tooltip.css(borderSide);
 
 			// Reset background and border colours
 			$('*', tip).add(tip).css('cssText', bgColor+':'+transparent+important+';border:0'+important+';');
