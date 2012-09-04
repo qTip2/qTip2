@@ -31,10 +31,6 @@
 	
 	font-size: 10.5px;
 	line-height: 12px;
-
-	border-width: 1px;
-	border-style: solid;
-	border-color: transparent;
 }
 
 	.ui-tooltip-content{
@@ -109,7 +105,10 @@
 
 /* Default tooltip style */
 .ui-tooltip-default{
+	border-width: 1px;
+	border-style: solid;
 	border-color: #F1D031;
+
 	background-color: #FFFFA3;
 	color: #555;
 }
