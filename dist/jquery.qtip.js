@@ -935,7 +935,7 @@ function QTip(target, options, id, attr)
 				visible = tooltip[0].offsetWidth > 0,
 				animate = state || opts.target.length === 1,
 				sameTarget = !event || opts.target.length < 2 || cache.target[0] === event.target,
-				delay;
+				showEvent, delay;
 
 			// Detect state if valid one isn't provided
 			if((typeof state).search('boolean|number')) { state = !visible; }
@@ -984,8 +984,11 @@ function QTip(target, options, id, attr)
 				// Update the tooltip position
 				self.reposition(event, arguments[2]);
 
-				// Hide other tooltips if tooltip is solo, using it as the context
-				if(!!opts.solo) { $(selector, opts.solo).not(tooltip).qtip('hide', callback); }
+				// Hide other tooltips if tooltip is solo
+				if(!!opts.solo) {
+					showEvent = $.Event('tooltipshow'); event.solo = TRUE;
+					$(selector, opts.solo).not(tooltip).qtip('hide', showEvent);
+				}
 			}
 			else {
 				// Clear show timer if we're hiding
