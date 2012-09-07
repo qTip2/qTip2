@@ -921,7 +921,7 @@ function QTip(target, options, id, attr)
 
 				// Hide other tooltips if tooltip is solo
 				if(!!opts.solo) {
-					showEvent = $.Event('tooltipshow'); event.solo = TRUE;
+					showEvent = $.Event('tooltipshow'); showEvent.solo = TRUE;
 					$(selector, opts.solo).not(tooltip).qtip('hide', showEvent);
 				}
 			}
