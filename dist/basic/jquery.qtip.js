@@ -172,7 +172,7 @@ function QTip(target, options, id, attr)
 
 	function triggerEvent(type, args, event) {
 		var callback = $.Event('tooltip'+type);
-		callback.originalEvent = $.extend({}, event) || cache.event || NULL;
+		callback.originalEvent = (event ? $.extend({}, event) : NULL) || cache.event || NULL;
 		tooltip.triggerHandler(callback, [self].concat(args || []));
 
 		return !callback.isDefaultPrevented();
@@ -986,8 +986,7 @@ function QTip(target, options, id, attr)
 
 				// Hide other tooltips if tooltip is solo
 				if(!!opts.solo) {
-					showEvent = $.Event('tooltipshow'); showEvent.solo = TRUE;
-					$(selector, opts.solo).not(tooltip).qtip('hide', showEvent);
+					$(selector, opts.solo).not(tooltip).qtip('hide', $.Event('tooltipsolo'));
 				}
 			}
 			else {
