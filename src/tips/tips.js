@@ -327,13 +327,15 @@ function Tip(qTip, command)
 				tooltip.unbind(namespace).bind('tooltipmove'+namespace, reposition);
 
 				// Fix for issue of tips not showing after redraw in IE (VML...)
-				tooltip.bind('tooltipredraw tooltipredrawn', function(event) {
-					if(event.type === 'tooltipredraw') {
-						tiphtml = elems.tip.html();
-						elems.tip.html('');
-					}
-					else { elems.tip.html(tiphtml); }
-				});
+				if(!hasCanvas) {
+					tooltip.bind('tooltipredraw tooltipredrawn', function(event) {
+						if(event.type === 'tooltipredraw') {
+							tiphtml = elems.tip.html();
+							elems.tip.html('');
+						}
+						else { elems.tip.html(tiphtml); }
+					});
+				}
 			}
 			
 			return enabled;
