@@ -1,4 +1,4 @@
-/*! qTip2 - Pretty powerful tooltips - v2.0.0 - 2012-09-04
+/*! qTip2 - Pretty powerful tooltips - v2.0.0 - 2012-09-07
 * http://craigsworks.com/projects/qtip2/
 * Copyright (c) 2012 Craig Michael Thompson; Licensed MIT, GPL */
 
@@ -530,7 +530,7 @@
 }
 
 	.ui-tooltip .ui-tooltip-tip,
-	.ui-tooltip .ui-tooltip-tip *{
+	.ui-tooltip .ui-tooltip-tip .qtip-vml{
 		position: absolute;
 		
 		line-height: 0.1px !important;
@@ -543,8 +543,11 @@
 	
 	.ui-tooltip .ui-tooltip-tip canvas{ top: 0; left: 0; }
 
-
-
+	.ui-tooltip .ui-tooltip-tip .qtip-vml{
+		behavior: url(#default#VML);
+		display: inline-block;
+		visibility: visible;
+	}
 /* Modal plugin */
 #qtip-overlay{
 	position: fixed;

@@ -1,4 +1,4 @@
-/*! qTip2 - Pretty powerful tooltips - v2.0.0 - 2012-09-04
+/*! qTip2 - Pretty powerful tooltips - v2.0.0 - 2012-09-07
 * http://craigsworks.com/projects/qtip2/
 * Copyright (c) 2012 Craig Michael Thompson; Licensed MIT, GPL */
 
@@ -168,6 +168,14 @@ function QTip(target, options, id, attr)
 		}
 
 		return [obj || options, levels.pop()];
+	}
+
+	function triggerEvent(type, args, event) {
+		var callback = $.Event('tooltip'+type);
+		callback.originalEvent = $.extend({}, event) || cache.event || NULL;
+		tooltip.trigger(callback, [self].concat(args || []));
+
+		return !callback.isDefaultPrevented();
 	}
 
 	function setWidget()
@@ -731,8 +739,7 @@ function QTip(target, options, id, attr)
 
 			var text = options.content.text,
 				title = options.content.title.text,
-				posOptions = options.position,
-				callback = $.Event('tooltiprender');
+				posOptions = options.position;
 
 			// Add ARIA attributes to target
 			$.attr(target[0], 'aria-describedby', tooltipID);
@@ -804,9 +811,8 @@ function QTip(target, options, id, attr)
 			* See: updateContent method
 			*/
 			tooltip.queue('fx', function(next) {
-				// Trigger tooltiprender event and pass original triggering event as original
-				callback.originalEvent = cache.event;
-				tooltip.trigger(callback, [self]);
+				// tooltiprender event
+				triggerEvent('render');
 
 				// Reset flags
 				isDrawing = 0; isPositioning = 0;
@@ -929,7 +935,7 @@ function QTip(target, options, id, attr)
 				visible = tooltip[0].offsetWidth > 0,
 				animate = state || opts.target.length === 1,
 				sameTarget = !event || opts.target.length < 2 || cache.target[0] === event.target,
-				delay, callback;
+				delay;
 
 			// Detect state if valid one isn't provided
 			if((typeof state).search('boolean|number')) { state = !visible; }
@@ -949,11 +955,8 @@ function QTip(target, options, id, attr)
 				cache.event = $.extend({}, event);
 			}
 
-			// Call API methods
-			callback = $.Event('tooltip'+type);
-			callback.originalEvent = event ? cache.event : NULL;
-			tooltip.trigger(callback, [self, 90]);
-			if(callback.isDefaultPrevented()){ return self; }
+			// tooltipshow/tooltiphide events
+			if(!triggerEvent(type, [90])) { return self; }
 
 			// Set ARIA hidden status attribute
 			$.attr(tooltip[0], 'aria-hidden', !!!state);
@@ -982,7 +985,7 @@ function QTip(target, options, id, attr)
 				self.reposition(event, arguments[2]);
 
 				// Hide other tooltips if tooltip is solo, using it as the context
-				if((callback.solo = !!opts.solo)) { $(selector, opts.solo).not(tooltip).qtip('hide', callback); }
+				if(!!opts.solo) { $(selector, opts.solo).not(tooltip).qtip('hide', callback); }
 			}
 			else {
 				// Clear show timer if we're hiding
@@ -1029,10 +1032,8 @@ function QTip(target, options, id, attr)
 					});
 				}
 
-				// Call API method
-				callback = $.Event('tooltip'+(state ? 'visible' : 'hidden'));
-				callback.originalEvent = event ? cache.event : NULL;
-				tooltip.trigger(callback, [self]);
+				// tooltipvisible/tooltiphidden events
+				triggerEvent(state ? 'visible' : 'hidden');
 			}
 
 			// If no effect type is supplied, use a simple toggle
@@ -1069,18 +1070,13 @@ function QTip(target, options, id, attr)
 				curIndex = parseInt(tooltip[0].style.zIndex, 10),
 				newIndex = QTIP.zindex + qtips.length,
 				cachedEvent = $.extend({}, event),
-				focusedElem, callback;
+				focusedElem;
 
 			// Only update the z-index if it has changed and tooltip is not already focused
 			if(!tooltip.hasClass(focusClass))
 			{
-				// Call API method
-				callback = $.Event('tooltipfocus');
-				callback.originalEvent = cachedEvent;
-				tooltip.trigger(callback, [self, newIndex]);
-
-				// If default action wasn't prevented...
-				if(!callback.isDefaultPrevented()) {
+				// tooltipfocus event
+				if(triggerEvent('focus', [newIndex], cachedEvent)) {
 					// Only update z-index's if they've changed
 					if(curIndex !== newIndex) {
 						// Reduce our z-index's and keep them properly ordered
@@ -1103,16 +1099,11 @@ function QTip(target, options, id, attr)
 		},
 
 		blur: function(event) {
-			var cachedEvent = $.extend({}, event),
-				callback;
-
 			// Set focused status to FALSE
 			tooltip.removeClass(focusClass);
 
-			// Trigger blur event
-			callback = $.Event('tooltipblur');
-			callback.originalEvent = cachedEvent;
-			tooltip.trigger(callback, [self]);
+			// tooltipblur event
+			triggerEvent('blur', [tooltip.css('zIndex')], event);
 
 			return self;
 		},
@@ -1134,7 +1125,6 @@ function QTip(target, options, id, attr)
 				elemHeight = tooltip.outerHeight(),
 				targetWidth = 0,
 				targetHeight = 0,
-				callback = $.Event('tooltipmove'),
 				fixed = tooltip.css('position') === 'fixed',
 				viewport = posOptions.viewport,
 				position = { left: 0, top: 0 },
@@ -1249,10 +1239,8 @@ function QTip(target, options, id, attr)
 			// Viewport adjustment is disabled, set values to zero
 			else { position.adjusted = { left: 0, top: 0 }; }
 
-			// Call API method
-			callback.originalEvent = $.extend({}, event);
-			tooltip.trigger(callback, [self, position, viewport.elem || viewport]);
-			if(callback.isDefaultPrevented()){ return self; }
+			// tooltipmove event
+			if(!triggerEvent('move', [position, viewport.elem || viewport], event)) { return self; }
 			delete position.adjusted;
 
 			// If effect is disabled, target it mouse, no animation is defined or positioning gives NaN out, set CSS directly
@@ -1290,6 +1278,9 @@ function QTip(target, options, id, attr)
 			// Set drawing flag
 			isDrawing = 1;
 
+			// tooltipredraw event
+			triggerEvent('redraw');
+
 			// If tooltip has a set height/width, just set it... like a boss!
 			if(style.height) { tooltip.css(HEIGHT, style.height); }
 			if(style.width) { tooltip.css(WIDTH, style.width); }
@@ -1318,6 +1309,9 @@ function QTip(target, options, id, attr)
 				// Set the newly calculated width and remvoe fluid class
 				tooltip.css(WIDTH, Math.round(width)).appendTo(container);
 			}
+
+			// tooltipredrawn event
+			triggerEvent('redrawn');
 
 			// Set drawing flag
 			isDrawing = 0;

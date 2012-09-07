@@ -37,7 +37,8 @@ function Tip(qTip, command)
 		color = { },
 		border = opts.border || 0,
 		namespace = '.qtip-tip',
-		hasCanvas = !!($('<canvas />')[0] || {}).getContext;
+		hasCanvas = !!($('<canvas />')[0] || {}).getContext,
+		tiphtml;
 
 	self.corner = NULL;
 	self.mimic = NULL;
@@ -306,6 +307,11 @@ function Tip(qTip, command)
 		return { height: result[ y ? 0 : 1 ], width: result[ y ? 1 : 0 ] };
 	}
 
+	function createVML(tag, props, style) {
+		return '<qvml:'+tag+' xmlns="urn:schemas-microsoft.com:vml" class="qtip-vml" '+(props||'')+
+			' style="behavior: url(#default#VML); '+(style||'')+ '" />';
+	}
+
 	$.extend(self, {
 		init: function()
 		{
@@ -319,6 +325,15 @@ function Tip(qTip, command)
 
 				// Bind update events
 				tooltip.unbind(namespace).bind('tooltipmove'+namespace, reposition);
+
+				// Fix for issue of tips not showing after redraw in IE (VML...)
+				tooltip.bind('tooltipredraw tooltipredrawn', function(event) {
+					if(event.type === 'tooltipredraw') {
+						tiphtml = elems.tip.html();
+						elems.tip.html('');
+					}
+					else { elems.tip.html(tiphtml); }
+				});
 			}
 			
 			return enabled;
@@ -342,7 +357,7 @@ function Tip(qTip, command)
 				$('<canvas />').appendTo(elems.tip)[0].getContext('2d').save();
 			}
 			else {
-				vml = '<vml:shape coordorigin="0,0" style="display:inline-block; position:absolute; behavior:url(#default#VML);"></vml:shape>';
+				vml = createVML('shape', 'coordorigin="0,0"', 'position:absolute;');
 				elems.tip.html(vml + vml);
 
 				// Prevent mousing down on the tip since it causes problems with .live() handling in IE due to VML
@@ -356,8 +371,6 @@ function Tip(qTip, command)
 				inner = tip.children(),
 				width = size.width,
 				height = size.height,
-				regular = 'px solid ',
-				transparent = 'px dashed transparent', // Dashed IE6 border-transparency hack. Awesome!
 				mimic = opts.mimic,
 				round = Math.round,
 				precedance, context, coords, translate, newSize;
@@ -483,9 +496,10 @@ function Tip(qTip, command)
 
 				// Set initial CSS
 				inner.css({
+					coordsize: (width+border) + ' ' + (height+border),
 					antialias: ''+(mimic.string().indexOf(CENTER) > -1),
-					left: translate[0] - (translate[2] * Number(precedance === X)),
-					top: translate[1] - (translate[2] * Number(precedance === Y)),
+					left: translate[0],
+					top: translate[1],
 					width: width + border,
 					height: height + border
 				})
@@ -500,13 +514,12 @@ function Tip(qTip, command)
 						filled: !!i,
 						stroked: !i
 					})
-					.css({ display: border || i ? 'block' : 'none' });
+					.toggle(!!(border || i));
 
 					// Check if border is enabled and add stroke element
 					if(!i && $this.html() === '') {
 						$this.html(
-							'<vml:stroke weight="'+(border*2)+'px" color="'+color.border+'" miterlimit="1000" joinstyle="miter" ' +
-							' style="behavior:url(#default#VML); display:inline-block;" />'
+							createVML('stroke', 'weight="'+(border*2)+'px" color="'+color.border+'" miterlimit="1000" joinstyle="miter"')
 						);
 					}
 				});

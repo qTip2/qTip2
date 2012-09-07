@@ -6,7 +6,7 @@
 }
 
 	.ui-tooltip .ui-tooltip-tip,
-	.ui-tooltip .ui-tooltip-tip *{
+	.ui-tooltip .ui-tooltip-tip .qtip-vml{
 		position: absolute;
 		
 		line-height: 0.1px !important;
@@ -19,4 +19,8 @@
 	
 	.ui-tooltip .ui-tooltip-tip canvas{ top: 0; left: 0; }
 
-
+	.ui-tooltip .ui-tooltip-tip .qtip-vml{
+		behavior: url(#default#VML);
+		display: inline-block;
+		visibility: visible;
+	}
