@@ -1229,7 +1229,7 @@ function QTip(target, options, id, attr)
 
 				// Grab our tooltip width (add 1 if odd so we don't get wrapping problems.. huzzah!)
 				width = tooltip.width();
-				if(!(width % 2)) { width += 1; }
+				if(width % 2 < 1) { width += 1; }
 
 				// Grab our max/min properties
 				max = tooltip.css('max-width') || '';
