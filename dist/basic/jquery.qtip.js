@@ -1,4 +1,4 @@
-/*! qTip2 - Pretty powerful tooltips - v2.0.0 - 2012-09-09
+/*! qTip2 - Pretty powerful tooltips - v2.0.0 - 2012-09-10
 * http://craigsworks.com/projects/qtip2/
 * Copyright (c) 2012 Craig Michael Thompson; Licensed MIT, GPL */
 
@@ -173,7 +173,7 @@ function QTip(target, options, id, attr)
 	function triggerEvent(type, args, event) {
 		var callback = $.Event('tooltip'+type);
 		callback.originalEvent = (event ? $.extend({}, event) : NULL) || cache.event || NULL;
-		tooltip.triggerHandler(callback, [self].concat(args || []));
+		tooltip.trigger(callback, [self].concat(args || []));
 
 		return !callback.isDefaultPrevented();
 	}

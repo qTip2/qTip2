@@ -108,7 +108,7 @@ function QTip(target, options, id, attr)
 	function triggerEvent(type, args, event) {
 		var callback = $.Event('tooltip'+type);
 		callback.originalEvent = (event ? $.extend({}, event) : NULL) || cache.event || NULL;
-		tooltip.triggerHandler(callback, [self].concat(args || []));
+		tooltip.trigger(callback, [self].concat(args || []));
 
 		return !callback.isDefaultPrevented();
 	}
