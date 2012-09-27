@@ -214,95 +214,61 @@
  * Does not work with IE 7.
  */
 .ui-tooltip-bootstrap{
-	/**
-	 * Overrides qTip2:
-	 * .ui-tooltip, .qtip { font-size: 10.5px; line-height: 12px; }
-	 * Taken from Bootstrap:
-	 * body { font-size: 13px; line-height: 18px; }
-	 */
-	font-size: 13px;
-	line-height: 18px;
-
-	/**
-	 * Overrides qTip2:
-	 * .ui-tooltip-default .ui-tooltip-titlebar,
-	 * .ui-tooltip-default .ui-tooltip-content{
-	 *   border-color: #F1D031;
-	 *   background-color: #FFFFA3;
-	 *   color: #555;
-	 * }
-	 * Taken from Bootstrap body
-	 */
+	/** Taken from Bootstrap body */
+	font-size: 14px;
+	line-height: 20px;
 	color: #333333;
 
-	/**
-	 * Overrides qTip2:
-	 * .ui-tooltip-default .ui-tooltip-titlebar { background-color: #FFEF93; }
-	 * Taken from Bootstrap body
-	 */
+	/** Taken from Bootstrap .popover */
+	padding: 1px;
 	background-color: #ffffff;
-
-	/* Taken from Bootstrap .dropdown-menu */
-
 	border: 1px solid #ccc;
-	border: 1px solid rgba(0, 0, 0, 0.2); /* Transparency does not work */
-
-	*border-right-width: 2px;
-	*border-bottom-width: 2px;
-
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
-
+	border: 1px solid rgba(0, 0, 0, 0.2);
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
 	-webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 	-moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-
 	-webkit-background-clip: padding-box;
 	-moz-background-clip: padding;
 	background-clip: padding-box;
 }
 
 	.ui-tooltip-bootstrap .ui-tooltip-titlebar{
-		/**
-		 * Taken from Bootstrap h3
-		 */
-		font-size: 18px;
-		line-height: 22px; /* 22px instead of 27px */
-
-		/**
-		 * Taken and adapted from Bootstrap:
-		 * .modal-header {
-		 *   padding: 9px 15px;
-		 *   border-bottom: 1px solid #eee;
-		 * }
-		 */
-		border-bottom: 1px solid #ccc;
-
-		background-color: transparent;
+		/** Taken from Bootstrap .popover-title */
+		padding: 8px 14px;
+		margin: 0;
+		font-size: 14px;
+		font-weight: normal;
+		line-height: 18px;
+		background-color: #f7f7f7;
+		border-bottom: 1px solid #ebebeb;
+		-webkit-border-radius: 5px 5px 0 0;
+		-moz-border-radius: 5px 5px 0 0;
+		border-radius: 5px 5px 0 0;
 	}
 
 		.ui-tooltip-bootstrap .ui-tooltip-titlebar .ui-state-default{
 			/**
 			 * Overrides qTip2:
 			 * .ui-tooltip-titlebar .ui-state-default{
-			 *   position: absolute;
+			 *   [...]
 			 *   right: 4px;
 			 *   top: 50%;
-			 *   margin-top: -9px;
-			 *
-			 *   cursor: pointer;
-			 *   outline: medium none;
-			 *
-			 *   border-width: 1px;
+			 *   [...]
 			 *   border-style: solid;
 			 * }
 			 */
-			right: 9px;
-			top: 49%;
-
-			border-style: none; /* No border */
+			right: 11px;
+			top: 45%;
+			border-style: none;
 		}
+
+	.ui-tooltip-bootstrap .ui-tooltip-content{
+		/** Taken from Bootstrap .popover-content */
+		padding: 9px 14px;
+	}
 
 	.ui-tooltip-bootstrap .ui-tooltip-icon{
 		/**
@@ -313,7 +279,7 @@
 		 *   color: #777;
 		 * }
 		 */
-		background: white;
+		background: transparent;
 	}
 
 		.ui-tooltip-bootstrap .ui-tooltip-icon .ui-icon{
