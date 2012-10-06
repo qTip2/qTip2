@@ -214,52 +214,86 @@
  * Does not work with IE 7.
  */
 .ui-tooltip-bootstrap{
-	font-size: 13px;
-	line-height: 18px;
-
+	/** Taken from Bootstrap body */
+	font-size: 14px;
+	line-height: 20px;
 	color: #333333;
+
+	/** Taken from Bootstrap .popover */
+	padding: 1px;
 	background-color: #ffffff;
-
-
 	border: 1px solid #ccc;
 	border: 1px solid rgba(0, 0, 0, 0.2);
-
-	*border-right-width: 2px;
-	*border-bottom-width: 2px;
-
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
-
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
 	-webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 	-moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-
 	-webkit-background-clip: padding-box;
 	-moz-background-clip: padding;
 	background-clip: padding-box;
 }
 
 	.ui-tooltip-bootstrap .ui-tooltip-titlebar{
-		font-size: 18px;
-		line-height: 22px;
-
-		border-bottom: 1px solid #ccc;
-		background-color: transparent;
+		/** Taken from Bootstrap .popover-title */
+		padding: 8px 14px;
+		margin: 0;
+		font-size: 14px;
+		font-weight: normal;
+		line-height: 18px;
+		background-color: #f7f7f7;
+		border-bottom: 1px solid #ebebeb;
+		-webkit-border-radius: 5px 5px 0 0;
+		-moz-border-radius: 5px 5px 0 0;
+		border-radius: 5px 5px 0 0;
 	}
 
 		.ui-tooltip-bootstrap .ui-tooltip-titlebar .ui-state-default{
-			right: 9px; top: 49%;
+			/**
+			 * Overrides qTip2:
+			 * .ui-tooltip-titlebar .ui-state-default{
+			 *   [...]
+			 *   right: 4px;
+			 *   top: 50%;
+			 *   [...]
+			 *   border-style: solid;
+			 * }
+			 */
+			right: 11px;
+			top: 45%;
 			border-style: none;
 		}
 
+	.ui-tooltip-bootstrap .ui-tooltip-content{
+		/** Taken from Bootstrap .popover-content */
+		padding: 9px 14px;
+	}
+
 	.ui-tooltip-bootstrap .ui-tooltip-icon{
-		background: white;
+		/**
+		 * Overrides qTip2:
+		 * .ui-tooltip-default .ui-tooltip-icon {
+		 *   border-color: #CCC;
+		 *   background: #F1F1F1;
+		 *   color: #777;
+		 * }
+		 */
+		background: transparent;
 	}
 
 		.ui-tooltip-bootstrap .ui-tooltip-icon .ui-icon{
+			/**
+			 * Overrides qTip2:
+			 * .ui-tooltip-icon .ui-icon{
+			 *   width: 18px;
+			 *   height: 14px;
+			 * }
+			 */
 			width: auto;
 			height: auto;
+
+			/* Taken from Bootstrap .close */
 			float: right;
 			font-size: 20px;
 			font-weight: bold;
@@ -271,6 +305,7 @@
 		}
 
 		.ui-tooltip-bootstrap .ui-tooltip-icon .ui-icon:hover{
+			/* Taken from Bootstrap .close:hover */
 			color: #000000;
 			text-decoration: none;
 			cursor: pointer;
