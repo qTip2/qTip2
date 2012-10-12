@@ -1,4 +1,4 @@
-/*! qTip2 - Pretty powerful tooltips - v2.0.0 - 2012-10-03
+/*! qTip2 - Pretty powerful tooltips - v2.0.0 - 2012-10-12
 * http://craigsworks.com/projects/qtip2/
 * Copyright (c) 2012 Craig Michael Thompson; Licensed MIT, GPL */
 
@@ -839,7 +839,7 @@ function QTip(target, options, id, attr)
 			{
 				case 'dimensions':
 					result = {
-						height: tooltip.outerHeight(), width: tooltip.outerWidth()
+						height: tooltip.outerHeight(FALSE), width: tooltip.outerWidth(FALSE)
 					};
 				break;
 
@@ -1123,8 +1123,8 @@ function QTip(target, options, id, attr)
 				at = posOptions.at,
 				adjust = posOptions.adjust,
 				method = adjust.method.split(' '),
-				elemWidth = tooltip.outerWidth(),
-				elemHeight = tooltip.outerHeight(),
+				elemWidth = tooltip.outerWidth(FALSE),
+				elemHeight = tooltip.outerHeight(FALSE),
 				targetWidth = 0,
 				targetHeight = 0,
 				fixed = tooltip.css('position') === 'fixed',
@@ -1194,8 +1194,8 @@ function QTip(target, options, id, attr)
 				}
 
 				else {
-					targetWidth = target.outerWidth();
-					targetHeight = target.outerHeight();
+					targetWidth = target.outerWidth(FALSE);
+					targetHeight = target.outerHeight(FALSE);
 
 					position = PLUGINS.offset(target, container);
 				}
