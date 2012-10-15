@@ -859,6 +859,18 @@ function QTip(target, options, id, attr)
 
 		toggle: function(state, event)
 		{
+			// Try to prevent flickering when tooltip overlaps show element
+			if(event) {
+				if((/over|enter/).test(event.type) && (/out|leave/).test(cache.event.type) &&
+					options.show.target.add(event.target).length === options.show.target.length &&
+					tooltip.has(event.relatedTarget).length) {
+					return self;
+				}
+
+				// Cache event
+				cache.event = $.extend({}, event);
+			}
+	
 			// Render the tooltip if showing and it isn't already
 			if(!self.rendered) { return state ? self.render(1) : self; }
 
@@ -877,18 +889,6 @@ function QTip(target, options, id, attr)
 
 			// Return if element is already in correct state
 			if(!tooltip.is(':animated') && visible === state && sameTarget) { return self; }
-
-			// Try to prevent flickering when tooltip overlaps show element
-			if(event) {
-				if((/over|enter/).test(event.type) && (/out|leave/).test(cache.event.type) &&
-					options.show.target.add(event.target).length === options.show.target.length &&
-					tooltip.has(event.relatedTarget).length) {
-					return self;
-				}
-
-				// Cache event
-				cache.event = $.extend({}, event);
-			}
 
 			// tooltipshow/tooltiphide events
 			if(!triggerEvent(type, [90])) { return self; }
