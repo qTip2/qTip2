@@ -14,9 +14,11 @@
 
 ## API reference
 
-* [content](content.md) - Content
-* [position](position.md) - Positioning and corner types
-* [show](show.md) - Show properties and effects
-* [hide](hide.md) - Hide properties and effects
-* [style](style.md) - Styling properties
-* [events](events.md) - Events API
+* [core](core.md) - *Core* options
+* [content](content.md) - *Content* and titles
+* [position](position.md) - *Positioning* and corner types
+* [show](show.md) - *Show* properties and effects
+* [hide](hide.md) - *Hide* properties and effects
+* [style](style.md) - *Styling* properties
+* [methods](methods.md) - *API* - Methods and properties
+* [events](events.md) - *API* - Events and callbacks
