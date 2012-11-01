@@ -1,9 +1,8 @@
-# qTip<sup>2</sup> - Plugins - BGIFrame (IE6)
+# qTip<sup>2</sup> - Plugins - IE6
 
 <a name="overview"></a>
 ## Overview
-This plugin is simply a wrapper around the [IE6 BGIFrame jquery plugin](http://plugins.jquery.com/project/bgiframe) by Brandon Aaron,
-utilising qTip<sup>2</sup>'s [API](../api.md) to keep the plugin updated and compatible.
+This plugin is an IE6 compatibility layer that wraps around the [IE6 BGIFrame jquery plugin](http://plugins.jquery.com/project/bgiframe) by Brandon Aaron, and also simulates the [max/min]-width CSS properties applied to the tooltip (if present).
 
 <a name="usage"></a>
 ## Usage

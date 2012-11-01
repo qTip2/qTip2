@@ -48,13 +48,4 @@
 		hoverClass = uitooltip + '-hover',
 		replaceSuffix = '_replacedByqTip',
 		oldtitle = 'oldtitle',
-		trackingBound,
-		redrawContainer;
-
-	/*
-	* redraw() container for width/height calculations
-	*/
-	redrawContainer = $('<div/>', { id: 'qtip-rcontainer' });
-	$(function() { redrawContainer.appendTo(document.body); });
-
-
+		trackingBound;

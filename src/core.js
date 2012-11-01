@@ -105,13 +105,6 @@ function QTip(target, options, id, attr)
 		return [obj || options, levels.pop()];
 	}
 
-	function triggerEvent(type, args, event) {
-		var callback = $.Event('tooltip'+type);
-		callback.originalEvent = (event ? $.extend({}, event) : NULL) || cache.event || NULL;
-		tooltip.trigger(callback, [self].concat(args || []));
-
-		return !callback.isDefaultPrevented();
-	}
 
 	function setWidget()
 	{
@@ -175,9 +168,6 @@ function QTip(target, options, id, attr)
 				if(!tooltip.hasClass(disabled)) { self.hide(event); }
 				return FALSE;
 			});
-
-		// Redraw the tooltip when we're done
-		self.redraw();
 	}
 
 	function createTitle()
@@ -210,9 +200,6 @@ function QTip(target, options, id, attr)
 
 		// Create button if enabled
 		if(options.content.title.button) { createButton(); }
-
-		// Redraw the tooltip dimensions if it's rendered
-		else if(self.rendered){ self.redraw(); }
 	}
 
 	function updateButton(button)
@@ -257,8 +244,7 @@ function QTip(target, options, id, attr)
 		// Content is a regular string, insert the new content
 		else { elem.html(content); }
 
-		// Redraw and reposition
-		self.redraw();
+		// Reposition if rnedered
 		if(reposition !== FALSE && self.rendered && tooltip[0].offsetWidth > 0) {
 			self.reposition(cache.event);
 		}
@@ -298,7 +284,6 @@ function QTip(target, options, id, attr)
 
 				// If queue is empty after image removal, update tooltip and continue the queue
 				if($.isEmptyObject(srcs)) {
-					self.redraw();
 					if(reposition !== FALSE) {
 						self.reposition(cache.event);
 					}
@@ -645,6 +630,9 @@ function QTip(target, options, id, attr)
 		'^style.classes$': function(obj, o, v) {
 			tooltip.attr('class', uitooltip + ' qtip ' + v);
 		},
+		'^style.width|height': function(obj, o, v) {
+			tooltip.css(o, v);
+		},
 		'^style.widget|content.title': setWidget,
 
 		// Events check
@@ -664,10 +652,22 @@ function QTip(target, options, id, attr)
 		}
 	};
 
-	/*
-	* Public API methods
-	*/
 	$.extend(self, {
+		/*
+		* Psuedo-private API methods
+		*/
+		_triggerEvent: function(type, args, event)
+		{
+			var callback = $.Event('tooltip'+type);
+			callback.originalEvent = (event ? $.extend({}, event) : NULL) || cache.event || NULL;
+			tooltip.trigger(callback, [self].concat(args || []));
+
+			return !callback.isDefaultPrevented();
+		},
+
+		/*
+		* Public API methods
+		*/
 		render: function(show)
 		{
 			if(self.rendered) { return self; } // If tooltip has already been rendered, exit
@@ -706,9 +706,9 @@ function QTip(target, options, id, attr)
 					})
 				);
 
-			// Set rendered flag and prevent redundant redraw/reposition calls for now
+			// Set rendered flag and prevent redundant reposition calls for now
 			self.rendered = -1;
-			isDrawing = 1; isPositioning = 1;
+			isPositioning = 1;
 
 			// Create title...
 			if(title) {
@@ -747,13 +747,10 @@ function QTip(target, options, id, attr)
 			*/
 			tooltip.queue('fx', function(next) {
 				// tooltiprender event
-				triggerEvent('render');
+				self._triggerEvent('render');
 
 				// Reset flags
-				isDrawing = 0; isPositioning = 0;
-
-				// Redraw the tooltip manually now we're fully rendered
-				self.redraw();
+				isPositioning = 0;
 
 				// Show tooltip if needed
 				if(options.show.ready || show) {
@@ -774,7 +771,8 @@ function QTip(target, options, id, attr)
 			{
 				case 'dimensions':
 					result = {
-						height: tooltip.outerHeight(FALSE), width: tooltip.outerWidth(FALSE)
+						height: tooltip.outerHeight(FALSE),
+						width: tooltip.outerWidth(FALSE)
 					};
 				break;
 
@@ -797,7 +795,6 @@ function QTip(target, options, id, attr)
 			var rmove = /^position\.(my|at|adjust|target|container)|style|content|show\.ready/i,
 				rdraw = /^content\.(title|attr)|style/i,
 				reposition = FALSE,
-				redraw = FALSE,
 				checks = self.checks,
 				name;
 
@@ -831,9 +828,8 @@ function QTip(target, options, id, attr)
 				// Set the new params for the callback
 				option[notation] = [obj[0], obj[1], value, previous];
 
-				// Also check if we need to reposition / redraw
+				// Also check if we need to reposition
 				reposition = rmove.test(notation) || reposition;
-				redraw = rdraw.test(notation) || redraw;
 			});
 
 			// Re-sanitize options
@@ -841,17 +837,13 @@ function QTip(target, options, id, attr)
 
 			/*
 			* Execute any valid callbacks for the set options
-			* Also set isPositioning/isDrawing so we don't get loads of redundant repositioning
-			* and redraw calls.
+			* Also set isPositioning/isDrawing so we don't get loads of redundant repositioning calls.
 			*/
-			isPositioning = isDrawing = 1; $.each(option, callback); isPositioning = isDrawing = 0;
+			isPositioning = 1; $.each(option, callback); isPositioning = 0;
 
-			// Update position / redraw if needed
-			if(self.rendered && tooltip[0].offsetWidth > 0) {
-				if(reposition) {
-					self.reposition( options.position.target === 'mouse' ? NULL : cache.event );
-				}
-				if(redraw) { self.redraw(); }
+			// Update position if needed
+			if(self.rendered && tooltip[0].offsetWidth > 0 && reposition) {
+				self.reposition( options.position.target === 'mouse' ? NULL : cache.event );
 			}
 
 			return self;
@@ -891,7 +883,7 @@ function QTip(target, options, id, attr)
 			if(!tooltip.is(':animated') && visible === state && sameTarget) { return self; }
 
 			// tooltipshow/tooltiphide events
-			if(!triggerEvent(type, [90])) { return self; }
+			if(!self._triggerEvent(type, [90])) { return self; }
 
 			// Set ARIA hidden status attribute
 			$.attr(tooltip[0], 'aria-hidden', !!!state);
@@ -970,7 +962,7 @@ function QTip(target, options, id, attr)
 				}
 
 				// tooltipvisible/tooltiphidden events
-				triggerEvent(state ? 'visible' : 'hidden');
+				self._triggerEvent(state ? 'visible' : 'hidden');
 			}
 
 			// If no effect type is supplied, use a simple toggle
@@ -1013,7 +1005,7 @@ function QTip(target, options, id, attr)
 			if(!tooltip.hasClass(focusClass))
 			{
 				// tooltipfocus event
-				if(triggerEvent('focus', [newIndex], cachedEvent)) {
+				if(self._triggerEvent('focus', [newIndex], cachedEvent)) {
 					// Only update z-index's if they've changed
 					if(curIndex !== newIndex) {
 						// Reduce our z-index's and keep them properly ordered
@@ -1040,7 +1032,7 @@ function QTip(target, options, id, attr)
 			tooltip.removeClass(focusClass);
 
 			// tooltipblur event
-			triggerEvent('blur', [tooltip.css('zIndex')], event);
+			self._triggerEvent('blur', [tooltip.css('zIndex')], event);
 
 			return self;
 		},
@@ -1177,7 +1169,7 @@ function QTip(target, options, id, attr)
 			else { position.adjusted = { left: 0, top: 0 }; }
 
 			// tooltipmove event
-			if(!triggerEvent('move', [position, viewport.elem || viewport], event)) { return self; }
+			if(!self._triggerEvent('move', [position, viewport.elem || viewport], event)) { return self; }
 			delete position.adjusted;
 
 			// If effect is disabled, target it mouse, no animation is defined or positioning gives NaN out, set CSS directly
@@ -1197,61 +1189,8 @@ function QTip(target, options, id, attr)
 				});
 			}
 
-			// Set positioning flag
+			// Set positioning flagwtf
 			isPositioning = 0;
-
-			return self;
-		},
-
-		// Max/min width simulator function for all browsers.. yeaaah!
-		redraw: function()
-		{
-			if(self.rendered < 1 || isDrawing) { return self; }
-
-			var style = options.style,
-				container = options.position.container,
-				perc, width, max, min;
-
-			// Set drawing flag
-			isDrawing = 1;
-
-			// tooltipredraw event
-			triggerEvent('redraw');
-
-			// If tooltip has a set height/width, just set it... like a boss!
-			if(style.height) { tooltip.css(HEIGHT, style.height); }
-			if(style.width) { tooltip.css(WIDTH, style.width); }
-
-			// Simulate max/min width if not set width present...
-			else {
-				// Reset width and add fluid class
-				tooltip.css(WIDTH, '').appendTo(redrawContainer);
-
-				// Grab our tooltip width (add 1 if odd so we don't get wrapping problems.. huzzah!)
-				width = tooltip.width();
-				if(width % 2 < 1) { width += 1; }
-
-				// Grab our max/min properties
-				max = tooltip.css('max-width') || '';
-				min = tooltip.css('min-width') || '';
-
-				// Parse into proper pixel values
-				perc = (max + min).indexOf('%') > -1 ? container.width() / 100 : 0;
-				max = ((max.indexOf('%') > -1 ? perc : 1) * parseInt(max, 10)) || width;
-				min = ((min.indexOf('%') > -1 ? perc : 1) * parseInt(min, 10)) || 0;
-
-				// Determine new dimension size based on max/min/current values
-				width = max + min ? Math.min(Math.max(width, min), max) : width;
-
-				// Set the newly calculated width and remvoe fluid class
-				tooltip.css(WIDTH, Math.round(width)).appendTo(container);
-			}
-
-			// tooltipredrawn event
-			triggerEvent('redrawn');
-
-			// Set drawing flag
-			isDrawing = 0;
 
 			return self;
 		},
