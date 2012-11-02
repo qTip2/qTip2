@@ -8,16 +8,16 @@ The core options are the options which have no parent object i.e. they are all l
 "String", false *(Default: false)*
 
 ### Overview
-A unique string that determines the value of the qTip's "id" attribute that can be used to easily identify this qTip in the document.The attribute is prepended with 'ui-tooltip-'.
+A unique string that determines the value of the qTip's "id" attribute that can be used to easily identify this qTip in the document.The attribute is prepended with 'qtip-'.
 
 ### Examples
-This tooltip will be assigned an "id" value of "ui-tooltip-myTooltip"
+This tooltip will be assigned an "id" value of "qtip-myTooltip"
 
 ```js
 $('.selector').qtip({
 	id: 'myTooltip',
 	content: {
-		text: 'My ID is #ui-tooltip-myTooltip'
+		text: 'My ID is #qtip-myTooltip'
 	}
 });
 ```
@@ -25,7 +25,7 @@ $('.selector').qtip({
 It can then be easily found in the document via simple jQuery selectors like so:
 
 ```js
-$('#ui-tooltip-myTooltip');
+$('#qtip-myTooltip');
 ```
 
 ### Notes
@@ -137,7 +137,7 @@ If you happen to use the [jQuery Metadata plugin](http://plugins.jquery.com/proj
 Let's setup some elements with custom metadata attached via a custom tag:
 
 ```html
-<div qtipOpts="{ style: { classes: 'ui-tooltip-blue' } }">*Hover me* to see a blue tooltip</div>
+<div qtipOpts="{ style: { classes: 'qtip-blue' } }">*Hover me* to see a blue tooltip</div>
 <div qtipOpts="{ show: { event: 'click' } }">*Click me* to show a regular tooltip</div>
 ```
 
@@ -157,7 +157,7 @@ You can also utilise the new HTML5 data-* attributes in a similar way by setting
 
 ```html
 // Elements with data-qtipopts defined as a valid options object will automatically have it merged into the .qtip() calls options.
-<div data-qtipopts="{ style: { classes: 'ui-tooltip-green' } }">*Hover me* to see a green tooltip</div>
+<div data-qtipopts="{ style: { classes: 'qtip-green' } }">*Hover me* to see a green tooltip</div>
 ```
 
 ...and then specifying 'html5' as you metadata type, along with the data attributes name (the bit after the hyphen):

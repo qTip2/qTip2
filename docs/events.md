@@ -339,7 +339,7 @@ $('.selector').qtip({
 	events: {
 		focus: function(event, api) {
 			// For more information on the API object, check-out the API documentation
-			api.elements.tooltip.toggleClass('ui-tooltip-blue ui-tooltip-cream');
+			api.elements.tooltip.toggleClass('qtip-blue qtip-cream');
 		}
 	}
 });
@@ -369,7 +369,7 @@ $('.selector').qtip({
 	events: {
 		blur: function(event, api) {
 			// For more information on the API object, check-out the API documentation
-			api.elements.tooltip.toggleClass('ui-tooltip-blue ui-tooltip-cream');
+			api.elements.tooltip.toggleClass('qtip-blue qtip-cream');
 		}
 	}
 });

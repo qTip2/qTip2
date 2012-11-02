@@ -14,23 +14,23 @@ There are several base styles included in the CSS file provided, including:
 
 ```css
 /* CSS2 styles */
-ui-tooltip{ } /* This one is applied by default (formally the "cream" style) */
-ui-tooltip-plain{ }
-ui-tooltip-light{ }
-ui-tooltip-dark{ }
-ui-tooltip-red{ }
-ui-tooltip-green{ }
-ui-tooltip-blue{ }
+qtip{ } /* This one is applied by default (formally the "cream" style) */
+qtip-plain{ }
+qtip-light{ }
+qtip-dark{ }
+qtip-red{ }
+qtip-green{ }
+qtip-blue{ }
 
 /* CSS3+ styles */
-ui-tooltip-shadow{ } /* Adds a shadows to your tooltips */
-ui-tooltip-rounded{ } /* Adds a rounded corner to your tooltips */
-ui-tooltip-bootstrap{ } /* Bootstrap style */
-ui-tooltip-tipsy{ } /* Tipsy style */
-ui-tooltip-youtube{ } /* Youtube style */
-ui-tooltip-jtools{ } /* jTools tooltip style */
-ui-tooltip-cluetip{ } /* ClueTip style */
-ui-tooltip-tipped{ } /* Tipped style */
+qtip-shadow{ } /* Adds a shadows to your tooltips */
+qtip-rounded{ } /* Adds a rounded corner to your tooltips */
+qtip-bootstrap{ } /* Bootstrap style */
+qtip-tipsy{ } /* Tipsy style */
+qtip-youtube{ } /* Youtube style */
+qtip-jtools{ } /* jTools tooltip style */
+qtip-cluetip{ } /* ClueTip style */
+qtip-tipped{ } /* Tipped style */
 ```
 
 ### Examples
@@ -42,7 +42,7 @@ $('.selector').qtip({
 		text: 'I\'m blue... deal with it!'
 	},
 	style: {
-		classes: 'ui-tooltip-blue ui-tooltip-shadow'
+		classes: 'qtip-blue qtip-shadow'
 	}
 });
 ```
@@ -56,7 +56,7 @@ $('.selector').qtip({
 true, false *(Default: true)*
 
 ### Overview
-This property allows you to prevent the .ui-tooltip-default class from being applied to the main tooltip element.
+This property allows you to prevent the .qtip-default class from being applied to the main tooltip element.
 
 ### Notes
 * Setting this to false will cause the tooltip to have no visual styling if you haven't applied any [custom classes](#classes)</li>

@@ -23,23 +23,23 @@ $('.selector').qtip({
 
 <a name="styling"></a>
 ## Styling
-Styling the tip's background and border colours is done via CSS, not the options below. These are detected from the styles set on the *ui-tooltip-tip* element listed above. If
+Styling the tip's background and border colours is done via CSS, not the options below. These are detected from the styles set on the *qtip-tip* element listed above. If
 no valid style can be found for the background or border colour properties, qTip will look for styles on specific elements, depending on what it's looking for:
 
 <a name="bordercolor"></a>
 #### border-color
-* ui-tooltip-tip element
-* ui-tooltip-titlebar element - If present and tip overlaps
-* ui-tooltip-content element
+* qtip-tip element
+* qtip-titlebar element - If present and tip overlaps
+* qtip-content element
 
 <a name="bgcolor"></a>
 #### background-color
-* ui-tooltip-tip element
-* ui-tooltip-titlebar element - If present and tip overlaps
-* ui-tooltip-content element
-* ui-tooltip element
+* qtip-tip element
+* qtip-titlebar element - If present and tip overlaps
+* qtip-content element
+* qtip element
 
-If no valid style can be found on any of these elements, the initially detected style of the *ui-tooltip-tip* element will be used. A notable exception to the inheritance is the [border](#border)
+If no valid style can be found on any of these elements, the initially detected style of the *qtip-tip* element will be used. A notable exception to the inheritance is the [border](#border)
 property, which can be used to override the detected CSS border-width.
 
 --------------------
@@ -176,7 +176,7 @@ $('.selector').qtip({
 		text: 'I look very similar to a Google Maps tooltip!'
 	},
 	style: {
-		classes: 'ui-tooltip-light',
+		classes: 'qtip-light',
 		tip: {
 			corner: 'bottom center',
 			mimic: 'bottom left',

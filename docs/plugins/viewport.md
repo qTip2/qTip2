@@ -8,24 +8,24 @@ When the [position.adjust.method](#adjustmethod) is set to either "flip" or "fli
 to the qTip which denotes it's current [Corner](../position.md#basics) position. The following list details the [corner values](../position.md#basics)
 along with their associated class:
 
-* top left - *ui-tooltip-pos-tl*
-* top center - *ui-tooltip-pos-tc*
-* top right - *ui-tooltip-pos-tr*
-* bottom left - *ui-tooltip-pos-bl*
-* bottom center - *ui-tooltip-pos-bc*
-* bottom right - *ui-tooltip-pos-br*
-* left top - *ui-tooltip-pos-lt*
-* left center - *ui-tooltip-pos-lc*
-* left bottom - *ui-tooltip-pos-lb*
-* right top - *ui-tooltip-pos-rt*
-* right center - *ui-tooltip-pos-rc*
-* right bottom - *ui-tooltip-pos-rb*
-* center center - *ui-tooltip-pos-c*
+* top left - *qtip-pos-tl*
+* top center - *qtip-pos-tc*
+* top right - *qtip-pos-tr*
+* bottom left - *qtip-pos-bl*
+* bottom center - *qtip-pos-bc*
+* bottom right - *qtip-pos-br*
+* left top - *qtip-pos-lt*
+* left center - *qtip-pos-lc*
+* left bottom - *qtip-pos-lb*
+* right top - *qtip-pos-rt*
+* right center - *qtip-pos-rc*
+* right bottom - *qtip-pos-rb*
+* center center - *qtip-pos-c*
 
 You can use this to easily adjust the styling of your qTip's based upon their viewport position, cool huh? For example:
 
 ```css
-.myStyle.ui-tooltip-pos-tl{
+.myStyle.qtip-pos-tl{
 	color: red;
 }
 ```

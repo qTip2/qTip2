@@ -103,7 +103,7 @@ $.fn.qtip.defaults = {
 
 ### Overview
 Determines the base numeric identifier assigned to future qTips. At document load this is set to *zero*, and is incremented for each successive qTip
-created. This identifier is used to retrieve qTips by their corresponding 'id' attr in the form of &quot;ui-tooltip-*&lt;i&gt;*&quot;
+created. This identifier is used to retrieve qTips by their corresponding 'id' attr in the form of &quot;qtip-*&lt;i&gt;*&quot;
 
 ### Examples
 We can start our qTip ID at a higher number, such as 100:
@@ -112,7 +112,7 @@ We can start our qTip ID at a higher number, such as 100:
 $.fn.qtip.nextid = 100;
 
 /*
- * This qTip will have an ID of "ui-tooltip-100"
+ * This qTip will have an ID of "qtip-100"
  * All qTips created after will have ID values greater than 100
  */
 $('.selector').qtip({
