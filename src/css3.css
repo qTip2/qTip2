@@ -1,21 +1,21 @@
 /* Add shadows to your tooltips in: FF3+, Chrome 2+, Opera 10.6+, IE9+, Safari 2+ */
-.ui-tooltip-shadow{
+.qtip-shadow{
 	-webkit-box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.15);
 	-moz-box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.15);
 	box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.15);
 }
 
 /* Add rounded corners to your tooltips in: FF3+, Chrome 2+, Opera 10.6+, IE9+, Safari 2+ */
-.ui-tooltip-rounded,
-.ui-tooltip-tipsy,
-.ui-tooltip-bootstrap{
+.qtip-rounded,
+.qtip-tipsy,
+.qtip-bootstrap{
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 	border-radius: 5px;
 }
 
 /* Youtube tooltip style */
-.ui-tooltip-youtube{
+.qtip-youtube{
 	-moz-border-radius: 2px;
 	-webkit-border-radius: 2px;
 	border-radius: 2px;
@@ -35,12 +35,12 @@
 	background-image: -o-linear-gradient(top,#4A4A4A 0,black 100%);
 }
 
-	.ui-tooltip-youtube .ui-tooltip-titlebar{
+	.qtip-youtube .qtip-titlebar{
 		background-color: #4A4A4A;
 		background-color: rgba(0,0,0,0);
 	}
 	
-	.ui-tooltip-youtube .ui-tooltip-content{
+	.qtip-youtube .qtip-content{
 		padding: .75em;
 		font: 12px arial,sans-serif;
 		
@@ -48,17 +48,17 @@
 		-ms-filter: "progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr=#4a4a4a,EndColorStr=#000000);";
 	}
 
-	.ui-tooltip-youtube .ui-tooltip-icon{
+	.qtip-youtube .qtip-icon{
 		border-color: #222;
 	}
 
-	.ui-tooltip-youtube .ui-tooltip-titlebar .ui-state-hover{
+	.qtip-youtube .qtip-titlebar .ui-state-hover{
 		border-color: #303030;
 	}
 
 
 /* jQuery TOOLS Tooltip style */
-.ui-tooltip-jtools{
+.qtip-jtools{
 	background: #232323;
 	background: rgba(0, 0, 0, 0.7);
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#717171), to(#232323));
@@ -80,34 +80,34 @@
 }
 
 	/* IE Specific */
-	.ui-tooltip-jtools .ui-tooltip-titlebar{
+	.qtip-jtools .qtip-titlebar{
 		background-color: transparent;
 		filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#717171,endColorstr=#4A4A4A);
 		-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#717171,endColorstr=#4A4A4A)";
 	}
-	.ui-tooltip-jtools .ui-tooltip-content{
+	.qtip-jtools .qtip-content{
 		filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#4A4A4A,endColorstr=#232323);
 		-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#4A4A4A,endColorstr=#232323)";
 	}
 
-	.ui-tooltip-jtools .ui-tooltip-titlebar,
-	.ui-tooltip-jtools .ui-tooltip-content{
+	.qtip-jtools .qtip-titlebar,
+	.qtip-jtools .qtip-content{
 		background: transparent;
 		color: white;
 		border: 0 dashed transparent;
 	}
 
-	.ui-tooltip-jtools .ui-tooltip-icon{
+	.qtip-jtools .qtip-icon{
 		border-color: #555;
 	}
 
-	.ui-tooltip-jtools .ui-tooltip-titlebar .ui-state-hover{
+	.qtip-jtools .qtip-titlebar .ui-state-hover{
 		border-color: #333;
 	}
 
 
 /* Cluetip style */
-.ui-tooltip-cluetip{
+.qtip-cluetip{
 	-webkit-box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.4);
 	-moz-box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.4);
 	box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.4);
@@ -117,24 +117,24 @@
 	border: 0 dashed transparent;
 }
 
-	.ui-tooltip-cluetip .ui-tooltip-titlebar{
+	.qtip-cluetip .qtip-titlebar{
 		background-color: #87876A;
 		color: white;
 		border: 0 dashed transparent;
 	}
 	
-	.ui-tooltip-cluetip .ui-tooltip-icon{
+	.qtip-cluetip .qtip-icon{
 		border-color: #808064;
 	}
 	
-	.ui-tooltip-cluetip .ui-tooltip-titlebar .ui-state-hover{
+	.qtip-cluetip .qtip-titlebar .ui-state-hover{
 		border-color: #696952;
 		color: #696952;
 	}
 
 
 /* Tipsy style */
-.ui-tooltip-tipsy{
+.qtip-tipsy{
 	background: black;
 	background: rgba(0, 0, 0, .87);
 
@@ -148,27 +148,27 @@
 	text-shadow: 0 1px black;
 }
 
-	.ui-tooltip-tipsy .ui-tooltip-titlebar{
+	.qtip-tipsy .qtip-titlebar{
 		padding: 6px 35px 0 10;
 		background-color: transparent;
 	}
 
-	.ui-tooltip-tipsy .ui-tooltip-content{
+	.qtip-tipsy .qtip-content{
 		padding: 6px 10;
 	}
 	
-	.ui-tooltip-tipsy .ui-tooltip-icon{
+	.qtip-tipsy .qtip-icon{
 		border-color: #222;
 		text-shadow: none;
 	}
 
-	.ui-tooltip-tipsy .ui-tooltip-titlebar .ui-state-hover{
+	.qtip-tipsy .qtip-titlebar .ui-state-hover{
 		border-color: #303030;
 	}
 
 
 /* Tipped style */
-.ui-tooltip-tipped{
+.qtip-tipped{
 	border: 3px solid #959FA9;
 
 	-moz-border-radius: 3px;
@@ -182,7 +182,7 @@
 	font-family: serif;
 }
 
-	.ui-tooltip-tipped .ui-tooltip-titlebar{
+	.qtip-tipped .qtip-titlebar{
 		border-bottom-width: 0;
 
 		color: white;
@@ -196,12 +196,12 @@
 		-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#3A79B8,endColorstr=#2E629D)";
 	}
 
-	.ui-tooltip-tipped .ui-tooltip-icon{
+	.qtip-tipped .qtip-icon{
 		border: 2px solid #285589;
 		background: #285589;
 	}
 
-		.ui-tooltip-tipped .ui-tooltip-icon .ui-icon{
+		.qtip-tipped .qtip-icon .ui-icon{
 			background-color: #FBFBFB;
 			color: #555;
 		}
@@ -213,7 +213,7 @@
  * Tested with IE 8, IE 9, Chrome 18, Firefox 9, Opera 11.
  * Does not work with IE 7.
  */
-.ui-tooltip-bootstrap{
+.qtip-bootstrap{
 	/** Taken from Bootstrap body */
 	font-size: 14px;
 	line-height: 20px;
@@ -235,7 +235,7 @@
 	background-clip: padding-box;
 }
 
-	.ui-tooltip-bootstrap .ui-tooltip-titlebar{
+	.qtip-bootstrap .qtip-titlebar{
 		/** Taken from Bootstrap .popover-title */
 		padding: 8px 14px;
 		margin: 0;
@@ -249,10 +249,10 @@
 		border-radius: 5px 5px 0 0;
 	}
 
-		.ui-tooltip-bootstrap .ui-tooltip-titlebar .ui-state-default{
+		.qtip-bootstrap .qtip-titlebar .qtip-close{
 			/**
 			 * Overrides qTip2:
-			 * .ui-tooltip-titlebar .ui-state-default{
+			 * .qtip-titlebar .qtip-close{
 			 *   [...]
 			 *   right: 4px;
 			 *   top: 50%;
@@ -265,15 +265,15 @@
 			border-style: none;
 		}
 
-	.ui-tooltip-bootstrap .ui-tooltip-content{
+	.qtip-bootstrap .qtip-content{
 		/** Taken from Bootstrap .popover-content */
 		padding: 9px 14px;
 	}
 
-	.ui-tooltip-bootstrap .ui-tooltip-icon{
+	.qtip-bootstrap .qtip-icon{
 		/**
 		 * Overrides qTip2:
-		 * .ui-tooltip-default .ui-tooltip-icon {
+		 * .qtip-default .qtip-icon {
 		 *   border-color: #CCC;
 		 *   background: #F1F1F1;
 		 *   color: #777;
@@ -282,10 +282,10 @@
 		background: transparent;
 	}
 
-		.ui-tooltip-bootstrap .ui-tooltip-icon .ui-icon{
+		.qtip-bootstrap .qtip-icon .ui-icon{
 			/**
 			 * Overrides qTip2:
-			 * .ui-tooltip-icon .ui-icon{
+			 * .qtip-icon .ui-icon{
 			 *   width: 18px;
 			 *   height: 14px;
 			 * }
@@ -304,7 +304,7 @@
 			filter: alpha(opacity=20);
 		}
 
-		.ui-tooltip-bootstrap .ui-tooltip-icon .ui-icon:hover{
+		.qtip-bootstrap .qtip-icon .ui-icon:hover{
 			/* Taken from Bootstrap .close:hover */
 			color: #000000;
 			text-decoration: none;
@@ -315,8 +315,8 @@
 
 
 /* IE9 fix - removes all filters */
-.ui-tooltip:not(.ie9haxors) div.ui-tooltip-content,
-.ui-tooltip:not(.ie9haxors) div.ui-tooltip-titlebar{
+.qtip:not(.ie9haxors) div.qtip-content,
+.qtip:not(.ie9haxors) div.qtip-titlebar{
 	filter: none;
 	-ms-filter: none;
 }

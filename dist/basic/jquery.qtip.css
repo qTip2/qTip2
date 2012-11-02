@@ -1,26 +1,9 @@
-/*! qTip2 - Pretty powerful tooltips - v2.0.0 - 2012-11-01
+/*! qTip2 - Pretty powerful tooltips - v2.0.0 - 2012-11-02
 * http://craigsworks.com/projects/qtip2/
 * Copyright (c) 2012 Craig Michael Thompson; Licensed MIT, GPL */
 
-/* Fluid class for determining actual width in IE */
-#qtip-rcontainer{
-	position: absolute;
-	left: -28000px;
-	top: -28000px;
-	display: block;
-	visibility: hidden;
-}
-
-	/* Fluid class for determining actual width in IE */
-	#qtip-rcontainer .ui-tooltip{
-		display: block !important;
-		visibility: hidden !important;
-		position: static !important;
-		float: left !important;
-	}
-
 /* Core qTip styles */
-.ui-tooltip, .qtip{
+.qtip, .qtip{
 	position: absolute;
 	left: -28000px;
 	top: -28000px;
@@ -33,7 +16,7 @@
 	line-height: 12px;
 }
 
-	.ui-tooltip-content{
+	.qtip-content{
 		position: relative;
 		padding: 5px 9px;
 		overflow: hidden;
@@ -42,7 +25,7 @@
 		word-wrap: break-word;
 	}
 
-	.ui-tooltip-titlebar{
+	.qtip-titlebar{
 		position: relative;
 		min-height: 14px;
 		padding: 5px 35px 5px 10px;
@@ -52,10 +35,10 @@
 		font-weight: bold;
 	}
 
-	.ui-tooltip-titlebar + .ui-tooltip-content{ border-top-width: 0 !important; }
+	.qtip-titlebar + .qtip-content{ border-top-width: 0 !important; }
 
 		/* Default close button class */
-		.ui-tooltip-titlebar .ui-state-default{
+		.qtip-titlebar .qtip-close{
 			position: absolute;
 			right: 4px;
 			top: 50%;
@@ -68,23 +51,23 @@
 			border-style: solid;
 		}
 		
-		* html .ui-tooltip-titlebar .ui-state-default{ top: 16px; } /* IE fix */
+		* html .qtip-titlebar .qtip-close{ top: 16px; } /* IE fix */
 
-		.ui-tooltip-titlebar .ui-icon,
-		.ui-tooltip-icon .ui-icon{
+		.qtip-titlebar .ui-icon,
+		.qtip-icon .ui-icon{
 			display: block;
 			text-indent: -1000em;
 			direction: ltr;
 		}
 
-		.ui-tooltip-icon, .ui-tooltip-icon .ui-icon{
+		.qtip-icon, .qtip-icon .ui-icon{
 			-moz-border-radius: 3px;
 			-webkit-border-radius: 3px;
 			border-radius: 3px;
 			text-decoration: none;
 		}
 
-			.ui-tooltip-icon .ui-icon{
+			.qtip-icon .ui-icon{
 				width: 18px;
 				height: 14px;
 
@@ -98,13 +81,13 @@
 
 
 /* Applied to 'focused' tooltips e.g. most recently displayed/interacted with */
-.ui-tooltip-focus{}
+.qtip-focus{}
 
 /* Applied on hover of tooltips i.e. added/removed on mouseenter/mouseleave respectively */
-.ui-tooltip-hover{}
+.qtip-hover{}
 
 /* Default tooltip style */
-.ui-tooltip-default{
+.qtip-default{
 	border-width: 1px;
 	border-style: solid;
 	border-color: #F1D031;
@@ -113,122 +96,122 @@
 	color: #555;
 }
 
-	.ui-tooltip-default .ui-tooltip-titlebar{
+	.qtip-default .qtip-titlebar{
 		background-color: #FFEF93;
 	}
 
-	.ui-tooltip-default .ui-tooltip-icon{
+	.qtip-default .qtip-icon{
 		border-color: #CCC;
 		background: #F1F1F1;
 		color: #777;
 	}
 	
-	.ui-tooltip-default .ui-tooltip-titlebar .ui-state-hover{
+	.qtip-default .qtip-titlebar .qtip-close{
 		border-color: #AAA;
 		color: #111;
 	}
 
 
 /*! Light tooltip style */
-.ui-tooltip-light{
+.qtip-light{
 	background-color: white;
 	border-color: #E2E2E2;
 	color: #454545;
 }
 
-	.ui-tooltip-light .ui-tooltip-titlebar{
+	.qtip-light .qtip-titlebar{
 		background-color: #f1f1f1;
 	}
 
 
 /*! Dark tooltip style */
-.ui-tooltip-dark{
+.qtip-dark{
 	background-color: #505050;
 	border-color: #303030;
 	color: #f3f3f3;
 }
 
-	.ui-tooltip-dark .ui-tooltip-titlebar{
+	.qtip-dark .qtip-titlebar{
 		background-color: #404040;
 	}
 
-	.ui-tooltip-dark .ui-tooltip-icon{
+	.qtip-dark .qtip-icon{
 		border-color: #444;
 	}
 
-	.ui-tooltip-dark .ui-tooltip-titlebar .ui-state-hover{
+	.qtip-dark .qtip-titlebar .ui-state-hover{
 		border-color: #303030;
 	}
 
 
 /*! Cream tooltip style */
-.ui-tooltip-cream{
+.qtip-cream{
 	background-color: #FBF7AA;
 	border-color: #F9E98E;
 	color: #A27D35;
 }
 
-	.ui-tooltip-cream .ui-tooltip-titlebar{
+	.qtip-cream .qtip-titlebar{
 		background-color: #F0DE7D;
 	}
 
-	.ui-tooltip-cream .ui-state-default .ui-tooltip-icon{
+	.qtip-cream .qtip-close .qtip-icon{
 		background-position: -82px 0;
 	}
 
 
 /*! Red tooltip style */
-.ui-tooltip-red{
+.qtip-red{
 	background-color: #F78B83;
 	border-color: #D95252;
 	color: #912323;
 }
 
-	.ui-tooltip-red .ui-tooltip-titlebar{
+	.qtip-red .qtip-titlebar{
 		background-color: #F06D65;
 	}
 
-	.ui-tooltip-red .ui-state-default .ui-tooltip-icon{
+	.qtip-red .qtip-close .qtip-icon{
 		background-position: -102px 0;
 	}
 
-	.ui-tooltip-red .ui-tooltip-icon{
+	.qtip-red .qtip-icon{
 		border-color: #D95252;
 	}
 
-	.ui-tooltip-red .ui-tooltip-titlebar .ui-state-hover{
+	.qtip-red .qtip-titlebar .ui-state-hover{
 		border-color: #D95252;
 	}
 
 
 /*! Green tooltip style */
-.ui-tooltip-green{
+.qtip-green{
 	background-color: #CAED9E;
 	border-color: #90D93F;
 	color: #3F6219;
 }
 
-	.ui-tooltip-green .ui-tooltip-titlebar{
+	.qtip-green .qtip-titlebar{
 		background-color: #B0DE78;
 	}
 
-	.ui-tooltip-green .ui-state-default .ui-tooltip-icon{
+	.qtip-green .qtip-close .qtip-icon{
 		background-position: -42px 0;
 	}
 
 
 /*! Blue tooltip style */
-.ui-tooltip-blue{
+.qtip-blue{
 	background-color: #E5F6FE;
 	border-color: #ADD9ED;
 	color: #5E99BD;
 }
 
-	.ui-tooltip-blue .ui-tooltip-titlebar{
+	.qtip-blue .qtip-titlebar{
 		background-color: #D0E9F5;
 	}
 
-	.ui-tooltip-blue .ui-state-default .ui-tooltip-icon{
+	.qtip-blue .qtip-close .qtip-icon{
 		background-position: -2px 0;
 	}
 

@@ -22,7 +22,7 @@ function IE6(api)
 		{
 			// Create the BGIFrame element if needed
 			if(bgiframe) {
-				elems.bgiframe = $('<iframe class="ui-tooltip-bgiframe" frameborder="0" tabindex="-1" src="javascript:\'\';" ' +
+				elems.bgiframe = $('<iframe class="qtip-bgiframe" frameborder="0" tabindex="-1" src="javascript:\'\';" ' +
 					' style="display:block; position:absolute; z-index:-1; filter:alpha(opacity=0); ' +
 						'-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";"></iframe>');
 

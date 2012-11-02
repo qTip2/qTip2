@@ -340,7 +340,7 @@ function Tip(qTip, command)
 			if(elems.tip) { elems.tip.remove(); }
 
 			// Create tip element and prepend to the tooltip
-			elems.tip = $('<div />', { 'class': 'ui-tooltip-tip' }).css({ width: width, height: height }).prependTo(tooltip);
+			elems.tip = $('<div />', { 'class': 'qtip-tip' }).css({ width: width, height: height }).prependTo(tooltip);
 
 			// Create tip drawing element(s)
 			if(hasCanvas) {

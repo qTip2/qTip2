@@ -104,7 +104,7 @@ PLUGINS.viewport = function(api, position, posOptions, targetWidth, targetHeight
 	};
 
 	// Set tooltip position class if it's changed
-	if(newMy && cache.lastClass !== (newClass = uitooltip + '-pos-' + newMy.abbrev())) {
+	if(newMy && cache.lastClass !== (newClass = NAMESPACE + '-pos-' + newMy.abbrev())) {
 		tooltip.removeClass(api.cache.lastClass).addClass( (api.cache.lastClass = newClass) );
 	}
 

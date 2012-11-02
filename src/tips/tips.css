@@ -1,12 +1,12 @@
 /* Tips plugin */
-.ui-tooltip .ui-tooltip-tip{
+.qtip .qtip-tip{
 	margin: 0 auto;
 	overflow: hidden;
 	z-index: 10;
 }
 
-	.ui-tooltip .ui-tooltip-tip,
-	.ui-tooltip .ui-tooltip-tip .qtip-vml{
+	.qtip .qtip-tip,
+	.qtip .qtip-tip .qtip-vml{
 		position: absolute;
 		
 		line-height: 0.1px !important;
@@ -17,9 +17,9 @@
 		border: 0 dashed transparent;
 	}
 	
-	.ui-tooltip .ui-tooltip-tip canvas{ top: 0; left: 0; }
+	.qtip .qtip-tip canvas{ top: 0; left: 0; }
 
-	.ui-tooltip .ui-tooltip-tip .qtip-vml{
+	.qtip .qtip-tip .qtip-vml{
 		behavior: url(#default#VML);
 		display: inline-block;
 		visibility: visible;

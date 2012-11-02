@@ -38,14 +38,13 @@
 
 		// Shortcut vars
 		QTIP, PLUGINS, MOUSE,
+		NAMESPACE = 'qtip',
 		usedIDs = {},
-		uitooltip = 'ui-tooltip',
 		widget = 'ui-widget',
-		disabled = 'ui-state-disabled',
-		selector = 'div.qtip.'+uitooltip,
-		defaultClass = uitooltip + '-default',
-		focusClass = uitooltip + '-focus',
-		hoverClass = uitooltip + '-hover',
+		selector = 'div.qtip.'+NAMESPACE,
+		defaultClass = NAMESPACE + '-default',
+		focusClass = NAMESPACE + '-focus',
+		hoverClass = NAMESPACE + '-hover',
 		replaceSuffix = '_replacedByqTip',
 		oldtitle = 'oldtitle',
 		trackingBound;
