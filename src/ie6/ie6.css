@@ -1,4 +1,4 @@
 /* IE6 Modal plugin fix */
-#qtip-overlay{
+#qtip-overlay.ie6-fix{
 	position: absolute !important;
 }
