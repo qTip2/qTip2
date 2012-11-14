@@ -35,7 +35,7 @@ module.exports = function(grunt) {
 			modal: { js: '<%=dirs.src%>/modal/modal.js', css: '<%=dirs.src%>/modal/modal.css' },
 			viewport: { js: '<%=dirs.src%>/viewport/viewport.js' },
 			imagemap: { js: '<%=dirs.src%>/imagemap/imagemap.js' },
-			ie6: { js: '<%=dirs.src%>/ie6/ie6.js' }
+			ie6: { js: '<%=dirs.src%>/ie6/ie6.js', css: '<%=dirs.src%>/ie6/ie6.css' }
 		},
 
 		// Actual tasks
