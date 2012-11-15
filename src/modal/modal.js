@@ -152,7 +152,7 @@ function Modal(api)
 
 		create: function()
 		{
-			var elem = $(overlaySelector);
+			var elem = $(overlaySelector), win = $(window);
 
 			// Return if overlay is already rendered
 			if(elem.length) {
@@ -172,11 +172,11 @@ function Modal(api)
 			// Update position on window resize or scroll
 			function resize() {
 				overlay.css({
-					height: $(window).height(),
-					width: $(window).width()
+					height: win.height(),
+					width: win.width()
 				});
 			}
-			$(window).unbind(globalNamespace).bind('resize'+globalNamespace, resize);
+			win.unbind(globalNamespace).bind('resize'+globalNamespace, resize);
 			resize(); // Fire it initially too
 
 			return overlay;

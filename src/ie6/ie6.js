@@ -11,6 +11,7 @@ function IE6(api)
 		namespace = '.ie6-' + api.id,
 		bgiframe = $('select, object').length < 1,
 		isDrawing = 0,
+		modalProcessed = FALSE,
 		redrawContainer;
 
 	api.checks.ie6 = {
@@ -20,6 +21,8 @@ function IE6(api)
 	$.extend(self, {
 		init: function()
 		{
+			var win = $(window), scroll;
+
 			// Create the BGIFrame element if needed
 			if(bgiframe) {
 				elems.bgiframe = $('<iframe class="qtip-bgiframe" frameborder="0" tabindex="-1" src="javascript:\'\';" ' +
@@ -39,6 +42,19 @@ function IE6(api)
 
 			// Set dimensions
 			self.redraw();
+
+			// Fixup modal plugin if present too
+			if(elems.overlay && !modalProcessed) {
+				scroll = function() {
+					elems.overlay[0].style.top = win.scrollTop() + 'px';
+				};
+				win.bind('scroll.qtip-ie6, resize.qtip-ie6', scroll);
+				scroll(); // Fire it initially too
+
+				elem.overlay.addClass('ie6-fix'); // Add fix class
+
+				modalProcessed = TRUE; // Set flag
+			}
 		},
 
 		adjustBGIFrame: function()
