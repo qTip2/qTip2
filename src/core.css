@@ -45,6 +45,7 @@
 
 			border-width: 1px;
 			border-style: solid;
+			border-color: transparent;
 		}
 		
 		* html .qtip-titlebar .qtip-close{ top: 16px; } /* IE fix */

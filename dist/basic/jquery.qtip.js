@@ -44,7 +44,7 @@
 		QTIP, PLUGINS, MOUSE,
 		NAMESPACE = 'qtip',
 		usedIDs = {},
-		widget = 'ui-widget',
+		widget = ['ui-widget', 'ui-tooltip'],
 		selector = 'div.qtip.'+NAMESPACE,
 		defaultClass = NAMESPACE + '-default',
 		focusClass = NAMESPACE + '-focus',
@@ -161,6 +161,10 @@ function QTip(target, options, id, attr)
 		return [obj || options, levels.pop()];
 	}
 
+	function createWidgetClass(cls)
+	{
+		return widget.concat('').join(cls ? '-'+cls+' ' : ' ');
+	}
 
 	function setWidget()
 	{
@@ -171,13 +175,13 @@ function QTip(target, options, id, attr)
 		disabledClass = on ? 'ui-state-disabled' : 'qtip-disabled';
 		tooltip.toggleClass(disabledClass, disabled);
 
-		tooltip.toggleClass('ui-helper-reset '+widget, on).toggleClass(defaultClass, options.style.def && !on);
+		tooltip.toggleClass('ui-helper-reset '+createWidgetClass(), on).toggleClass(defaultClass, options.style.def && !on);
 		
 		if(elements.content) {
-			elements.content.toggleClass(widget+'-content', on);
+			elements.content.toggleClass( createWidgetClass('content'), on);
 		}
 		if(elements.titlebar) {
-			elements.titlebar.toggleClass(widget+'-header', on);
+			elements.titlebar.toggleClass( createWidgetClass('header'), on);
 		}
 		if(elements.button) {
 			elements.button.toggleClass(NAMESPACE+'-icon', !on);
@@ -239,7 +243,7 @@ function QTip(target, options, id, attr)
 
 		// Create title bar and title elements
 		elements.titlebar = $('<div />', {
-			'class': NAMESPACE + '-titlebar ' + (options.style.widget ? 'ui-widget-header' : '')
+			'class': NAMESPACE + '-titlebar ' + (options.style.widget ? createWidgetClass('header') : '')
 		})
 		.append(
 			elements.title = $('<div />', {

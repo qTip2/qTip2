@@ -40,7 +40,7 @@
 		QTIP, PLUGINS, MOUSE,
 		NAMESPACE = 'qtip',
 		usedIDs = {},
-		widget = 'ui-widget',
+		widget = ['ui-widget', 'ui-tooltip'],
 		selector = 'div.qtip.'+NAMESPACE,
 		defaultClass = NAMESPACE + '-default',
 		focusClass = NAMESPACE + '-focus',
