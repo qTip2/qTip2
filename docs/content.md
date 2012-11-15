@@ -153,10 +153,10 @@ $('.selector').qtip({
 jQuery([ ]), "String", true, false *(Default: false)*
 
 ### Overview
-Text/HTML which will appear inside the title's button element (e.g. close link) located to the right of the title content. The button will close the tooltip when clicked.
+Text/HTML which will appear inside the button element (i.e. close button or link) located by default at the top right of the tooltip or titlebar (if enabled). The button will close the tooltip when clicked.
 
-If it is set to *true* the default styled icon will be used. If a jQuery element is provided it will be used as the button and appended to the titlebar element. Finally, if a
-string is provided it will be used as the buttons innerText and title/aria-title attributes.
+If it is set to *true* the default styled icon will be used. If a jQuery element is provided it will be used as the button and appended to the tooltip, or titlebar element
+(if enabled). Finally, if a string is provided it will be used as the buttons innerText and title/aria-title attributes.
 
 ### Examples
 Create another "About me" tooltip which opens on click and only hides when the title button is clicked
@@ -175,9 +175,24 @@ $('.selector').qtip({
 	}
 });
 ```
+You can also have tooltips with a button but no title:
+
+```js
+$('.selector').qtip({
+	content: {
+		text: 'Quite Fancybox-y if you ask me...',
+		title: {
+			button: true
+		}
+	},
+	hide: {
+		event: false
+	}
+});
+```
 
 ### Notes
-* Button only appears if a title is present e.g. [content.title.text](#titletext) is defined and valid.
+* Button will be appended to the titlebar element if [content.title.text](#titletext) is set, otherwise to the tooltip element.
 * If no valid content is provided, the button will not be created.
 
 
