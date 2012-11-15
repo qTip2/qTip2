@@ -10,6 +10,8 @@
 	
 	font-size: 10.5px;
 	line-height: 12px;
+
+	direction: ltr;
 }
 
 	.qtip-content{
@@ -23,7 +25,6 @@
 
 	.qtip-titlebar{
 		position: relative;
-		min-height: 14px;
 		padding: 5px 35px 5px 10px;
 		overflow: hidden;
 
@@ -33,21 +34,24 @@
 
 	.qtip-titlebar + .qtip-content{ border-top-width: 0 !important; }
 
-		/* Default close button class */
+	/* Default close button class */
+	.qtip-close{
+		position: absolute;
+		right: -9px; top: -9px;
+
+		cursor: pointer;
+		outline: medium none;
+
+		border-width: 1px;
+		border-style: solid;
+		border-color: transparent;
+	}
+
 		.qtip-titlebar .qtip-close{
-			position: absolute;
-			right: 4px;
-			top: 50%;
+			right: 4px; top: 50%;
 			margin-top: -9px;
-
-			cursor: pointer;
-			outline: medium none;
-
-			border-width: 1px;
-			border-style: solid;
-			border-color: transparent;
 		}
-		
+	
 		* html .qtip-titlebar .qtip-close{ top: 16px; } /* IE fix */
 
 		.qtip-titlebar .ui-icon,
@@ -55,6 +59,7 @@
 			display: block;
 			text-indent: -1000em;
 			direction: ltr;
+			vertical-align: middle;
 		}
 
 		.qtip-icon, .qtip-icon .ui-icon{
