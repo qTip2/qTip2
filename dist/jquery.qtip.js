@@ -1,4 +1,4 @@
-/*! qTip2 - Pretty powerful tooltips - v2.0.0 - 2012-11-15
+/*! qTip2 - Pretty powerful tooltips - v2.0.0rc1 - 2012-11-15
 * http://craigsworks.com/projects/qtip2/
 * Copyright (c) 2012 Craig Michael Thompson; Licensed MIT, GPL */
 
@@ -1705,7 +1705,7 @@ if(!$.ui) {
 }
 
 // Set global qTip properties
-QTIP.version = '@VERSION';
+QTIP.version = '2.0.0rc1';
 QTIP.nextid = 0;
 QTIP.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleave mouseenter'.split(' ');
 QTIP.zindex = 15000;
