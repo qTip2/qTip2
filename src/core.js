@@ -2,7 +2,7 @@
 function sanitizeOptions(opts)
 {
 	var invalid = function(a) { return a === NULL || 'object' !== typeof a; },
-		invalidContent = function(c) { return !$.isFunction(c) && ((!c && !c.attr) || c.length < 1 || ('object' === typeof c && !c.jquery)); };
+		invalidContent = function(c) { return !$.isFunction(c) && ((!c && !c.attr) || c.length < 1 || ('object' === typeof c && !c.jquery && !c.then)); };
 
 	if(!opts || 'object' !== typeof opts) { return FALSE; }
 
@@ -246,7 +246,16 @@ function QTip(target, options, id, attr)
 		}
 	}
 
-	function updateContent(content, reposition)
+	function deferredContent(deferred)
+	{
+		if(deferred && $.isFunction(deferred.done)) {
+			deferred.done(function(c) {
+				updateContent(c, null, FALSE);
+			});
+		}
+	}
+
+	function updateContent(content, reposition, checkDeferred)
 	{
 		var elem = elements.content;
 
@@ -256,6 +265,11 @@ function QTip(target, options, id, attr)
 		// Use function to parse content
 		if($.isFunction(content)) {
 			content = content.call(target, cache.event, self) || '';
+		}
+
+		// Handle deferred content
+		if(checkDeferred !== FALSE) {
+			deferredContent(options.content.deferred);
 		}
 
 		// Append new content if its a DOM array and show it if hidden
@@ -594,7 +608,8 @@ function QTip(target, options, id, attr)
 		},
 
 		// Content checks
-		'^content.text$': function(obj, o, v){ updateContent(v); },
+		'^content.text$': function(obj, o, v) { updateContent(options.content.text); },
+		'^content.deferred$': function(obj, o, v) { deferredContent(options.content.deferred); },
 		'^content.title.text$': function(obj, o, v) {
 			// Remove title if content is null
 			if(!v) { return removeTitle(); }
@@ -718,7 +733,7 @@ function QTip(target, options, id, attr)
 			else { createButton(); }
 
 			// Set proper rendered flag and update content if not a callback function (called in toggle)
-			if(!$.isFunction(text)) { updateContent(text, FALSE); }
+			if(!$.isFunction(text) || text.then) { updateContent(text, FALSE); }
 			self.rendered = TRUE;
 
 			// Setup widget classes
@@ -1647,6 +1662,7 @@ QTIP.defaults = {
 	content: {
 		text: TRUE,
 		attr: 'title',
+		deferred: FALSE,
 		title: {
 			text: FALSE,
 			button: FALSE
