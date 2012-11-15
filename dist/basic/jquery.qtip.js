@@ -1,4 +1,4 @@
-/*! qTip2 - Pretty powerful tooltips - v2.0.0 - 2012-11-14
+/*! qTip2 - Pretty powerful tooltips - v2.0.0 - 2012-11-15
 * http://craigsworks.com/projects/qtip2/
 * Copyright (c) 2012 Craig Michael Thompson; Licensed MIT, GPL */
 
@@ -218,7 +218,7 @@ function QTip(target, options, id, attr)
 		}
 
 		// Create button and setup attributes
-		elements.button.appendTo(elements.titlebar)
+		elements.button.appendTo(elements.titlebar || tooltip)
 			.attr('role', 'button')
 			.click(function(event) {
 				if(!tooltip.hasClass(disabled)) { self.hide(event); }
@@ -260,8 +260,7 @@ function QTip(target, options, id, attr)
 
 	function updateButton(button)
 	{
-		var elem = elements.button,
-			title = elements.title;
+		var elem = elements.button;
 
 		// Make sure tooltip is rendered and if not, return
 		if(!self.rendered) { return FALSE; }
@@ -270,9 +269,6 @@ function QTip(target, options, id, attr)
 			elem.remove();
 		}
 		else {
-			if(!title) {
-				createTitle();
-			}
 			createButton();
 		}
 	}
@@ -773,6 +769,9 @@ function QTip(target, options, id, attr)
 				// Update title only if its not a callback (called in toggle if so)
 				if(!$.isFunction(title)) { updateTitle(title, FALSE); }
 			}
+
+			// Create button
+			else { createButton(); }
 
 			// Set proper rendered flag and update content if not a callback function (called in toggle)
 			if(!$.isFunction(text)) { updateContent(text, FALSE); }

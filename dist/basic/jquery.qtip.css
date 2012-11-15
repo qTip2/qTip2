@@ -1,4 +1,4 @@
-/*! qTip2 - Pretty powerful tooltips - v2.0.0 - 2012-11-14
+/*! qTip2 - Pretty powerful tooltips - v2.0.0 - 2012-11-15
 * http://craigsworks.com/projects/qtip2/
 * Copyright (c) 2012 Craig Michael Thompson; Licensed MIT, GPL */
 
@@ -31,6 +31,8 @@
 	
 	font-size: 10.5px;
 	line-height: 12px;
+
+	direction: ltr;
 }
 
 	.ui-tooltip-content{
@@ -54,27 +56,31 @@
 
 	.ui-tooltip-titlebar + .ui-tooltip-content{ border-top-width: 0 !important; }
 
-		/* Default close button class */
-		.ui-tooltip-titlebar .ui-state-default{
-			position: absolute;
-			right: 4px;
-			top: 50%;
+	/* Default close button class */
+	.ui-tooltip-close{
+		position: absolute;
+		right: -9px; top: -9px;
+
+		cursor: pointer;
+		outline: medium none;
+
+		border-width: 1px;
+		border-style: solid;
+	}
+
+		.ui-tooltip-titlebar .ui-tooltip-close{
+			right: 4px; top: 50%;
 			margin-top: -9px;
-
-			cursor: pointer;
-			outline: medium none;
-
-			border-width: 1px;
-			border-style: solid;
 		}
-		
-		* html .ui-tooltip-titlebar .ui-state-default{ top: 16px; } /* IE fix */
+	
+		* html .ui-tooltip-titlebar .ui-tooltip-close{ top: 16px; } /* IE fix */
 
 		.ui-tooltip-titlebar .ui-icon,
 		.ui-tooltip-icon .ui-icon{
 			display: block;
 			text-indent: -1000em;
 			direction: ltr;
+			vertical-align: middle;
 		}
 
 		.ui-tooltip-icon, .ui-tooltip-icon .ui-icon{
