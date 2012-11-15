@@ -1499,7 +1499,8 @@ QTIP.bind = function(opts, event)
 
 		// Prerendering is enabled, create tooltip now
 		if(options.show.ready || options.prerender) { hoverIntent(event); }
-	});
+	})
+	.attr('data-hasqtip', TRUE);
 };
 
 // Setup base plugins
