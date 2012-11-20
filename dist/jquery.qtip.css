@@ -1,4 +1,4 @@
-/*! qTip2 - Pretty powerful tooltips - v2.0.0 - 2012-11-15
+/*! qTip2 - Pretty powerful tooltips - v2.0.0rc1 - 2012-11-20
 * http://craigsworks.com/projects/qtip2/
 * Copyright (c) 2012 Craig Michael Thompson; Licensed MIT, GPL */
 
@@ -597,6 +597,6 @@
 
 
 /* IE6 Modal plugin fix */
-#qtip-overlay.ie6-fix{
+.qtipmodal-ie6fix{
 	position: absolute !important;
 }

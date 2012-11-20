@@ -2,6 +2,7 @@
 module.exports = function(grunt) {
 	// Load grunt helpers
 	grunt.loadNpmTasks('grunt-contrib');
+	grunt.loadNpmTasks('grunt-text-replace');
 
 	// Project configuration.
 	grunt.initConfig({
@@ -89,6 +90,19 @@ module.exports = function(grunt) {
 				}
 			}
 		},
+		replace: {
+			dist: {
+				src: '<%=dirs.dist%>/**/*.js',
+				overwrite: true,
+				replacements: [{
+					from: '@VERSION',
+					to: '<%= pkg.version %>'
+				}, {
+					from: '@DATE',
+					to: '<%= grunt.template.today("yyyy") %>'
+				}]
+			}
+		},
 		lint: {
 			beforeconcat: ['grunt.js', '<%=dirs.src%>/core.js', '<%=dirs.src%>/*/*.js']
 		},
@@ -174,7 +188,7 @@ module.exports = function(grunt) {
 
 	// Setup all other tasks
 	grunt.registerTask('css', 'init clean concat:dist_css mincss:dist');
-	grunt.registerTask('basic', 'init clean lint concat:basic concat:basic_css min:basic mincss:basic');
-	grunt.registerTask('default', 'init clean lint concat:dist concat:dist_css min:dist mincss:dist');
-	grunt.registerTask('dev', 'init clean lint concat min mincss');
+	grunt.registerTask('basic', 'init clean lint concat:basic concat:basic_css min:basic mincss:basic replace');
+	grunt.registerTask('default', 'init clean lint concat:dist concat:dist_css min:dist mincss:dist replace');
+	grunt.registerTask('dev', 'init clean lint concat min mincss replace');
 };

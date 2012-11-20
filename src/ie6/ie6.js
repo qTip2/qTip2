@@ -51,7 +51,7 @@ function IE6(api)
 				win.bind('scroll.qtip-ie6, resize.qtip-ie6', scroll);
 				scroll(); // Fire it initially too
 
-				elem.overlay.addClass('ie6-fix'); // Add fix class
+				elems.overlay.addClass('qtipmodal-ie6fix'); // Add fix class
 
 				modalProcessed = TRUE; // Set flag
 			}

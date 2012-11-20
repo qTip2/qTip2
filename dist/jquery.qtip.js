@@ -1,4 +1,4 @@
-/*! qTip2 - Pretty powerful tooltips - v2.0.0 - 2012-11-15
+/*! qTip2 - Pretty powerful tooltips - v2.0.0rc1 - 2012-11-20
 * http://craigsworks.com/projects/qtip2/
 * Copyright (c) 2012 Craig Michael Thompson; Licensed MIT, GPL */
 
@@ -748,7 +748,7 @@ function QTip(target, options, id, attr)
 			if(self.rendered) { return self; } // If tooltip has already been rendered, exit
 
 			var text = options.content.text,
-				title = options.content.title.text,
+				title = options.content.title,
 				posOptions = options.position;
 
 			// Add ARIA attributes to target
@@ -786,15 +786,15 @@ function QTip(target, options, id, attr)
 			isPositioning = 1;
 
 			// Create title...
-			if(title) {
+			if(title.text) {
 				createTitle();
 
 				// Update title only if its not a callback (called in toggle if so)
-				if(!$.isFunction(title)) { updateTitle(title, FALSE); }
+				if(!$.isFunction(title.text)) { updateTitle(title.text, FALSE); }
 			}
 
 			// Create button
-			else { createButton(); }
+			else if(title.button) { createButton(); }
 
 			// Set proper rendered flag and update content if not a callback function (called in toggle)
 			if(!$.isFunction(text) || text.then) { updateContent(text, FALSE); }
@@ -1563,7 +1563,8 @@ QTIP.bind = function(opts, event)
 
 		// Prerendering is enabled, create tooltip now
 		if(options.show.ready || options.prerender) { hoverIntent(event); }
-	});
+	})
+	.attr('data-hasqtip', TRUE);
 };
 
 // Setup base plugins
@@ -1712,7 +1713,7 @@ if(!$.ui) {
 }
 
 // Set global qTip properties
-QTIP.version = '@VERSION';
+QTIP.version = '2.0.0rc1';
 QTIP.nextid = 0;
 QTIP.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleave mouseenter'.split(' ');
 QTIP.zindex = 15000;
@@ -3279,7 +3280,7 @@ function IE6(api)
 				win.bind('scroll.qtip-ie6, resize.qtip-ie6', scroll);
 				scroll(); // Fire it initially too
 
-				elem.overlay.addClass('ie6-fix'); // Add fix class
+				elems.overlay.addClass('qtipmodal-ie6fix'); // Add fix class
 
 				modalProcessed = TRUE; // Set flag
 			}

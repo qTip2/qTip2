@@ -1,7 +1,7 @@
 # qTip<sup>2</sup> - Custom builds
 
 ## What you need to build qTip2
-In order to build qTip<sup>2</sup>, you need to have Node.js 0.7 or later, [grunt][grunt] and [grunt-contrib][contrib].
+In order to build qTip<sup>2</sup>, you need to have Node.js 0.7 or later, [grunt][grunt], [grunt-contrib][contrib] and [grunt-text-replace][grunt-text-replace].
 
 ### Installing Node.js
 Head over to [http://nodejs.org/](http://nodejs.org/) to grab the OS-specific installer for Node.js and the Node Package Manager.
@@ -11,8 +11,9 @@ Head over to [http://nodejs.org/](http://nodejs.org/) to grab the OS-specific in
 2. If grunt isn't installed globally, run `npm install -g grunt` to install the latest version. _You may need to run `sudo npm install -g grunt`._
 3. From the root directory of this project, run `npm install` to install the project's dependencies.
 
-### Installing grunt-contrib
+### Installing grunt-contrib and grunt-text-replace
 1. run `npm install grunt-contrib` to install the latest version.
+2. run `npm install grunt-text-replace` to install the latest version.
 
 ## Important notes
 Please don't edit files in the `dist` subdirectory as they are automagically generated via grunt. You'll find source code in the `src` subdirectory!
