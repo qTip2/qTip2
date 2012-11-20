@@ -7,7 +7,7 @@ module.exports = function(grunt) {
 	// Project configuration.
 	grunt.initConfig({
 		// Meta properties
-		pkg: '<json:qtip2.jquery.json>',
+		pkg: '<json:package.json>',
 		meta: {
 			banners: {
 				full: '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - ' +
@@ -93,14 +93,7 @@ module.exports = function(grunt) {
 		replace: {
 			dist: {
 				src: '<%=dirs.dist%>/**/*.js',
-				overwrite: true,
-				replacements: [{
-					from: '@VERSION',
-					to: '<%= pkg.version %>'
-				}, {
-					from: '@DATE',
-					to: '<%= grunt.template.today("yyyy") %>'
-				}]
+				overwrite: true
 			}
 		},
 		lint: {
@@ -186,9 +179,28 @@ module.exports = function(grunt) {
 		);
 	});
 
+	// Called post-commit
+	grunt.registerTask('version', 'Replace versioning/date holders in files', function(nightly) {
+		var done = this.async();
+
+		// Get the current commit
+		grunt.utils.spawn({ cmd: 'git', args: ['hash-object', 'dist/jquery.qtip.js' ] }, function(err, sha1) {
+			var version = grunt.config('pkg.version') + (nightly !== false ? '-nightly-'+sha1.substr(0,10) : '');
+			grunt.config('replace.dist.replacements', [{
+				from: '@VERSION',
+				to: version
+			}, {
+				from: '@DATE',
+				to: grunt.template.today("dd-mm-yyyy")
+			}]);
+
+			done();
+		});
+	});
+
 	// Setup all other tasks
 	grunt.registerTask('css', 'init clean concat:dist_css mincss:dist');
-	grunt.registerTask('basic', 'init clean lint concat:basic concat:basic_css min:basic mincss:basic replace');
-	grunt.registerTask('default', 'init clean lint concat:dist concat:dist_css min:dist mincss:dist replace');
-	grunt.registerTask('dev', 'init clean lint concat min mincss replace');
+	grunt.registerTask('basic', 'init clean lint concat:basic concat:basic_css min:basic mincss:basic version replace');
+	grunt.registerTask('default', 'init clean lint concat:dist concat:dist_css min:dist mincss:dist version replace');
+	grunt.registerTask('dev', 'init clean lint concat min mincss version replace');
 };
