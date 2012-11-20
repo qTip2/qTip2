@@ -418,7 +418,7 @@ function Tip(qTip, command)
 
 			// Determine tip size
 			self.size = newSize = calculateSize(corner);
-			tip.css(newSize);
+			tip.css(newSize).css('line-height', newSize.height+'px');
 
 			// Calculate tip translation
 			if(corner.precedance === Y) {

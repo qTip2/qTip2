@@ -556,11 +556,8 @@
 	.qtip .qtip-tip,
 	.qtip .qtip-tip .qtip-vml{
 		position: absolute;
-		
-		line-height: 0.1px !important;
-		font-size: 0.1px !important;
-		color: #123456;
 
+		color: #123456;
 		background: transparent;
 		border: 0 dashed transparent;
 	}
