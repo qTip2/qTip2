@@ -1716,7 +1716,7 @@ if(!$.ui) {
 }
 
 // Set global qTip properties
-QTIP.version = '2.0.0pre-nightly-01181a986a';
+QTIP.version = '2.0.0pre-nightly-11b229eb10';
 QTIP.nextid = 0;
 QTIP.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleave mouseenter'.split(' ');
 QTIP.zindex = 15000;
@@ -1746,7 +1746,7 @@ QTIP.defaults = {
 			x: 0, y: 0,
 			mouse: TRUE,
 			resize: TRUE,
-			method: 'flip flip'
+			method: 'flipinvert flipinvert'
 		},
 		effect: function(api, pos, viewport) {
 			$(this).animate(pos, {

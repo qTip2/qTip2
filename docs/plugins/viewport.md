@@ -66,7 +66,7 @@ $('.selector').qtip({
 ## position.adjust.method
 
 ### Values
-"{flip|flipinvert|shift|none} {flip|flipinvert|shift|none}" *(Default: "flip")*
+"{flip|flipinvert|shift|none} {flip|flipinvert|shift|none}" *(Default: "flipinvert")*
 
 ### Overview
 This option determines the kind of [viewport positioning](#viewport) that takes place.
