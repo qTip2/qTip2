@@ -1543,7 +1543,8 @@ PLUGINS = QTIP.plugins = {
 	// Custom (more correct for qTip!) offset calculator
 	offset: function(elem, container) {
 		var pos = elem.offset(),
-			docBody = elem.closest('body')[0],
+			docBody = elem.closest('body'),
+			quirks = $.browser.msie && document.compatMode !== 'CSS1Compat',
 			parent = container, scrolled,
 			coffset, overflow;
 
@@ -1568,8 +1569,10 @@ PLUGINS = QTIP.plugins = {
 			}
 			while((parent = $(parent[0].offsetParent)).length);
 
-			// Compensate for containers scroll if it also has an offsetParent
-			if(scrolled && scrolled[0] !== docBody) { scroll( scrolled, 1 ); }
+			// Compensate for containers scroll if it also has an offsetParent (or in IE quirks mode)
+			if(scrolled && scrolled[0] !== docBody[0] || quirks) {
+				scroll( scrolled || docBody, 1 );
+			}
 		}
 
 		return pos;
