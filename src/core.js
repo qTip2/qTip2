@@ -1139,7 +1139,7 @@ function QTip(target, options, id, attr)
 				else if(PLUGINS.imagemap && target.is('area')) {
 					adjusted = PLUGINS.imagemap(self, target, at, PLUGINS.viewport ? method : FALSE);
 				}
-				else if(PLUGINS.svg && typeof target[0].xmlbase === 'string') {
+				else if(PLUGINS.svg && target[0].ownerSVGElement) {
 					adjusted = PLUGINS.svg(self, target, at, PLUGINS.viewport ? method : FALSE);
 				}
 

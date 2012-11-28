@@ -1,4 +1,4 @@
-/*! qTip2 - Pretty powerful tooltips - v2.0.0pre - 2012-11-20
+/*! qTip2 - Pretty powerful tooltips - v2.0.0pre - 2012-11-28
 * http://craigsworks.com/projects/qtip2/
 * Copyright (c) 2012 Craig Michael Thompson; Licensed MIT, GPL */
 
@@ -1194,7 +1194,7 @@ function QTip(target, options, id, attr)
 				else if(PLUGINS.imagemap && target.is('area')) {
 					adjusted = PLUGINS.imagemap(self, target, at, PLUGINS.viewport ? method : FALSE);
 				}
-				else if(PLUGINS.svg && typeof target[0].xmlbase === 'string') {
+				else if(PLUGINS.svg && target[0].ownerSVGElement) {
 					adjusted = PLUGINS.svg(self, target, at, PLUGINS.viewport ? method : FALSE);
 				}
 
@@ -1713,7 +1713,7 @@ if(!$.ui) {
 }
 
 // Set global qTip properties
-QTIP.version = '2.0.0pre-nightly-6a1900df60';
+QTIP.version = '2.0.0pre-nightly-f3fefe0e24';
 QTIP.nextid = 0;
 QTIP.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleave mouseenter'.split(' ');
 QTIP.zindex = 15000;
