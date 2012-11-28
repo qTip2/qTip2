@@ -575,7 +575,7 @@ function QTip(target, options, id, attr)
 		}
 
 		// Adjust tooltip position on scroll if screen adjustment is enabled
-		if(targets.viewport.length || (IE6 && tooltip.css('position') === 'fixed')) {
+		if(targets.viewport.length || (IE6 && tooltip.css('position') === 'fixed') || posOptions.adjust.mouse) {
 			targets.viewport.bind('scroll'+namespace, repositionMethod);
 		}
 	}

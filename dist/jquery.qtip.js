@@ -630,7 +630,7 @@ function QTip(target, options, id, attr)
 		}
 
 		// Adjust tooltip position on scroll if screen adjustment is enabled
-		if(targets.viewport.length || (IE6 && tooltip.css('position') === 'fixed')) {
+		if(targets.viewport.length || (IE6 && tooltip.css('position') === 'fixed') || posOptions.adjust.mouse) {
 			targets.viewport.bind('scroll'+namespace, repositionMethod);
 		}
 	}
@@ -1716,7 +1716,7 @@ if(!$.ui) {
 }
 
 // Set global qTip properties
-QTIP.version = '2.0.0pre-nightly-11b229eb10';
+QTIP.version = '2.0.0pre-nightly-19317041b8';
 QTIP.nextid = 0;
 QTIP.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleave mouseenter'.split(' ');
 QTIP.zindex = 15000;
