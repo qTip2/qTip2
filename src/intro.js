@@ -48,3 +48,15 @@
 		replaceSuffix = '_replacedByqTip',
 		oldtitle = 'oldtitle',
 		trackingBound;
+
+	// Store mouse coordinates
+	function storeMouse(event)
+	{
+		MOUSE = {
+			pageX: event.pageX,
+			pageY: event.pageY,
+			type: 'mousemove',
+			scrollX: window.pageXOffset || document.body.scrollLeft || document.documentElement.scrollLeft,
+			scrollY: window.pageYOffset || document.body.scrollTop || document.documentElement.scrollTop
+		};
+	}

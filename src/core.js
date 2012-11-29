@@ -88,9 +88,6 @@ function QTip(target, options, id, attr)
 		lastClass: ''
 	};
 
-	/*
-	* Private core functions
-	*/
 	function convertNotation(notation)
 	{
 		var i = 0, obj, option = options,
@@ -540,9 +537,7 @@ function QTip(target, options, id, attr)
 		// Mouse positioning events
 		if(posOptions.target === 'mouse') {
 			// Cache mousemove coords on show targets
-			targets.show.bind('mousemove'+namespace, function(event) {
-				MOUSE = { pageX: event.pageX, pageY: event.pageY, type: 'mousemove' };
-			});
+			targets.show.bind('mousemove'+namespace, storeMouse);
 
 			// If mouse adjustment is on...
 			if(posOptions.adjust.mouse) {
@@ -574,10 +569,8 @@ function QTip(target, options, id, attr)
 			($.event.special.resize ? targets.viewport : targets.window).bind('resize'+namespace, repositionMethod);
 		}
 
-		// Adjust tooltip position on scroll if screen adjustment is enabled
-		if(targets.viewport.length || (IE6 && tooltip.css('position') === 'fixed') || posOptions.adjust.mouse) {
-			targets.viewport.bind('scroll'+namespace, repositionMethod);
-		}
+		// Adjust tooltip position on scroll of the window or viewport element if present
+		targets.window.bind('scroll'+namespace, repositionMethod);
 	}
 
 	function unassignEvents()
@@ -925,9 +918,7 @@ function QTip(target, options, id, attr)
 
 				// Cache mousemove events for positioning purposes (if not already tracking)
 				if(!trackingBound && posOptions.target === 'mouse' && posOptions.adjust.mouse) {
-					$(document).bind('mousemove.qtip', function(event) {
-						MOUSE = { pageX: event.pageX, pageY: event.pageY, type: 'mousemove' };
-					});
+					$(document).bind('mousemove.qtip', storeMouse);
 					trackingBound = TRUE;
 				}
 
@@ -1082,7 +1073,9 @@ function QTip(target, options, id, attr)
 				position = { left: 0, top: 0 },
 				container = posOptions.container,
 				visible = tooltip[0].offsetWidth > 0,
-				adjusted, offset, win;
+				isScroll = event && event.type === 'scroll',
+				win = $(window),
+				adjusted, offset;
 
 			// Check if absolute position was passed
 			if($.isArray(target) && target.length === 2) {
@@ -1105,6 +1098,12 @@ function QTip(target, options, id, attr)
 
 				// Use event coordinates for position
 				position = { top: event.pageY, left: event.pageX };
+
+				// Scroll events are a pain, some browsers
+				if(adjust.mouse && isScroll) {
+					position.left -= MOUSE.scrollX - win.scrollLeft();
+					position.top -= MOUSE.scrollY - win.scrollTop();
+				}
 			}
 
 			// Target wasn't mouse or absolute...
@@ -1163,7 +1162,6 @@ function QTip(target, options, id, attr)
 					(PLUGINS.iOS >= 4.3 && PLUGINS.iOS < 4.33) || 
 					(!PLUGINS.iOS && fixed)
 				){
-					win = $(window);
 					position.left -= win.scrollLeft();
 					position.top -= win.scrollTop();
 				}
@@ -1471,7 +1469,7 @@ QTIP.bind = function(opts, event)
 		* Also set onTarget when triggered to keep mouse tracking working
 		*/
 		targets.show.bind('mousemove'+namespace, function(event) {
-			MOUSE = { pageX: event.pageX, pageY: event.pageY, type: 'mousemove' };
+			storeMouse(event);
 			api.cache.onTarget = TRUE;
 		});
 

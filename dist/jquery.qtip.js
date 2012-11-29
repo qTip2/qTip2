@@ -1,4 +1,4 @@
-/*! qTip2 - Pretty powerful tooltips - v2.0.0pre - 2012-11-28
+/*! qTip2 - Pretty powerful tooltips - v2.0.0pre - 2012-11-29
 * http://craigsworks.com/projects/qtip2/
 * Copyright (c) 2012 Craig Michael Thompson; Licensed MIT, GPL */
 
@@ -53,6 +53,17 @@
 		oldtitle = 'oldtitle',
 		trackingBound;
 
+	// Store mouse coordinates
+	function storeMouse(event)
+	{
+		MOUSE = {
+			pageX: event.pageX,
+			pageY: event.pageY,
+			type: 'mousemove',
+			scrollX: window.pageXOffset || document.body.scrollLeft || document.documentElement.scrollLeft,
+			scrollY: window.pageYOffset || document.body.scrollTop || document.documentElement.scrollTop
+		};
+	}
 // Option object sanitizer
 function sanitizeOptions(opts)
 {
@@ -143,9 +154,6 @@ function QTip(target, options, id, attr)
 		lastClass: ''
 	};
 
-	/*
-	* Private core functions
-	*/
 	function convertNotation(notation)
 	{
 		var i = 0, obj, option = options,
@@ -595,9 +603,7 @@ function QTip(target, options, id, attr)
 		// Mouse positioning events
 		if(posOptions.target === 'mouse') {
 			// Cache mousemove coords on show targets
-			targets.show.bind('mousemove'+namespace, function(event) {
-				MOUSE = { pageX: event.pageX, pageY: event.pageY, type: 'mousemove' };
-			});
+			targets.show.bind('mousemove'+namespace, storeMouse);
 
 			// If mouse adjustment is on...
 			if(posOptions.adjust.mouse) {
@@ -629,10 +635,8 @@ function QTip(target, options, id, attr)
 			($.event.special.resize ? targets.viewport : targets.window).bind('resize'+namespace, repositionMethod);
 		}
 
-		// Adjust tooltip position on scroll if screen adjustment is enabled
-		if(targets.viewport.length || (IE6 && tooltip.css('position') === 'fixed') || posOptions.adjust.mouse) {
-			targets.viewport.bind('scroll'+namespace, repositionMethod);
-		}
+		// Adjust tooltip position on scroll of the window or viewport element if present
+		targets.window.bind('scroll'+namespace, repositionMethod);
 	}
 
 	function unassignEvents()
@@ -980,9 +984,7 @@ function QTip(target, options, id, attr)
 
 				// Cache mousemove events for positioning purposes (if not already tracking)
 				if(!trackingBound && posOptions.target === 'mouse' && posOptions.adjust.mouse) {
-					$(document).bind('mousemove.qtip', function(event) {
-						MOUSE = { pageX: event.pageX, pageY: event.pageY, type: 'mousemove' };
-					});
+					$(document).bind('mousemove.qtip', storeMouse);
 					trackingBound = TRUE;
 				}
 
@@ -1137,7 +1139,9 @@ function QTip(target, options, id, attr)
 				position = { left: 0, top: 0 },
 				container = posOptions.container,
 				visible = tooltip[0].offsetWidth > 0,
-				adjusted, offset, win;
+				isScroll = event && event.type === 'scroll',
+				win = $(window),
+				adjusted, offset;
 
 			// Check if absolute position was passed
 			if($.isArray(target) && target.length === 2) {
@@ -1160,6 +1164,12 @@ function QTip(target, options, id, attr)
 
 				// Use event coordinates for position
 				position = { top: event.pageY, left: event.pageX };
+
+				// Scroll events are a pain, some browsers
+				if(adjust.mouse && isScroll) {
+					position.left -= MOUSE.scrollX - win.scrollLeft();
+					position.top -= MOUSE.scrollY - win.scrollTop();
+				}
 			}
 
 			// Target wasn't mouse or absolute...
@@ -1218,7 +1228,6 @@ function QTip(target, options, id, attr)
 					(PLUGINS.iOS >= 4.3 && PLUGINS.iOS < 4.33) || 
 					(!PLUGINS.iOS && fixed)
 				){
-					win = $(window);
 					position.left -= win.scrollLeft();
 					position.top -= win.scrollTop();
 				}
@@ -1526,7 +1535,7 @@ QTIP.bind = function(opts, event)
 		* Also set onTarget when triggered to keep mouse tracking working
 		*/
 		targets.show.bind('mousemove'+namespace, function(event) {
-			MOUSE = { pageX: event.pageX, pageY: event.pageY, type: 'mousemove' };
+			storeMouse(event);
 			api.cache.onTarget = TRUE;
 		});
 
@@ -1716,7 +1725,7 @@ if(!$.ui) {
 }
 
 // Set global qTip properties
-QTIP.version = '2.0.0pre-nightly-19317041b8';
+QTIP.version = '2.0.0pre-nightly-61a8d9e715';
 QTIP.nextid = 0;
 QTIP.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleave mouseenter'.split(' ');
 QTIP.zindex = 15000;
