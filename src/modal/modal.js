@@ -193,11 +193,15 @@ function Modal(api)
 				modals = $('[' + attr + ']').filter(':visible').not(tooltip),
 				zindex;
 
+				console.trace();
+
 			// Create our overlay if it isn't present already
 			if(!overlay) { overlay = self.create(); }
 
 			// Prevent modal from conflicting with show.solo, and don't hide backdrop is other modals are visible
-			if((overlay.is(':animated') && visible === state) || (!state && modals.length)) { return self; }
+			if((overlay.is(':animated') && visible === state && overlay.data('toggleState') !== FALSE) || (!state && modals.length)) {
+				return self;
+			}
 
 			// State specific...
 			if(state) {
@@ -222,7 +226,7 @@ function Modal(api)
 			}
 
 			// Stop all animations
-			overlay.stop(TRUE, FALSE);
+			overlay.stop(TRUE, FALSE).data('toggleState', state);
 
 			// Use custom function if provided
 			if($.isFunction(effect)) {
@@ -244,7 +248,7 @@ function Modal(api)
 			// Reset position on hide
 			if(!state) {
 				overlay.queue(function(next) {
-					overlay.css({ left: '', top: '' });
+					overlay.css({ left: '', top: '' }).removeData('toggleState');
 					next();
 				});
 			}

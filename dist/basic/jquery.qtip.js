@@ -1725,7 +1725,7 @@ if(!$.ui) {
 }
 
 // Set global qTip properties
-QTIP.version = '2.0.0pre-nightly-61a8d9e715';
+QTIP.version = '2.0.0pre-nightly-ab233bafce';
 QTIP.nextid = 0;
 QTIP.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleave mouseenter'.split(' ');
 QTIP.zindex = 15000;
