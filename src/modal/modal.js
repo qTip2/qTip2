@@ -193,8 +193,6 @@ function Modal(api)
 				modals = $('[' + attr + ']').filter(':visible').not(tooltip),
 				zindex;
 
-				console.trace();
-
 			// Create our overlay if it isn't present already
 			if(!overlay) { overlay = self.create(); }
 
