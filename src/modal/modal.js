@@ -275,7 +275,7 @@ function Modal(api)
 				}
 
 				// Undelegate focus handler
-				docBody.undelegate('*', 'focusin'+namespace);
+				docBody.unbind('focusin'+namespace);
 			}
 
 			// Remove bound events
