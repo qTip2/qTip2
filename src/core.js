@@ -1068,7 +1068,7 @@ function QTip(target, options, id, attr)
 				elemHeight = tooltip.outerHeight(FALSE),
 				targetWidth = 0,
 				targetHeight = 0,
-				fixed = tooltip.css('position') === 'fixed',
+				type = tooltip.css('position'),
 				viewport = posOptions.viewport,
 				position = { left: 0, top: 0 },
 				container = posOptions.container,
@@ -1097,7 +1097,8 @@ function QTip(target, options, id, attr)
 					event) || event || cache.event || MOUSE || {};
 
 				// Use event coordinates for position
-				position = { top: event.pageY, left: event.pageX };
+				if(type !== 'static') { position = container.offset(); }
+				position = { left: event.pageX - position.left, top: event.pageY - position.top };
 
 				// Scroll events are a pain, some browsers
 				if(adjust.mouse && isScroll) {
@@ -1160,7 +1161,7 @@ function QTip(target, options, id, attr)
 				// Adjust for position.fixed tooltips (and also iOS scroll bug in v3.2-4.0 & v4.3-4.3.2)
 				if((PLUGINS.iOS > 3.1 && PLUGINS.iOS < 4.1) || 
 					(PLUGINS.iOS >= 4.3 && PLUGINS.iOS < 4.33) || 
-					(!PLUGINS.iOS && fixed)
+					(!PLUGINS.iOS && type === 'fixed')
 				){
 					position.left -= win.scrollLeft();
 					position.top -= win.scrollTop();

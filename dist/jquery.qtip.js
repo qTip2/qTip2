@@ -1,4 +1,4 @@
-/*! qTip2 - Pretty powerful tooltips - v2.0.0pre - 2012-12-14
+/*! qTip2 - Pretty powerful tooltips - v2.0.0pre - 2012-12-20
 * http://craigsworks.com/projects/qtip2/
 * Copyright (c) 2012 Craig Michael Thompson; Licensed MIT, GPL */
 
@@ -1134,7 +1134,7 @@ function QTip(target, options, id, attr)
 				elemHeight = tooltip.outerHeight(FALSE),
 				targetWidth = 0,
 				targetHeight = 0,
-				fixed = tooltip.css('position') === 'fixed',
+				type = tooltip.css('position'),
 				viewport = posOptions.viewport,
 				position = { left: 0, top: 0 },
 				container = posOptions.container,
@@ -1163,7 +1163,8 @@ function QTip(target, options, id, attr)
 					event) || event || cache.event || MOUSE || {};
 
 				// Use event coordinates for position
-				position = { top: event.pageY, left: event.pageX };
+				if(type !== 'static') { position = container.offset(); }
+				position = { left: event.pageX - position.left, top: event.pageY - position.top };
 
 				// Scroll events are a pain, some browsers
 				if(adjust.mouse && isScroll) {
@@ -1226,7 +1227,7 @@ function QTip(target, options, id, attr)
 				// Adjust for position.fixed tooltips (and also iOS scroll bug in v3.2-4.0 & v4.3-4.3.2)
 				if((PLUGINS.iOS > 3.1 && PLUGINS.iOS < 4.1) || 
 					(PLUGINS.iOS >= 4.3 && PLUGINS.iOS < 4.33) || 
-					(!PLUGINS.iOS && fixed)
+					(!PLUGINS.iOS && type === 'fixed')
 				){
 					position.left -= win.scrollLeft();
 					position.top -= win.scrollTop();
@@ -1725,7 +1726,7 @@ if(!$.ui) {
 }
 
 // Set global qTip properties
-QTIP.version = '2.0.0pre-nightly-214951b9f3';
+QTIP.version = '2.0.0pre-nightly-d0ae10dc5d';
 QTIP.nextid = 0;
 QTIP.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleave mouseenter'.split(' ');
 QTIP.zindex = 15000;
