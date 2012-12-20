@@ -1726,7 +1726,7 @@ if(!$.ui) {
 }
 
 // Set global qTip properties
-QTIP.version = '2.0.0pre-nightly-d0ae10dc5d';
+QTIP.version = '2.0.0pre-nightly-3d8eba36e1';
 QTIP.nextid = 0;
 QTIP.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleave mouseenter'.split(' ');
 QTIP.zindex = 15000;
@@ -1836,8 +1836,6 @@ PLUGINS.svg = function(api, svg, corner, adjustMethod)
 		tPoint = point.matrixTransform(mtx);
 		result.position.left = tPoint.x;
 		result.position.top = tPoint.y;
-
-		console.log(result, point, tPoint);
 
 		// Adjust width and height
 		point.x += box.width;

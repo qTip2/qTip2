@@ -30,8 +30,6 @@ PLUGINS.svg = function(api, svg, corner, adjustMethod)
 		result.position.left = tPoint.x;
 		result.position.top = tPoint.y;
 
-		console.log(result, point, tPoint);
-
 		// Adjust width and height
 		point.x += box.width;
 		point.y += box.height;
