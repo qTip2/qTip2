@@ -33,14 +33,14 @@ You can also build your own qTip<sup>2</sup> script that includes select [plugin
 you don't plan on using. Find more information about this [here][build]
 
 ## Documentation
-Take a look at the [documentation table of contents][toc] for extensive docs and guides.
+Take a look at the [Wiki][wiki] for extensive docs and guides.
 
 ## Release History
 _(Nothing yet)_
 
 ## Questions or problems?
 If you have any questions, please feel free to post on the [support forums][forums], but before you do make sure to
-check out the [thorough documentation][docs] both here in the repo and on the [official site][site].
+check out the [thorough documentation][wiki] both here in the repo and on the [official site][site].
 
 ## License
 Copyright (c) 2012 Craig Michael Thompson. Licensed under the MIT, GPL licenses. *See [here][license] for more details.*
@@ -51,19 +51,18 @@ Big shout-out to ["Cowboy" Ben Alman][cowboy] for providing the [grunt][grunt] b
 [min]: https://raw.github.com/Craga89/qtip2/master/dist/jquery.qtip.min.js
 [max]: https://raw.github.com/Craga89/qtip2/master/dist/jquery.qtip.js
 
-[dist]: /Craga89/qTip2/tree/master/dist/
-[docs]: /Craga89/qTip2/tree/master/docs/
-[toc]: /Craga89/qTip2/blob/master/docs/toc.md
-[build]: /Craga89/qTip2/tree/master/docs/build.md
-[style]: /Craga89/qTip2/tree/master/docs/style.md
-[plugins]: /Craga89/qTip2/tree/master/docs/plugins/
-[tips]: /Craga89/qTip2/tree/master/docs/plugins/tips.md
-[imgmap]: /Craga89/qTip2/tree/master/docs/plugins/imagemap.md
+[dist]: /Craga89/qTip2/tree/master/dist
+[wiki]: /Craga89/qTip2/wiki
+[build]: /Craga89/qTip2/wiki/custom-build
+[style]: /Craga89/qTip2/wiki/style
+[plugins]: /Craga89/qTip2/wiki#plugins
+[tips]: /Craga89/qTip2/wiki/tips
+[imgmap]: /Craga89/qTip2/wiki/imagemap
 
-[site]: http://craigsworks.com/projects/qtip2/
+[site]: http://craigsworks.com/projects/qtip2
 [download]: http://craigsworks.com/projects/qtip2/download
 [forums]: http://craigsworks.com/projects/forums
-[license]: http://jquery.org/license/
+[license]: http://jquery.org/license
 
-[cowboy]: https://github.com/cowboy/
+[cowboy]: https://github.com/cowboy
 [grunt]: https://github.com/cowboy/grunt
