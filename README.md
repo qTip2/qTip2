@@ -23,6 +23,8 @@ More documentation and information is available at the [official site][site].
 You can grab the *latest stable releases* from the [download page][download] of the [official site][site]. This also lets
 you choose what [plugins][plugins] you'd like included in your download, as well as other things.
 
+Otherwise, if you prefer to use a [CDN] [wikipedia-cdn], you can now find qTip<sup>2</sup> available on [cdnjs] [cdnjs].
+
 ### Bleeding edge
 You can grab the latest and greatest qTip<sup>2</sup> nightly from the [dist][dist] directory and get started quickly.
 Download the [production version][min] or the [development version][max].
@@ -66,3 +68,6 @@ Big shout-out to ["Cowboy" Ben Alman][cowboy] for providing the [grunt][grunt] b
 
 [cowboy]: https://github.com/cowboy
 [grunt]: https://github.com/cowboy/grunt
+
+[wikipedia-cdn]: http://en.wikipedia.org/wiki/Content_delivery_network "Content Delivery Network"
+[cdnjs]: http://cdnjs.com/
