@@ -10,14 +10,18 @@ module.exports = function(grunt) {
 		pkg: '<json:package.json>',
 		meta: {
 			banners: {
-				full: '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - ' +
-					'<%= grunt.template.today("yyyy-mm-dd") %>\n' +
-					'<%= pkg.homepage ? "* " + pkg.homepage + "\n" : "" %>' +
-					'* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
-					' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */',
+				full: '/*!\n * <%= pkg.title || pkg.name %> - @vVERSION\n' +
+					' * <%=pkg.homepage%>\n' +
+					' *\n' + 
+					' * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>\n' +
+					' * Released under the <%= _.pluck(pkg.licenses, "type").join(", ") %> licenses\n' + 
+					' * http://jquery.org/license\n' + 
+					' *\n' + 
+					' * Date: <%= grunt.template.today("ddd mmm d yyyy hh:MM Zo", true) %>\n' + 
+					'@BUILDPROPS */',
 
-				min:'/*! <%= pkg.name %> v<%= pkg.version %> | <%= pkg.homepage %> | '+
-					'Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */'
+				min:'/*! <%= pkg.name %> @vVERSION @MINBUILDPROPS| <%= pkg.homepage.replace("http://","") %> | '+
+					'Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> | <%=grunt.template.today() %> */'
 			}
 		},
 
@@ -92,7 +96,7 @@ module.exports = function(grunt) {
 		},
 		replace: {
 			dist: {
-				src: '<%=dirs.dist%>/**/*.js',
+				src: '<%=dirs.dist%>/**/*',
 				overwrite: true
 			}
 		},
@@ -127,10 +131,13 @@ module.exports = function(grunt) {
 
 	// Parse command line options
 	grunt.registerTask('init', 'Default build', function() {
+		var done = this.async();
+
 		if(grunt.config('concat.dist.src')) { return; } // Only do it once
 
 		// Grab command-line options, using valid defaults if not given
-		var plugins = (grunt.option('plugins') || Object.keys( grunt.config('plugins')).join(' ')).replace(/ /g, ' ').split(' '),
+		var stable = grunt.option('stable') === true,
+			plugins = (grunt.option('plugins') || Object.keys( grunt.config('plugins')).join(' ')).replace(/ /g, ' ').split(' '),
 			styles = (grunt.option('styles') || Object.keys( grunt.config('styles')).join(' ')).replace(/ /g, ' ').split(' '),
 			valid;
 
@@ -172,35 +179,51 @@ module.exports = function(grunt) {
 			grunt.config('clean.dist', dist + '/**/*');
 		}
 
-		// Output current build properties
-		grunt.log.write("\nBuilding " + "qTip2".green + " with " +
-			"plugins " + plugins.join(' ').green + " and " +
-			"styles "  +styles.join(' ').green + "\n"
-		);
-	});
+		// Setup in-file text replacements (version, date etc)
+		grunt.utils.spawn({ cmd: 'git', args: ['describe'] }, function(err, sha1) {
+			var version = stable ? grunt.config('pkg.version') : sha1.substr(0,10);
 
-	// Called post-commit
-	grunt.registerTask('version', 'Replace versioning/date holders in files', function(nightly) {
-		var done = this.async();
-
-		// Get the current commit
-		grunt.utils.spawn({ cmd: 'git', args: ['hash-object', 'dist/jquery.qtip.js' ] }, function(err, sha1) {
-			var version = grunt.config('pkg.version') + (nightly !== false ? '-nightly-'+sha1.substr(0,10) : '');
 			grunt.config('replace.dist.replacements', [{
 				from: '@VERSION',
-				to: version
+				to: stable ? version : version.substr(1)
+			}, {
+				from: '@vVERSION',
+				to: stable ? 'v'+version : version
 			}, {
 				from: '@DATE',
 				to: grunt.template.today("dd-mm-yyyy")
+			}, {
+				from: '@BUILDPROPS',
+				to: (plugins.length ? ' * Plugins: @PLUGINS\n' : '') + 
+					(styles.length ? ' * Styles: @STYLES\n' : '')
+			}, {
+				from: '@MINBUILDPROPS',
+				to: plugins[0] !== 'None' || styles[0] !== 'None' ? 
+						'(includes: ' + 
+							(plugins[0] !== 'None' ? '@PLUGINS' : '') + 
+							(styles[0] !== 'None' ? ' / @STYLES' : '') + ') '
+						: ''
+			}, {
+				from: '@STYLES',
+				to: styles.length ? styles.join(' ') : ''
+			}, {
+				from: '@PLUGINS',
+				to: plugins.length ? plugins.join(' ') : ''
 			}]);
+
+			// Output current build properties
+			grunt.log.write("\nBuilding " + "qTip2".green + " "+version+" with " +
+				"plugins " + plugins.join(' ').green + " and " +
+				"styles "  +styles.join(' ').green + "\n"
+			);
 
 			done();
 		});
 	});
 
 	// Setup all other tasks
-	grunt.registerTask('css', 'init clean concat:dist_css mincss:dist');
-	grunt.registerTask('basic', 'init clean lint concat:basic concat:basic_css min:basic mincss:basic version replace');
-	grunt.registerTask('default', 'init clean lint concat:dist concat:dist_css min:dist mincss:dist version replace');
-	grunt.registerTask('dev', 'init clean lint concat min mincss version replace');
+	grunt.registerTask('css', 'init clean concat:dist_css mincss:dist replace');
+	grunt.registerTask('basic', 'init clean lint concat:basic concat:basic_css min:basic mincss:basic replace');
+	grunt.registerTask('default', 'init clean lint concat:dist concat:dist_css min:dist mincss:dist replace');
+	grunt.registerTask('dev', 'init clean lint concat min mincss replace');
 };

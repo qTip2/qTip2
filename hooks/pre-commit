@@ -1,6 +1,0 @@
-#!/bin/sh
-# Generate dist/ files
-grunt dev
-
-# Re-add dist folder
-git add dist/*
