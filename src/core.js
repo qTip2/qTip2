@@ -1093,7 +1093,7 @@ function QTip(target, options, id, attr)
 				event = MOUSE && MOUSE.pageX && (adjust.mouse || !event || !event.pageX) ? { pageX: MOUSE.pageX, pageY: MOUSE.pageY } :
 					(event && (event.type === 'resize' || event.type === 'scroll') ? cache.event :
 					event && event.pageX && event.type === 'mousemove' ? event :
-					!adjust.mouse && cache.origin && cache.origin.pageX && options.show.distance ? cache.origin :
+					(!adjust.mouse || options.show.distance) && cache.origin && cache.origin.pageX ? cache.origin :
 					event) || event || cache.event || MOUSE || {};
 
 				// Use event coordinates for position
