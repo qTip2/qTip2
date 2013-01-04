@@ -927,7 +927,8 @@ function QTip(target, options, id, attr)
 
 				// Hide other tooltips if tooltip is solo
 				if(!!opts.solo) {
-					$(selector, opts.solo).not(tooltip).qtip('hide', $.Event('tooltipsolo'));
+					(typeof opts.solo === 'string' ? $(opts.solo) : $(selector, opts.solo))
+						.not(tooltip).not(opts.target).qtip('hide', $.Event('tooltipsolo'));
 				}
 			}
 			else {
