@@ -570,7 +570,7 @@ function QTip(target, options, id, attr)
 		}
 
 		// Adjust tooltip position on scroll of the window or viewport element if present
-		targets.window.bind('scroll'+namespace, repositionMethod);
+		targets.window.add(posOptions.container).bind('scroll'+namespace, repositionMethod);
 	}
 
 	function unassignEvents()
