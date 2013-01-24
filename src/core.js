@@ -475,7 +475,7 @@ function QTip(target, options, id, attr)
 					isAncestor = elem.parents(selector).filter(tooltip[0]).length > 0;
 
 				if(elem[0] !== target[0] && elem[0] !== tooltip[0] && !isAncestor &&
-					!target.has(elem[0]).length && !elem.attr('disabled')
+					!target.has(elem[0]).length && enabled
 				) {
 					self.hide(event);
 				}
