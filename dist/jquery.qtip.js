@@ -1,12 +1,12 @@
 /*!
- * qTip2 - Pretty powerful tooltips - v2.0.1-5-g
+ * qTip2 - Pretty powerful tooltips - v2.0.1-9-g
  * http://qtip2.com
  *
  * Copyright (c) 2013 Craig Michael Thompson
  * Released under the MIT, GPL licenses
  * http://jquery.org/license
  *
- * Date: Wed Feb 6 2013 08:45 GMT+0000
+ * Date: Wed Feb 6 2013 08:55 GMT+0000
  * Plugins: svg ajax tips modal viewport imagemap ie6
  * Styles: basic css3
  */
@@ -550,7 +550,7 @@ function QTip(target, options, id, attr)
 					isAncestor = elem.parents(selector).filter(tooltip[0]).length > 0;
 
 				if(elem[0] !== target[0] && elem[0] !== tooltip[0] && !isAncestor &&
-					!target.has(elem[0]).length && !elem.attr('disabled')
+					!target.has(elem[0]).length && enabled
 				) {
 					self.hide(event);
 				}
@@ -1704,11 +1704,6 @@ PLUGINS = QTIP.plugins = {
 			return $.fn['attr'+replaceSuffix].apply(this, arguments);
 		},
 
-		prop: function(attr, val) {
-			var old = $.fn['prop'+replaceSuffix];
-			return (old ? old : $.fn.attr).apply(this, arguments);
-		},
-
 		/* Allow clone to correctly retrieve cached title attributes */
 		clone: function(keepData) {
 			var titles = $([]), title = 'title',
@@ -1755,7 +1750,7 @@ if(!$.ui) {
 }
 
 // Set global qTip properties
-QTIP.version = '2.0.1-5-g';
+QTIP.version = '2.0.1-9-g';
 QTIP.nextid = 0;
 QTIP.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleave mouseenter'.split(' ');
 QTIP.zindex = 15000;

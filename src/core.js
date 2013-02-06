@@ -1629,11 +1629,6 @@ PLUGINS = QTIP.plugins = {
 			return $.fn['attr'+replaceSuffix].apply(this, arguments);
 		},
 
-		prop: function(attr, val) {
-			var old = $.fn['prop'+replaceSuffix];
-			return (old ? old : $.fn.attr).apply(this, arguments);
-		},
-
 		/* Allow clone to correctly retrieve cached title attributes */
 		clone: function(keepData) {
 			var titles = $([]), title = 'title',
