@@ -234,15 +234,16 @@ function Tip(qTip, command)
 	function parseRadius(corner) {
 		var isTitleTop = elems.titlebar && corner.y === TOP,
 			elem = isTitleTop ? elems.titlebar : elems.content,
-			moz = $.browser.mozilla,
-			prefix = moz ? '-moz-' : $.browser.webkit ? '-webkit-' : '',
+			mozPrefix = '-moz-', webkitPrefix = '-webkit-',
 			nonStandard = 'border-radius-' + corner.y + corner.x,
 			standard = 'border-' + corner.y + '-' + corner.x + '-radius',
 			css = function(c) { return parseInt(elem.css(c), 10) || parseInt(tooltip.css(c), 10); },
 			val;
 
 		whileVisible(function() {
-			val = css(standard) || css(prefix + standard) || css(prefix + nonStandard) || css(nonStandard) || 0;
+			val = css(standard) || css(nonStandard) ||
+				css(mozPrefix + standard) || css(mozPrefix + nonStandard) || 
+				css(webkitPrefix + standard) || css(webkitPrefix + nonStandard) || 0;
 		});
 		return val;
 	}
@@ -315,7 +316,7 @@ function Tip(qTip, command)
 	$.extend(self, {
 		init: function()
 		{
-			var enabled = parseCorner() && (hasCanvas || $.browser.msie);
+			var enabled = parseCorner() && (hasCanvas || PLUGINS.ie);
 
 			// Determine tip corner and type
 			if(enabled) {
@@ -482,8 +483,8 @@ function Tip(qTip, command)
 					',' + coords[1][1] + ' ' + coords[2][0] + ',' + coords[2][1] + ' xe';
 
 				// Setup VML-specific offset for pixel-perfection
-				translate[2] = border && /^(r|b)/i.test(corner.string()) ?
-					parseFloat($.browser.version, 10) === 8 ? 2 : 1 : 0;
+				translate[2] = border && /^(r|b)/i.test(corner.string()) ? 
+					PLUGINS.ie === 8 ? 2 : 1 : 0;
 
 				// Set initial CSS
 				inner.css({

@@ -366,7 +366,7 @@ function QTip(target, options, id, attr)
 				show: $.trim('' + options.show.event).split(' '),
 				hide: $.trim('' + options.hide.event).split(' ')
 			},
-			IE6 = $.browser.msie && parseInt($.browser.version, 10) === 6;
+			IE6 = PLUGINS.ie === 6;
 
 		// Define show event method
 		function showMethod(event)
@@ -952,7 +952,7 @@ function QTip(target, options, id, attr)
 			function after() {
 				if(state) {
 					// Prevent antialias from disappearing in IE by removing filter
-					if($.browser.msie) { tooltip[0].style.removeAttribute('filter'); }
+					if(PLUGINS.ie) { tooltip[0].style.removeAttribute('filter'); }
 
 					// Remove overflow setting to prevent tip bugs
 					tooltip.css('overflow', '');
@@ -1206,7 +1206,7 @@ function QTip(target, options, id, attr)
 				tooltip.queue(function(next) {
 					// Reset attributes to avoid cross-browser rendering bugs
 					$(this).css({ opacity: '', height: '' });
-					if($.browser.msie) { this.style.removeAttribute('filter'); }
+					if(PLUGINS.ie) { this.style.removeAttribute('filter'); }
 
 					next();
 				});
@@ -1544,7 +1544,7 @@ PLUGINS = QTIP.plugins = {
 	offset: function(elem, container) {
 		var pos = elem.offset(),
 			docBody = elem.closest('body'),
-			quirks = $.browser.msie && document.compatMode !== 'CSS1Compat',
+			quirks = PLUGINS.ie && document.compatMode !== 'CSS1Compat',
 			parent = container, scrolled,
 			coffset, overflow;
 
@@ -1578,6 +1578,20 @@ PLUGINS = QTIP.plugins = {
 		return pos;
 	},
 
+	/*
+	* IE version detection
+	*
+	* Adapted from: http://ajaxian.com/archives/attack-of-the-ie-conditional-comment
+	* Credit to James Padolsey for the original implemntation!
+	*/
+	ie: (function(){
+		var v = 3, div = document.createElement('div');
+		while ((div.innerHTML = '<!--[if gt IE '+(++v)+']><i></i><![endif]-->')) {
+			if(!div.getElementsByTagName('i')[0]) { break; }
+		}
+		return v > 4 ? v : FALSE;
+	}()),
+ 
 	/*
 	* iOS version detection
 	*/
@@ -1613,6 +1627,11 @@ PLUGINS = QTIP.plugins = {
 			}
 
 			return $.fn['attr'+replaceSuffix].apply(this, arguments);
+		},
+
+		prop: function(attr, val) {
+			var old = $.fn['prop'+replaceSuffix];
+			return (old ? old : $.fn.attr).apply(this, arguments);
 		},
 
 		/* Allow clone to correctly retrieve cached title attributes */

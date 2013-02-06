@@ -140,13 +140,10 @@ function IE6(api)
 
 PLUGINS.ie6 = function(api)
 {
-	var browser = $.browser,
-		self = api.plugins.ie6;
+	var self = api.plugins.ie6;
 	
 	// Proceed only if the browser is IE6
-	if(!(browser.msie && (''+browser.version).charAt(0) === '6')) {
-		return FALSE;
-	}
+	if(PLUGINS.ie !== 6) { return FALSE; }
 
 	return 'object' === typeof self ? self : (api.plugins.ie6 = new IE6(api));
 };
