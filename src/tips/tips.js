@@ -1,3 +1,7 @@
+var TIP,
+	TIPNS = '.qtip-tip',
+	HASCANVAS = !!document.createElement('canvas').getContext;
+
 // Tip coordinates calculator
 function calculateTip(corner, width, height)
 {	
@@ -36,8 +40,6 @@ function Tip(qTip, command)
 		},
 		color = { },
 		border = opts.border || 0,
-		namespace = '.qtip-tip',
-		hasCanvas = !!($('<canvas />')[0] || {}).getContext,
 		tiphtml;
 
 	self.corner = NULL;
@@ -316,7 +318,7 @@ function Tip(qTip, command)
 	$.extend(self, {
 		init: function()
 		{
-			var enabled = parseCorner() && (hasCanvas || PLUGINS.ie);
+			var enabled = parseCorner() && (HASCANVAS || PLUGINS.ie);
 
 			// Determine tip corner and type
 			if(enabled) {
@@ -325,7 +327,7 @@ function Tip(qTip, command)
 				self.update();
 
 				// Bind update events
-				tooltip.unbind(namespace).bind('tooltipmove'+namespace, reposition);
+				tooltip.unbind(TIPNS).bind('tooltipmove'+TIPNS, reposition);
 			}
 			
 			return enabled;
@@ -344,7 +346,7 @@ function Tip(qTip, command)
 			elems.tip = $('<div />', { 'class': 'qtip-tip' }).css({ width: width, height: height }).prependTo(tooltip);
 
 			// Create tip drawing element(s)
-			if(hasCanvas) {
+			if(HASCANVAS) {
 				// save() as soon as we create the canvas element so FF2 doesn't bork on our first restore()!
 				$('<canvas />').appendTo(elems.tip)[0].getContext('2d').save();
 			}
@@ -353,7 +355,7 @@ function Tip(qTip, command)
 				elems.tip.html(vml + vml);
 
 				// Prevent mousing down on the tip since it causes problems with .live() handling in IE due to VML
-				$('*', elems.tip).bind('click'+namespace+' mousedown'+namespace, function(event) { event.stopPropagation(); });
+				$('*', elems.tip).bind('click'+TIPNS+' mousedown'+TIPNS, function(event) { event.stopPropagation(); });
 			}
 		},
 
@@ -436,7 +438,7 @@ function Tip(qTip, command)
 			}
 
 			// Canvas drawing implementation
-			if(hasCanvas) {
+			if(HASCANVAS) {
 				// Set the canvas size using calculated size
 				inner.attr(newSize);
 
@@ -572,7 +574,7 @@ function Tip(qTip, command)
 		destroy: function()
 		{
 			// Unbind events
-			tooltip.unbind(namespace);
+			tooltip.unbind(TIPNS);
 
 			// Remove the tip element(s)
 			if(elems.tip) {
@@ -590,7 +592,7 @@ function Tip(qTip, command)
 	self.init();
 }
 
-PLUGINS.tip = function(api)
+TIP = PLUGINS.tip = function(api)
 {
 	var self = api.plugins.tip;
 	
@@ -598,10 +600,10 @@ PLUGINS.tip = function(api)
 };
 
 // Initialize tip on render
-PLUGINS.tip.initialize = 'render';
+TIP.initialize = 'render';
 
 // Setup plugin sanitization options
-PLUGINS.tip.sanitize = function(options)
+TIP.sanitize = function(options)
 {
 	var style = options.style, opts;
 	if(style && 'tip' in style) {

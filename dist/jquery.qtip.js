@@ -1,12 +1,12 @@
 /*!
- * qTip2 - Pretty powerful tooltips - v2.0.1-12-
+ * qTip2 - Pretty powerful tooltips - v2.0.1-13-
  * http://qtip2.com
  *
  * Copyright (c) 2013 Craig Michael Thompson
  * Released under the MIT, GPL licenses
  * http://jquery.org/license
  *
- * Date: Mon Feb 11 2013 11:13 GMT+0000
+ * Date: Mon Feb 11 2013 11:27 GMT+0000
  * Plugins: svg ajax tips modal viewport imagemap ie6
  * Styles: basic css3
  */
@@ -1762,7 +1762,7 @@ if(!$.ui) {
 }
 
 // Set global qTip properties
-QTIP.version = '2.0.1-12-';
+QTIP.version = '2.0.1-13-';
 QTIP.nextid = 0;
 QTIP.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleave mouseenter'.split(' ');
 QTIP.zindex = 15000;
@@ -1889,14 +1889,16 @@ PLUGINS.svg = function(api, svg, corner, adjustMethod)
 };
 
 
+var AJAX,
+	AJAXNS = '.qtip-ajax',
+	RSCRIPT = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
+
 function Ajax(api)
 {
 	var self = this,
 		tooltip = api.elements.tooltip,
 		opts = api.options.content.ajax,
 		defaults = QTIP.defaults.content.ajax,
-		namespace = '.qtip-ajax',
-		rscript = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
 		first = TRUE,
 		stop = FALSE,
 		xhr;
@@ -1913,7 +1915,7 @@ function Ajax(api)
 				self.load();
 			}
 			else {
-				tooltip.unbind(namespace);
+				tooltip.unbind(AJAXNS);
 			}
 		}
 	};
@@ -1922,7 +1924,7 @@ function Ajax(api)
 		init: function() {
 			// Make sure ajax options are enabled and bind event
 			if(opts && opts.url) {
-				tooltip.unbind(namespace)[ opts.once ? 'one' : 'bind' ]('tooltipshow'+namespace, self.load);
+				tooltip.unbind(AJAXNS)[ opts.once ? 'one' : 'bind' ]('tooltipshow'+AJAXNS, self.load);
 			}
 
 			return self;
@@ -1983,7 +1985,7 @@ function Ajax(api)
 					content = $('<div/>')
 						// inject the contents of the document in, removing the scripts
 						// to avoid any 'Permission Denied' errors in IE
-						.append(content.replace(rscript, ""))
+						.append(content.replace(RSCRIPT, ""))
 						
 						// Locate the specified elements
 						.find(selector);
@@ -2026,18 +2028,17 @@ function Ajax(api)
 	self.init();
 }
 
-
-PLUGINS.ajax = function(api)
+AJAX = PLUGINS.ajax = function(api)
 {
 	var self = api.plugins.ajax;
 	
 	return 'object' === typeof self ? self : (api.plugins.ajax = new Ajax(api));
 };
 
-PLUGINS.ajax.initialize = 'render';
+AJAX.initialize = 'render';
 
 // Setup plugin sanitization
-PLUGINS.ajax.sanitize = function(options)
+AJAX.sanitize = function(options)
 {
 	var content = options.content, opts;
 	if(content && 'ajax' in content) {
@@ -2057,6 +2058,10 @@ $.extend(TRUE, QTIP.defaults, {
 	}
 });
 
+
+var TIP,
+	TIPNS = '.qtip-tip',
+	HASCANVAS = !!document.createElement('canvas').getContext;
 
 // Tip coordinates calculator
 function calculateTip(corner, width, height)
@@ -2096,8 +2101,6 @@ function Tip(qTip, command)
 		},
 		color = { },
 		border = opts.border || 0,
-		namespace = '.qtip-tip',
-		hasCanvas = !!($('<canvas />')[0] || {}).getContext,
 		tiphtml;
 
 	self.corner = NULL;
@@ -2376,7 +2379,7 @@ function Tip(qTip, command)
 	$.extend(self, {
 		init: function()
 		{
-			var enabled = parseCorner() && (hasCanvas || PLUGINS.ie);
+			var enabled = parseCorner() && (HASCANVAS || PLUGINS.ie);
 
 			// Determine tip corner and type
 			if(enabled) {
@@ -2385,7 +2388,7 @@ function Tip(qTip, command)
 				self.update();
 
 				// Bind update events
-				tooltip.unbind(namespace).bind('tooltipmove'+namespace, reposition);
+				tooltip.unbind(TIPNS).bind('tooltipmove'+TIPNS, reposition);
 			}
 			
 			return enabled;
@@ -2404,7 +2407,7 @@ function Tip(qTip, command)
 			elems.tip = $('<div />', { 'class': 'qtip-tip' }).css({ width: width, height: height }).prependTo(tooltip);
 
 			// Create tip drawing element(s)
-			if(hasCanvas) {
+			if(HASCANVAS) {
 				// save() as soon as we create the canvas element so FF2 doesn't bork on our first restore()!
 				$('<canvas />').appendTo(elems.tip)[0].getContext('2d').save();
 			}
@@ -2413,7 +2416,7 @@ function Tip(qTip, command)
 				elems.tip.html(vml + vml);
 
 				// Prevent mousing down on the tip since it causes problems with .live() handling in IE due to VML
-				$('*', elems.tip).bind('click'+namespace+' mousedown'+namespace, function(event) { event.stopPropagation(); });
+				$('*', elems.tip).bind('click'+TIPNS+' mousedown'+TIPNS, function(event) { event.stopPropagation(); });
 			}
 		},
 
@@ -2496,7 +2499,7 @@ function Tip(qTip, command)
 			}
 
 			// Canvas drawing implementation
-			if(hasCanvas) {
+			if(HASCANVAS) {
 				// Set the canvas size using calculated size
 				inner.attr(newSize);
 
@@ -2632,7 +2635,7 @@ function Tip(qTip, command)
 		destroy: function()
 		{
 			// Unbind events
-			tooltip.unbind(namespace);
+			tooltip.unbind(TIPNS);
 
 			// Remove the tip element(s)
 			if(elems.tip) {
@@ -2650,7 +2653,7 @@ function Tip(qTip, command)
 	self.init();
 }
 
-PLUGINS.tip = function(api)
+TIP = PLUGINS.tip = function(api)
 {
 	var self = api.plugins.tip;
 	
@@ -2658,10 +2661,10 @@ PLUGINS.tip = function(api)
 };
 
 // Initialize tip on render
-PLUGINS.tip.initialize = 'render';
+TIP.initialize = 'render';
 
 // Setup plugin sanitization options
-PLUGINS.tip.sanitize = function(options)
+TIP.sanitize = function(options)
 {
 	var style = options.style, opts;
 	if(style && 'tip' in style) {
@@ -3313,11 +3316,13 @@ PLUGINS.imagemap = function(api, area, corner, adjustMethod)
 };
 
 
+var IE6;
+
 /* 
  * BGIFrame adaption (http://plugins.jquery.com/project/bgiframe)
  * Special thanks to Brandon Aaron
  */
-function IE6(api)
+function Ie6(api)
 {
 	var self = this,
 		elems = api.elements,
@@ -3453,18 +3458,17 @@ function IE6(api)
 	self.init();
 }
 
-PLUGINS.ie6 = function(api)
+IE6 = PLUGINS.ie6 = function(api)
 {
 	var self = api.plugins.ie6;
 	
 	// Proceed only if the browser is IE6
 	if(PLUGINS.ie !== 6) { return FALSE; }
 
-	return 'object' === typeof self ? self : (api.plugins.ie6 = new IE6(api));
+	return 'object' === typeof self ? self : (api.plugins.ie6 = new Ie6(api));
 };
 
-// Plugin needs to be initialized on render
-PLUGINS.ie6.initialize = 'render';
+IE6.initialize = 'render';
 
 
 }));
