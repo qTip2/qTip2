@@ -576,15 +576,15 @@ function QTip(target, options, id, attr)
 	function unassignEvents()
 	{
 		var targets = [
-				options.show.target[0],
-				options.hide.target[0],
-				self.rendered && elements.tooltip[0],
-				options.position.container[0],
-				options.position.viewport[0],
-				options.position.container.closest('html')[0], // unfocus
-				window,
-				document
-			];
+			options.show.target[0],
+			options.hide.target[0],
+			self.rendered && elements.tooltip[0],
+			options.position.container[0],
+			options.position.viewport[0],
+			options.position.container.closest('html')[0], // unfocus
+			window,
+			document
+		];
 
 		// Check if tooltip is rendered
 		if(self.rendered) {
@@ -1239,20 +1239,24 @@ function QTip(target, options, id, attr)
 
 		destroy: function()
 		{
+			// Set flag the signify destroy is taking place to plugins
+			// and ensure it only gets destroyed once!b
+			if(!(self.destroyed = !self.detroyed)) { return; }
+
 			var t = target[0],
 				title = $.attr(t, oldtitle),
 				elemAPI = target.data('qtip');
 
-			// Set flag the signify destroy is taking place to plugins
-			self.destroyed = TRUE;
-
 			// Destroy tooltip and  any associated plugins if rendered
 			if(self.rendered) {
-				tooltip.stop(1,0).remove();
-
-				$.each(self.plugins, function() {
+				// Destroy all plugins
+				$.each(self.plugins, function(name) {
 					if(this.destroy) { this.destroy(); }
+					delete self.plugins[name];
 				});
+
+				// Remove all descendants and tooltip element
+				tooltip.stop(1,0).find('*').remove().end().remove();
 			}
 
 			// Clear timers and remove bound events
@@ -1263,11 +1267,11 @@ function QTip(target, options, id, attr)
 			// If the API if actually this qTip API...
 			if(!elemAPI || self === elemAPI) {
 				// Remove api object
-				$.removeData(t, 'qtip');
+				target.removeData('qtip').removeAttr(HASATTR);
 
 				// Reset old title attribute if removed
 				if(options.suppress && title) {
-					$.attr(t, 'title', title);
+					target.attr('title', title);
 					target.removeAttr(oldtitle);
 				}
 
@@ -1278,8 +1282,12 @@ function QTip(target, options, id, attr)
 			// Remove qTip events associated with this API
 			target.unbind('.qtip-'+id);
 
-			// Remove ID from sued id object
+			// Remove ID from used id objects, and delete object references
+			// for better garbage collection and leak protection
 			delete usedIDs[self.id];
+			delete self.options; delete self.elements;
+			delete self.cache; delete self.timers;
+			delete self.checks;
 
 			return target;
 		}
@@ -1287,16 +1295,15 @@ function QTip(target, options, id, attr)
 }
 
 // Initialization method
-function init(id, opts)
+function init(elem, id, opts)
 {
 	var obj, posOptions, attr, config, title,
 
 	// Setup element references
-	elem = $(this),
 	docBody = $(document.body),
 
 	// Use document body instead of document element if needed
-	newTarget = this === document ? docBody : elem,
+	newTarget = elem[0] === document ? docBody : elem,
 
 	// Grab metadata from element if plugin is present
 	metadata = (elem.metadata) ? elem.metadata(opts.metadata) : NULL,
@@ -1346,7 +1353,7 @@ function init(id, opts)
 	posOptions.my = new PLUGINS.Corner(posOptions.my);
 
 	// Destroy previous tooltip if overwrite is enabled, or skip element if not
-	if($.data(this, 'qtip')) {
+	if(elem.data('qtip')) {
 		if(config.overwrite) {
 			elem.qtip('destroy');
 		}
@@ -1355,18 +1362,23 @@ function init(id, opts)
 		}
 	}
 
+	// Add has-qtip attribute
+	elem.attr(HASATTR, true);
+
 	// Remove title attribute and store it if present
-	if(config.suppress && (title = $.attr(this, 'title'))) {
+	if(config.suppress && (title = elem.attr('title'))) {
 		// Final attr call fixes event delegatiom and IE default tooltip showing problem
-		$(this).removeAttr('title').attr(oldtitle, title).attr('title', '');
+		elem.removeAttr('title').attr(oldtitle, title).attr('title', '');
 	}
 
 	// Initialize the tooltip and add API reference
 	obj = new QTip(elem, config, id, !!attr);
-	$.data(this, 'qtip', obj);
+	elem.data('qtip', obj);
 
 	// Catch remove/removeqtip events on target element to destroy redundant tooltip
-	elem.one('remove.qtip-'+id+' removeqtip.qtip-'+id, function(){ obj.destroy(); });
+	elem.one('remove.qtip-'+id+' removeqtip.qtip-'+id, function() { 
+		var api; if((api = $(this).data('qtip'))) { api.destroy(); }
+	});
 
 	return obj;
 }
@@ -1440,7 +1452,7 @@ QTIP.bind = function(opts, event)
 		namespace = '.qtip-'+id+'-create';
 
 		// Initialize the qTip and re-grab newly sanitized options
-		api = init.call(this, id, opts);
+		api = init($(this), id, opts);
 		if(api === FALSE) { return TRUE; }
 		options = api.options;
 
@@ -1508,8 +1520,7 @@ QTIP.bind = function(opts, event)
 
 		// Prerendering is enabled, create tooltip now
 		if(options.show.ready || options.prerender) { hoverIntent(event); }
-	})
-	.attr('data-hasqtip', TRUE);
+	});
 };
 
 // Setup base plugins
@@ -1666,8 +1677,8 @@ $.each(PLUGINS.fn, function(name, func) {
 if(!$.ui) {
 	$['cleanData'+replaceSuffix] = $.cleanData;
 	$.cleanData = function( elems ) {
-		for(var i = 0, elem; (elem = elems[i]) !== undefined; i++) {
-			try { $( elem ).triggerHandler('removeqtip'); }
+		for(var i = 0, elem; (elem = elems[i]) !== undefined && elem.getAttribute(HASATTR); i++) {
+			try { $( elem ).triggerHandler('removeqtip');}
 			catch( e ) {}
 		}
 		$['cleanData'+replaceSuffix]( elems );

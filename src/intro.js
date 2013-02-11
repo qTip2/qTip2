@@ -39,6 +39,7 @@
 		// Shortcut vars
 		QTIP, PLUGINS, MOUSE,
 		NAMESPACE = 'qtip',
+		HASATTR = 'data-hasqtip',
 		usedIDs = {},
 		widget = ['ui-widget', 'ui-tooltip'],
 		selector = 'div.qtip.'+NAMESPACE,

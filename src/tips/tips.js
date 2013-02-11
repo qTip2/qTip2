@@ -353,7 +353,7 @@ function Tip(qTip, command)
 				elems.tip.html(vml + vml);
 
 				// Prevent mousing down on the tip since it causes problems with .live() handling in IE due to VML
-				$('*', elems.tip).bind('click mousedown', function(event) { event.stopPropagation(); });
+				$('*', elems.tip).bind('click'+namespace+' mousedown'+namespace, function(event) { event.stopPropagation(); });
 			}
 		},
 
@@ -571,12 +571,19 @@ function Tip(qTip, command)
 		
 		destroy: function()
 		{
-			// Remove the tip element
-			if(elems.tip) { elems.tip.remove(); }
-			elems.tip = false;
-
 			// Unbind events
 			tooltip.unbind(namespace);
+
+			// Remove the tip element(s)
+			if(elems.tip) {
+				elems.tip.find('*').remove()
+					.end().remove();
+			}
+
+			// Delete references
+			delete self.corner;
+			delete self.mimic;
+			delete self.size;
 		}
 	});
 
