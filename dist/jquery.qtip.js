@@ -1,12 +1,12 @@
 /*!
- * qTip2 - Pretty powerful tooltips - v2.0.1-13-
+ * qTip2 - Pretty powerful tooltips - v2.0.1-14-
  * http://qtip2.com
  *
  * Copyright (c) 2013 Craig Michael Thompson
  * Released under the MIT, GPL licenses
  * http://jquery.org/license
  *
- * Date: Mon Feb 11 2013 11:27 GMT+0000
+ * Date: Mon Feb 11 2013 11:28 GMT+0000
  * Plugins: svg ajax tips modal viewport imagemap ie6
  * Styles: basic css3
  */
@@ -1762,7 +1762,7 @@ if(!$.ui) {
 }
 
 // Set global qTip properties
-QTIP.version = '2.0.1-13-';
+QTIP.version = '2.0.1-14-';
 QTIP.nextid = 0;
 QTIP.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleave mouseenter'.split(' ');
 QTIP.zindex = 15000;
@@ -2670,7 +2670,7 @@ TIP.sanitize = function(options)
 	if(style && 'tip' in style) {
 		opts = options.style.tip;
 		if(typeof opts !== 'object'){ options.style.tip = { corner: opts }; }
-		if(!(/string|boolean/i).test(typeof opts['corner'])) { opts['corner'] = TRUE; }
+		if(!(/string|boolean/i).test(typeof opts.corner)) { opts.corner = TRUE; }
 		if(typeof opts.width !== 'number'){ delete opts.width; }
 		if(typeof opts.height !== 'number'){ delete opts.height; }
 		if(typeof opts.border !== 'number' && opts.border !== TRUE){ delete opts.border; }
