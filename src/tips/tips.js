@@ -141,7 +141,7 @@ function Tip(qTip, command)
 		// Viewport "shift" specific adjustments
 		if(shift.left = (horizontal === SHIFT && !!adjust.left)) {
 			if(newCorner.x === CENTER) {
-				css['margin-left'] = shift.x = offset['margin-left'];
+				css['margin-left'] = shift.x = offset['margin-left'] - adjust.left;
 			}
 			else {
 				props = offset.right !== undefined ?
@@ -157,7 +157,7 @@ function Tip(qTip, command)
 		}
 		if(shift.top = (vertical === SHIFT && !!adjust.top)) {
 			if(newCorner.y === CENTER) {
-				css['margin-top'] = shift.y = offset['margin-top'];
+				css['margin-top'] = shift.y = offset['margin-top'] - adjust.top;
 			}
 			else {
 				props = offset.bottom !== undefined ?

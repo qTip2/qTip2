@@ -1,12 +1,12 @@
 /*!
- * qTip2 - Pretty powerful tooltips - v2.0.1-17-
+ * qTip2 - Pretty powerful tooltips - v2.0.1-18-
  * http://qtip2.com
  *
  * Copyright (c) 2013 Craig Michael Thompson
  * Released under the MIT, GPL licenses
  * http://jquery.org/license
  *
- * Date: Mon Feb 11 2013 12:30 GMT+0000
+ * Date: Mon Feb 11 2013 12:40 GMT+0000
  * Plugins: svg ajax tips modal viewport imagemap ie6
  * Styles: basic css3
  */
@@ -1770,7 +1770,7 @@ if(!$.ui) {
 }
 
 // Set global qTip properties
-QTIP.version = '2.0.1-17-';
+QTIP.version = '2.0.1-18-';
 QTIP.nextid = 0;
 QTIP.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleave mouseenter'.split(' ');
 QTIP.zindex = 15000;
@@ -2211,7 +2211,7 @@ function Tip(qTip, command)
 		// Viewport "shift" specific adjustments
 		if(shift.left = (horizontal === SHIFT && !!adjust.left)) {
 			if(newCorner.x === CENTER) {
-				css['margin-left'] = shift.x = offset['margin-left'];
+				css['margin-left'] = shift.x = offset['margin-left'] - adjust.left;
 			}
 			else {
 				props = offset.right !== undefined ?
@@ -2227,7 +2227,7 @@ function Tip(qTip, command)
 		}
 		if(shift.top = (vertical === SHIFT && !!adjust.top)) {
 			if(newCorner.y === CENTER) {
-				css['margin-top'] = shift.y = offset['margin-top'];
+				css['margin-top'] = shift.y = offset['margin-top'] - adjust.top;
 			}
 			else {
 				props = offset.bottom !== undefined ?
