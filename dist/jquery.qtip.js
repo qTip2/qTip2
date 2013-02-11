@@ -1,12 +1,12 @@
 /*!
- * qTip2 - Pretty powerful tooltips - v2.0.1-18-
+ * qTip2 - Pretty powerful tooltips - v2.0.1-19-
  * http://qtip2.com
  *
  * Copyright (c) 2013 Craig Michael Thompson
  * Released under the MIT, GPL licenses
  * http://jquery.org/license
  *
- * Date: Mon Feb 11 2013 12:40 GMT+0000
+ * Date: Mon Feb 11 2013 12:48 GMT+0000
  * Plugins: svg ajax tips modal viewport imagemap ie6
  * Styles: basic css3
  */
@@ -1770,7 +1770,7 @@ if(!$.ui) {
 }
 
 // Set global qTip properties
-QTIP.version = '2.0.1-18-';
+QTIP.version = '2.0.1-19-';
 QTIP.nextid = 0;
 QTIP.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleave mouseenter'.split(' ');
 QTIP.zindex = 15000;

@@ -6,7 +6,8 @@
 }
 
 	.qtip .qtip-tip,
-	.qtip .qtip-tip .qtip-vml{
+	.qtip .qtip-tip .qtip-vml,
+	.qtip .qtip-tip canvas{
 		position: absolute;
 
 		color: #123456;
