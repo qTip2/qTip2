@@ -576,7 +576,9 @@ function QTip(target, options, id, attr)
 		}
 
 		// Adjust tooltip position on scroll of the window or viewport element if present
-		targets.window.add(posOptions.container).bind('scroll'+namespace, repositionMethod);
+		if(posOptions.adjust.scroll) {
+			targets.window.add(posOptions.container).bind('scroll'+namespace, repositionMethod);
+		}
 	}
 
 	function unassignEvents()
@@ -1721,6 +1723,7 @@ QTIP.defaults = {
 		adjust: {
 			x: 0, y: 0,
 			mouse: TRUE,
+			scroll: TRUE,
 			resize: TRUE,
 			method: 'flipinvert flipinvert'
 		},

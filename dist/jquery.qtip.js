@@ -1,12 +1,12 @@
 /*!
- * qTip2 - Pretty powerful tooltips - v2.0.1-16-
+ * qTip2 - Pretty powerful tooltips - v2.0.1-17-
  * http://qtip2.com
  *
  * Copyright (c) 2013 Craig Michael Thompson
  * Released under the MIT, GPL licenses
  * http://jquery.org/license
  *
- * Date: Mon Feb 11 2013 12:27 GMT+0000
+ * Date: Mon Feb 11 2013 12:30 GMT+0000
  * Plugins: svg ajax tips modal viewport imagemap ie6
  * Styles: basic css3
  */
@@ -652,7 +652,9 @@ function QTip(target, options, id, attr)
 		}
 
 		// Adjust tooltip position on scroll of the window or viewport element if present
-		targets.window.add(posOptions.container).bind('scroll'+namespace, repositionMethod);
+		if(posOptions.adjust.scroll) {
+			targets.window.add(posOptions.container).bind('scroll'+namespace, repositionMethod);
+		}
 	}
 
 	function unassignEvents()
@@ -1768,7 +1770,7 @@ if(!$.ui) {
 }
 
 // Set global qTip properties
-QTIP.version = '2.0.1-16-';
+QTIP.version = '2.0.1-17-';
 QTIP.nextid = 0;
 QTIP.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleave mouseenter'.split(' ');
 QTIP.zindex = 15000;
@@ -1797,6 +1799,7 @@ QTIP.defaults = {
 		adjust: {
 			x: 0, y: 0,
 			mouse: TRUE,
+			scroll: TRUE,
 			resize: TRUE,
 			method: 'flipinvert flipinvert'
 		},
