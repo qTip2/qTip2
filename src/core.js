@@ -35,7 +35,8 @@ function sanitizeOptions(opts)
 	}
 
 	if('show' in opts && invalid(opts.show)) {
-		opts.show = opts.show.jquery ? { target: opts.show } : { event: opts.show };
+		opts.show = opts.show.jquery ? { target: opts.show } : 
+			opts.show === TRUE ? { ready: TRUE } : { event: opts.show };
 	}
 
 	if('hide' in opts && invalid(opts.hide)) {

@@ -1,12 +1,12 @@
 /*!
- * qTip2 - Pretty powerful tooltips - v2.0.1-19-
+ * qTip2 - Pretty powerful tooltips - v2.0.1-20-
  * http://qtip2.com
  *
  * Copyright (c) 2013 Craig Michael Thompson
  * Released under the MIT, GPL licenses
  * http://jquery.org/license
  *
- * Date: Mon Feb 11 2013 12:48 GMT+0000
+ * Date: Mon Feb 11 2013 01:16 GMT+0000
  * Plugins: svg ajax tips modal viewport imagemap ie6
  * Styles: basic css3
  */
@@ -111,7 +111,8 @@ function sanitizeOptions(opts)
 	}
 
 	if('show' in opts && invalid(opts.show)) {
-		opts.show = opts.show.jquery ? { target: opts.show } : { event: opts.show };
+		opts.show = opts.show.jquery ? { target: opts.show } : 
+			opts.show === TRUE ? { ready: TRUE } : { event: opts.show };
 	}
 
 	if('hide' in opts && invalid(opts.hide)) {
@@ -1770,7 +1771,7 @@ if(!$.ui) {
 }
 
 // Set global qTip properties
-QTIP.version = '2.0.1-19-';
+QTIP.version = '2.0.1-20-';
 QTIP.nextid = 0;
 QTIP.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleave mouseenter'.split(' ');
 QTIP.zindex = 15000;
@@ -2589,8 +2590,18 @@ function Tip(qTip, command)
 				});
 			}
 
+			// Opera bug #357 - Incorrect tip position
+			// https://github.com/Craga89/qTip2/issues/367
+			setTimeout(function() {
+				elems.tip.css({
+					display: 'inline-block',
+					visibility: 'visible'
+				});
+			}, 1);
+
 			// Position if needed
 			if(position !== FALSE) { self.position(corner); }
+
 		},
 
 		// Tip positioning method
