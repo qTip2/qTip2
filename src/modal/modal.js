@@ -125,7 +125,7 @@ OVERLAY = function()
 			else { focusableElems = []; }
 		},
 
-		toggle: function(event, api, state, duration)
+		toggle: function(api, state, duration)
 		{
 			var docBody = $(document.body),
 				tooltip = api.elements.tooltip,
@@ -190,6 +190,9 @@ OVERLAY = function()
 
 			// Cache the state
 			prevState = state;
+
+			// If the tooltip is destroyed, set referenceto null
+			if(current.destroyed) { current = NULL; }
 
 			return self;
 		}
@@ -300,7 +303,7 @@ function Modal(api)
 			if(event && event.isDefaultPrevented()) { return self; }
 
 			// Toggle it
-			OVERLAY.toggle(event, api, !!state, duration);
+			OVERLAY.toggle(api, !!state, duration);
 
 			return self;
 		},
@@ -310,6 +313,7 @@ function Modal(api)
 			$([document, tooltip, overlay]).removeAttr(MODALATTR).unbind(namespace);
 
 			// Delete element reference
+			OVERLAY.toggle(api, FALSE);
 			delete elems.overlay;
 		}
 	});

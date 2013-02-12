@@ -1246,57 +1246,67 @@ function QTip(target, options, id, attr)
 
 		enable: function() { return self.disable(FALSE); },
 
-		destroy: function()
+		destroy: function(immediate)
 		{
 			// Set flag the signify destroy is taking place to plugins
-			// and ensure it only gets destroyed once!b
-			if(!(self.destroyed = !self.detroyed)) { return; }
+			// and ensure it only gets destroyed once!
+			if(self.destroyed) { return; }
+			self.destroyed = TRUE;
 
-			var t = target[0],
-				title = $.attr(t, oldtitle),
-				elemAPI = target.data('qtip');
+			function process() {
+				var t = target[0],
+					title = $.attr(t, oldtitle),
+					elemAPI = target.data('qtip');
 
-			// Destroy tooltip and  any associated plugins if rendered
-			if(self.rendered) {
-				// Destroy all plugins
-				$.each(self.plugins, function(name) {
-					if(this.destroy) { this.destroy(); }
-					delete self.plugins[name];
-				});
+				// Destroy tooltip and  any associated plugins if rendered
+				if(self.rendered) {
+					// Destroy all plugins
+					$.each(self.plugins, function(name) {
+						if(this.destroy) { this.destroy(); }
+						delete self.plugins[name];
+					});
 
-				// Remove all descendants and tooltip element
-				tooltip.stop(1,0).find('*').remove().end().remove();
-			}
-
-			// Clear timers and remove bound events
-			clearTimeout(self.timers.show);
-			clearTimeout(self.timers.hide);
-			unassignEvents();
-
-			// If the API if actually this qTip API...
-			if(!elemAPI || self === elemAPI) {
-				// Remove api object
-				target.removeData('qtip').removeAttr(HASATTR);
-
-				// Reset old title attribute if removed
-				if(options.suppress && title) {
-					target.attr('title', title);
-					target.removeAttr(oldtitle);
+					// Remove all descendants and tooltip element
+					tooltip.stop(1,0).find('*').remove().end().remove();
 				}
 
-				// Remove ARIA attributes
-				target.removeAttr('aria-describedby');
+				// Clear timers and remove bound events
+				clearTimeout(self.timers.show);
+				clearTimeout(self.timers.hide);
+				unassignEvents();
+
+				// If the API if actually this qTip API...
+				if(!elemAPI || self === elemAPI) {
+					// Remove api object
+					target.removeData('qtip').removeAttr(HASATTR);
+
+					// Reset old title attribute if removed
+					if(options.suppress && title) {
+						target.attr('title', title);
+						target.removeAttr(oldtitle);
+					}
+
+					// Remove ARIA attributes
+					target.removeAttr('aria-describedby');
+				}
+
+				// Remove qTip events associated with this API
+				target.unbind('.qtip-'+id);
+
+				// Remove ID from used id objects, and delete object references
+				// for better garbage collection and leak protection
+				delete usedIDs[self.id];
+				delete self.options; delete self.elements;
+				delete self.cache; delete self.timers;
+				delete self.checks;
 			}
 
-			// Remove qTip events associated with this API
-			target.unbind('.qtip-'+id);
-
-			// Remove ID from used id objects, and delete object references
-			// for better garbage collection and leak protection
-			delete usedIDs[self.id];
-			delete self.options; delete self.elements;
-			delete self.cache; delete self.timers;
-			delete self.checks;
+			// Destroy after hide if no immediate
+			if(immediate === TRUE) { process(); }
+			else {
+				tooltip.bind('tooltiphidden', process);
+				self.hide();
+			}
 
 			return target;
 		}

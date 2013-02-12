@@ -1,12 +1,12 @@
 /*!
- * qTip2 - Pretty powerful tooltips - v2.0.1-20-
+ * qTip2 - Pretty powerful tooltips - v2.0.1-21-
  * http://qtip2.com
  *
  * Copyright (c) 2013 Craig Michael Thompson
  * Released under the MIT, GPL licenses
  * http://jquery.org/license
  *
- * Date: Mon Feb 11 2013 01:16 GMT+0000
+ * Date: Tue Feb 12 2013 07:18 GMT+0000
  * Plugins: svg ajax tips modal viewport imagemap ie6
  * Styles: basic css3
  */
@@ -1322,57 +1322,67 @@ function QTip(target, options, id, attr)
 
 		enable: function() { return self.disable(FALSE); },
 
-		destroy: function()
+		destroy: function(immediate)
 		{
 			// Set flag the signify destroy is taking place to plugins
-			// and ensure it only gets destroyed once!b
-			if(!(self.destroyed = !self.detroyed)) { return; }
+			// and ensure it only gets destroyed once!
+			if(self.destroyed) { return; }
+			self.destroyed = TRUE;
 
-			var t = target[0],
-				title = $.attr(t, oldtitle),
-				elemAPI = target.data('qtip');
+			function process() {
+				var t = target[0],
+					title = $.attr(t, oldtitle),
+					elemAPI = target.data('qtip');
 
-			// Destroy tooltip and  any associated plugins if rendered
-			if(self.rendered) {
-				// Destroy all plugins
-				$.each(self.plugins, function(name) {
-					if(this.destroy) { this.destroy(); }
-					delete self.plugins[name];
-				});
+				// Destroy tooltip and  any associated plugins if rendered
+				if(self.rendered) {
+					// Destroy all plugins
+					$.each(self.plugins, function(name) {
+						if(this.destroy) { this.destroy(); }
+						delete self.plugins[name];
+					});
 
-				// Remove all descendants and tooltip element
-				tooltip.stop(1,0).find('*').remove().end().remove();
-			}
-
-			// Clear timers and remove bound events
-			clearTimeout(self.timers.show);
-			clearTimeout(self.timers.hide);
-			unassignEvents();
-
-			// If the API if actually this qTip API...
-			if(!elemAPI || self === elemAPI) {
-				// Remove api object
-				target.removeData('qtip').removeAttr(HASATTR);
-
-				// Reset old title attribute if removed
-				if(options.suppress && title) {
-					target.attr('title', title);
-					target.removeAttr(oldtitle);
+					// Remove all descendants and tooltip element
+					tooltip.stop(1,0).find('*').remove().end().remove();
 				}
 
-				// Remove ARIA attributes
-				target.removeAttr('aria-describedby');
+				// Clear timers and remove bound events
+				clearTimeout(self.timers.show);
+				clearTimeout(self.timers.hide);
+				unassignEvents();
+
+				// If the API if actually this qTip API...
+				if(!elemAPI || self === elemAPI) {
+					// Remove api object
+					target.removeData('qtip').removeAttr(HASATTR);
+
+					// Reset old title attribute if removed
+					if(options.suppress && title) {
+						target.attr('title', title);
+						target.removeAttr(oldtitle);
+					}
+
+					// Remove ARIA attributes
+					target.removeAttr('aria-describedby');
+				}
+
+				// Remove qTip events associated with this API
+				target.unbind('.qtip-'+id);
+
+				// Remove ID from used id objects, and delete object references
+				// for better garbage collection and leak protection
+				delete usedIDs[self.id];
+				delete self.options; delete self.elements;
+				delete self.cache; delete self.timers;
+				delete self.checks;
 			}
 
-			// Remove qTip events associated with this API
-			target.unbind('.qtip-'+id);
-
-			// Remove ID from used id objects, and delete object references
-			// for better garbage collection and leak protection
-			delete usedIDs[self.id];
-			delete self.options; delete self.elements;
-			delete self.cache; delete self.timers;
-			delete self.checks;
+			// Destroy after hide if no immediate
+			if(immediate === TRUE) { process(); }
+			else {
+				tooltip.bind('tooltiphidden', process);
+				self.hide();
+			}
 
 			return target;
 		}
@@ -1771,7 +1781,7 @@ if(!$.ui) {
 }
 
 // Set global qTip properties
-QTIP.version = '2.0.1-20-';
+QTIP.version = '2.0.1-21-';
 QTIP.nextid = 0;
 QTIP.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleave mouseenter'.split(' ');
 QTIP.zindex = 15000;
@@ -2840,7 +2850,7 @@ OVERLAY = function()
 			else { focusableElems = []; }
 		},
 
-		toggle: function(event, api, state, duration)
+		toggle: function(api, state, duration)
 		{
 			var docBody = $(document.body),
 				tooltip = api.elements.tooltip,
@@ -2905,6 +2915,9 @@ OVERLAY = function()
 
 			// Cache the state
 			prevState = state;
+
+			// If the tooltip is destroyed, set referenceto null
+			if(current.destroyed) { current = NULL; }
 
 			return self;
 		}
@@ -3015,7 +3028,7 @@ function Modal(api)
 			if(event && event.isDefaultPrevented()) { return self; }
 
 			// Toggle it
-			OVERLAY.toggle(event, api, !!state, duration);
+			OVERLAY.toggle(api, !!state, duration);
 
 			return self;
 		},
@@ -3025,6 +3038,7 @@ function Modal(api)
 			$([document, tooltip, overlay]).removeAttr(MODALATTR).unbind(namespace);
 
 			// Delete element reference
+			OVERLAY.toggle(api, FALSE);
 			delete elems.overlay;
 		}
 	});
