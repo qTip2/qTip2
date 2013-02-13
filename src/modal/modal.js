@@ -310,7 +310,7 @@ function Modal(api)
 
 		destroy: function() {
 			// Remove bound events
-			$([document, tooltip, overlay]).removeAttr(MODALATTR).unbind(namespace);
+			$([document, tooltip]).removeAttr(MODALATTR).unbind(namespace);
 
 			// Delete element reference
 			OVERLAY.toggle(api, FALSE);

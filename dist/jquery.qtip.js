@@ -1,12 +1,12 @@
 /*!
- * qTip2 - Pretty powerful tooltips - v2.0.1-21-
+ * qTip2 - Pretty powerful tooltips - v2.0.1-22-
  * http://qtip2.com
  *
  * Copyright (c) 2013 Craig Michael Thompson
  * Released under the MIT, GPL licenses
  * http://jquery.org/license
  *
- * Date: Tue Feb 12 2013 07:18 GMT+0000
+ * Date: Wed Feb 13 2013 06:10 GMT+0000
  * Plugins: svg ajax tips modal viewport imagemap ie6
  * Styles: basic css3
  */
@@ -1781,7 +1781,7 @@ if(!$.ui) {
 }
 
 // Set global qTip properties
-QTIP.version = '2.0.1-21-';
+QTIP.version = '2.0.1-22-';
 QTIP.nextid = 0;
 QTIP.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleave mouseenter'.split(' ');
 QTIP.zindex = 15000;
@@ -3035,7 +3035,7 @@ function Modal(api)
 
 		destroy: function() {
 			// Remove bound events
-			$([document, tooltip, overlay]).removeAttr(MODALATTR).unbind(namespace);
+			$([document, tooltip]).removeAttr(MODALATTR).unbind(namespace);
 
 			// Delete element reference
 			OVERLAY.toggle(api, FALSE);
