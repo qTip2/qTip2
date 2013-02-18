@@ -1251,7 +1251,7 @@ function QTip(target, options, id, attr)
 			// Set flag the signify destroy is taking place to plugins
 			// and ensure it only gets destroyed once!
 			if(self.destroyed) { return; }
-			self.destroyed = TRUE;
+			self.destroyed = !(self.rendered = FALSE);
 
 			function process() {
 				var t = target[0],
