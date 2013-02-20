@@ -901,6 +901,7 @@ function QTip(target, options, id, attr)
 				otherOpts = options[ !state ? 'show' : 'hide' ],
 				posOptions = options.position,
 				contentOptions = options.content,
+				width = tooltip.css('width'),
 				visible = tooltip[0].offsetWidth > 0,
 				animate = state || opts.target.length === 1,
 				sameTarget = !event || opts.target.length < 2 || cache.target[0] === event.target,
@@ -936,8 +937,10 @@ function QTip(target, options, id, attr)
 					trackingBound = TRUE;
 				}
 
-				// Update the tooltip position
+				// Update the tooltip position (set width first to prevent viewport/max-width issues)
+				if(!width) { tooltip.css('width', tooltip.outerWidth()); }
 				self.reposition(event, arguments[2]);
+				if(!width) { tooltip.css('width', ''); }
 
 				// Hide other tooltips if tooltip is solo
 				if(!!opts.solo) {

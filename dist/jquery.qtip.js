@@ -1,12 +1,12 @@
 /*!
- * qTip2 - Pretty powerful tooltips - v2.0.1-24-
+ * qTip2 - Pretty powerful tooltips - v2.0.1-25-
  * http://qtip2.com
  *
  * Copyright (c) 2013 Craig Michael Thompson
  * Released under the MIT, GPL licenses
  * http://jquery.org/license
  *
- * Date: Wed Feb 20 2013 10:47 GMT+0000
+ * Date: Wed Feb 20 2013 11:04 GMT+0000
  * Plugins: svg ajax tips modal viewport imagemap ie6
  * Styles: basic css3
  */
@@ -984,6 +984,7 @@ function QTip(target, options, id, attr)
 				otherOpts = options[ !state ? 'show' : 'hide' ],
 				posOptions = options.position,
 				contentOptions = options.content,
+				width = tooltip.css('width'),
 				visible = tooltip[0].offsetWidth > 0,
 				animate = state || opts.target.length === 1,
 				sameTarget = !event || opts.target.length < 2 || cache.target[0] === event.target,
@@ -1019,8 +1020,10 @@ function QTip(target, options, id, attr)
 					trackingBound = TRUE;
 				}
 
-				// Update the tooltip position
+				// Update the tooltip position (set width first to prevent viewport/max-width issues)
+				if(!width) { tooltip.css('width', tooltip.outerWidth()); }
 				self.reposition(event, arguments[2]);
+				if(!width) { tooltip.css('width', ''); }
 
 				// Hide other tooltips if tooltip is solo
 				if(!!opts.solo) {
@@ -1793,7 +1796,7 @@ if(!$.ui) {
 }
 
 // Set global qTip properties
-QTIP.version = '2.0.1-24-';
+QTIP.version = '2.0.1-25-';
 QTIP.nextid = 0;
 QTIP.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleave mouseenter'.split(' ');
 QTIP.zindex = 15000;
