@@ -1,12 +1,12 @@
 /*!
- * qTip2 - Pretty powerful tooltips - v2.0.1-23-
+ * qTip2 - Pretty powerful tooltips - v2.0.1-24-
  * http://qtip2.com
  *
  * Copyright (c) 2013 Craig Michael Thompson
  * Released under the MIT, GPL licenses
  * http://jquery.org/license
  *
- * Date: Mon Feb 18 2013 07:08 GMT+0000
+ * Date: Wed Feb 20 2013 10:47 GMT+0000
  * Plugins: svg ajax tips modal viewport imagemap ie6
  * Styles: basic css3
  */
@@ -36,18 +36,25 @@
 		FALSE = false,
 		NULL = null,
 
-		// Side names and other stuff
+		// Common variables
 		X = 'x', Y = 'y',
 		WIDTH = 'width',
 		HEIGHT = 'height',
+
+		// Positioning sides
 		TOP = 'top',
 		LEFT = 'left',
 		BOTTOM = 'bottom',
 		RIGHT = 'right',
 		CENTER = 'center',
+
+		// Position adjustment types
 		FLIP = 'flip',
 		FLIPINVERT = 'flipinvert',
 		SHIFT = 'shift',
+
+		// Used by image load detection (see core.js)
+		BLANKIMG = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==', 
 
 		// Shortcut vars
 		QTIP, PLUGINS, MOUSE,
@@ -363,67 +370,72 @@ function QTip(target, options, id, attr)
 		// Content is a regular string, insert the new content
 		else { elem.html(content); }
 
-		// Image detection
-		function detectImages(next) {
-			var images, srcs = {};
+		/* 
+		 * New images loaded detection method slimmed down from David DeSandro's plugin
+		 *    GitHub: https://github.com/desandro/imagesloaded/
+		 */
+		function imagesLoaded(next) {
+			var elem = $(this),
+				images = elem.find('img').add( elem.filter('img') ),
+				loaded = [];
 
-			function imageLoad(image) {
-				// Clear src from object and any timers and events associated with the image
-				if(image) {
-					delete srcs[image.src];
-					clearTimeout(self.timers.img[image.src]);
-					$(image).unbind(namespace);
-				}
+			function imgLoaded( img ) {
+				// don't proceed if BLANKIMG image, or image is already loaded
+				if(img.src === BLANKIMG || $.inArray(img, loaded) !== -1) { return; }
 
-				// If queue is empty after image removal, update tooltip and continue the queue
-				if($.isEmptyObject(srcs)) {
-					if(reposition !== FALSE) {
-						self.reposition(cache.event);
-					}
+				// store element in loaded images array
+				loaded.push(img);
 
-					next();
+				// cache image and its state for future calls
+				$.data(img, 'imagesLoaded', { src: img.src });
+
+				// call doneLoading and clean listeners if all images are loaded
+				if(images.length === loaded.length) {
+					setTimeout(next);
+					images.unbind('.imagesLoaded');
 				}
 			}
 
-			// Find all content images without dimensions, and if no images were found, continue
-			if((images = elem.find('img[src]:not([height]):not([width])')).length === 0) { return imageLoad(); }
+			// No images? Proceed with next
+			if(!images.length) { return next(); }
 
-			// Apply timer to each image to poll for dimensions
-			images.each(function(i, elem) {
-				// Skip if the src is already present
-				if(srcs[elem.src] !== undefined) { return; }
+			images.bind('load.imagesLoaded error.imagesLoaded', function() {
+				imgLoaded(event.target);
+			})
+			.each(function(i, el) {
+				var src = el.src, cached = $.data(el, 'imagesLoaded');
 
-				// Keep track of how many times we poll for image dimensions.
-				// If it doesn't return in a reasonable amount of time, it's better
-				// to display the tooltip, rather than hold up the queue.
-				var iterations = 0, maxIterations = 3;
+				/*
+				 * Find out if this image has been already checked for status, and
+				 * if it was and src has not changed, call imgLoaded on it. Also,
+				 * if complete is true and browser supports natural sizes, try to 
+				 * check for image status manually
+				 */
+				if((cached && cached.src === src) || (el.complete && el.naturalWidth)) {
+					imgLoaded(el);
+				}
 
-				(function timer(){
-					// When the dimensions are found, remove the image from the queue
-					if(elem.height || elem.width || (iterations > maxIterations)) { return imageLoad(elem); }
-
-					// Increase iterations and restart timer
-					iterations += 1;
-					self.timers.img[elem.src] = setTimeout(timer, 700);
-				}());
-
-				// Also apply regular load/error event handlers
-				$(elem).bind('error'+namespace+' load'+namespace, function(){ imageLoad(this); });
-
-				// Store the src and element in our object
-				srcs[elem.src] = elem;
+				/*
+				 * Cached images don't fire load sometimes, so we reset src, but only when
+				 * dealing with IE, or image is complete (loaded) and failed manual check
+				 * 
+				 * Webkit hack from http://groups.google.com/group/jquery-dev/browse_thread/thread/eee6ab7b2da50e1f
+				 */
+				else if(el.readyState || el.complete) {
+					el.src = BLANKIMG; el.src = src;
+				}
 			});
 		}
 
 		/*
-		* If we're still rendering... insert into 'fx' queue our image dimension
-		* checker which will halt the showing of the tooltip until image dimensions
-		* can be detected properly.
-		*/
-		if(self.rendered < 0) { tooltip.queue('fx', detectImages); }
+		 * If we're still rendering... insert into 'fx' queue our image dimension
+		 * checker which will halt the showing of the tooltip until image dimensions
+		 * can be detected properly.
+		 */
+		if(self.rendered < 0) { tooltip.queue('fx', imagesLoaded); }
 
 		// We're fully rendered, so reset isDrawing flag and proceed without queue delay
-		else { isDrawing = 0; detectImages($.noop); }
+		else { isDrawing = 0; imagesLoaded.call(tooltip[0], $.noop); }
 
 		return self;
 	}
@@ -541,9 +553,9 @@ function QTip(target, options, id, attr)
 		}
 
 		/*
-		* Make sure hoverIntent functions properly by using mouseleave to clear show timer if
-		* mouseenter/mouseout is used for show.event, even if it isn't in the users options.
-		*/
+		 * Make sure hoverIntent functions properly by using mouseleave to clear show timer if
+		 * mouseenter/mouseout is used for show.event, even if it isn't in the users options.
+		 */
 		else if(/mouse(over|enter)/i.test(options.show.event)) {
 			targets.hide.bind('mouseleave'+namespace, function(event) {
 				clearTimeout(self.timers.show);
@@ -752,8 +764,8 @@ function QTip(target, options, id, attr)
 
 	$.extend(self, {
 		/*
-		* Psuedo-private API methods
-		*/
+		 * Psuedo-private API methods
+		 */
 		_triggerEvent: function(type, args, event)
 		{
 			var callback = $.Event('tooltip'+type);
@@ -764,8 +776,8 @@ function QTip(target, options, id, attr)
 		},
 
 		/*
-		* Public API methods
-		*/
+		 * Public API methods
+		 */
 		render: function(show)
 		{
 			if(self.rendered) { return self; } // If tooltip has already been rendered, exit
@@ -842,10 +854,10 @@ function QTip(target, options, id, attr)
 			assignEvents();
 
 			/* Queue this part of the render process in our fx queue so we can
-			* load images before the tooltip renders fully.
-			*
-			* See: updateContent method
-			*/
+			 * load images before the tooltip renders fully.
+			 *
+			 * See: updateContent method
+			 */
 			tooltip.queue('fx', function(next) {
 				// tooltiprender event
 				self._triggerEvent('render');
@@ -937,9 +949,9 @@ function QTip(target, options, id, attr)
 			sanitizeOptions(options);
 
 			/*
-			* Execute any valid callbacks for the set options
-			* Also set isPositioning/isDrawing so we don't get loads of redundant repositioning calls.
-			*/
+			 * Execute any valid callbacks for the set options
+			 * Also set isPositioning/isDrawing so we don't get loads of redundant repositioning calls.
+			 */
 			isPositioning = 1; $.each(option, callback); isPositioning = 0;
 
 			// Update position if needed
@@ -1564,19 +1576,19 @@ QTIP.bind = function(opts, event)
 		};
 
 		/*
-		* Make sure hoverIntent functions properly by using mouseleave as a hide event if
-		* mouseenter/mouseout is used for show.event, even if it isn't in the users options.
-		*/
+		 * Make sure hoverIntent functions properly by using mouseleave as a hide event if
+		 * mouseenter/mouseout is used for show.event, even if it isn't in the users options.
+		 */
 		if(/mouse(over|enter)/i.test(events.show) && !/mouse(out|leave)/i.test(events.hide)) {
 			events.hide += ' mouseleave' + namespace;
 		}
 
 		/*
-		* Also make sure initial mouse targetting works correctly by caching mousemove coords
-		* on show targets before the tooltip has rendered.
-		*
-		* Also set onTarget when triggered to keep mouse tracking working
-		*/
+		 * Also make sure initial mouse targetting works correctly by caching mousemove coords
+		 * on show targets before the tooltip has rendered.
+		 *
+		 * Also set onTarget when triggered to keep mouse tracking working
+		 */
 		targets.show.bind('mousemove'+namespace, function(event) {
 			storeMouse(event);
 			api.cache.onTarget = TRUE;
@@ -1685,11 +1697,11 @@ PLUGINS = QTIP.plugins = {
 	},
 
 	/*
-	* IE version detection
-	*
-	* Adapted from: http://ajaxian.com/archives/attack-of-the-ie-conditional-comment
-	* Credit to James Padolsey for the original implemntation!
-	*/
+	 * IE version detection
+	 *
+	 * Adapted from: http://ajaxian.com/archives/attack-of-the-ie-conditional-comment
+	 * Credit to James Padolsey for the original implemntation!
+	 */
 	ie: (function(){
 		var v = 3, div = document.createElement('div');
 		while ((div.innerHTML = '<!--[if gt IE '+(++v)+']><i></i><![endif]-->')) {
@@ -1699,16 +1711,16 @@ PLUGINS = QTIP.plugins = {
 	}()),
  
 	/*
-	* iOS version detection
-	*/
+	 * iOS version detection
+	 */
 	iOS: parseFloat( 
 		('' + (/CPU.*OS ([0-9_]{1,5})|(CPU like).*AppleWebKit.*Mobile/i.exec(navigator.userAgent) || [0,''])[1])
 		.replace('undefined', '3_2').replace('_', '.').replace('_', '')
 	) || FALSE,
 
 	/*
-	* jQuery-specific $.fn overrides
-	*/
+	 * jQuery-specific $.fn overrides
+	 */
 	fn: {
 		/* Allow other plugins to successfully retrieve the title of an element with a qTip applied */
 		attr: function(attr, val) {
@@ -1781,7 +1793,7 @@ if(!$.ui) {
 }
 
 // Set global qTip properties
-QTIP.version = '2.0.1-23-';
+QTIP.version = '2.0.1-24-';
 QTIP.nextid = 0;
 QTIP.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleave mouseenter'.split(' ');
 QTIP.zindex = 15000;
