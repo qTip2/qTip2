@@ -316,7 +316,7 @@ function QTip(target, options, id, attr)
 			// No images? Proceed with next
 			if(!images.length) { return next(); }
 
-			images.bind('load.imagesLoaded error.imagesLoaded', function() {
+			images.bind('load.imagesLoaded error.imagesLoaded', function(event) {
 				imgLoaded(event.target);
 			})
 			.each(function(i, el) {
