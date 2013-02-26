@@ -1259,7 +1259,7 @@ function QTip(target, options, id, attr)
 			// Set flag the signify destroy is taking place to plugins
 			// and ensure it only gets destroyed once!
 			if(self.destroyed) { return; }
-			self.destroyed = !(self.rendered = FALSE);
+			self.destroyed = TRUE;
 
 			function process() {
 				var t = target[0],
@@ -1276,6 +1276,9 @@ function QTip(target, options, id, attr)
 
 					// Remove all descendants and tooltip element
 					tooltip.stop(1,0).find('*').remove().end().remove();
+
+					// Set rendered flag
+					self.rendered = FALSE;
 				}
 
 				// Clear timers and remove bound events
