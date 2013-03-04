@@ -1153,19 +1153,20 @@ function QTip(target, options, id, attr)
 					}
 				}
 
-				// Use Imagemap/SVG plugins if needed
+				// Check if the target is an <AREA> element
 				else if(PLUGINS.imagemap && target.is('area')) {
 					adjusted = PLUGINS.imagemap(self, target, at, PLUGINS.viewport ? method : FALSE);
 				}
+
+				// Check if the target is an SVG element
 				else if(PLUGINS.svg && target[0].ownerSVGElement) {
 					adjusted = PLUGINS.svg(self, target, at, PLUGINS.viewport ? method : FALSE);
 				}
 
+				// Otherwise use regular jQuery methods
 				else {
 					targetWidth = target.outerWidth(FALSE);
 					targetHeight = target.outerHeight(FALSE);
-
-					position = PLUGINS.offset(target, container);
 				}
 
 				// Parse returned plugin values into proper variables
@@ -1175,6 +1176,12 @@ function QTip(target, options, id, attr)
 					offset = adjusted.offset;
 					position = adjusted.position;
 				}
+
+				// Use regular offset method if non-plugin generated
+				else { position = target.offset(); }
+
+				// Adjust position to take into account offset parents
+				position = PLUGINS.offset(target, position, container);
 
 				// Adjust for position.fixed tooltips (and also iOS scroll bug in v3.2-4.0 & v4.3-4.3.2)
 				if((PLUGINS.iOS > 3.1 && PLUGINS.iOS < 4.1) || 
@@ -1582,9 +1589,8 @@ PLUGINS = QTIP.plugins = {
 	},
 
 	// Custom (more correct for qTip!) offset calculator
-	offset: function(elem, container) {
-		var pos = elem.offset(),
-			docBody = elem.closest('body'),
+	offset: function(elem, pos, container) {
+		var docBody = elem.closest('body'),
 			quirks = PLUGINS.ie && document.compatMode !== 'CSS1Compat',
 			parent = container, scrolled,
 			coffset, overflow;
