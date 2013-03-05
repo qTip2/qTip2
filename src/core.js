@@ -1178,7 +1178,7 @@ function QTip(target, options, id, attr)
 				}
 
 				// Use regular offset method if non-plugin generated
-				else { position = target.offset(); }
+				else if(!position) { position = target.offset(); }
 
 				// Adjust position to take into account offset parents
 				position = PLUGINS.offset(target, position, container);
