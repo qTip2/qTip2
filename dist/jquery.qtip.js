@@ -1,12 +1,12 @@
 /*!
- * qTip2 - Pretty powerful tooltips - v2.0.1-34-
+ * qTip2 - Pretty powerful tooltips - v2.0.1-35-
  * http://qtip2.com
  *
  * Copyright (c) 2013 Craig Michael Thompson
  * Released under the MIT, GPL licenses
  * http://jquery.org/license
  *
- * Date: Sun Mar 10 2013 01:45 GMT+0000
+ * Date: Sun Mar 10 2013 03:07 GMT+0000
  * Plugins: svg ajax tips modal viewport imagemap ie6
  * Styles: basic css3
  */
@@ -1813,7 +1813,7 @@ if(!$.ui) {
 }
 
 // Set global qTip properties
-QTIP.version = '2.0.1-34-';
+QTIP.version = '2.0.1-35-';
 QTIP.nextid = 0;
 QTIP.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleave mouseenter'.split(' ');
 QTIP.zindex = 15000;
@@ -2774,7 +2774,7 @@ OVERLAY = function()
 		if($.expr[':'].focusable) { return $.expr[':'].focusable; }
 
 		var isTabIndexNotNaN = !isNaN($.attr(element, 'tabindex')),
-			nodeName = element.nodeName.toLowerCase(),
+			nodeName = element.nodeName && element.nodeName.toLowerCase(),
 			map, mapName, img;
 
 		if('area' === nodeName) {

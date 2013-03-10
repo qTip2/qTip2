@@ -17,7 +17,7 @@ OVERLAY = function()
 		if($.expr[':'].focusable) { return $.expr[':'].focusable; }
 
 		var isTabIndexNotNaN = !isNaN($.attr(element, 'tabindex')),
-			nodeName = element.nodeName.toLowerCase(),
+			nodeName = element.nodeName && element.nodeName.toLowerCase(),
 			map, mapName, img;
 
 		if('area' === nodeName) {
