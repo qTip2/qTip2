@@ -914,7 +914,7 @@ function QTip(target, options, id, attr)
 			if(!tooltip.is(':animated') && visible === state && sameTarget) { return self; }
 
 			// tooltipshow/tooltiphide events
-			if(!self._triggerEvent(type, [90])) { return self; }
+			if(!self._triggerEvent(type, [90]) && !self.destroyed) { return self; }
 
 			// Set ARIA hidden status attribute
 			$.attr(tooltip[0], 'aria-hidden', !!!state);
@@ -1318,12 +1318,21 @@ function QTip(target, options, id, attr)
 				delete self.checks;
 			}
 
-			// Destroy after hide if no immediate
-			if(immediate === TRUE) { process(); }
-			else {
-				tooltip.bind('tooltiphidden', process);
+			var isHiding = FALSE;
+
+			// If an immediate destory is needed
+			if(immediate !== TRUE) {
+				// Check to see if the hide call below suceeds
+				tooltip.bind('tooltiphide', function() {
+					// Set the hiding flag and process on hidden
+					isHiding = TRUE;
+					tooltip.bind('tooltiphidden', process);
+				});
 				self.hide();
 			}
+
+			// If we're not in the process of hiding... process
+			if(!isHiding) { process(); }
 
 			return target;
 		}

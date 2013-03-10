@@ -1,12 +1,12 @@
 /*!
- * qTip2 - Pretty powerful tooltips - v2.0.1-33-
+ * qTip2 - Pretty powerful tooltips - v2.0.1-34-
  * http://qtip2.com
  *
  * Copyright (c) 2013 Craig Michael Thompson
  * Released under the MIT, GPL licenses
  * http://jquery.org/license
  *
- * Date: Sun Mar 10 2013 01:34 GMT+0000
+ * Date: Sun Mar 10 2013 01:45 GMT+0000
  * Plugins: svg ajax tips modal viewport imagemap ie6
  * Styles: basic css3
  */
@@ -997,7 +997,7 @@ function QTip(target, options, id, attr)
 			if(!tooltip.is(':animated') && visible === state && sameTarget) { return self; }
 
 			// tooltipshow/tooltiphide events
-			if(!self._triggerEvent(type, [90])) { return self; }
+			if(!self._triggerEvent(type, [90]) && !self.destroyed) { return self; }
 
 			// Set ARIA hidden status attribute
 			$.attr(tooltip[0], 'aria-hidden', !!!state);
@@ -1401,12 +1401,21 @@ function QTip(target, options, id, attr)
 				delete self.checks;
 			}
 
-			// Destroy after hide if no immediate
-			if(immediate === TRUE) { process(); }
-			else {
-				tooltip.bind('tooltiphidden', process);
+			var isHiding = FALSE;
+
+			// If an immediate destory is needed
+			if(immediate !== TRUE) {
+				// Check to see if the hide call below suceeds
+				tooltip.bind('tooltiphide', function() {
+					// Set the hiding flag and process on hidden
+					isHiding = TRUE;
+					tooltip.bind('tooltiphidden', process);
+				});
 				self.hide();
 			}
+
+			// If we're not in the process of hiding... process
+			if(!isHiding) { process(); }
 
 			return target;
 		}
@@ -1804,7 +1813,7 @@ if(!$.ui) {
 }
 
 // Set global qTip properties
-QTIP.version = '2.0.1-33-';
+QTIP.version = '2.0.1-34-';
 QTIP.nextid = 0;
 QTIP.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleave mouseenter'.split(' ');
 QTIP.zindex = 15000;
