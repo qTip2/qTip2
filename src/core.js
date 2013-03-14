@@ -1321,7 +1321,7 @@ function QTip(target, options, id, attr)
 			var isHiding = FALSE;
 
 			// If an immediate destory is needed
-			if(immediate !== TRUE) {
+			if(immediate === TRUE) {
 				// Check to see if the hide call below suceeds
 				tooltip.bind('tooltiphide', function() {
 					// Set the hiding flag and process on hidden
@@ -1338,7 +1338,6 @@ function QTip(target, options, id, attr)
 		}
 	});
 }
-
 // Initialization method
 function init(elem, id, opts)
 {
