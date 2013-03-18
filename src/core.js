@@ -1285,11 +1285,13 @@ function QTip(target, options, id, attr)
 
 					// Set rendered flag
 					self.rendered = FALSE;
+
+					// Clear timers and remove bound events
+					clearTimeout(self.timers.show);
+					clearTimeout(self.timers.hide);
 				}
 
-				// Clear timers and remove bound events
-				clearTimeout(self.timers.show);
-				clearTimeout(self.timers.hide);
+				// Remove bound events
 				unassignEvents();
 
 				// If the API if actually this qTip API...
@@ -1321,7 +1323,7 @@ function QTip(target, options, id, attr)
 			var isHiding = FALSE;
 
 			// If an immediate destory is needed
-			if(immediate === TRUE) {
+			if(immediate !== TRUE) {
 				// Check to see if the hide call below suceeds
 				tooltip.bind('tooltiphide', function() {
 					// Set the hiding flag and process on hidden
