@@ -1323,10 +1323,10 @@ function QTip(target, options, id, attr)
 			// If an immediate destory is needed
 			if(immediate !== TRUE) {
 				// Check to see if the hide call below suceeds
-				tooltip.bind('tooltiphide', function() {
+				tooltip.one('tooltiphide', function() {
 					// Set the hiding flag and process on hidden
 					isHiding = TRUE;
-					tooltip.bind('tooltiphidden', process);
+					tooltip.one('tooltiphidden', process);
 				});
 				self.hide();
 			}

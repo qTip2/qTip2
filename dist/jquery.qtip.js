@@ -1,12 +1,12 @@
 /*!
- * qTip2 - Pretty powerful tooltips - v2.0.1-36-
+ * qTip2 - Pretty powerful tooltips - v2.0.1-37-
  * http://qtip2.com
  *
  * Copyright (c) 2013 Craig Michael Thompson
  * Released under the MIT, GPL licenses
  * http://jquery.org/license
  *
- * Date: Wed Mar 20 2013 04:47 GMT+0000
+ * Date: Wed Mar 27 2013 01:04 GMT+0000
  * Plugins: svg ajax tips modal viewport imagemap ie6
  * Styles: basic css3
  */
@@ -1406,10 +1406,10 @@ function QTip(target, options, id, attr)
 			// If an immediate destory is needed
 			if(immediate !== TRUE) {
 				// Check to see if the hide call below suceeds
-				tooltip.bind('tooltiphide', function() {
+				tooltip.one('tooltiphide', function() {
 					// Set the hiding flag and process on hidden
 					isHiding = TRUE;
-					tooltip.bind('tooltiphidden', process);
+					tooltip.one('tooltiphidden', process);
 				});
 				self.hide();
 			}
@@ -1813,7 +1813,7 @@ if(!$.ui) {
 }
 
 // Set global qTip properties
-QTIP.version = '2.0.1-36-';
+QTIP.version = '2.0.1-37-';
 QTIP.nextid = 0;
 QTIP.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleave mouseenter'.split(' ');
 QTIP.zindex = 15000;
