@@ -189,7 +189,7 @@ function Tip(qTip, command)
 
 	function parseWidth(corner, side, use) {
 		var prop = BORDER + camel(!side ? corner[corner.precedance] : side) + 'Width';
-		
+
 		return (use ? intCss(use, prop) : (
 			intCss(elems.content, prop) ||
 			intCss(corner.y === TOP && elems.titlebar || elems.content, prop) ||
@@ -582,7 +582,7 @@ function Tip(qTip, command)
 					bc = parseWidth(corner, side, isWidget ? NULL : elems.content);
 					br = parseRadius(corner);
 
-					position[ side ] = i ? bc : (userOffset + (br > b ? br : -b));
+					position[ side ] = Math.max(-border, i ? bc : (userOffset + (br > b ? br : -b)));
 				}
 			});
 

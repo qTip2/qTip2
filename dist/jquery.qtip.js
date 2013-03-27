@@ -1,12 +1,12 @@
 /*!
- * qTip2 - Pretty powerful tooltips - v2.0.1-40-
+ * qTip2 - Pretty powerful tooltips - v2.0.1-41-
  * http://qtip2.com
  *
  * Copyright (c) 2013 Craig Michael Thompson
  * Released under the MIT, GPL licenses
  * http://jquery.org/license
  *
- * Date: Wed Mar 27 2013 07:11 GMT+0000
+ * Date: Wed Mar 27 2013 07:41 GMT+0000
  * Plugins: svg ajax tips modal viewport imagemap ie6
  * Styles: basic css3
  */
@@ -1821,7 +1821,7 @@ if(!$.ui) {
 }
 
 // Set global qTip properties
-QTIP.version = '2.0.1-40-';
+QTIP.version = '2.0.1-41-';
 QTIP.nextid = 0;
 QTIP.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleave mouseenter'.split(' ');
 QTIP.zindex = 15000;
@@ -2310,7 +2310,7 @@ function Tip(qTip, command)
 
 	function parseWidth(corner, side, use) {
 		var prop = BORDER + camel(!side ? corner[corner.precedance] : side) + 'Width';
-		
+
 		return (use ? intCss(use, prop) : (
 			intCss(elems.content, prop) ||
 			intCss(corner.y === TOP && elems.titlebar || elems.content, prop) ||
@@ -2703,7 +2703,7 @@ function Tip(qTip, command)
 					bc = parseWidth(corner, side, isWidget ? NULL : elems.content);
 					br = parseRadius(corner);
 
-					position[ side ] = i ? bc : (userOffset + (br > b ? br : -b));
+					position[ side ] = Math.max(-border, i ? bc : (userOffset + (br > b ? br : -b)));
 				}
 			});
 
