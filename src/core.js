@@ -697,7 +697,7 @@ function QTip(target, options, id, attr)
 		 */
 		render: function(show)
 		{
-			if(self.rendered) { return self; } // If tooltip has already been rendered, exit
+			if(self.rendered || self.destroyed) { return self; } // If tooltip has already been rendered, exit
 
 			var text = options.content.text,
 				title = options.content.title,
@@ -795,6 +795,8 @@ function QTip(target, options, id, attr)
 
 		get: function(notation)
 		{
+			if(self.destroyed) { return self; }
+
 			var result, o;
 
 			switch(notation.toLowerCase())
@@ -822,6 +824,8 @@ function QTip(target, options, id, attr)
 
 		set: function(option, value)
 		{
+			if(self.destroyed) { return self; }
+
 			var rmove = /^position\.(my|at|adjust|target|container)|style|content|show\.ready/i,
 				rdraw = /^content\.(title|attr)|style/i,
 				reposition = FALSE,
@@ -894,7 +898,7 @@ function QTip(target, options, id, attr)
 			}
 	
 			// Render the tooltip if showing and it isn't already
-			if(!self.rendered) { return state ? self.render(1) : self; }
+			if(!self.rendered || self.destroyed) { return state ? self.render(1) : self; }
 
 			var type = state ? 'show' : 'hide',
 				opts = options[type],
@@ -1025,7 +1029,7 @@ function QTip(target, options, id, attr)
 
 		focus: function(event)
 		{
-			if(!self.rendered) { return self; }
+			if(!self.rendered || self.destroyed) { return self; }
 
 			var qtips = $(selector),
 				curIndex = parseInt(tooltip[0].style.zIndex, 10),
@@ -1060,6 +1064,8 @@ function QTip(target, options, id, attr)
 		},
 
 		blur: function(event) {
+			if(self.destroyed) { return self; }
+
 			// Set focused status to FALSE
 			tooltip.removeClass(focusClass);
 
@@ -1071,7 +1077,7 @@ function QTip(target, options, id, attr)
 
 		reposition: function(event, effect)
 		{
-			if(!self.rendered || isPositioning) { return self; }
+			if(!self.rendered || isPositioning || self.destroyed) { return self; }
 
 			// Set positioning flag
 			isPositioning = 1;
@@ -1243,6 +1249,8 @@ function QTip(target, options, id, attr)
 
 		disable: function(state)
 		{
+			if(self.destroyed) { return self; }
+
 			if('boolean' !== typeof state) {
 				state = !(tooltip.hasClass(disabledClass) || cache.disabled);
 			}
@@ -1264,7 +1272,7 @@ function QTip(target, options, id, attr)
 		{
 			// Set flag the signify destroy is taking place to plugins
 			// and ensure it only gets destroyed once!
-			if(self.destroyed) { return; }
+			if(self.destroyed) { return target; }
 			self.destroyed = TRUE;
 
 			function process() {

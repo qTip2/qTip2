@@ -1,12 +1,12 @@
 /*!
- * qTip2 - Pretty powerful tooltips - v2.0.1-37-
+ * qTip2 - Pretty powerful tooltips - v2.0.1-38-
  * http://qtip2.com
  *
  * Copyright (c) 2013 Craig Michael Thompson
  * Released under the MIT, GPL licenses
  * http://jquery.org/license
  *
- * Date: Wed Mar 27 2013 01:04 GMT+0000
+ * Date: Wed Mar 27 2013 01:22 GMT+0000
  * Plugins: svg ajax tips modal viewport imagemap ie6
  * Styles: basic css3
  */
@@ -780,7 +780,7 @@ function QTip(target, options, id, attr)
 		 */
 		render: function(show)
 		{
-			if(self.rendered) { return self; } // If tooltip has already been rendered, exit
+			if(self.rendered || self.destroyed) { return self; } // If tooltip has already been rendered, exit
 
 			var text = options.content.text,
 				title = options.content.title,
@@ -878,6 +878,8 @@ function QTip(target, options, id, attr)
 
 		get: function(notation)
 		{
+			if(self.destroyed) { return self; }
+
 			var result, o;
 
 			switch(notation.toLowerCase())
@@ -905,6 +907,8 @@ function QTip(target, options, id, attr)
 
 		set: function(option, value)
 		{
+			if(self.destroyed) { return self; }
+
 			var rmove = /^position\.(my|at|adjust|target|container)|style|content|show\.ready/i,
 				rdraw = /^content\.(title|attr)|style/i,
 				reposition = FALSE,
@@ -977,7 +981,7 @@ function QTip(target, options, id, attr)
 			}
 	
 			// Render the tooltip if showing and it isn't already
-			if(!self.rendered) { return state ? self.render(1) : self; }
+			if(!self.rendered || self.destroyed) { return state ? self.render(1) : self; }
 
 			var type = state ? 'show' : 'hide',
 				opts = options[type],
@@ -1108,7 +1112,7 @@ function QTip(target, options, id, attr)
 
 		focus: function(event)
 		{
-			if(!self.rendered) { return self; }
+			if(!self.rendered || self.destroyed) { return self; }
 
 			var qtips = $(selector),
 				curIndex = parseInt(tooltip[0].style.zIndex, 10),
@@ -1143,6 +1147,8 @@ function QTip(target, options, id, attr)
 		},
 
 		blur: function(event) {
+			if(self.destroyed) { return self; }
+
 			// Set focused status to FALSE
 			tooltip.removeClass(focusClass);
 
@@ -1154,7 +1160,7 @@ function QTip(target, options, id, attr)
 
 		reposition: function(event, effect)
 		{
-			if(!self.rendered || isPositioning) { return self; }
+			if(!self.rendered || isPositioning || self.destroyed) { return self; }
 
 			// Set positioning flag
 			isPositioning = 1;
@@ -1326,6 +1332,8 @@ function QTip(target, options, id, attr)
 
 		disable: function(state)
 		{
+			if(self.destroyed) { return self; }
+
 			if('boolean' !== typeof state) {
 				state = !(tooltip.hasClass(disabledClass) || cache.disabled);
 			}
@@ -1347,7 +1355,7 @@ function QTip(target, options, id, attr)
 		{
 			// Set flag the signify destroy is taking place to plugins
 			// and ensure it only gets destroyed once!
-			if(self.destroyed) { return; }
+			if(self.destroyed) { return target; }
 			self.destroyed = TRUE;
 
 			function process() {
@@ -1813,7 +1821,7 @@ if(!$.ui) {
 }
 
 // Set global qTip properties
-QTIP.version = '2.0.1-37-';
+QTIP.version = '2.0.1-38-';
 QTIP.nextid = 0;
 QTIP.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleave mouseenter'.split(' ');
 QTIP.zindex = 15000;
@@ -2756,9 +2764,8 @@ $.extend(TRUE, QTIP.defaults, {
 
 
 var MODAL, OVERLAY,
-	MODALATTR = 'is-modal-qtip',
-	MODALSELECTOR = selector + '['+MODALATTR+']',
-	MODALNS = '.qtipmodal';
+	MODALCLASS = 'qtip-modal',
+	MODALSELECTOR = '.'+MODALCLASS;
 
 OVERLAY = function()
 {
@@ -2846,21 +2853,21 @@ OVERLAY = function()
 					width: win.width()
 				});
 			}
-			$(window).bind('resize'+MODALNS, resize);
+			$(window).bind('resize'+MODALSELECTOR, resize);
 			resize(); // Fire it initially too
 
 			// Make sure we can't focus anything outside the tooltip
-			$(document.body).bind('focusin'+MODALNS, stealFocus);
+			$(document.body).bind('focusin'+MODALSELECTOR, stealFocus);
 
 			// Apply keyboard "Escape key" close handler
-			$(document).bind('keydown'+MODALNS, function(event) {
+			$(document).bind('keydown'+MODALSELECTOR, function(event) {
 				if(current && current.options.show.modal.escape && event.keyCode === 27) {
 					current.hide(event);
 				}
 			});
 
 			// Apply click handler for blur option
-			elem.bind('click'+MODALNS, function(event) {
+			elem.bind('click'+MODALSELECTOR, function(event) {
 				if(current && current.options.show.modal.blur) {
 					current.hide(event);
 				}
@@ -2890,8 +2897,11 @@ OVERLAY = function()
 				effect = options.effect,
 				type = state ? 'show': 'hide',
 				visible = elem.is(':visible'),
-				modals = $(MODALSELECTOR).filter(':visible:not(:animated)').not(tooltip),
+				visibleModals = $(MODALSELECTOR).filter(':visible:not(:animated)').not(tooltip),
 				zindex;
+
+			console.log(state);
+			console.trace();
 
 			// Set active tooltip API reference
 			self.update(api);
@@ -2912,7 +2922,7 @@ OVERLAY = function()
 			}
 
 			// Prevent modal from conflicting with show.solo, and don't hide backdrop is other modals are visible
-			if((elem.is(':animated') && visible === state && prevState !== FALSE) || (!state && modals.length)) {
+			if((elem.is(':animated') && visible === state && prevState !== FALSE) || (!state && visibleModals.length)) {
 				return self;
 			}
 
@@ -2939,8 +2949,9 @@ OVERLAY = function()
 			// Reset position and detach from body on hide
 			if(!state) {
 				elem.queue(function(next) {
+					console.log('test');
 					elem.css({ left: '', top: '' });
-					if(!modals.length) { elem.detach(); }
+					if(!$(MODALSELECTOR).length) { elem.detach(); }
 					next();
 				});
 			}
@@ -2965,7 +2976,7 @@ function Modal(api)
 		options = api.options.show.modal,
 		elems = api.elements,
 		tooltip = elems.tooltip,
-		namespace = MODALNS + api.id,
+		namespace = MODALSELECTOR + api.id,
 		overlay;
 
 	// Setup option set checks
@@ -2990,7 +3001,7 @@ function Modal(api)
 			overlay = elems.overlay = OVERLAY.elem;
 
 			// Add unique attribute so we can grab modal tooltips easily via a selector
-			tooltip.attr(MODALATTR, TRUE)
+			tooltip.addClass(MODALCLASS)
 
 			// Set z-index
 			.css('z-index', PLUGINS.modal.zindex + $(MODALSELECTOR).length)
@@ -3066,8 +3077,11 @@ function Modal(api)
 		},
 
 		destroy: function() {
+			// Remove modal class
+			tooltip.removeClass(MODALCLASS);
+
 			// Remove bound events
-			$([document, tooltip]).removeAttr(MODALATTR).unbind(namespace);
+			tooltip.add(document).unbind(namespace);
 
 			// Delete element reference
 			OVERLAY.toggle(api, FALSE);

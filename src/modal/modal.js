@@ -1,7 +1,6 @@
 var MODAL, OVERLAY,
-	MODALATTR = 'is-modal-qtip',
-	MODALSELECTOR = selector + '['+MODALATTR+']',
-	MODALNS = '.qtipmodal';
+	MODALCLASS = 'qtip-modal',
+	MODALSELECTOR = '.'+MODALCLASS;
 
 OVERLAY = function()
 {
@@ -89,21 +88,21 @@ OVERLAY = function()
 					width: win.width()
 				});
 			}
-			$(window).bind('resize'+MODALNS, resize);
+			$(window).bind('resize'+MODALSELECTOR, resize);
 			resize(); // Fire it initially too
 
 			// Make sure we can't focus anything outside the tooltip
-			$(document.body).bind('focusin'+MODALNS, stealFocus);
+			$(document.body).bind('focusin'+MODALSELECTOR, stealFocus);
 
 			// Apply keyboard "Escape key" close handler
-			$(document).bind('keydown'+MODALNS, function(event) {
+			$(document).bind('keydown'+MODALSELECTOR, function(event) {
 				if(current && current.options.show.modal.escape && event.keyCode === 27) {
 					current.hide(event);
 				}
 			});
 
 			// Apply click handler for blur option
-			elem.bind('click'+MODALNS, function(event) {
+			elem.bind('click'+MODALSELECTOR, function(event) {
 				if(current && current.options.show.modal.blur) {
 					current.hide(event);
 				}
@@ -133,8 +132,11 @@ OVERLAY = function()
 				effect = options.effect,
 				type = state ? 'show': 'hide',
 				visible = elem.is(':visible'),
-				modals = $(MODALSELECTOR).filter(':visible:not(:animated)').not(tooltip),
+				visibleModals = $(MODALSELECTOR).filter(':visible:not(:animated)').not(tooltip),
 				zindex;
+
+			console.log(state);
+			console.trace();
 
 			// Set active tooltip API reference
 			self.update(api);
@@ -155,7 +157,7 @@ OVERLAY = function()
 			}
 
 			// Prevent modal from conflicting with show.solo, and don't hide backdrop is other modals are visible
-			if((elem.is(':animated') && visible === state && prevState !== FALSE) || (!state && modals.length)) {
+			if((elem.is(':animated') && visible === state && prevState !== FALSE) || (!state && visibleModals.length)) {
 				return self;
 			}
 
@@ -182,8 +184,9 @@ OVERLAY = function()
 			// Reset position and detach from body on hide
 			if(!state) {
 				elem.queue(function(next) {
+					console.log('test');
 					elem.css({ left: '', top: '' });
-					if(!modals.length) { elem.detach(); }
+					if(!$(MODALSELECTOR).length) { elem.detach(); }
 					next();
 				});
 			}
@@ -208,7 +211,7 @@ function Modal(api)
 		options = api.options.show.modal,
 		elems = api.elements,
 		tooltip = elems.tooltip,
-		namespace = MODALNS + api.id,
+		namespace = MODALSELECTOR + api.id,
 		overlay;
 
 	// Setup option set checks
@@ -233,7 +236,7 @@ function Modal(api)
 			overlay = elems.overlay = OVERLAY.elem;
 
 			// Add unique attribute so we can grab modal tooltips easily via a selector
-			tooltip.attr(MODALATTR, TRUE)
+			tooltip.addClass(MODALCLASS)
 
 			// Set z-index
 			.css('z-index', PLUGINS.modal.zindex + $(MODALSELECTOR).length)
@@ -309,8 +312,11 @@ function Modal(api)
 		},
 
 		destroy: function() {
+			// Remove modal class
+			tooltip.removeClass(MODALCLASS);
+
 			// Remove bound events
-			$([document, tooltip]).removeAttr(MODALATTR).unbind(namespace);
+			tooltip.add(document).unbind(namespace);
 
 			// Delete element reference
 			OVERLAY.toggle(api, FALSE);
