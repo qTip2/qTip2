@@ -1,12 +1,12 @@
 /*!
- * qTip2 - Pretty powerful tooltips - v2.0.1-38-
+ * qTip2 - Pretty powerful tooltips - v2.0.1-39-
  * http://qtip2.com
  *
  * Copyright (c) 2013 Craig Michael Thompson
  * Released under the MIT, GPL licenses
  * http://jquery.org/license
  *
- * Date: Wed Mar 27 2013 01:22 GMT+0000
+ * Date: Wed Mar 27 2013 01:23 GMT+0000
  * Plugins: svg ajax tips modal viewport imagemap ie6
  * Styles: basic css3
  */
@@ -1821,7 +1821,7 @@ if(!$.ui) {
 }
 
 // Set global qTip properties
-QTIP.version = '2.0.1-38-';
+QTIP.version = '2.0.1-39-';
 QTIP.nextid = 0;
 QTIP.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleave mouseenter'.split(' ');
 QTIP.zindex = 15000;
@@ -2900,9 +2900,6 @@ OVERLAY = function()
 				visibleModals = $(MODALSELECTOR).filter(':visible:not(:animated)').not(tooltip),
 				zindex;
 
-			console.log(state);
-			console.trace();
-
 			// Set active tooltip API reference
 			self.update(api);
 
@@ -2949,7 +2946,6 @@ OVERLAY = function()
 			// Reset position and detach from body on hide
 			if(!state) {
 				elem.queue(function(next) {
-					console.log('test');
 					elem.css({ left: '', top: '' });
 					if(!$(MODALSELECTOR).length) { elem.detach(); }
 					next();

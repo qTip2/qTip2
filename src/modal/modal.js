@@ -135,9 +135,6 @@ OVERLAY = function()
 				visibleModals = $(MODALSELECTOR).filter(':visible:not(:animated)').not(tooltip),
 				zindex;
 
-			console.log(state);
-			console.trace();
-
 			// Set active tooltip API reference
 			self.update(api);
 
@@ -184,7 +181,6 @@ OVERLAY = function()
 			// Reset position and detach from body on hide
 			if(!state) {
 				elem.queue(function(next) {
-					console.log('test');
 					elem.css({ left: '', top: '' });
 					if(!$(MODALSELECTOR).length) { elem.detach(); }
 					next();
