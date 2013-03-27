@@ -119,7 +119,8 @@ module.exports = function(grunt) {
 				boss: true,
 				eqnull: true,
 				browser: true,
-				undef: false
+				undef: false,
+				expr: true
 			},
 			globals: {
 				jQuery: true,

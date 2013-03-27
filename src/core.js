@@ -1652,7 +1652,7 @@ PLUGINS = QTIP.plugins = {
 		while ((div.innerHTML = '<!--[if gt IE '+(++v)+']><i></i><![endif]-->')) {
 			if(!div.getElementsByTagName('i')[0]) { break; }
 		}
-		return v > 4 ? v : FALSE;
+		return v > 4 ? v : NaN;
 	}()),
  
 	/*
