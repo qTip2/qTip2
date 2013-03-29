@@ -13,7 +13,7 @@ module.exports = function(grunt) {
 			download: 'http://qtip2.com/download',
 			docs: 'http://qtip2.com/guides',
 			demo: 'http://qtip2.com/demos',
-			bugs: 'http://gitbhub.com/Craga89/qTip2/issues',
+			bugs: 'http://github.com/Craga89/qTip2/issues',
 			maintainers: [{
 				"name": "Craig Michael Thompson",
 				"email": "craig@craigsworks.com",
