@@ -549,7 +549,9 @@ function QTip(target, options, id, attr)
 		// Mouse positioning events
 		if(posOptions.target === 'mouse') {
 			// Cache mousemove coords on show targets
-			targets.show.bind('mousemove'+namespace, storeMouse);
+			targets.show.bind('mousemove'+namespace, function(event) {
+				storeMouse(self.id, event);
+			});
 
 			// If mouse adjustment is on...
 			if(posOptions.adjust.mouse) {
@@ -570,7 +572,7 @@ function QTip(target, options, id, attr)
 				targets.document.bind('mousemove'+namespace, function(event) {
 					// Update the tooltip position only if the tooltip is visible and adjustment is enabled
 					if(self.rendered && cache.onTarget && !tooltip.hasClass(disabledClass) && tooltip[0].offsetWidth > 0) {
-						self.reposition(event || MOUSE);
+						self.reposition(event || MOUSE[self.id]);
 					}
 				});
 			}
@@ -926,7 +928,7 @@ function QTip(target, options, id, attr)
 			// Execute state specific properties
 			if(state) {
 				// Store show origin coordinates
-				cache.origin = $.extend({}, MOUSE);
+				cache.origin = $.extend({}, MOUSE[self.id]);
 
 				// Focus the tooltip
 				self.focus(event);
@@ -937,7 +939,9 @@ function QTip(target, options, id, attr)
 
 				// Cache mousemove events for positioning purposes (if not already tracking)
 				if(!trackingBound && posOptions.target === 'mouse' && posOptions.adjust.mouse) {
-					$(document).bind('mousemove.qtip', storeMouse);
+					$(document).bind('mousemove.'+NAMESPACE, function(event) {
+						storeMouse(self.id, event);
+					});
 					trackingBound = TRUE;
 				}
 
@@ -961,7 +965,7 @@ function QTip(target, options, id, attr)
 
 				// Remove mouse tracking event if not needed (all tracking qTips are hidden)
 				if(trackingBound && !$(selector+'[tracking="true"]:visible', opts.solo).not(tooltip).length) {
-					$(document).unbind('mousemove.qtip');
+					$(document).unbind('mousemove.'+NAMESPACE);
 					trackingBound = FALSE;
 				}
 
@@ -1099,7 +1103,7 @@ function QTip(target, options, id, attr)
 				visible = tooltip[0].offsetWidth > 0,
 				isScroll = event && event.type === 'scroll',
 				win = $(window),
-				adjusted, offset;
+				adjusted, offset, mouse;
 
 			// Check if absolute position was passed
 			if($.isArray(target) && target.length === 2) {
@@ -1112,13 +1116,14 @@ function QTip(target, options, id, attr)
 			else if(target === 'mouse' && ((event && event.pageX) || cache.event.pageX)) {
 				// Force left top to allow flipping
 				at = { x: LEFT, y: TOP };
+				mouse = MOUSE[self.id];
 
 				// Use cached event if one isn't available for positioning
-				event = MOUSE && MOUSE.pageX && (adjust.mouse || !event || !event.pageX) ? { pageX: MOUSE.pageX, pageY: MOUSE.pageY } :
+				event = mouse && mouse.pageX && (adjust.mouse || !event || !event.pageX) ? { pageX: mouse.pageX, pageY: mouse.pageY } :
 					(event && (event.type === 'resize' || event.type === 'scroll') ? cache.event :
 					event && event.pageX && event.type === 'mousemove' ? event :
 					(!adjust.mouse || options.show.distance) && cache.origin && cache.origin.pageX ? cache.origin :
-					event) || event || cache.event || MOUSE || {};
+					event) || event || cache.event || mouse || {};
 
 				// Use event coordinates for position
 				if(type !== 'static') { position = container.offset(); }
@@ -1126,8 +1131,8 @@ function QTip(target, options, id, attr)
 
 				// Scroll events are a pain, some browsers
 				if(adjust.mouse && isScroll) {
-					position.left -= MOUSE.scrollX - win.scrollLeft();
-					position.top -= MOUSE.scrollY - win.scrollTop();
+					position.left -= mouse.scrollX - win.scrollLeft();
+					position.top -= mouse.scrollY - win.scrollTop();
 				}
 			}
 
@@ -1324,6 +1329,7 @@ function QTip(target, options, id, attr)
 				delete self.options; delete self.elements;
 				delete self.cache; delete self.timers;
 				delete self.checks;
+				delete MOUSE[self.id];
 			}
 
 			var isHiding = FALSE;
@@ -1536,7 +1542,7 @@ QTIP.bind = function(opts, event)
 		 * Also set onTarget when triggered to keep mouse tracking working
 		 */
 		targets.show.bind('mousemove'+namespace, function(event) {
-			storeMouse(event);
+			storeMouse(self.id, event);
 			api.cache.onTarget = TRUE;
 		});
 

@@ -44,9 +44,10 @@
 		BLANKIMG = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==', 
 
 		// Shortcut vars
-		QTIP, PLUGINS, MOUSE,
+		QTIP, PLUGINS,
 		NAMESPACE = 'qtip',
 		HASATTR = 'data-hasqtip',
+		MOUSE = {},
 		usedIDs = {},
 		widget = ['ui-widget', 'ui-tooltip'],
 		selector = 'div.qtip.'+NAMESPACE,
@@ -58,9 +59,9 @@
 		trackingBound;
 
 	// Store mouse coordinates
-	function storeMouse(event)
+	function storeMouse(id, event)
 	{
-		MOUSE = {
+		MOUSE[id] = {
 			pageX: event.pageX,
 			pageY: event.pageY,
 			type: 'mousemove',
