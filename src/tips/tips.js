@@ -146,7 +146,7 @@ function Tip(qTip, command)
 			// Reposition the tooltip
 			qTip.reposition();
 		},
-		'^content.title.text|style.(classes|widget)$': function() {
+		'^content.title|style.(classes|widget)$': function() {
 			elems.tip && elems.tip.length && self.update();
 		}
 	};
