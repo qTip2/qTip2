@@ -9,6 +9,11 @@
 		"email": "craig@craigsworks.com",
 		"url": "http://craigsworks.com/"
 	},
+	"contributors": [{
+		"name": "Craig Michael Thompson",
+		"email": "craig@craigsworks.com",
+		"url": "http://craigsworks.com/"
+	}],
 	"repository": {
 		"type": "git",
 		"url": "git://github.com/Craga89/qTip2.git"
@@ -30,12 +35,13 @@
 		}
 	],
 	"dependencies": {
-		"jquery": "=>1.4.2"
+		"jquery": ">=1.4.2"
 	},
 	"devDependencies": {
 		"grunt": "~0.3.11",
 		"grunt-contrib": "~0.1.1",
-		"grunt-text-replace": "~0.1.8"
+		"grunt-text-replace": "~0.1.8",
+		"grunt-jquery-json": "~0.2.1"
 	},
-	"keywords": ["tooltip", "tooltips", "jquery", "qtip", "qtip2", "craig michael thompson", "craigsworks"]
+	"keywords": ["tooltip", "tooltips", "jquery", "qtip", "qtip2", "craig", "thompson", "craigsworks"]
 }

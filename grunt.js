@@ -3,11 +3,25 @@ module.exports = function(grunt) {
 	// Load grunt helpers
 	grunt.loadNpmTasks('grunt-contrib');
 	grunt.loadNpmTasks('grunt-text-replace');
+	grunt.loadNpmTasks('grunt-jquery-json');
 
 	// Project configuration.
 	grunt.initConfig({
-		// Meta properties
+		// Package properties
 		pkg: '<json:package.json>',
+		jqueryjson: {
+			download: 'http://qtip2.com/download',
+			docs: 'http://qtip2.com/guides',
+			demo: 'http://qtip2.com/demos',
+			bugs: 'http://gitbhub.com/Craga89/qTip2/issues',
+			maintainers: [{
+				"name": "Craig Michael Thompson",
+				"email": "craig@craigsworks.com",
+				"url": "http://craigsworks.com/"
+			}]
+		},
+
+		// So meta...
 		meta: {
 			banners: {
 				full: '/*!\n * <%= pkg.title || pkg.name %> - @vVERSION\n' +
@@ -226,5 +240,5 @@ module.exports = function(grunt) {
 	grunt.registerTask('css', 'init clean concat:dist_css mincss:dist replace');
 	grunt.registerTask('basic', 'init clean lint concat:basic concat:basic_css min:basic mincss:basic replace');
 	grunt.registerTask('default', 'init clean lint concat:dist concat:dist_css min:dist mincss:dist replace');
-	grunt.registerTask('dev', 'init clean lint concat min mincss replace');
+	grunt.registerTask('dev', 'init clean lint jquery-json concat min mincss replace');
 };
