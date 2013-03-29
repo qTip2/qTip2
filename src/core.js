@@ -916,16 +916,20 @@ function QTip(target, options, id, attr)
 				visible = tooltip[0].offsetWidth > 0,
 				animate = state || opts.target.length === 1,
 				sameTarget = !event || opts.target.length < 2 || cache.target[0] === event.target,
-				showEvent, delay;
+				identicalState, allow, showEvent, delay;
 
 			// Detect state if valid one isn't provided
 			if((typeof state).search('boolean|number')) { state = !visible; }
 
-			// Return if element is already in correct state
-			if(!tooltip.is(':animated') && visible === state && sameTarget) { return self; }
+			// Return if element is already in correct state or user returned false in tooltipshow/tooltiphide
+			identicalState = !tooltip.is(':animated') && visible === state && sameTarget;
+			allow = !identicalState ? !!self._triggerEvent(type, [90]) : NULL;
 
-			// tooltipshow/tooltiphide events
-			if(!self._triggerEvent(type, [90]) && !self.destroyed) { return self; }
+			// If the user didn't stop the method prematurely and we're showing the tooltip, focus it
+			if(allow !== FALSE && state) { self.focus(event); }
+
+			// If the state hasn't changed or the user stopped it, return early
+			if(!allow || identicalState) { return self; }
 
 			// Set ARIA hidden status attribute
 			$.attr(tooltip[0], 'aria-hidden', !!!state);
@@ -934,9 +938,6 @@ function QTip(target, options, id, attr)
 			if(state) {
 				// Store show origin coordinates
 				cache.origin = $.extend({}, MOUSE[self.id]);
-
-				// Focus the tooltip
-				self.focus(event);
 
 				// Update tooltip content & title if it's a dynamic function
 				if($.isFunction(contentOptions.text)) { updateContent(contentOptions.text, FALSE); }
