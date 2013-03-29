@@ -20,12 +20,13 @@ function sanitizeOptions(opts)
 		}
 
 		if('title' in opts.content) {
-			if(invalid(opts.content.title)) {
-				opts.content.title = { text: opts.content.title };
+			if(!invalid(opts.content.title)) {
+				opts.content.button = opts.content.title.button;
+				opts.content.title = opts.content.title.text;
 			}
 
-			if(invalidContent(opts.content.title.text || FALSE)) {
-				opts.content.title.text = FALSE;
+			if(invalidContent(opts.content.title || FALSE)) {
+				opts.content.title = FALSE;
 			}
 		}
 	}
@@ -144,7 +145,7 @@ function QTip(target, options, id, attr)
 
 	function createButton()
 	{
-		var button = options.content.title.button,
+		var button = options.content.button,
 			isString = typeof button === 'string',
 			close = isString ? button : 'Close tooltip';
 
@@ -206,7 +207,7 @@ function QTip(target, options, id, attr)
 		});
 
 		// Create button if enabled
-		if(options.content.title.button) { createButton(); }
+		if(options.content.button) { createButton(); }
 	}
 
 	function updateButton(button)
@@ -628,7 +629,7 @@ function QTip(target, options, id, attr)
 		// Content checks
 		'^content.text$': function(obj, o, v) { updateContent(options.content.text); },
 		'^content.deferred$': function(obj, o, v) { deferredContent(options.content.deferred); },
-		'^content.title.text$': function(obj, o, v) {
+		'^content.title$': function(obj, o, v) {
 			// Remove title if content is null
 			if(!v) { return removeTitle(); }
 
@@ -636,7 +637,10 @@ function QTip(target, options, id, attr)
 			if(!elements.title && v) { createTitle(); }
 			updateTitle(v);
 		},
-		'^content.title.button$': function(obj, o, v){ updateButton(v); },
+		'^content.button$': function(obj, o, v){ updateButton(v); },
+		'^content.title.(text|button)$': function(obj, o, v) { // Backwards title.text/button compat
+			self.set('content.'+(o === 'button' ? o : 'title'), v);
+		}, 
 
 		// Position checks
 		'^position.(my|at)$': function(obj, o, v){
@@ -703,6 +707,7 @@ function QTip(target, options, id, attr)
 
 			var text = options.content.text,
 				title = options.content.title,
+				button = options.content.button,
 				posOptions = options.position;
 
 			// Add ARIA attributes to target
@@ -740,15 +745,15 @@ function QTip(target, options, id, attr)
 			isPositioning = 1;
 
 			// Create title...
-			if(title.text) {
+			if(title) {
 				createTitle();
 
 				// Update title only if its not a callback (called in toggle if so)
-				if(!$.isFunction(title.text)) { updateTitle(title.text, FALSE); }
+				if(!$.isFunction(title)) { updateTitle(title, FALSE); }
 			}
 
 			// Create button
-			else if(title.button) { createButton(); }
+			if(button) { createButton(); }
 
 			// Set proper rendered flag and update content if not a callback function (called in toggle)
 			if(!$.isFunction(text) || text.then) { updateContent(text, FALSE); }
@@ -935,7 +940,7 @@ function QTip(target, options, id, attr)
 
 				// Update tooltip content & title if it's a dynamic function
 				if($.isFunction(contentOptions.text)) { updateContent(contentOptions.text, FALSE); }
-				if($.isFunction(contentOptions.title.text)) { updateTitle(contentOptions.title.text, FALSE); }
+				if($.isFunction(contentOptions.title)) { updateTitle(contentOptions.title, FALSE); }
 
 				// Cache mousemove events for positioning purposes (if not already tracking)
 				if(!trackingBound && posOptions.target === 'mouse' && posOptions.adjust.mouse) {
@@ -1759,10 +1764,8 @@ QTIP.defaults = {
 		text: TRUE,
 		attr: 'title',
 		deferred: FALSE,
-		title: {
-			text: FALSE,
-			button: FALSE
-		}
+		title: FALSE,
+		button: FALSE
 	},
 	position: {
 		my: 'top left',
