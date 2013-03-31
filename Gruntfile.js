@@ -159,9 +159,7 @@ module.exports = function(grunt) {
 	});
 
 	// Parse command line options
-	grunt.registerTask('init', 'Default build', function() {
-		if(grunt.config('concat.dist.src')) { return; } // Only do it once
-
+	grunt.registerTask('init', 'Initialise build configuration.', function(basic) {
 		// Grab command-line options, using valid defaults if not given
 		var done = this.async(),
 			stable = grunt.option('stable') === true,
@@ -174,11 +172,14 @@ module.exports = function(grunt) {
 			css = ['<banner:meta.banners.full>', '<%=dirs.src%>/core.css'],
 			dist = grunt.option('dist') || 'dist';
 
+		// If basic... go into dist/basic
+		if(basic) { dist += '/basic'; }
+
 		// Parse 'dist' option (decides which directory to build into)
 		grunt.config('dirs.dist', dist);
 
 		// Parse 'styles' option (decides which stylesheets are included)
-		if(grunt.option('styles') !== 0) {
+		if(!basic && grunt.option('styles') !== 0) {
 			styles.forEach(function(style, i) {
 				if( (valid = grunt.config('styles.'+style)) ) {
 					css.push(valid);
@@ -189,7 +190,7 @@ module.exports = function(grunt) {
 		else { styles = ['None']; }
 
 		// Parse 'plugins' option (decides which plugins are included)
-		if(grunt.option('plugins') !== 0) {
+		if(!basic && grunt.option('plugins') !== 0) {
 			plugins.forEach(function(plugin, i) {
 				if( (valid = grunt.config('plugins.'+plugin)) ) {
 					if(valid.js) { js.push(valid.js); }
@@ -248,8 +249,12 @@ module.exports = function(grunt) {
 		});
 	});
 
-	// Setup all other tasks
-	grunt.registerTask('css', ['init', 'clean', 'csslint', 'concat:css', 'cssmin:dist', 'replace']);
-	grunt.registerTask('default', ['init', 'clean', 'concat:dist', 'concat:distcss', 'uglify', 'cssmin', 'concat:libs', 'replace']);
-	grunt.registerTask('dev', ['init', 'clean', 'jshint', 'csslint', 'concat:dist', 'concat:css', 'uglify', 'cssmin', 'concat:libs', 'replace']);
+	var defaultTasks = ['concat:dist', 'concat:css', 'uglify', 'cssmin', 'concat:libs', 'replace'];
+
+	// Setup tasks
+	grunt.registerTask('basic', ['init:basic', 'clean'].concat(defaultTasks));
+	grunt.registerTask('default', ['init', 'clean'].concat(defaultTasks));
+	grunt.registerTask('dev', ['init', 'clean', 'jshint', 'csslint'].concat(defaultTasks));
+	grunt.registerTask('css', ['init', 'clean', 'csslint', 'concat:css', 'cssmin', 'replace']);
+	grunt.registerTask('all', ['init', 'clean'].concat(defaultTasks).concat(['init:basic']).concat(defaultTasks));
 };
