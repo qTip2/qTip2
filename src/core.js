@@ -1,7 +1,7 @@
 // Option object sanitizer
 function sanitizeOptions(opts)
 {
-	var invalid = function(a) { return a === NULL || 'object' !== typeof a; },
+	var invalid = function(a) { return a === NULL || !$.isPlainObject(a); },
 		invalidContent = function(c) { return !$.isFunction(c) && ((!c && !c.attr) || c.length < 1 || ('object' === typeof c && !c.jquery && !c.then)); };
 
 	if(!opts || 'object' !== typeof opts) { return FALSE; }
@@ -11,7 +11,7 @@ function sanitizeOptions(opts)
 	}
 
 	if('content' in opts) {
-		if(invalid(opts.content) || opts.content.jquery) {
+		if(invalid(opts.content) || opts.content.jquery || opts.content.done) {
 			opts.content = { text: opts.content };
 		}
 
@@ -232,6 +232,13 @@ function QTip(target, options, id, attr)
 		// Make sure tooltip is rendered and if not, return
 		if(!self.rendered || !content) { return FALSE; }
 
+		// Handle deferred content
+		if($.isFunction(content.done)) {
+			return content.done(function(c) {
+				return updateContent(c, reposition, FALSE);
+			});
+		}
+
 		// Use function to parse content
 		if($.isFunction(content)) {
 			content = content.call(target, cache.event, self);
@@ -254,16 +261,7 @@ function QTip(target, options, id, attr)
 		}
 	}
 
-	function deferredContent(deferred)
-	{
-		if(deferred && $.isFunction(deferred.done)) {
-			deferred.done(function(c) {
-				updateContent(c, null, FALSE);
-			});
-		}
-	}
-
-	function updateContent(content, reposition, checkDeferred)
+	function updateContent(content, reposition)
 	{
 		var elem = elements.content;
 
@@ -276,8 +274,10 @@ function QTip(target, options, id, attr)
 		}
 
 		// Handle deferred content
-		if(checkDeferred !== FALSE) {
-			deferredContent(options.content.deferred);
+		if($.isFunction(content.done)) {
+			return content.done(function(c) {
+				return updateContent(c, reposition, FALSE);
+			});
 		}
 
 		// Append new content if its a DOM array and show it if hidden
@@ -288,74 +288,8 @@ function QTip(target, options, id, attr)
 		// Content is a regular string, insert the new content
 		else { elem.html(content); }
 
-		/* 
-		 * New images loaded detection method slimmed down from David DeSandro's plugin
-		 *    GitHub: https://github.com/desandro/imagesloaded/
-		 */
-		function imagesLoaded(next) {
-			var elem = $(this),
-				images = elem.find('img').add( elem.filter('img') ),
-				loaded = [];
-
-			function imgLoaded( img ) {
-				// don't proceed if BLANKIMG image, or image is already loaded
-				if(img.src === BLANKIMG || $.inArray(img, loaded) !== -1) { return; }
-
-				// store element in loaded images array
-				loaded.push(img);
-
-				// cache image and its state for future calls
-				$.data(img, 'imagesLoaded', { src: img.src });
-
-				// call doneLoading and clean listeners if all images are loaded
-				if(images.length === loaded.length) {
-					setTimeout(next);
-					images.unbind('.imagesLoaded');
-				}
-			}
-
-			// No images? Proceed with next
-			if(!images.length) { return next(); }
-
-			images.bind('load.imagesLoaded error.imagesLoaded', function(event) {
-				imgLoaded(event.target);
-			})
-			.each(function(i, el) {
-				var src = el.src, cached = $.data(el, 'imagesLoaded');
-
-				/*
-				 * Find out if this image has been already checked for status, and
-				 * if it was and src has not changed, call imgLoaded on it. Also,
-				 * if complete is true and browser supports natural sizes, try to 
-				 * check for image status manually
-				 */
-				if((cached && cached.src === src) || (el.complete && el.naturalWidth)) {
-					imgLoaded(el);
-				}
-
-				/*
-				 * Cached images don't fire load sometimes, so we reset src, but only when
-				 * dealing with IE, or image is complete (loaded) and failed manual check
-				 * 
-				 * Webkit hack from http://groups.google.com/group/jquery-dev/browse_thread/thread/eee6ab7b2da50e1f
-				 */
-				else if(el.readyState || el.complete) {
-					el.src = BLANKIMG; el.src = src;
-				}
-			});
-		}
-
-		/*
-		 * If we're still rendering... insert into 'fx' queue our image dimension
-		 * checker which will halt the showing of the tooltip until image dimensions
-		 * can be detected properly.
-		 */
-		if(self.rendered < 0) { tooltip.queue('fx', imagesLoaded); }
-
-		// We're fully rendered, so reset isDrawing flag and proceed without queue delay
-		else { isDrawing = 0; imagesLoaded.call(tooltip[0], $.noop); }
-
-		return self;
+		// Ensure images have loaded...
+		return elem.imagesLoaded().promise();
 	}
 
 	function assignEvents()
@@ -628,7 +562,6 @@ function QTip(target, options, id, attr)
 
 		// Content checks
 		'^content.text$': function(obj, o, v) { updateContent(options.content.text); },
-		'^content.deferred$': function(obj, o, v) { deferredContent(options.content.deferred); },
 		'^content.title$': function(obj, o, v) {
 			// Remove title if content is null
 			if(!v) { return removeTitle(); }
@@ -708,7 +641,8 @@ function QTip(target, options, id, attr)
 			var text = options.content.text,
 				title = options.content.title,
 				button = options.content.button,
-				posOptions = options.position;
+				posOptions = options.position,
+				deferreds = [];
 
 			// Add ARIA attributes to target
 			$.attr(target[0], 'aria-describedby', tooltipID);
@@ -749,14 +683,18 @@ function QTip(target, options, id, attr)
 				createTitle();
 
 				// Update title only if its not a callback (called in toggle if so)
-				if(!$.isFunction(title)) { updateTitle(title, FALSE); }
+				if(!$.isFunction(title)) {
+					deferreds.push( updateTitle(title, FALSE) );
+				}
 			}
 
 			// Create button
 			if(button) { createButton(); }
 
 			// Set proper rendered flag and update content if not a callback function (called in toggle)
-			if(!$.isFunction(text) || text.then) { updateContent(text, FALSE); }
+			if(!$.isFunction(text)) {
+				deferreds.push( updateContent(text, FALSE) );
+			}
 			self.rendered = TRUE;
 
 			// Setup widget classes
@@ -777,12 +715,7 @@ function QTip(target, options, id, attr)
 			// Assign events
 			assignEvents();
 
-			/* Queue this part of the render process in our fx queue so we can
-			 * load images before the tooltip renders fully.
-			 *
-			 * See: updateContent method
-			 */
-			tooltip.queue('fx', function(next) {
+			$.when.apply($, deferreds).then(function() {
 				// tooltiprender event
 				self._triggerEvent('render');
 
@@ -793,8 +726,6 @@ function QTip(target, options, id, attr)
 				if(options.show.ready || show) {
 					self.toggle(TRUE, cache.event, FALSE);
 				}
-
-				next(); // Move on to next method in queue
 			});
 
 			return self;
@@ -1750,7 +1681,7 @@ if(!$.ui) {
 }
 
 // Set global qTip properties
-QTIP.version = '@VERSION';
+QTIP.version = '@@VERSION';
 QTIP.nextid = 0;
 QTIP.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleave mouseenter'.split(' ');
 QTIP.zindex = 15000;

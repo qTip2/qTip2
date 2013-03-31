@@ -1,0 +1,3 @@
+[submodule "libs/imagesloaded"]
+	path = libs/imagesloaded
+	url = git://github.com/desandro/imagesloaded.git

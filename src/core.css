@@ -1,4 +1,3 @@
-/* Core qTip styles */
 .qtip{
 	position: absolute;
 	left: -28000px;
@@ -62,7 +61,6 @@
 			display: block;
 			text-indent: -1000em;
 			direction: ltr;
-			vertical-align: middle;
 		}
 
 		.qtip-icon, .qtip-icon .ui-icon{
@@ -84,7 +82,6 @@
 				color: inherit;
 				background: transparent none no-repeat -100em -100em;
 			}
-
 
 /* Applied to 'focused' tooltips e.g. most recently displayed/interacted with */
 .qtip-focus{}

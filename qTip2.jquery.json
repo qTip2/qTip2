@@ -13,15 +13,15 @@
   "licenses": [
     {
       "type": "MIT",
-      "url": "http://craigsworks.com/projects/qtip2/blob/master/LICENSE-MIT"
+      "url": "http://github.com/Craga89/qTip2/blob/master/LICENSE-MIT"
     },
     {
       "type": "GPL",
-      "url": "http://craigsworks.com/projects/qtip2/blob/master/LICENSE-GPL"
+      "url": "http://github.com/Craga89/qTip2/blob/master/LICENSE-GPL"
     }
   ],
   "dependencies": {
-    "jquery": ">=1.4.2"
+    "jquery": ">=1.5.0"
   },
   "keywords": [
     "tooltip",
