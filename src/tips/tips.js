@@ -66,15 +66,15 @@ function calculateSize(size, corner, border) {
 		bigHyp, ratio, result,
 
 	smallHyp = Math.sqrt( pow(base, 2) + pow(height, 2) ),
-	
 	hyp = [ (border / base) * smallHyp, (border / height) * smallHyp ];
+	
 	hyp[2] = Math.sqrt( pow(hyp[0], 2) - pow(border, 2) );
 	hyp[3] = Math.sqrt( pow(hyp[1], 2) - pow(border, 2) );
 
 	bigHyp = smallHyp + hyp[2] + hyp[3] + (isCenter ? 0 : hyp[0]);
 	ratio = bigHyp / smallHyp;
 
-	result = [ round(ratio * height), round(ratio * width) ];
+	result = [ round(ratio * width), round(ratio * height) ];
 	return y ? result : result.reverse();
 }
 
