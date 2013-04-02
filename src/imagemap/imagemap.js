@@ -16,7 +16,13 @@ PLUGINS.imagemap = function(api, area, corner, adjustMethod)
 				bottom: 0, left: 1e10
 			}
 		},
-		i = 0, next = 0, dimensions;
+		circleMap = {
+			tc: 3 / 2, tr: 7 / 4, tl: 5 / 4, 
+			bc: 1 / 2, br: 1 / 4, bl: 3 / 4, 
+			rc: 2, lc: 1, c: 0
+		},
+		i = 0, next = 0,
+		dimensions, c, cx, cy;
 
 	// POLY area coordinate calculator
 	//	Special thanks to Ed Cradock for helping out with this.
@@ -103,14 +109,20 @@ PLUGINS.imagemap = function(api, area, corner, adjustMethod)
 		break;
 
 		case 'circle':
+			c = circleMap[ corner.abbrev() ];
+			cx = coords[2] * Math.cos( c * Math.PI );
+			cy = coords[2] * Math.sin( c * Math.PI );
+
 			result = {
-				width: coords[2] * 2,
-				height: coords[2] * 2,
+				width: (coords[2] * 2) - Math.abs(cx),
+				height: (coords[2] * 2) - Math.abs(cy),
 				position: {
-					left: coords[0] - coords[2],
-					top: coords[1] - coords[2]
-				}
+					left: coords[0] + cx,
+					top: coords[1] + cy
+				},
+				adjustable: FALSE
 			};
+
 		break;
 
 		case 'poly':
@@ -147,7 +159,7 @@ PLUGINS.imagemap = function(api, area, corner, adjustMethod)
 				result = cache[corner+coordsString];
 			}
 
-			result.width = result.height = 0;
+			result.adjustable = FALSE;
 		break;
 	}
 

@@ -579,7 +579,7 @@ function QTip(target, options, id, attr)
 		'^position.(my|at)$': function(obj, o, v){
 			// Parse new corner value into Corner objecct
 			if('string' === typeof v) {
-				obj[o] = new PLUGINS.Corner(v);
+				obj[o] = new PLUGINS.Corner(v, o === 'at');
 			}
 		},
 		'^position.container$': function(obj, o, v){
@@ -1040,7 +1040,7 @@ function QTip(target, options, id, attr)
 				visible = tooltip[0].offsetWidth > 0,
 				isScroll = event && event.type === 'scroll',
 				win = $(window),
-				adjusted, offset, mouse;
+				pluginCalculations, offset, mouse;
 
 			// Check if absolute position was passed
 			if($.isArray(target) && target.length === 2) {
@@ -1103,12 +1103,12 @@ function QTip(target, options, id, attr)
 
 				// Check if the target is an <AREA> element
 				else if(PLUGINS.imagemap && target.is('area')) {
-					adjusted = PLUGINS.imagemap(self, target, at, PLUGINS.viewport ? method : FALSE);
+					pluginCalculations = PLUGINS.imagemap(self, target, at, PLUGINS.viewport ? method : FALSE);
 				}
 
 				// Check if the target is an SVG element
 				else if(PLUGINS.svg && target[0].ownerSVGElement) {
-					adjusted = PLUGINS.svg(self, target, at, PLUGINS.viewport ? method : FALSE);
+					pluginCalculations = PLUGINS.svg(self, target, at, PLUGINS.viewport ? method : FALSE);
 				}
 
 				// Otherwise use regular jQuery methods
@@ -1119,13 +1119,12 @@ function QTip(target, options, id, attr)
 				}
 
 				// Parse returned plugin values into proper variables
-				if(adjusted) {
-					targetWidth = adjusted.width;
-					targetHeight = adjusted.height;
-					offset = adjusted.offset;
-					position = adjusted.position;
+				if(pluginCalculations) {
+					targetWidth = pluginCalculations.width;
+					targetHeight = pluginCalculations.height;
+					offset = pluginCalculations.offset;
+					position = pluginCalculations.position;
 				}
-
 
 				// Adjust position to take into account offset parents
 				position = PLUGINS.offset(target, position, container);
@@ -1140,8 +1139,10 @@ function QTip(target, options, id, attr)
 				}
 
 				// Adjust position relative to target
-				position.left += at.x === RIGHT ? targetWidth : at.x === CENTER ? targetWidth / 2 : 0;
-				position.top += at.y === BOTTOM ? targetHeight : at.y === CENTER ? targetHeight / 2 : 0;
+				if(!pluginCalculations || (pluginCalculations && pluginCalculations.adjustable !== FALSE)) {
+					position.left += at.x === RIGHT ? targetWidth : at.x === CENTER ? targetWidth / 2 : 0;
+					position.top += at.y === BOTTOM ? targetHeight : at.y === CENTER ? targetHeight / 2 : 0;
+				}
 			}
 
 			// Adjust position relative to tooltip
@@ -1345,7 +1346,7 @@ function init(elem, id, opts)
 	posOptions.container = posOptions.container.eq(0);
 
 	// Convert position corner values into x and y strings
-	posOptions.at = new PLUGINS.Corner(posOptions.at);
+	posOptions.at = new PLUGINS.Corner(posOptions.at, TRUE);
 	posOptions.my = new PLUGINS.Corner(posOptions.my);
 
 	// Destroy previous tooltip if overwrite is enabled, or skip element if not
@@ -1522,17 +1523,20 @@ QTIP.bind = function(opts, event)
 // Setup base plugins
 PLUGINS = QTIP.plugins = {
 	// Corner object parser
-	Corner: function(corner) {
+	Corner: function(corner, forceY) {
 		corner = ('' + corner).replace(/([A-Z])/, ' $1').replace(/middle/gi, CENTER).toLowerCase();
 		this.x = (corner.match(/left|right/i) || corner.match(/center/) || ['inherit'])[0].toLowerCase();
 		this.y = (corner.match(/top|bottom|center/i) || ['inherit'])[0].toLowerCase();
+		this._forceY = !!forceY;
 
 		var f = corner.charAt(0); this.precedance = (f === 't' || f === 'b' ? Y : X);
 
-		this.string = function() { return this.precedance === Y ? this.y+this.x : this.x+this.y; };
+		this.string = function() {
+			return this.precedance === Y || (this._forceY && this.y !== 'center') ? this.y+this.x : this.x+this.y;
+		};
 		this.abbrev = function() {
 			var x = this.x.substr(0,1), y = this.y.substr(0,1);
-			return x === y ? x : this.precedance === Y ? y + x : x + y;
+			return x === y ? x : this.precedance === Y || (this._forceY && y !== 'c') ? y + x : x + y;
 		};
 
 		this.invertx = function(center) { this.x = this.x === LEFT ? RIGHT : this.x === RIGHT ? LEFT : center || this.x; };
