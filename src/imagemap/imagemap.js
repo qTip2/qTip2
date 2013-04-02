@@ -64,8 +64,6 @@ PLUGINS.imagemap = function(api, area, corner, adjustMethod)
 		return { left: coords[0][0], top: coords[0][1] };
 	}
 
-	$('<div style="position:absolute; width: 1px; height: 1px; background: red;" />').css( imageOffset ).appendTo(document.body);
-
 	// Make sure we account for padding and borders on the image
 	imageOffset.left += Math.ceil((image.outerWidth() - image.width()) / 2);
 	imageOffset.top += Math.ceil((image.outerHeight() - image.height()) / 2);

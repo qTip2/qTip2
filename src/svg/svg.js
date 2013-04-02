@@ -11,6 +11,8 @@ PLUGINS.svg = function(api, svg, corner, adjustMethod)
 	// Ascend the parentNode chain until we find an element with getBBox()
 	while(!elem.getBBox) { elem = elem.parentNode; }
 
+	console.log(elem.nodeName);
+
 	// Check for a valid bounding box method
 	if (elem.getBBox && elem.parentNode) {
 		box = elem.getBBox();
@@ -29,6 +31,8 @@ PLUGINS.svg = function(api, svg, corner, adjustMethod)
 		tPoint = point.matrixTransform(mtx);
 		result.position.left = tPoint.x;
 		result.position.top = tPoint.y;
+
+
 
 		// Adjust width and height
 		point.x += box.width;
