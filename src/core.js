@@ -1549,36 +1549,43 @@ PLUGINS = QTIP.plugins = {
 
 	// Custom (more correct for qTip!) offset calculator
 	offset: function(elem, pos, container) {
-		var docBody = elem.closest('body'),
-			quirks = PLUGINS.ie && document.compatMode !== 'CSS1Compat',
-			parent = container, scrolled,
-			coffset, overflow;
+		if(!container[0]) { return pos; }
+
+		var ownerDocument = $(elem[0].ownerDocument),
+			quirks = !!PLUGINS.ie && document.compatMode !== 'CSS1Compat',
+			parent = container[0],
+			scrolled, position, parentOffset, overflow;
 
 		function scroll(e, i) {
 			pos.left += i * e.scrollLeft();
 			pos.top += i * e.scrollTop();
 		}
 
-		if(parent) {
-			// Compensate for non-static containers offset
-			do {
-				if(parent.css('position') !== 'static') {
-					coffset = parent.position();
-
-					// Account for element positioning, borders and margins
-					pos.left -= coffset.left + (parseInt(parent.css('borderLeftWidth'), 10) || 0) + (parseInt(parent.css('marginLeft'), 10) || 0);
-					pos.top -= coffset.top + (parseInt(parent.css('borderTopWidth'), 10) || 0) + (parseInt(parent.css('marginTop'), 10) || 0);
-
-					// If this is the first parent element with an overflow of "scroll" or "auto", store it
-					if(!scrolled && (overflow = parent.css('overflow')) !== 'hidden' && overflow !== 'visible') { scrolled = parent; }
+		// Compensate for non-static containers offset
+		do {
+			if((position = $.css(parent, 'position')) !== 'static') {
+				if(position === 'fixed') {
+					parentOffset = parent.getBoundingClientRect();
+					scroll(ownerDocument, -1);
 				}
-			}
-			while((parent = $(parent[0].offsetParent)).length);
+				else {
+					parentOffset = $(parent).position();
+					parentOffset.left += (parseFloat($.css(parent, 'borderLeftWidth')) || 0);
+					parentOffset.top += (parseFloat($.css(parent, 'borderTopWidth')) || 0);
+				}
 
-			// Compensate for containers scroll if it also has an offsetParent (or in IE quirks mode)
-			if(scrolled && scrolled[0] !== docBody[0] || quirks) {
-				scroll( scrolled || docBody, 1 );
+				pos.left -= parentOffset.left + (parseFloat($.css(parent, 'marginLeft')) || 0);
+				pos.top -= parentOffset.top + (parseFloat($.css(parent, 'marginTop')) || 0);
+
+				// If this is the first parent element with an overflow of "scroll" or "auto", store it
+				if(!scrolled && (overflow = $.css(parent, 'overflow')) !== 'hidden' && overflow !== 'visible') { scrolled = parent; }
 			}
+		}
+		while((parent = parent.offsetParent));
+
+		// Compensate for containers scroll if it also has an offsetParent (or in IE quirks mode)
+		if(scrolled && scrolled !== ownerDocument[0] || quirks) {
+			scroll(scrolled, 1);
 		}
 
 		return pos;
