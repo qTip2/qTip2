@@ -64,6 +64,8 @@ PLUGINS.imagemap = function(api, area, corner, adjustMethod)
 		return { left: coords[0][0], top: coords[0][1] };
 	}
 
+	$('<div style="position:absolute; width: 1px; height: 1px; background: red;" />').css( imageOffset ).appendTo(document.body);
+
 	// Make sure we account for padding and borders on the image
 	imageOffset.left += Math.ceil((image.outerWidth() - image.width()) / 2);
 	imageOffset.top += Math.ceil((image.outerHeight() - image.height()) / 2);
@@ -84,7 +86,7 @@ PLUGINS.imagemap = function(api, area, corner, adjustMethod)
 	}
 	else {
 		i = -1; while(i++ < baseCoords.length) {
-			coords.push( parseInt(baseCoords[i], 10) );
+			(next = parseInt(baseCoords[i], 10)) && coords.push(next);
 		}
 	}
 
@@ -104,9 +106,12 @@ PLUGINS.imagemap = function(api, area, corner, adjustMethod)
 
 		case 'circle':
 			result = {
-				width: coords[2] + 2,
-				height: coords[2] + 2,
-				position: { left: coords[0], top: coords[1] }
+				width: coords[2] * 2,
+				height: coords[2] * 2,
+				position: {
+					left: coords[0] - coords[2],
+					top: coords[1] - coords[2]
+				}
 			};
 		break;
 
