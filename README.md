@@ -26,9 +26,8 @@ you choose what [plugins][plugins] you'd like included in your download, as well
 Otherwise, if you prefer to use a [CDN] [wikipedia-cdn], you can now find qTip<sup>2</sup> available on [cdnjs] [cdnjs].
 
 ### Bleeding edge
-You can grab the latest and greatest qTip<sup>2</sup> nightly from the [dist][dist] directory and get started quickly.
-Download the [production version][min] or the [development version][max].
-
+You can grab the latest and greatest qTip<sup>2</sup> nightly from the [here][dist] and get started quickly.
+Download the [minified version][min] or the [non-minified version][max].
 
 ### Custom builds
 You can also build your own qTip<sup>2</sup> script that includes select [plugins][plugins] and [styles][style] to reduce the overall file size and remove features
@@ -50,10 +49,10 @@ Copyright (c) 2012 Craig Michael Thompson. Licensed under the MIT, GPL licenses.
 ## Special thanks
 Big shout-out to ["Cowboy" Ben Alman][cowboy] for providing the [grunt][grunt] build system used by qTip<sup>2</sup>
 
-[min]: https://raw.github.com/Craga89/qtip2/master/dist/jquery.qtip.min.js
-[max]: https://raw.github.com/Craga89/qtip2/master/dist/jquery.qtip.js
+[min]: http://qtip2.com/v/nightly/jquery.qtip.min.js
+[max]: http://qtip2.com/v/nightly/jquery.qtip.js
 
-[dist]: /Craga89/qTip2/tree/master/dist
+[dist]: http://qtip2.com/v/nightly
 [wiki]: /Craga89/qTip2/wiki
 [build]: /Craga89/qTip2/wiki/custom-build
 [style]: /Craga89/qTip2/wiki/style
