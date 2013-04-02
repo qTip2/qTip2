@@ -53,13 +53,13 @@ Big shout-out to ["Cowboy" Ben Alman][cowboy] for providing the [grunt][grunt] b
 [min]: https://raw.github.com/Craga89/qtip2/master/dist/jquery.qtip.min.js
 [max]: https://raw.github.com/Craga89/qtip2/master/dist/jquery.qtip.js
 
-[dist]: /Craga89/qTip2/tree/master/dist
-[wiki]: /Craga89/qTip2/wiki
-[build]: /Craga89/qTip2/wiki/custom-build
-[style]: /Craga89/qTip2/wiki/style
-[plugins]: /Craga89/qTip2/wiki#plugins
-[tips]: /Craga89/qTip2/wiki/tips
-[imgmap]: /Craga89/qTip2/wiki/imagemap
+[dist]: tree/master/dist
+[wiki]: https://github.com/Craga89/qTip2/wiki/
+[build]: https://github.com/Craga89/qTip2/wiki/custom-build
+[style]: https://github.com/Craga89/qTip2/wiki/style
+[plugins]: https://github.com/Craga89/qTip2/wiki/#plugins
+[tips]: https://github.com/Craga89/qTip2/wiki/tips
+[imgmap]: https://github.com/Craga89/qTip2/wiki/imagemap
 
 [site]: http://craigsworks.com/projects/qtip2
 [download]: http://craigsworks.com/projects/qtip2/download
