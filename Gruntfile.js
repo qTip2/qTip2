@@ -44,7 +44,6 @@ module.exports = function(grunt) {
 			css3: '<%=dirs.src%>/css3.css'
 		},
 		plugins: {
-			ajax: { js: '<%=dirs.src%>/ajax/ajax.js' },
 			tips: { js: '<%=dirs.src%>/tips/tips.js', css: '<%=dirs.src%>/tips/tips.css' },
 			modal: { js: '<%=dirs.src%>/modal/modal.js', css: '<%=dirs.src%>/modal/modal.css' },
 			viewport: { js: '<%=dirs.src%>/position/viewport.js' },

@@ -2,7 +2,8 @@
 function sanitizeOptions(opts)
 {
 	var invalid = function(a) { return a === NULL || !$.isPlainObject(a); },
-		invalidContent = function(c) { return !$.isFunction(c) && ((!c && !c.attr) || c.length < 1 || ('object' === typeof c && !c.jquery && !c.then)); };
+		invalidContent = function(c) { return !$.isFunction(c) && ((!c && !c.attr) || c.length < 1 || ('object' === typeof c && !c.jquery && !c.then)); },
+		once;
 
 	if(!opts || 'object' !== typeof opts) { return FALSE; }
 
@@ -19,18 +20,22 @@ function sanitizeOptions(opts)
 			opts.content.text = FALSE;
 		}
 
+		// DEPRECATED - Old content.ajax plugin functionality
+		// Converts it into the proper Deferred syntax
 		if('ajax' in opts.content) {
+			once = opts.content.ajax.once !== FALSE;
 			opts.content.text = function(event, api) {
-				$.ajax(opts.content.ajax)
+				var deferred = $.ajax(opts.content.ajax)
 					.then(function(content) {
-						api.set('content.text', content);
+						if(once) { api.set('content.text', content); }
+						return content;
 					},
 					function(xhr, status, error) {
 						if(api.destroyed || xhr.status === 0) { return; }
 						api.set('content.text', status + ': ' + error);
 					});
 
-				return 'Loading...';
+				return !once ? deferred : 'Loading...';
 			};
 		}
 
