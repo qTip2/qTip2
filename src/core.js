@@ -1,81 +1,3 @@
-// Option object sanitizer
-function sanitizeOptions(opts)
-{
-	var invalid = function(a) { return a === NULL || !$.isPlainObject(a); },
-		invalidContent = function(c) { return !$.isFunction(c) && ((!c && !c.attr) || c.length < 1 || ('object' === typeof c && !c.jquery && !c.then)); },
-		once;
-
-	if(!opts || 'object' !== typeof opts) { return FALSE; }
-
-	if(invalid(opts.metadata)) {
-		opts.metadata = { type: opts.metadata };
-	}
-
-	if('content' in opts) {
-		if(invalid(opts.content) || opts.content.jquery || opts.content.done) {
-			opts.content = { text: opts.content };
-		}
-
-		if(invalidContent(opts.content.text || FALSE)) {
-			opts.content.text = FALSE;
-		}
-
-		// DEPRECATED - Old content.ajax plugin functionality
-		// Converts it into the proper Deferred syntax
-		if('ajax' in opts.content) {
-			once = opts.content.ajax.once !== FALSE;
-			opts.content.text = function(event, api) {
-				var deferred = $.ajax(opts.content.ajax)
-					.then(function(content) {
-						if(once) { api.set('content.text', content); }
-						return content;
-					},
-					function(xhr, status, error) {
-						if(api.destroyed || xhr.status === 0) { return; }
-						api.set('content.text', status + ': ' + error);
-					});
-
-				return !once ? deferred : 'Loading...';
-			};
-		}
-
-		if('title' in opts.content) {
-			if(!invalid(opts.content.title)) {
-				opts.content.button = opts.content.title.button;
-				opts.content.title = opts.content.title.text;
-			}
-
-			if(invalidContent(opts.content.title || FALSE)) {
-				opts.content.title = FALSE;
-			}
-		}
-	}
-
-	if('position' in opts && invalid(opts.position)) {
-		opts.position = { my: opts.position, at: opts.position };
-	}
-
-	if('show' in opts && invalid(opts.show)) {
-		opts.show = opts.show.jquery ? { target: opts.show } : 
-			opts.show === TRUE ? { ready: TRUE } : { event: opts.show };
-	}
-
-	if('hide' in opts && invalid(opts.hide)) {
-		opts.hide = opts.hide.jquery ? { target: opts.hide } : { event: opts.hide };
-	}
-
-	if('style' in opts && invalid(opts.style)) {
-		opts.style = { classes: opts.style };
-	}
-
-	// Sanitize plugin options
-	$.each(PLUGINS, function() {
-		if(this.sanitize) { this.sanitize(opts); }
-	});
-
-	return opts;
-}
-
 /*
 * Core plugin implementation
 */
@@ -125,10 +47,6 @@ function QTip(target, options, id, attr)
 		return [obj || options, levels.pop()];
 	}
 
-	function createWidgetClass(cls)
-	{
-		return widget.concat('').join(cls ? '-'+cls+' ' : ' ');
-	}
 
 	function setWidget()
 	{
