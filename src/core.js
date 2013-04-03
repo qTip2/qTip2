@@ -232,16 +232,16 @@ function QTip(target, options, id, attr)
 		// Make sure tooltip is rendered and if not, return
 		if(!self.rendered || !content) { return FALSE; }
 
+		// Use function to parse content
+		if($.isFunction(content)) {
+			content = content.call(target, cache.event, self);
+		}
+
 		// Handle deferred content
 		if($.isFunction(content.done)) {
 			return content.done(function(c) {
 				return updateContent(c, reposition, FALSE);
 			});
-		}
-
-		// Use function to parse content
-		if($.isFunction(content)) {
-			content = content.call(target, cache.event, self);
 		}
 
 		// Remove title if callback returns false or null/undefined (but not '')
