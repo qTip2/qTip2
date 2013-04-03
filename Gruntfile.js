@@ -44,12 +44,12 @@ module.exports = function(grunt) {
 			css3: '<%=dirs.src%>/css3.css'
 		},
 		plugins: {
-			svg: { js: '<%=dirs.src%>/svg/svg.js' },
 			ajax: { js: '<%=dirs.src%>/ajax/ajax.js' },
 			tips: { js: '<%=dirs.src%>/tips/tips.js', css: '<%=dirs.src%>/tips/tips.css' },
 			modal: { js: '<%=dirs.src%>/modal/modal.js', css: '<%=dirs.src%>/modal/modal.css' },
-			viewport: { js: '<%=dirs.src%>/viewport/viewport.js' },
-			imagemap: { js: '<%=dirs.src%>/imagemap/imagemap.js' },
+			viewport: { js: '<%=dirs.src%>/position/viewport.js' },
+			svg: { js: [ '<%=dirs.src%>/position/polys.js', '<%=dirs.src%>/position/svg.js' ] },
+			imagemap: { js: [ '<%=dirs.src%>/position/polys.js', '<%=dirs.src%>/position/imagemap.js' ] },
 			ie6: { js: '<%=dirs.src%>/ie6/ie6.js', css: '<%=dirs.src%>/ie6/ie6.css' }
 		},
 
