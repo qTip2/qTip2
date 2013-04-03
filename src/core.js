@@ -5,13 +5,14 @@ function QTip(target, options, id, attr)
 {
 	// Declare this reference
 	var self = this,
-		docBody = document.body,
 		tooltipID = NAMESPACE + '-' + id,
-		isPositioning = 0,
-		isDrawing = 0,
 		tooltip = $(),
 		namespace = '.qtip-' + id,
 		disabledClass = 'qtip-disabled',
+		isPositioning = 0,
+		isDrawing = 0,
+		isWaiting = 0,
+		hiddenDuringWait = 0,
 		elements, cache;
 
 	// Setup class attributes
@@ -204,7 +205,10 @@ function QTip(target, options, id, attr)
 		}
 
 		// Ensure images have loaded...
-		return elem.imagesLoaded().promise();
+		isWaiting = TRUE;
+		return elem.imagesLoaded()
+			.done(function() { isWaiting = FALSE; })
+			.promise();
 	}
 
 	function updateContent(content, reposition)
@@ -221,7 +225,9 @@ function QTip(target, options, id, attr)
 
 		// Handle deferred content
 		if($.isFunction(content.then)) {
+			isWaiting = TRUE;
 			return content.then(function(c) {
+				isWaiting = FALSE;
 				return updateContent(c, reposition);
 			}, null, function(c) {
 				return updateContent(c, reposition);
@@ -237,7 +243,10 @@ function QTip(target, options, id, attr)
 		else { elem.html(content); }
 
 		// Ensure images have loaded...
-		return elem.imagesLoaded().promise();
+		isWaiting = TRUE;
+		return elem.imagesLoaded()
+			.done(function() { isWaiting = FALSE; })
+			.promise();
 	}
 
 	function assignEvents()
@@ -277,7 +286,7 @@ function QTip(target, options, id, attr)
 		// Define hide method
 		function hideMethod(event)
 		{
-			if(tooltip.hasClass(disabledClass) || isPositioning || isDrawing) { return FALSE; }
+			if(tooltip.hasClass(disabledClass) || isDrawing) { return FALSE; }
 
 			// Check if new target was actually the tooltip element
 			var relatedTarget = $(event.relatedTarget),
@@ -673,10 +682,11 @@ function QTip(target, options, id, attr)
 				// Reset flags
 				isPositioning = 0;
 
-				// Show tooltip if needed
-				if(options.show.ready || show) {
+				// Show tooltip if not hidden during wait period
+				if(!hiddenDuringWait && (options.show.ready || show)) {
 					self.toggle(TRUE, cache.event, FALSE);
 				}
+				hiddenDuringWait = FALSE;
 			});
 
 			return self;
@@ -774,6 +784,9 @@ function QTip(target, options, id, attr)
 
 		toggle: function(state, event)
 		{
+			// If we're currently waiting and we've just hidden... stop it
+			isWaiting && !state && (hiddenDuringWait = TRUE);
+
 			// Try to prevent flickering when tooltip overlaps show element
 			if(event) {
 				if((/over|enter/).test(event.type) && (/out|leave/).test(cache.event.type) &&
@@ -785,7 +798,7 @@ function QTip(target, options, id, attr)
 				// Cache event
 				cache.event = $.extend({}, event);
 			}
-	
+
 			// Render the tooltip if showing and it isn't already
 			if(!self.rendered || self.destroyed) { return state ? self.render(1) : self; }
 
@@ -799,7 +812,7 @@ function QTip(target, options, id, attr)
 				animate = state || opts.target.length === 1,
 				sameTarget = !event || opts.target.length < 2 || cache.target[0] === event.target,
 				identicalState, allow, showEvent, delay;
-
+	
 			// Detect state if valid one isn't provided
 			if((typeof state).search('boolean|number')) { state = !visible; }
 
