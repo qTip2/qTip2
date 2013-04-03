@@ -19,6 +19,21 @@ function sanitizeOptions(opts)
 			opts.content.text = FALSE;
 		}
 
+		if('ajax' in opts.content) {
+			opts.content.text = function(event, api) {
+				$.ajax(opts.content.ajax)
+					.then(function(content) {
+						api.set('content.text', content);
+					},
+					function(xhr, status, error) {
+						if(api.destroyed || xhr.status === 0) { return; }
+						api.set('content.text', status + ': ' + error);
+					});
+
+				return 'Loading...';
+			};
+		}
+
 		if('title' in opts.content) {
 			if(!invalid(opts.content.title)) {
 				opts.content.button = opts.content.title.button;
@@ -140,6 +155,9 @@ function QTip(target, options, id, attr)
 
 			// Reposition if enabled
 			if(reposition !== FALSE) { self.reposition(); }
+
+			// Set option
+			options.content.title = FALSE;
 		}
 	}
 
@@ -238,9 +256,11 @@ function QTip(target, options, id, attr)
 		}
 
 		// Handle deferred content
-		if($.isFunction(content.done)) {
-			return content.done(function(c) {
-				return updateContent(c, reposition, FALSE);
+		if($.isFunction(content.then)) {
+			return content.then(function(c) {
+				return updateTitle(c, reposition);
+			}, null, function(c) {
+				return updateTitle(c, reposition);
 			});
 		}
 
@@ -259,6 +279,9 @@ function QTip(target, options, id, attr)
 		if(reposition !== FALSE && self.rendered && tooltip[0].offsetWidth > 0) {
 			self.reposition(cache.event);
 		}
+
+		// Ensure images have loaded...
+		return elem.imagesLoaded().promise();
 	}
 
 	function updateContent(content, reposition)
@@ -274,9 +297,11 @@ function QTip(target, options, id, attr)
 		}
 
 		// Handle deferred content
-		if($.isFunction(content.done)) {
-			return content.done(function(c) {
-				return updateContent(c, reposition, FALSE);
+		if($.isFunction(content.then)) {
+			return content.then(function(c) {
+				return updateContent(c, reposition);
+			}, null, function(c) {
+				return updateContent(c, reposition);
 			});
 		}
 
@@ -561,7 +586,7 @@ function QTip(target, options, id, attr)
 		},
 
 		// Content checks
-		'^content.text$': function(obj, o, v) { updateContent(options.content.text); },
+		'^content.text$': function(obj, o, v) { updateContent( (obj[o] = v) ); },
 		'^content.title$': function(obj, o, v) {
 			// Remove title if content is null
 			if(!v) { return removeTitle(); }
@@ -569,6 +594,9 @@ function QTip(target, options, id, attr)
 			// If title isn't already created, create it now and update
 			if(!elements.title && v) { createTitle(); }
 			updateTitle(v);
+
+			// Set option
+			obj[o] = v;
 		},
 		'^content.button$': function(obj, o, v){ updateButton(v); },
 		'^content.title.(text|button)$': function(obj, o, v) { // Backwards title.text/button compat
