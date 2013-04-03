@@ -32,8 +32,8 @@ PLUGINS.imagemap = function(api, area, corner, adjustMethod)
 
 	// Make sure we account for padding and borders on the image
 	imageOffset = image.offset();
-	imageOffset.left += Math.ceil((image.outerWidth() - image.width()) / 2);
-	imageOffset.top += Math.ceil((image.outerHeight() - image.height()) / 2);
+	imageOffset.left += Math.ceil((image.outerWidth(FALSE) - image.width()) / 2);
+	imageOffset.top += Math.ceil((image.outerHeight(FALSE) - image.height()) / 2);
 
 	// Add image position to offset coordinates
 	result.position.left += imageOffset.left;

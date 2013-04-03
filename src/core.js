@@ -33,22 +33,6 @@ function QTip(target, options, id, attr)
 		lastClass: ''
 	};
 
-	function convertNotation(notation)
-	{
-		var i = 0, obj, option = options,
-
-		// Split notation into array
-		levels = notation.split('.');
-
-		// Loop through
-		while( option = option[ levels[i++] ] ) {
-			if(i < levels.length) { obj = option; }
-		}
-
-		return [obj || options, levels.pop()];
-	}
-
-
 	function setWidget()
 	{
 		var on = options.style.widget,
@@ -696,29 +680,10 @@ function QTip(target, options, id, attr)
 		{
 			if(self.destroyed) { return self; }
 
-			var result, o;
+			var o = convertNotation(options, notation.toLowerCase()),
+				result = o[0][ o[1] ];
 
-			switch(notation.toLowerCase())
-			{
-				case 'dimensions':
-					result = {
-						height: tooltip.outerHeight(FALSE),
-						width: tooltip.outerWidth(FALSE)
-					};
-				break;
-
-				case 'offset':
-					result = PLUGINS.offset(tooltip, options.position.container);
-				break;
-
-				default:
-					o = convertNotation(notation.toLowerCase());
-					result = o[0][ o[1] ];
-					result = result.precedance ? result.string() : result;
-				break;
-			}
-
-			return result;
+			return result.precedance ? result.string() : result;
 		},
 
 		set: function(option, value)
@@ -752,7 +717,7 @@ function QTip(target, options, id, attr)
 
 			// Set all of the defined options to their new values
 			$.each(option, function(notation, value) {
-				var obj = convertNotation( notation.toLowerCase() ), previous;
+				var obj = convertNotation(options, notation.toLowerCase()), previous;
 
 				// Set new obj value
 				previous = obj[0][ obj[1] ];
@@ -847,7 +812,7 @@ function QTip(target, options, id, attr)
 				}
 
 				// Update the tooltip position (set width first to prevent viewport/max-width issues)
-				if(!width) { tooltip.css('width', tooltip.outerWidth()); }
+				if(!width) { tooltip.css('width', tooltip.outerWidth(FALSE)); }
 				self.reposition(event, arguments[2]);
 				if(!width) { tooltip.css('width', ''); }
 

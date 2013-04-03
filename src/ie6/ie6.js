@@ -61,7 +61,10 @@ function Ie6(api)
 
 		adjustBGIFrame: function()
 		{
-			var dimensions = api.get('dimensions'), // Determine current tooltip dimensions
+			var dimensions = {
+					height: tooltip.outerHeight(FALSE),
+					width: tooltip.outerWidth(FALSE)
+				},
 				plugin = api.plugins.tip,
 				tip = elems.tip,
 				tipAdjust, offset;

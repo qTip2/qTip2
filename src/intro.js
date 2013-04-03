@@ -71,9 +71,23 @@
 		return WIDGET.concat('').join(cls ? '-'+cls+' ' : ' ');
 	}
 
+	// Dot notation converter
+	function convertNotation(options, notation) {
+		var i = 0, obj, option = options,
+
+		// Split notation into array
+		levels = notation.split('.');
+
+		// Loop through
+		while( option = option[ levels[i++] ] ) {
+			if(i < levels.length) { obj = option; }
+		}
+
+		return [obj || options, levels.pop()];
+	}
+
 	// Option object sanitizer
-	function sanitizeOptions(opts)
-	{
+	function sanitizeOptions(opts) {
 		var invalid = function(a) { return a === NULL || !$.isPlainObject(a); },
 			invalidContent = function(c) { return !$.isFunction(c) && ((!c && !c.attr) || c.length < 1 || ('object' === typeof c && !c.jquery && !c.then)); },
 			once;

@@ -24,8 +24,8 @@ PLUGINS.viewport = function(api, position, posOptions, targetWidth, targetHeight
 	fixed = tooltip.css('position') === 'fixed';
 	viewport = {
 		elem: viewport,
-		height: viewport[ (viewport[0] === window ? 'h' : 'outerH') + 'eight' ](),
-		width: viewport[ (viewport[0] === window ? 'w' : 'outerW') + 'idth' ](),
+		width: viewport[0] === window ? viewport.width() : viewport.outerWidth(FALSE),
+		height: viewport[0] === window ? viewport.height() : viewport.outerHeight(FALSE),
 		scrollleft: fixed ? 0 : viewport.scrollLeft(),
 		scrolltop: fixed ? 0 : viewport.scrollTop(),
 		offset: viewport.offset() || { left: 0, top: 0 }
