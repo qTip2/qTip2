@@ -53,20 +53,20 @@ Big shout-out to ["Cowboy" Ben Alman][cowboy] for providing the [grunt][grunt] b
 [max]: http://qtip2.com/v/nightly/jquery.qtip.js
 
 [dist]: http://qtip2.com/v/nightly
-[wiki]: /Craga89/qTip2/wiki
-[build]: /Craga89/qTip2/wiki/custom-build
-[style]: /Craga89/qTip2/wiki/style
-[plugins]: /Craga89/qTip2/wiki#plugins
-[tips]: /Craga89/qTip2/wiki/tips
-[imgmap]: /Craga89/qTip2/wiki/imagemap
+[wiki]: http://github.com/Craga89/qTip2/wiki
+[build]: http://github.com/Craga89/qTip2/wiki/custom-build
+[style]: http://github.com/Craga89/qTip2/wiki/style
+[plugins]: http://github.com/Craga89/qTip2/wiki#plugins
+[tips]: http://github.com/Craga89/qTip2/wiki/tips
+[imgmap]: http://github.com/Craga89/qTip2/wiki/imagemap
 
-[site]: http://craigsworks.com/projects/qtip2
-[download]: http://craigsworks.com/projects/qtip2/download
+[site]: http://qtip2.com/
+[download]: http://qtip2.com/download
 [forums]: http://craigsworks.com/projects/forums
 [license]: http://jquery.org/license
 
-[cowboy]: https://github.com/cowboy
-[grunt]: https://github.com/cowboy/grunt
+[cowboy]: http://github.com/cowboy
+[grunt]: http://github.com/gruntjs/grunt
 
 [wikipedia-cdn]: http://en.wikipedia.org/wiki/Content_delivery_network "Content Delivery Network"
 [cdnjs]: http://cdnjs.com/

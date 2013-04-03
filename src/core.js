@@ -1409,7 +1409,7 @@ QTIP.bind = function(opts, event)
 		 * Also set onTarget when triggered to keep mouse tracking working
 		 */
 		targets.show.bind('mousemove'+namespace, function(event) {
-			storeMouse(self.id, event);
+			storeMouse(api.id, event);
 			api.cache.onTarget = TRUE;
 		});
 
