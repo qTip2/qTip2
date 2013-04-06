@@ -90,7 +90,7 @@
 	function sanitizeOptions(opts) {
 		var invalid = function(a) { return a === NULL || !$.isPlainObject(a); },
 			invalidContent = function(c) { return !$.isFunction(c) && ((!c && !c.attr) || c.length < 1 || ('object' === typeof c && !c.jquery && !c.then)); },
-			once;
+			ajax, once;
 
 		if(!opts || 'object' !== typeof opts) { return FALSE; }
 
@@ -110,9 +110,14 @@
 			// DEPRECATED - Old content.ajax plugin functionality
 			// Converts it into the proper Deferred syntax
 			if('ajax' in opts.content) {
-				once = opts.content.ajax.once !== FALSE;
+				ajax = opts.content.ajax;
+				once = ajax && ajax.once !== FALSE;
+				opts.content.ajax = null;
+
 				opts.content.text = function(event, api) {
-					var deferred = $.ajax(opts.content.ajax)
+					var deferred = $.ajax(
+							$.extend({}, opts.content.ajax, { context: api })
+						)
 						.then(function(content) {
 							if(once) { api.set('content.text', content); }
 							return content;
