@@ -1165,11 +1165,13 @@ function QTip(target, options, id, attr)
 
 					// Set rendered flag
 					self.rendered = FALSE;
+
+					// Clear timers and remove bound events
+					clearTimeout(self.timers.show);
+					clearTimeout(self.timers.hide);
 				}
 
-				// Clear timers and remove bound events
-				clearTimeout(self.timers.show);
-				clearTimeout(self.timers.hide);
+				// Remove bound events
 				unassignEvents();
 
 				// If the API if actually this qTip API...
@@ -1219,7 +1221,6 @@ function QTip(target, options, id, attr)
 		}
 	});
 }
-
 // Initialization method
 function init(elem, id, opts)
 {
