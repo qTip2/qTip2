@@ -116,7 +116,7 @@
 
 				opts.content.text = function(event, api) {
 					var deferred = $.ajax(
-							$.extend({}, opts.content.ajax, { context: api })
+							$.extend({}, ajax, { context: api })
 						)
 						.then(function(content) {
 							if(once) { api.set('content.text', content); }
