@@ -47,7 +47,7 @@
 		WIDGET = ['ui-widget', 'ui-tooltip'],
 		MOUSE = {},
 		usedIDs = {},
-		selector = 'div.qtip.'+NAMESPACE,
+		selector = 'div.'+NAMESPACE,
 		defaultClass = NAMESPACE + '-default',
 		focusClass = NAMESPACE + '-focus',
 		hoverClass = NAMESPACE + '-hover',
@@ -86,77 +86,85 @@
 		return [obj || options, levels.pop()];
 	}
 
+	function invalidOpt(a) {
+		return a === NULL || !$.isPlainObject(a);
+	}
+
+	function invalidContent(c) {
+		return !$.isFunction(c) && (
+			(!c && !c.attr) || c.length < 1 || ('object' === typeof c && !c.jquery && !c.then)
+		);
+	}
+
 	// Option object sanitizer
 	function sanitizeOptions(opts) {
-		var invalid = function(a) { return a === NULL || !$.isPlainObject(a); },
-			invalidContent = function(c) { return !$.isFunction(c) && ((!c && !c.attr) || c.length < 1 || ('object' === typeof c && !c.jquery && !c.then)); },
-			ajax, once;
+		var content, text, ajax, once;
 
-		if(!opts || 'object' !== typeof opts) { return FALSE; }
+		if(invalidOpt(opts)) { return FALSE; }
 
-		if(invalid(opts.metadata)) {
+		if(invalidOpt(opts.metadata)) {
 			opts.metadata = { type: opts.metadata };
 		}
 
 		if('content' in opts) {
-			if(invalid(opts.content) || opts.content.jquery || opts.content.done) {
-				opts.content = { text: opts.content };
-			}
+			content = opts.content;
 
-			if(invalidContent(opts.content.text || FALSE)) {
-				opts.content.text = FALSE;
+			if(invalidOpt(content) || content.jquery || content.done) {
+				content = opts.content = {
+					text: (text = invalidContent(content) ? FALSE : content)
+				};
 			}
 
 			// DEPRECATED - Old content.ajax plugin functionality
 			// Converts it into the proper Deferred syntax
-			if('ajax' in opts.content) {
-				ajax = opts.content.ajax;
+			if('ajax' in content) {
+				ajax = content.ajax;
 				once = ajax && ajax.once !== FALSE;
-				opts.content.ajax = null;
+				content.ajax = null;
 
-				opts.content.text = function(event, api) {
+				content.text = function(event, api) {
 					var deferred = $.ajax(
-							$.extend({}, ajax, { context: api })
-						)
-						.then(function(content) {
-							if(once) { api.set('content.text', content); }
-							return content;
-						},
-						function(xhr, status, error) {
-							if(api.destroyed || xhr.status === 0) { return; }
-							api.set('content.text', status + ': ' + error);
-						});
+						$.extend({}, ajax, { context: api })
+					)
+					.then(function(content) {
+						if(once) { api.set('content.text', content); }
+						return content;
+					},
+					function(xhr, status, error) {
+						if(api.destroyed || xhr.status === 0) { return; }
+						api.set('content.text', status + ': ' + error);
+					});
 
-					return !once ? deferred : 'Loading...';
+					return !once ? deferred : (text || $(this).attr(api.options.content.attr) || 'Loading...');
 				};
 			}
 
-			if('title' in opts.content) {
-				if(!invalid(opts.content.title)) {
-					opts.content.button = opts.content.title.button;
-					opts.content.title = opts.content.title.text;
+			if('title' in content) {
+				if(!invalidOpt(content.title)) {
+					content.button = content.title.button;
+					content.title = content.title.text;
 				}
 
-				if(invalidContent(opts.content.title || FALSE)) {
-					opts.content.title = FALSE;
+				if(invalidContent(content.title || FALSE)) {
+					content.title = FALSE;
 				}
 			}
 		}
 
-		if('position' in opts && invalid(opts.position)) {
+		if('position' in opts && invalidOpt(opts.position)) {
 			opts.position = { my: opts.position, at: opts.position };
 		}
 
-		if('show' in opts && invalid(opts.show)) {
+		if('show' in opts && invalidOpt(opts.show)) {
 			opts.show = opts.show.jquery ? { target: opts.show } : 
 				opts.show === TRUE ? { ready: TRUE } : { event: opts.show };
 		}
 
-		if('hide' in opts && invalid(opts.hide)) {
+		if('hide' in opts && invalidOpt(opts.hide)) {
 			opts.hide = opts.hide.jquery ? { target: opts.hide } : { event: opts.hide };
 		}
 
-		if('style' in opts && invalid(opts.style)) {
+		if('style' in opts && invalidOpt(opts.style)) {
 			opts.style = { classes: opts.style };
 		}
 
