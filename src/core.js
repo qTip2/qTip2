@@ -781,8 +781,10 @@ function QTip(target, options, id, attr)
 			// Detect state if valid one isn't provided
 			if((typeof state).search('boolean|number')) { state = !visible; }
 
-			// Return if element is already in correct state or user returned false in tooltipshow/tooltiphide
+			// Check if the tooltip is in an identical state to the new would-be state
 			identicalState = !tooltip.is(':animated') && visible === state && sameTarget;
+
+			// Fire tooltip(show/hide) event and check if destroyed
 			allow = !identicalState ? !!self._triggerEvent(type, [90]) : NULL;
 
 			// If the user didn't stop the method prematurely and we're showing the tooltip, focus it
@@ -791,7 +793,7 @@ function QTip(target, options, id, attr)
 			// If the state hasn't changed or the user stopped it, return early
 			if(!allow || identicalState) { return self; }
 
-			// Set ARIA hidden status attribute
+			// Set ARIA hidden attribute
 			$.attr(tooltip[0], 'aria-hidden', !!!state);
 
 			// Execute state specific properties
@@ -1192,28 +1194,19 @@ function QTip(target, options, id, attr)
 
 				// Remove ID from used id objects, and delete object references
 				// for better garbage collection and leak protection
-				delete usedIDs[self.id];
-				delete self.options; delete self.elements;
-				delete self.cache; delete self.timers;
-				delete self.checks;
-				delete MOUSE[self.id];
-			}
+				self.options = self.elements = self.cache = self.timers = self.checks = 
+					usedIDs[self.id] = MOUSE[self.id] = null;
 
-			var isHiding = FALSE;
+				console.log(self);
+			}
 
 			// If an immediate destory is needed
 			if(immediate !== TRUE) {
-				// Check to see if the hide call below suceeds
-				tooltip.one('tooltiphide', function() {
-					// Set the hiding flag and process on hidden
-					isHiding = TRUE;
-					tooltip.one('tooltiphidden', process);
-				});
-				self.hide();
+				tooltip.one('tooltiphidden', process);
 			}
 
 			// If we're not in the process of hiding... process
-			if(!isHiding) { process(); }
+			else { process(); }
 
 			return target;
 		}
