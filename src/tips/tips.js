@@ -128,29 +128,6 @@ function Tip(qTip, command)
 	self.offset = opts.offset;
 	self.size = size;
 
-	// Add new option checks for the plugin
-	qTip.checks.tip = {
-		'^position.my|style.tip.(corner|mimic|border)$': function() {
-			// Make sure a tip can be drawn
-			!self.init() && self.destroy();
-			
-			// Reposition the tooltip
-			qTip.reposition();
-		},
-		'^style.tip.(height|width)$': function() {
-			// Re-set dimensions and redraw the tip
-			self.size = size = [ opts.width, opts.height ];
-			self.create();
-			self.update();
-
-			// Reposition the tooltip
-			qTip.reposition();
-		},
-		'^content.title|style.(classes|widget)$': function() {
-			elems.tip && elems.tip.length && self.update();
-		}
-	};
-
 	function swapDimensions() {
 		size[0] = opts.height;
 		size[1] = opts.width;
@@ -601,25 +578,19 @@ function Tip(qTip, command)
 
 			// Remove the tip element(s)
 			if(elems.tip) {
-				elems.tip.find('*').remove()
-					.end().remove();
+				elems.tip.find('*').remove().end().remove();
 			}
 
 			// Delete references
-			delete self.corner;
-			delete self.mimic;
-			delete self.size;
+			self.corner = self.mimic = self.size = null;
 		}
 	});
 
 	self.init();
 }
 
-TIP = PLUGINS.tip = function(api)
-{
-	var self = api.plugins.tip;
-	
-	return 'object' === typeof self ? self : (api.plugins.tip = new Tip(api));
+TIP = PLUGINS.tip = function(api) {
+	return new Tip(api);
 };
 
 // Initialize tip on render
@@ -631,12 +602,36 @@ TIP.sanitize = function(options)
 	var style = options.style, opts;
 	if(style && 'tip' in style) {
 		opts = options.style.tip;
-		if(typeof opts !== 'object'){ options.style.tip = { corner: opts }; }
+		if(typeof opts !== 'object') { options.style.tip = { corner: opts }; }
 		if(!(/string|boolean/i).test(typeof opts.corner)) { opts.corner = TRUE; }
-		if(typeof opts.width !== 'number'){ delete opts.width; }
-		if(typeof opts.height !== 'number'){ delete opts.height; }
-		if(typeof opts.border !== 'number' && opts.border !== TRUE){ delete opts.border; }
-		if(typeof opts.offset !== 'number'){ delete opts.offset; }
+		if(typeof opts.width !== 'number') { delete opts.width; }
+		if(typeof opts.height !== 'number') { delete opts.height; }
+		if(typeof opts.border !== 'number' && opts.border !== TRUE) { delete opts.border; }
+		if(typeof opts.offset !== 'number') { delete opts.offset; }
+	}
+};
+
+// Add new option checks for the plugin
+CHECKS.tip = {
+	'^position.my|style.tip.(corner|mimic|border)$': function() {
+		// Make sure a tip can be drawn
+		!this.init() && this.destroy();
+		
+		// Reposition the tooltip
+		this.qtip.reposition();
+	},
+	'^style.tip.(height|width)$': function(obj) {
+		// Re-set dimensions and redraw the tip
+		this.size = size = [ obj.width, obj.height ];
+		this.create();
+		this.update();
+
+		// Reposition the tooltip
+		this.qtip.reposition();
+	},
+	'^content.title|style.(classes|widget)$': function() {
+		var tip = this.qtip.elements.tip;
+		tip && tip.length && this.update();
 	}
 };
 

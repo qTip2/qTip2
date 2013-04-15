@@ -1,0 +1,281 @@
+function invalidOpt(a) {
+	return a === NULL || !$.isPlainObject(a);
+}
+
+function invalidContent(c) {
+	return !$.isFunction(c) && (
+		(!c && !c.attr) || c.length < 1 || ('object' === typeof c && !c.jquery && !c.then)
+	);
+}
+
+// Option object sanitizer
+function sanitizeOptions(opts) {
+	var content, text, ajax, once;
+
+	if(invalidOpt(opts)) { return FALSE; }
+
+	if(invalidOpt(opts.metadata)) {
+		opts.metadata = { type: opts.metadata };
+	}
+
+	if('content' in opts) {
+		content = opts.content;
+
+		if(invalidOpt(content) || content.jquery || content.done) {
+			content = opts.content = {
+				text: (text = invalidContent(content) ? FALSE : content)
+			};
+		}
+
+		// DEPRECATED - Old content.ajax plugin functionality
+		// Converts it into the proper Deferred syntax
+		if('ajax' in content) {
+			ajax = content.ajax;
+			once = ajax && ajax.once !== FALSE;
+			content.ajax = null;
+
+			content.text = function(event, api) {
+				var deferred = $.ajax(
+					$.extend({}, ajax, { context: api })
+				)
+				.then(function(content) {
+					if(once) { api.set('content.text', content); }
+					return content;
+				},
+				function(xhr, status, error) {
+					if(api.destroyed || xhr.status === 0) { return; }
+					api.set('content.text', status + ': ' + error);
+				});
+
+				return !once ? deferred : (text || $(this).attr(api.options.content.attr) || 'Loading...');
+			};
+		}
+
+		if('title' in content) {
+			if(!invalidOpt(content.title)) {
+				content.button = content.title.button;
+				content.title = content.title.text;
+			}
+
+			if(invalidContent(content.title || FALSE)) {
+				content.title = FALSE;
+			}
+		}
+	}
+
+	if('position' in opts && invalidOpt(opts.position)) {
+		opts.position = { my: opts.position, at: opts.position };
+	}
+
+	if('show' in opts && invalidOpt(opts.show)) {
+		opts.show = opts.show.jquery ? { target: opts.show } : 
+			opts.show === TRUE ? { ready: TRUE } : { event: opts.show };
+	}
+
+	if('hide' in opts && invalidOpt(opts.hide)) {
+		opts.hide = opts.hide.jquery ? { target: opts.hide } : { event: opts.hide };
+	}
+
+	if('style' in opts && invalidOpt(opts.style)) {
+		opts.style = { classes: opts.style };
+	}
+
+	// Sanitize plugin options
+	$.each(PLUGINS, function() {
+		this.sanitize && this.sanitize(opts);
+	});
+
+	return opts;
+}
+
+// Setup builtin .set() option checks
+CHECKS = PROTOTYPE.checks = {
+	builtin: {
+		// Core checks
+		'^id$': function(obj, o, v, prev) {
+			var id = v === TRUE ? QTIP.nextid : v,
+				new_id = NAMESPACE + '-' + id;
+
+			if(id !== FALSE && id.length > 0 && !$('#'+new_id).length) {
+				this._id = new_id;
+
+				if(this.rendered) {
+					this.tooltip[0].id = this._id;
+					this.elements.content[0].id = this._id + '-content';
+					this.elements.title[0].id = this._id + '-title';
+				}
+			}
+			else { obj[o] = prev; }
+		},
+		'^prerender': function(obj, o, v) {
+			v && !this.rendered && this.render(this.options.show.ready);
+		},
+
+		// Content checks
+		'^content.text$': function(obj, o, v) {
+			this._updateContent(v);
+		},
+		'^content.attr$': function(obj, o, v, prev) {
+			if(this.options.content.text === this.target.attr(prev)) {
+				this._updateContent( this.target.attr(v) );
+			}
+		},
+		'^content.title$': function(obj, o, v) {
+			// Remove title if content is null
+			if(!v) { return this._removeTitle(); }
+
+			// If title isn't already created, create it now and update
+			v && !this.elements.title && this._createTitle();
+			this._updateTitle(v);
+		},
+		'^content.button$': function(obj, o, v) {
+			this._updateButton(v);
+		},
+		'^content.title.(text|button)$': function(obj, o, v) {
+			this.set('content.'+o, v); // Backwards title.text/button compat
+		}, 
+
+		// Position checks
+		'^position.(my|at)$': function(obj, o, v){
+			'string' === typeof v && (obj[o] = new PLUGINS.Corner(v, o === 'at'));
+		},
+		'^position.container$': function(obj, o, v){
+			this.tooltip.appendTo(v);
+		},
+
+		// Show checks
+		'^show.ready$': function(obj, o, v) {
+			v && (!this.rendered && this.render(TRUE) || this.toggle(TRUE));
+		},
+
+		// Style checks
+		'^style.classes$': function(obj, o, v) {
+			this.tooltip.attr('class', 
+				[ NAMESPACE, defaultClass, v, NAMESPACE + '-pos-' + this.options.position.my.abbrev() ].join(' ')
+			);
+		},
+		'^style.width|height': function(obj, o, v) {
+			this.tooltip.css(o, v);
+		},
+		'^style.widget|content.title': function() {
+			this._setWidget();
+		},
+		'^style.def': function(obj, o, v) {
+			this.tooltip.toggleClass(defaultClass, !!v);
+		},
+
+		// Events check
+		'^events.(render|show|move|hide|focus|blur)$': function(obj, o, v) {
+			tooltip[($.isFunction(v) ? '' : 'un') + 'bind']('tooltip'+o, v);
+		},
+
+		// Properties which require event reassignment
+		'^(show|hide|position).(event|target|fixed|inactive|leave|distance|viewport|adjust)': function() {
+			var posOptions = this.options.position;
+
+			// Set tracking flag
+			tooltip.attr('tracking', posOptions.target === 'mouse' && posOptions.adjust.mouse);
+
+			// Reassign events
+			this._unassignEvents();
+			this._assignEvents();
+		}
+	}
+};
+
+// Dot notation converter
+function convertNotation(options, notation) {
+	var i = 0, obj, option = options,
+
+	// Split notation into array
+	levels = notation.split('.');
+
+	// Loop through
+	while( option = option[ levels[i++] ] ) {
+		if(i < levels.length) { obj = option; }
+	}
+
+	return [obj || options, levels.pop()];
+}
+
+PROTOTYPE.get = function(notation) {
+	if(this.destroyed) { return this; }
+
+	var o = convertNotation(this.options, notation.toLowerCase()),
+		result = o[0][ o[1] ];
+
+	return result.precedance ? result.string() : result;
+};
+
+function setCallback(notation, args) {
+	var category, rule, match;
+
+	for(category in this.checks) {
+		for(rule in this.checks[category]) {
+			if(match = (new RegExp(rule, 'i')).exec(notation)) {
+				args.push(match);
+
+				if(category === 'builtin' || this.plugins[category]) {
+					this.checks[category][rule].apply(
+						this.plugins[category] || this, args
+					);
+				}
+			}
+		}
+	}
+}
+
+var rmove = /^position\.(my|at|adjust|target|container|viewport)|style|content|show\.ready/i,
+	rrender = /^prerender|show\.ready/i;
+
+PROTOTYPE.set = function(option, value) {
+	if(this.destroyed) { return this; }
+
+	var rendered = this.rendered,
+		reposition = FALSE,
+		options = this.options,
+		checks = this.checks,
+		name;
+
+	// Convert singular option/value pair into object form
+	if('string' === typeof option) {
+		name = option; option = {}; option[name] = value;
+	}
+	else { option = $.extend({}, option); }
+
+	// Set all of the defined options to their new values
+	$.each(option, function(notation, value) {
+		if(!rendered && !rrender.test(notation)) {
+			delete option[notation]; return;
+		}
+
+		// Set new obj value
+		var obj = convertNotation(options, notation.toLowerCase()), previous;
+		previous = obj[0][ obj[1] ];
+		obj[0][ obj[1] ] = 'object' === typeof value && value.nodeType ? $(value) : value;
+
+		// Also check if we need to reposition
+		reposition = rmove.test(notation) || reposition;
+
+		// Set the new params for the callback
+		option[notation] = [obj[0], obj[1], value, previous];
+	});
+
+	// Re-sanitize options
+	sanitizeOptions(options);
+
+	/*
+	 * Execute any valid callbacks for the set options
+	 * Also set positioning flag so we don't get loads of redundant repositioning calls.
+	 */
+	this.positioning = TRUE;
+	$.each(option, $.proxy(setCallback, this));
+	this.positioning = FALSE;
+
+	// Update position if needed
+	if(this.rendered && this.tooltip[0].offsetWidth > 0 && reposition) {
+		this.reposition( options.position.target === 'mouse' ? NULL : this.cache.event );
+	}
+
+	return this;
+};

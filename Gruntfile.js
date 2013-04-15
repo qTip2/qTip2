@@ -38,6 +38,28 @@ module.exports = function(grunt) {
 		// Directories (dist changed in init())
 		dirs: { src: 'src', dist: 'dist', libs: 'libs' },
 
+		// Core files in order
+		core: {
+			js: [
+				'<%=dirs.src%>/core/intro.js',
+				'<%=dirs.src%>/core/constants.js',
+				'<%=dirs.src%>/core/class.js',
+
+				'<%=dirs.src%>/core/options.js',
+				'<%=dirs.src%>/core/content.js',
+				'<%=dirs.src%>/core/button.js',
+				'<%=dirs.src%>/core/style.js',
+				'<%=dirs.src%>/core/events.js',
+
+				'<%=dirs.src%>/core/jquery_methods.js',
+				'<%=dirs.src%>/core/plugins.js',
+				'<%=dirs.src%>/core/jquery_overrides.js',
+
+				'<%=dirs.src%>/core/defaults.js'
+			],
+			css: ['<%=dirs.src%>/core.css']
+		},
+
 		// Styles and plugins map
 		styles: {
 			basic: '<%=dirs.src%>/basic.css',
@@ -153,7 +175,10 @@ module.exports = function(grunt) {
 					'$': true
 				}
 			},
-			beforeconcat: ['grunt.js', '<%=dirs.src%>/core.js', '<%=dirs.src%>/*/*.js']
+			beforeconcat: [
+				'grunt.js', '<%=dirs.src%>/*/*.js',
+				'!<%=dirs.src%>/*/intro.js', '!<%=dirs.src%>/*/outro.js' // Ignore intro/outro files
+			]
 		}
 	});
 
@@ -167,8 +192,8 @@ module.exports = function(grunt) {
 			valid, lib;
 
 		// Setup JS/CSS arrays
-		var js = ['<banner:meta.banners.full>', '<%=dirs.src%>/intro.js', '<%=dirs.src%>/core.js'],
-			css = ['<banner:meta.banners.full>', '<%=dirs.src%>/core.css'],
+		var js = grunt.config('core.js'),
+			css = grunt.config('core.css'),
 			dist = grunt.option('dist') || 'dist';
 
 		// If basic... go into dist/basic
@@ -201,7 +226,7 @@ module.exports = function(grunt) {
 		else { plugins = ['None']; }
 
 		// Add outro
-		js.push('<%=dirs.src%>/outro.js');
+		js.push('<%=dirs.src%>/core/outro.js');
 
 		// Update concatenation config
 		grunt.config('concat.dist.src', js);

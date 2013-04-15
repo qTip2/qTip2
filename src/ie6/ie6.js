@@ -12,13 +12,8 @@ function Ie6(api)
 		tooltip = elems.tooltip,
 		namespace = '.ie6-' + api.id,
 		bgiframe = $('select, object').length < 1,
-		isDrawing = 0,
 		modalProcessed = FALSE,
 		redrawContainer;
-
-	api.checks.ie6 = {
-		'^content|style$': function(obj, o, v){ redraw(); }
-	};
 
 	$.extend(self, {
 		init: function()
@@ -86,14 +81,14 @@ function Ie6(api)
 		// Max/min width simulator function
 		redraw: function()
 		{
-			if(api.rendered < 1 || isDrawing) { return self; }
+			if(api.rendered < 1 || api.drawing) { return self; }
 
 			var style = options.style,
 				container = options.position.container,
 				perc, width, max, min;
 
 			// Set drawing flag
-			isDrawing = 1;
+			api.drawing = 1;
 
 			// If tooltip has a set height/width, just set it... like a boss!
 			if(style.height) { tooltip.css(HEIGHT, style.height); }
@@ -125,7 +120,7 @@ function Ie6(api)
 			}
 
 			// Set drawing flag
-			isDrawing = 0;
+			api.drawing = 0;
 
 			return self;
 		},
@@ -143,15 +138,15 @@ function Ie6(api)
 	self.init();
 }
 
-IE6 = PLUGINS.ie6 = function(api)
-{
-	var self = api.plugins.ie6;
-	
+IE6 = PLUGINS.ie6 = function(api) {
 	// Proceed only if the browser is IE6
-	if(PLUGINS.ie !== 6) { return FALSE; }
-
-	return 'object' === typeof self ? self : (api.plugins.ie6 = new Ie6(api));
+	return PLUGINS.ie === 6 ? new Ie6(api) : FALSE;
 };
 
 IE6.initialize = 'render';
 
+CHECKS.ie6 = {
+	'^content|style$': function() { 
+		this.redraw();
+	}
+};

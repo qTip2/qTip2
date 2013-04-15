@@ -50,7 +50,7 @@ OVERLAY = function()
 		if(!elem.is(':visible')) { return; }
 
 		var target = $(event.target),
-			tooltip = current.elements.tooltip,
+			tooltip = current.tooltip,
 			container = target.closest(selector),
 			targetOnTop;
 
@@ -117,7 +117,7 @@ OVERLAY = function()
 
 			// Update focusable elements if enabled
 			if(api.options.show.modal.stealfocus !== FALSE) {
-				focusableElems = api.elements.tooltip.find('*').filter(function() {
+				focusableElems = api.tooltip.find('*').filter(function() {
 					return focusable(this);
 				});
 			}
@@ -127,7 +127,7 @@ OVERLAY = function()
 		toggle: function(api, state, duration)
 		{
 			var docBody = $(document.body),
-				tooltip = api.elements.tooltip,
+				tooltip = api.tooltip,
 				options = api.options.show.modal,
 				effect = options.effect,
 				type = state ? 'show': 'hide',
@@ -209,18 +209,6 @@ function Modal(api)
 		tooltip = elems.tooltip,
 		namespace = MODALSELECTOR + api.id,
 		overlay;
-
-	// Setup option set checks
-	api.checks.modal = {
-		'^show.modal.(on|blur)$': function() {
-			// Initialise
-			self.destroy();
-			self.init();
-			
-			// Show the modal if not visible already and tooltip is visible
-			overlay.toggle( tooltip.is(':visible') );
-		}
-	};
 
 	$.extend(self, {
 		init: function()
@@ -324,9 +312,7 @@ function Modal(api)
 }
 
 MODAL = PLUGINS.modal = function(api) {
-	var self = api.plugins.modal;
-
-	return 'object' === typeof self ? self : (api.plugins.modal = new Modal(api));
+	return new Modal(api);
 };
 
 // Setup sanitiztion rules
@@ -343,6 +329,20 @@ MODAL.zindex = QTIP.zindex - 200;
 // Plugin needs to be initialized on render
 MODAL.initialize = 'render';
 
+// Setup option set checks
+CHECKS.modal = {
+	'^show.modal.(on|blur)$': function() {
+		// Initialise
+		this.destroy();
+		this.init();
+		
+		// Show the modal if not visible already and tooltip is visible
+		this.qtip.elems.overlay.toggle(
+			this.qtip.tooltip[0].offsetWidth > 0
+		);
+	}
+};
+
 // Extend original api defaults
 $.extend(TRUE, QTIP.defaults, {
 	show: {
@@ -355,4 +355,3 @@ $.extend(TRUE, QTIP.defaults, {
 		}
 	}
 });
-
