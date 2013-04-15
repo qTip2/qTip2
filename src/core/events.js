@@ -175,8 +175,6 @@ PROTOTYPE._assignEvents = function() {
 		this._bind(hideTarget.add(tooltip), QTIP.inactiveEvents, inactiveMethod, '-inactive');
 	}
 
-	this.id === 'unfocus' && console.log(showEvents, hideEvents, toggleEvents);
-
 	// Apply hide events (and filter identical show events)
 	hideEvents = $.map(hideEvents, function(type) {
 		var showIndex = $.inArray(type, showEvents);
@@ -188,7 +186,6 @@ PROTOTYPE._assignEvents = function() {
 
 		return type;
 	});
-
 
 	// Apply show/hide/toggle events
 	this._bind(showTarget, showEvents, showMethod);
@@ -214,17 +211,17 @@ PROTOTYPE._assignEvents = function() {
 	// Mouse positioning events
 	if(posOptions.target === 'mouse') {
 		// Cache mousemove coords on show targets
-		this._bind(showTarget, 'mousemove', this._storeMouse);
+		this._bind(showTarget.add(tooltip), 'mousemove', this._storeMouse);
+
+		// Hide when we leave the tooltip and not onto the show target
+		options.hide.event && this._bind(tooltip, 'mouseleave', function(event) {
+			!$(event.relatedTarget || event.target).closest(showTarget[0]).length && this.hide(event);
+		});
 
 		// If mouse adjustment is on...
 		if(posOptions.adjust.mouse) {
 			// Apply a mouseleave event so we don't get problems with overlapping
 			if(options.hide.event) {
-				// Hide when we leave the tooltip and not onto the show target
-				this._bind(tooltip, 'mouseleave', function(event) {
-					(event.relatedTarget || event.target) !== showTarget[0] && this.hide(event);
-				});
-
 				// Track if we're on the target or not
 				this._bind(showTarget, ['mouseenter', 'mouseleave'], function(event) {
 					this.cache.onTarget = event.type === 'mouseenter';
