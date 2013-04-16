@@ -537,11 +537,11 @@ PROTOTYPE.destroy = function(immediate) {
 	if(this.destroyed) { return this.target; }
 
 	function process() {
+		if(this.destroyed) { return; }
+		this.destroyed = TRUE;
+		
 		var target = this.target,
 			title = target.attr(oldtitle);
-
-		// Set flag
-		this.destroyed = TRUE;
 
 		// Destroy tooltip if rendered
 		if(this.rendered) {
