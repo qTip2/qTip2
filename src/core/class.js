@@ -26,7 +26,7 @@ function QTip(target, options, id, attr) {
 
 	// Set the initial flags
 	this.rendered = this.destroyed = this.disabled = this.waiting = 
-		this.hiddenDuringWait = this.positioning = FALSE;
+		this.hiddenDuringWait = this.positioning = this.triggering = FALSE;
 }
 PROTOTYPE = QTip.prototype;
 
@@ -156,7 +156,8 @@ PROTOTYPE.toggle = function(state, event) {
 	this.waiting && !state && (this.hiddenDuringWait = TRUE);
 
 	// Render the tooltip if showing and it isn't already
-	if(!this.rendered || this.destroyed) { return state ? this.render(1) : this; }
+	if(!this.rendered) { return state ? this.render(1) : this; }
+	else if(this.destroyed) { return this; }
 
 	var type = state ? 'show' : 'hide',
 		opts = this.options[type],
@@ -534,12 +535,13 @@ PROTOTYPE.destroy = function(immediate) {
 	// Set flag the signify destroy is taking place to plugins
 	// and ensure it only gets destroyed once!
 	if(this.destroyed) { return this.target; }
-	this.destroyed = TRUE;
 
 	function process() {
 		var target = this.target,
-			title = target.attr(oldtitle),
-			elemAPI = target.data(NAMESPACE);
+			title = target.attr(oldtitle);
+
+		// Set flag
+		this.destroyed = TRUE;
 
 		// Destroy tooltip if rendered
 		if(this.rendered) {
@@ -556,16 +558,13 @@ PROTOTYPE.destroy = function(immediate) {
 		clearTimeout(this.timers.hide);
 		this._unassignEvents();
 
-		// If the API if actually this qTip API...
-		if(!elemAPI || this === elemAPI) {
-			// Remove api object and ARIA attributes
-			target.removeData(NAMESPACE).removeAttr(HASATTR)
-				.removeAttr('aria-describedby');
+		// Remove api object and ARIA attributes
+		target.removeData(NAMESPACE).removeAttr(HASATTR)
+			.removeAttr('aria-describedby');
 
-			// Reset old title attribute if removed
-			if(this.options.suppress && title) {
-				target.attr('title', title).removeAttr(oldtitle);
-			}
+		// Reset old title attribute if removed
+		if(this.options.suppress && title) {
+			target.attr('title', title).removeAttr(oldtitle);
 		}
 
 		// Remove qTip events associated with this API
@@ -578,8 +577,9 @@ PROTOTYPE.destroy = function(immediate) {
 	}
 
 	// If an immediate destory is needed
-	if(immediate !== TRUE) {
+	if(immediate !== TRUE && this.rendered) {
 		tooltip.one('tooltiphidden', $.proxy(process, this));
+		!this.triggering && this.hide();
 	}
 
 	// If we're not in the process of hiding... process
