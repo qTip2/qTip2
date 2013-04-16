@@ -186,7 +186,7 @@ QTIP.bind = function(opts, event)
 		 *
 		 * Also set onTarget when triggered to keep mouse tracking working
 		 */
-		targets.show.bind('mousemove'+namespace, function(event) {
+		targets.show.on('mousemove'+namespace, function(event) {
 			api._storeMouse(event);
 			api.cache.onTarget = TRUE;
 		});
@@ -198,7 +198,7 @@ QTIP.bind = function(opts, event)
 				api.render(typeof event === 'object' || options.show.ready);
 
 				// Unbind show and hide events
-				targets.show.add(targets.hide).unbind(namespace);
+				targets.show.add(targets.hide).off(namespace);
 			}
 
 			// Only continue if tooltip isn't disabled
@@ -213,14 +213,14 @@ QTIP.bind = function(opts, event)
 				clearTimeout(api.timers.show);
 				api.timers.show = setTimeout(render, options.show.delay);
 				if(events.show !== events.hide) {
-					targets.hide.bind(events.hide, function() { clearTimeout(api.timers.show); });
+					targets.hide.on(events.hide, function() { clearTimeout(api.timers.show); });
 				}
 			}
 			else { render(); }
 		}
 
 		// Bind show events to target
-		targets.show.bind(events.show, hoverIntent);
+		targets.show.on(events.show, hoverIntent);
 
 		// Prerendering is enabled, create tooltip now
 		if(options.show.ready || options.prerender) { hoverIntent(event); }

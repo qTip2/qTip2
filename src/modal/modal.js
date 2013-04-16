@@ -88,21 +88,21 @@ OVERLAY = function()
 					width: win.width()
 				});
 			}
-			$(window).bind('resize'+MODALSELECTOR, resize);
+			$(window).on('resize'+MODALSELECTOR, resize);
 			resize(); // Fire it initially too
 
 			// Make sure we can't focus anything outside the tooltip
-			$(document.body).bind('focusin'+MODALSELECTOR, stealFocus);
+			$(document.body).on('focusin'+MODALSELECTOR, stealFocus);
 
 			// Apply keyboard "Escape key" close handler
-			$(document).bind('keydown'+MODALSELECTOR, function(event) {
+			$(document).on('keydown'+MODALSELECTOR, function(event) {
 				if(current && current.options.show.modal.escape && event.keyCode === 27) {
 					current.hide(event);
 				}
 			});
 
 			// Apply click handler for blur option
-			elem.bind('click'+MODALSELECTOR, function(event) {
+			elem.on('click'+MODALSELECTOR, function(event) {
 				if(current && current.options.show.modal.blur) {
 					current.hide(event);
 				}
@@ -226,7 +226,7 @@ function Modal(api)
 			.css('z-index', PLUGINS.modal.zindex + $(MODALSELECTOR).length)
 			
 			// Apply our show/hide/focus modal events
-			.bind('tooltipshow'+namespace+' tooltiphide'+namespace, function(event, api, duration) {
+			.on('tooltipshow'+namespace+' tooltiphide'+namespace, function(event, api, duration) {
 				var oEvent = event.originalEvent;
 
 				// Make sure mouseout doesn't trigger a hide when showing the modal and mousing onto backdrop
@@ -241,7 +241,7 @@ function Modal(api)
 			})
 
 			// Adjust modal z-index on tooltip focus
-			.bind('tooltipfocus'+namespace, function(event, api) {
+			.on('tooltipfocus'+namespace, function(event, api) {
 				// If focus was cancelled before it reached us, don't do anything
 				if(event.isDefaultPrevented() || event.target !== tooltip[0]) { return; }
 
@@ -275,7 +275,7 @@ function Modal(api)
 			})
 
 			// Focus any other visible modals when this one hides
-			.bind('tooltiphide'+namespace, function(event) {
+			.on('tooltiphide'+namespace, function(event) {
 				if(event.target === tooltip[0]) {
 					$(MODALSELECTOR).filter(':visible').not(tooltip).last().qtip('focus', event);
 				}
@@ -300,7 +300,7 @@ function Modal(api)
 			tooltip.removeClass(MODALCLASS);
 
 			// Remove bound events
-			tooltip.add(document).unbind(namespace);
+			tooltip.add(document).off(namespace);
 
 			// Delete element reference
 			OVERLAY.toggle(api, FALSE);
