@@ -30,7 +30,7 @@ function Ie6(api)
 				elems.bgiframe.appendTo(tooltip);
 
 				// Update BGIFrame on tooltip move
-				tooltip.bind('tooltipmove'+namespace, self.adjustBGIFrame);	
+				tooltip.on('tooltipmove'+namespace, self.adjustBGIFrame);
 			}
 
 			// redraw() container for width/height calculations
@@ -45,7 +45,7 @@ function Ie6(api)
 				scroll = function() {
 					elems.overlay[0].style.top = win.scrollTop() + 'px';
 				};
-				win.bind('scroll.qtip-ie6, resize.qtip-ie6', scroll);
+				win.on('scroll.qtip-ie6, resize.qtip-ie6', scroll);
 				scroll(); // Fire it initially too
 
 				elems.overlay.addClass('qtipmodal-ie6fix'); // Add fix class
@@ -131,7 +131,7 @@ function Ie6(api)
 			if(bgiframe) { elems.bgiframe.remove(); }
 
 			// Remove bound events
-			tooltip.unbind(namespace);
+			tooltip.off(namespace);
 		}
 	});
 

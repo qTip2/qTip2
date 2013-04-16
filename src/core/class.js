@@ -101,7 +101,7 @@ PROTOTYPE.render = function(show) {
 
 	// Assign passed event callbacks (before plugins!)
 	$.each(options.events, function(name, callback) {
-		$.isFunction(callback) && tooltip.bind(
+		$.isFunction(callback) && tooltip.on(
 			name === 'toggle' ? ['tooltipshow', 'tooltiphide'] : 'tooltip'+name, callback
 		);
 	});
@@ -199,7 +199,7 @@ PROTOTYPE.toggle = function(state, event) {
 
 		// Cache mousemove events for positioning purposes (if not already tracking)
 		if(!trackingBound && posOptions.target === 'mouse' && posOptions.adjust.mouse) {
-			$(document).bind('mousemove.'+NAMESPACE, this._storeMouse);
+			$(document).on('mousemove.'+NAMESPACE, this._storeMouse);
 			trackingBound = TRUE;
 		}
 
@@ -223,7 +223,7 @@ PROTOTYPE.toggle = function(state, event) {
 
 		// Remove mouse tracking event if not needed (all tracking qTips are hidden)
 		if(trackingBound && !$(selector+'[tracking="true"]:visible', opts.solo).not(tooltip).length) {
-			$(document).unbind('mousemove.'+NAMESPACE);
+			$(document).off('mousemove.'+NAMESPACE);
 			trackingBound = FALSE;
 		}
 
@@ -568,7 +568,7 @@ PROTOTYPE.destroy = function(immediate) {
 		}
 
 		// Remove qTip events associated with this API
-		target.unbind('.'+this._id);
+		target.off('.'+this._id);
 
 		// Remove ID from used id objects, and delete object references
 		// for better garbage collection and leak protection

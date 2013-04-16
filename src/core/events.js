@@ -77,7 +77,7 @@ PROTOTYPE._storeMouse = function(event) {
 // Bind events
 PROTOTYPE._bind = function(target, events, method, suffix) {
 	var ns = '.' + this._id + (suffix || '');
-	events.length && target.bind(
+	events.length && target.on(
 		(events.split ? events : events.join(ns + ' ')) + ns,
 		$.proxy(method, this)
 	);
@@ -172,7 +172,7 @@ PROTOTYPE._assignEvents = function() {
 	// Check if the tooltip hides when inactive
 	if('number' === typeof options.hide.inactive) {
 		// Bind inactive method to show target(s) as a custom event
-		showTarget.bind('qtip-'+this.id+'-inactive', $.proxy(inactiveMethod, this));
+		showTarget.on('qtip-'+this.id+'-inactive', $.proxy(inactiveMethod, this));
 
 		// Define events which reset the 'inactive' event handler
 		this._bind(hideTarget.add(tooltip), QTIP.inactiveEvents, inactiveMethod, '-inactive');
@@ -269,9 +269,9 @@ PROTOTYPE._unassignEvents = function() {
 	if(this.rendered) {
 		$([]).pushStack( $.grep(targets, function(i) {
 			return typeof i === 'object';
-		}) ).unbind('.'+this._id);
+		}) ).off('.'+this._id);
 	}
 
 	// Tooltip isn't yet rendered, remove render event
-	else { $(targets[0]).unbind('.'+this._id+'-create'); }
+	else { $(targets[0]).off('.'+this._id+'-create'); }
 };

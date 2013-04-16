@@ -166,7 +166,7 @@ CHECKS = PROTOTYPE.checks = {
 
 		// Events check
 		'^events.(render|show|move|hide|focus|blur)$': function(obj, o, v) {
-			tooltip[($.isFunction(v) ? '' : 'un') + 'bind']('tooltip'+o, v);
+			tooltip[($.isFunction(v) ? 'on' : 'off')]('tooltip'+o, v);
 		},
 
 		// Properties which require event reassignment

@@ -314,7 +314,7 @@ function Tip(qTip, command)
 				self.update();
 
 				// Bind update events
-				tooltip.unbind(TIPNS).bind('tooltipmove'+TIPNS, reposition);
+				tooltip.off(TIPNS).on('tooltipmove'+TIPNS, reposition);
 			}
 			
 			return enabled;
@@ -342,7 +342,7 @@ function Tip(qTip, command)
 				elems.tip.html(vml + vml);
 
 				// Prevent mousing down on the tip since it causes problems with .live() handling in IE due to VML
-				$('*', elems.tip).bind('click'+TIPNS+' mousedown'+TIPNS, function(event) { event.stopPropagation(); });
+				$('*', elems.tip).on('click'+TIPNS+' mousedown'+TIPNS, function(event) { event.stopPropagation(); });
 			}
 		},
 
@@ -574,7 +574,7 @@ function Tip(qTip, command)
 		destroy: function()
 		{
 			// Unbind events
-			tooltip.unbind(TIPNS);
+			tooltip.off(TIPNS);
 
 			// Remove the tip element(s)
 			if(elems.tip) {
