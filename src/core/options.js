@@ -1,11 +1,9 @@
 function invalidOpt(a) {
-	return a === NULL || !$.isPlainObject(a);
+	return a === NULL || $.type(a) !== 'object';
 }
 
 function invalidContent(c) {
-	return !$.isFunction(c) && (
-		(!c && !c.attr) || c.length < 1 || ('object' === typeof c && !c.jquery && !c.then)
-	);
+	return !( $.isFunction(c) || (c && c.attr) || c.length || ($.type(c) === 'object' && (c.jquery || c.then) ));
 }
 
 // Option object sanitizer
@@ -32,7 +30,7 @@ function sanitizeOptions(opts) {
 		if('ajax' in content) {
 			ajax = content.ajax;
 			once = ajax && ajax.once !== FALSE;
-			content.ajax = null;
+			delete content.ajax;
 
 			content.text = function(event, api) {
 				var deferred = $.ajax(
@@ -40,6 +38,7 @@ function sanitizeOptions(opts) {
 				)
 				.then(function(content) {
 					if(once) { api.set('content.text', content); }
+					console.log(once, api.get('content.text') );
 					return content;
 				},
 				function(xhr, status, error) {
@@ -252,7 +251,7 @@ PROTOTYPE.set = function(option, value) {
 		// Set new obj value
 		var obj = convertNotation(options, notation.toLowerCase()), previous;
 		previous = obj[0][ obj[1] ];
-		obj[0][ obj[1] ] = 'object' === typeof value && value.nodeType ? $(value) : value;
+		obj[0][ obj[1] ] = value && value.nodeType ? $(value) : value;
 
 		// Also check if we need to reposition
 		reposition = rmove.test(notation) || reposition;
@@ -261,8 +260,12 @@ PROTOTYPE.set = function(option, value) {
 		option[notation] = [obj[0], obj[1], value, previous];
 	});
 
+	console.log(options.content.text, option);
+
 	// Re-sanitize options
 	sanitizeOptions(options);
+
+	console.log(options.content.text, option);
 
 	/*
 	 * Execute any valid callbacks for the set options
