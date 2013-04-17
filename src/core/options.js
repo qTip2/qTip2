@@ -38,7 +38,6 @@ function sanitizeOptions(opts) {
 				)
 				.then(function(content) {
 					if(once) { api.set('content.text', content); }
-					console.log(once, api.get('content.text') );
 					return content;
 				},
 				function(xhr, status, error) {
@@ -260,12 +259,8 @@ PROTOTYPE.set = function(option, value) {
 		option[notation] = [obj[0], obj[1], value, previous];
 	});
 
-	console.log(options.content.text, option);
-
 	// Re-sanitize options
 	sanitizeOptions(options);
-
-	console.log(options.content.text, option);
 
 	/*
 	 * Execute any valid callbacks for the set options
