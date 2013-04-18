@@ -85,21 +85,21 @@ function calculateTip(corner, width, height)
 
 	// Define tip coordinates in terms of height and width values
 	tips = {
-		bottomright:	[[0,0],				[width,height],		[width,0]],
-		bottomleft:		[[0,0],				[width,0],				[0,height]],
-		topright:		[[0,height],		[width,0],				[width,height]],
-		topleft:			[[0,0],				[0,height],				[width,height]],
-		topcenter:		[[0,height],		[width2,0],				[width,height]],
-		bottomcenter:	[[0,0],				[width,0],				[width2,height]],
-		rightcenter:	[[0,0],				[width,height2],		[0,height]],
-		leftcenter:		[[width,0],			[width,height],		[0,height2]]
+		br:	[[0,0],			[width,height],		[width,0]],
+		bl:	[[0,0],			[width,0],			[0,height]],
+		tr:	[[0,height],	[width,0],			[width,height]],
+		tl:	[[0,0],			[0,height],			[width,height]],
+		tc:	[[0,height],	[width2,0],			[width,height]],
+		bc:	[[0,0],			[width,0],			[width2,height]],
+		rc:	[[0,0],			[width,height2],	[0,height]],
+		lc:	[[width,0],		[width,height],		[0,height2]]
 	};
 
 	// Set common side shapes
-	tips.lefttop = tips.bottomright; tips.righttop = tips.bottomleft;
-	tips.leftbottom = tips.topright; tips.rightbottom = tips.topleft;
+	tips.lt = tips.br; tips.rt = tips.bl;
+	tips.lb = tips.tr; tips.rb = tips.tl;
 
-	return tips[ corner.string() ];
+	return tips[ corner.abbrev() ];
 }
 
 // VML creation (for IE only)
@@ -120,6 +120,7 @@ function Tip(qTip, command)
 		size = [ opts.width, opts.height ],
 		color = { },
 		border = opts.border || 0,
+		enabled = FALSE,
 		tiphtml;
 
 	self.corner = NULL;
@@ -159,9 +160,9 @@ function Tip(qTip, command)
 		}
 
 		// Cache it
-		cache.corner = new PLUGINS.Corner( self.corner.string() );
+		cache.corner = self.corner.clone();
 
-		return self.corner.string() !== 'centercenter';
+		return self.corner.abbrev() !== 'c';
 	}
 
 	function parseWidth(corner, side, use) {
@@ -305,7 +306,7 @@ function Tip(qTip, command)
 	$.extend(self, {
 		init: function()
 		{
-			var enabled = parseCorner() && (HASCANVAS || PLUGINS.ie);
+			enabled = parseCorner() && (HASCANVAS || PLUGINS.ie);
 
 			// Determine tip corner and type
 			if(enabled) {
@@ -322,6 +323,8 @@ function Tip(qTip, command)
 
 		create: function()
 		{
+			if(!enabled) { return; }
+
 			var width = size[0],
 				height = size[1],
 				vml;
@@ -346,8 +349,9 @@ function Tip(qTip, command)
 			}
 		},
 
-		update: function(corner, position)
-		{
+		update: function(corner, position) {
+			if(!enabled) { return; }
+
 			var tip = elems.tip,
 				inner = tip.children(),
 				width = size[0],
@@ -630,8 +634,7 @@ CHECKS.tip = {
 		this.qtip.reposition();
 	},
 	'^content.title|style.(classes|widget)$': function() {
-		var tip = this.qtip.elements.tip;
-		tip && tip.length && this.update();
+		this.update();
 	}
 };
 

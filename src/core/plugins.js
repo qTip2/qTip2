@@ -9,7 +9,8 @@ PLUGINS = QTIP.plugins = {
 		var f = corner.charAt(0); this.precedance = (f === 't' || f === 'b' ? Y : X);
 
 		this.string = function() {
-			return this.precedance === Y || (this._forceY && this.y !== 'center') ? this.y+this.x : this.x+this.y;
+			var x = this.x, y = this.y;
+			return x === y ? x : this.precedance === Y || (this._forceY && y !== 'center') ? y+' '+x : x+' '+y;
 		};
 		this.abbrev = function() {
 			var x = this.x.substr(0,1), y = this.y.substr(0,1);
