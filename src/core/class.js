@@ -41,6 +41,7 @@ PROTOTYPE.render = function(show) {
 		title = options.content.title,
 		button = options.content.button,
 		posOptions = options.position,
+		namespace = '.'+this._id,
 		deferreds = [];
 
 	// Add ARIA attributes to target
@@ -102,7 +103,8 @@ PROTOTYPE.render = function(show) {
 	// Assign passed event callbacks (before plugins!)
 	$.each(options.events, function(name, callback) {
 		$.isFunction(callback) && tooltip.bind(
-			name === 'toggle' ? ['tooltipshow', 'tooltiphide'] : 'tooltip'+name, callback
+			(name === 'toggle' ? ['tooltipshow','tooltiphide'] : ['tooltip'+name])
+				.join(namespace)+namespace, callback
 		);
 	});
 

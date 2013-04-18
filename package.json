@@ -24,7 +24,7 @@
     "url": "http://github.com/Craga89/qTip2/issues"
   },
   "scripts": {
-    "build": "./nod_modules/.bin/grunt"
+    "build": "./node_modules/.bin/grunt"
   },
   "licenses": [
     {
