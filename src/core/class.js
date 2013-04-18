@@ -41,7 +41,7 @@ PROTOTYPE.render = function(show) {
 		title = options.content.title,
 		button = options.content.button,
 		posOptions = options.position,
-		namespace = '.'+this._id,
+		namespace = '.'+this._id+' ',
 		deferreds = [];
 
 	// Add ARIA attributes to target
