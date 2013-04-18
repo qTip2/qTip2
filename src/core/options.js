@@ -24,6 +24,7 @@ function sanitizeOptions(opts) {
 				text: (text = invalidContent(content) ? FALSE : content)
 			};
 		}
+		else { text = content.text; }
 
 		// DEPRECATED - Old content.ajax plugin functionality
 		// Converts it into the proper Deferred syntax
@@ -46,7 +47,9 @@ function sanitizeOptions(opts) {
 					api.set('content.text', status + ': ' + error);
 				});
 
-				return !once ? deferred : (text || $(this).attr(api.options.content.attr) || 'Loading...');
+				return !once ? deferred : (
+					text || $(this).attr(api.options.content.attr) || 'Loading...'
+				);
 			};
 		}
 
