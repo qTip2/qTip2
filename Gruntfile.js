@@ -47,12 +47,15 @@ module.exports = function(grunt) {
 
 				'<%=dirs.src%>/core/options.js',
 				'<%=dirs.src%>/core/content.js',
+				'<%=dirs.src%>/core/position.js',
+				'<%=dirs.src%>/core/toggle.js',
+				'<%=dirs.src%>/core/focus.js',
+				'<%=dirs.src%>/core/disable.js',
 				'<%=dirs.src%>/core/button.js',
 				'<%=dirs.src%>/core/style.js',
 				'<%=dirs.src%>/core/events.js',
 
 				'<%=dirs.src%>/core/jquery_methods.js',
-				'<%=dirs.src%>/core/plugins.js',
 				'<%=dirs.src%>/core/jquery_overrides.js',
 
 				'<%=dirs.src%>/core/defaults.js'

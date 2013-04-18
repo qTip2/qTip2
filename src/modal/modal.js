@@ -190,7 +190,7 @@ OVERLAY = function()
 			// Cache the state
 			prevState = state;
 
-			// If the tooltip is destroyed, set referenceto null
+			// If the tooltip is destroyed, set reference to null
 			if(current.destroyed) { current = NULL; }
 
 			return self;

@@ -53,8 +53,8 @@ function init(elem, id, opts)
 	posOptions.container = posOptions.container.eq(0);
 
 	// Convert position corner values into x and y strings
-	posOptions.at = new PLUGINS.Corner(posOptions.at, TRUE);
-	posOptions.my = new PLUGINS.Corner(posOptions.my);
+	posOptions.at = new CORNER(posOptions.at, TRUE);
+	posOptions.my = new CORNER(posOptions.my);
 
 	// Destroy previous tooltip if overwrite is enabled, or skip element if not
 	if(elem.data(NAMESPACE)) {

@@ -275,3 +275,4 @@ PROTOTYPE._unassignEvents = function() {
 	// Tooltip isn't yet rendered, remove render event
 	else { $(targets[0]).unbind('.'+this._id+'-create'); }
 };
+

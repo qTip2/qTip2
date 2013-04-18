@@ -16,7 +16,7 @@ PROTOTYPE._update = function(content, element, reposition) {
 		return content.then(function(c) {
 			cache.waiting = FALSE;
 			return self._updateContent(c, reposition);
-		}, null, function(c) {
+		}, NULL, function(c) {
 			return self._updateContent(c, reposition);
 		});
 	}
@@ -101,3 +101,4 @@ PROTOTYPE._removeTitle = function(reposition)
 		if(reposition !== FALSE) { this.reposition(); }
 	}
 };
+

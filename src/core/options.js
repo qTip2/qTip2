@@ -37,7 +37,7 @@ function sanitizeOptions(opts) {
 				var deferred = $.ajax(
 					$.extend({}, ajax, { context: api })
 				)
-				.then(ajax.success, null, ajax.error)
+				.then(ajax.success, NULL, ajax.error)
 				.then(function(content) {
 					if(content && once) { api.set('content.text', content); }
 					return content;
@@ -139,7 +139,7 @@ CHECKS = PROTOTYPE.checks = {
 
 		// Position checks
 		'^position.(my|at)$': function(obj, o, v){
-			'string' === typeof v && (obj[o] = new PLUGINS.Corner(v, o === 'at'));
+			'string' === typeof v && (obj[o] = new CORNER(v, o === 'at'));
 		},
 		'^position.container$': function(obj, o, v){
 			this.tooltip.appendTo(v);
@@ -281,3 +281,4 @@ PROTOTYPE.set = function(option, value) {
 
 	return this;
 };
+

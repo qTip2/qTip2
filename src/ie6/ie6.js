@@ -138,9 +138,9 @@ function Ie6(api)
 	self.init();
 }
 
-IE6 = PLUGINS.ie6 = function(api) {
+IE6 = BROWSER.ie6 = function(api) {
 	// Proceed only if the browser is IE6
-	return PLUGINS.ie === 6 ? new Ie6(api) : FALSE;
+	return BROWSER.ie === 6 ? new Ie6(api) : FALSE;
 };
 
 IE6.initialize = 'render';

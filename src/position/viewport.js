@@ -76,13 +76,13 @@ PLUGINS.viewport = function(api, position, posOptions, targetWidth, targetHeight
 			// Check for overflow on the left/top
 			if(overflow1 > 0 && (mySide !== side1 || overflow2 > 0)) {
 				position[side1] -= offset + adjust;
-				newMy['invert'+side](side1);
+				newMy.invert(side, side1);
 			}
 
 			// Check for overflow on the bottom/right
 			else if(overflow2 > 0 && (mySide !== side2 || overflow1 > 0)  ) {
 				position[side1] -= (mySide === CENTER ? -offset : offset) + adjust;
-				newMy['invert'+side](side2);
+				newMy.invert(side, side2);
 			}
 
 			// Make sure we haven't made things worse with the adjustment and reset if so

@@ -151,10 +151,10 @@ function Tip(qTip, command)
 		}
 		else {
 			if(corner === TRUE) {
-				self.corner = new PLUGINS.Corner(my);
+				self.corner = new CORNER(my);
 			}
 			else if(!corner.string) {
-				self.corner = new PLUGINS.Corner(corner);
+				self.corner = new CORNER(corner);
 				self.corner.fixed = TRUE;
 			}
 		}
@@ -178,7 +178,7 @@ function Tip(qTip, command)
 	function parseRadius(corner) {
 		var prop = BORDER + camel(corner.y) + camel(corner.x) + 'Radius';
 
-		return PLUGINS.ie < 9 ? 0 :
+		return BROWSER.ie < 9 ? 0 :
 			intCss(corner.y === TOP && elems.titlebar || elems.content, prop) || intCss(elems.tooltip, prop) || 0;
 	}
 
@@ -306,7 +306,7 @@ function Tip(qTip, command)
 	$.extend(self, {
 		init: function()
 		{
-			enabled = parseCorner() && (HASCANVAS || PLUGINS.ie);
+			enabled = parseCorner() && (HASCANVAS || BROWSER.ie);
 
 			// Determine tip corner and type
 			if(enabled) {
@@ -368,7 +368,7 @@ function Tip(qTip, command)
 
 			// Otherwise inherit mimic properties from the corner object as necessary
 			else {
-				mimic = new PLUGINS.Corner(mimic);
+				mimic = new CORNER(mimic);
 				mimic.precedance = corner.precedance;
 
 				if(mimic.x === 'inherit') { mimic.x = corner.x; }
@@ -481,7 +481,7 @@ function Tip(qTip, command)
 
 				// Setup VML-specific offset for pixel-perfection
 				translate[2] = border && /^(r|b)/i.test(corner.string()) ? 
-					PLUGINS.ie === 8 ? 2 : 1 : 0;
+					BROWSER.ie === 8 ? 2 : 1 : 0;
 
 				// Set initial CSS
 				inner.css({
@@ -586,7 +586,7 @@ function Tip(qTip, command)
 			}
 
 			// Delete references
-			self.corner = self.mimic = self.size = null;
+			self.corner = self.mimic = self.size = NULL;
 		}
 	});
 
