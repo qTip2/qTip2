@@ -36,8 +36,9 @@ function sanitizeOptions(opts) {
 				var deferred = $.ajax(
 					$.extend({}, ajax, { context: api })
 				)
+				.then(ajax.success, null, ajax.error)
 				.then(function(content) {
-					if(once) { api.set('content.text', content); }
+					if(content && once) { api.set('content.text', content); }
 					return content;
 				},
 				function(xhr, status, error) {
