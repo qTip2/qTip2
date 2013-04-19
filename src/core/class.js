@@ -112,7 +112,7 @@ PROTOTYPE.render = function(show) {
 	$.each(PLUGINS, function(name) {
 		var instance;
 		if(this.initialize === 'render' && (instance = this(self))) {
-			(self.plugins[name] = instance).qtip = self;
+			self.plugins[name] = instance;
 		}
 	});
 

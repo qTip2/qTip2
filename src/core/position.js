@@ -1,33 +1,4 @@
-// Corner class
-var C = (CORNER = function(corner, forceY) {
-	corner = ('' + corner).replace(/([A-Z])/, ' $1').replace(/middle/gi, CENTER).toLowerCase();
-	this.x = (corner.match(/left|right/i) || corner.match(/center/) || ['inherit'])[0].toLowerCase();
-	this.y = (corner.match(/top|bottom|center/i) || ['inherit'])[0].toLowerCase();
-	this.forceY = !!forceY;
-
-	var f = corner.charAt(0);
-	this.precedance = (f === 't' || f === 'b' ? Y : X);
-}).prototype;
-
-C.invert = function(z, center) {
-	this[z] = this[z] === LEFT ? RIGHT : this[z] === RIGHT ? LEFT : center || this[z];	
-};
-
-C.string = function() {
-	var x = this.x, y = this.y;
-	return x === y ? x : this.precedance === Y || (this.forceY && y !== 'center') ? y+' '+x : x+' '+y;
-};
-
-C.abbrev = function() {
-	var result = this.string().split(' ');
-	return result[0].charAt(0) + result[1].charAt(0);
-};
-
-C.clone = function() {
-	return new CORNER( this.string(), this.forceY );
-};
-
-(PROTOTYPE.reposition = function(event, effect) {
+PROTOTYPE.reposition = function(event, effect) {
 	if(!this.rendered || this.positioning || this.destroyed) { return this; }
 
 	// Set positioning flag
@@ -200,10 +171,10 @@ C.clone = function() {
 	this.positioning = FALSE;
 
 	return this;
-})
+};
 
 // Custom (more correct for qTip!) offset calculator
-.offset = function(elem, pos, container) {
+PROTOTYPE.reposition.offset = function(elem, pos, container) {
 	if(!container[0]) { return pos; }
 
 	var ownerDocument = $(elem[0].ownerDocument),
@@ -244,4 +215,33 @@ C.clone = function() {
 	}
 
 	return pos;
+};
+
+// Corner class
+var C = (CORNER = PROTOTYPE.reposition.Corner = function(corner, forceY) {
+	corner = ('' + corner).replace(/([A-Z])/, ' $1').replace(/middle/gi, CENTER).toLowerCase();
+	this.x = (corner.match(/left|right/i) || corner.match(/center/) || ['inherit'])[0].toLowerCase();
+	this.y = (corner.match(/top|bottom|center/i) || ['inherit'])[0].toLowerCase();
+	this.forceY = !!forceY;
+
+	var f = corner.charAt(0);
+	this.precedance = (f === 't' || f === 'b' ? Y : X);
+}).prototype;
+
+C.invert = function(z, center) {
+	this[z] = this[z] === LEFT ? RIGHT : this[z] === RIGHT ? LEFT : center || this[z];	
+};
+
+C.string = function() {
+	var x = this.x, y = this.y;
+	return x === y ? x : this.precedance === Y || (this.forceY && y !== 'center') ? y+' '+x : x+' '+y;
+};
+
+C.abbrev = function() {
+	var result = this.string().split(' ');
+	return result[0].charAt(0) + result[1].charAt(0);
+};
+
+C.clone = function() {
+	return new CORNER( this.string(), this.forceY );
 };

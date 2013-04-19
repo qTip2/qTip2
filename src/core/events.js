@@ -82,6 +82,9 @@ PROTOTYPE._bind = function(target, events, method, suffix) {
 		$.proxy(method, this)
 	);
 };
+PROTOTYPE._unbind = function(target, suffix) {
+	events.length && target.unbind('.' + this._id + (suffix || ''));
+};
 
 // Event trigger
 PROTOTYPE._trigger = function(type, args, event) {
