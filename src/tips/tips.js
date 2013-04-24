@@ -60,7 +60,6 @@ if(!HASCANVAS) {
 
 function Tip(qtip, options) {
 	this.options = options;
-	this.border = options.border || 0;
 	this.offset = options.offset;
 	this.size = [ options.width, options.height ];
 
@@ -94,7 +93,7 @@ $.extend(Tip.prototype, {
 		}
 
 		// Bind update events
-		qtip._bind(qtip.tooltip, 'tooltipmove', this.reposition, '-tip');
+		qtip._bind(qtip.tooltip, 'tooltipmove', this.reposition, '-tip', this);
 
 		// Create it
 		this.create();
@@ -178,8 +177,8 @@ $.extend(Tip.prototype, {
 
 	_calculateSize: function(corner) {
 		var y = corner.precedance === Y,
-			width = this.size [ y ? 0 : 1 ],
-			height = this.size [ y ? 1 : 0 ],
+			width = this.options[ y ? 'height' : 'width' ],
+			height = this.options[ y ? 'width' : 'height' ],
 			isCenter = corner.abbrev() === 'c',
 			base = width * (isCenter ? 0.5 : 1),
 			pow = Math.pow,
@@ -188,7 +187,7 @@ $.extend(Tip.prototype, {
 
 		smallHyp = Math.sqrt( pow(base, 2) + pow(height, 2) ),
 		hyp = [ (this.border / base) * smallHyp, (this.border / height) * smallHyp ];
-		
+
 		hyp[2] = Math.sqrt( pow(hyp[0], 2) - pow(this.border, 2) );
 		hyp[3] = Math.sqrt( pow(hyp[1], 2) - pow(this.border, 2) );
 
@@ -196,6 +195,7 @@ $.extend(Tip.prototype, {
 		ratio = bigHyp / smallHyp;
 
 		result = [ round(ratio * width), round(ratio * height) ];
+
 		return y ? result : result.reverse();
 	},
 
@@ -249,9 +249,10 @@ $.extend(Tip.prototype, {
 			tip = this.element,
 			inner = tip.children(),
 			options = this.options,
+			size = this.size,
 			mimic = options.mimic,
 			round = Math.round,
-			size, color, precedance, context,
+			color, precedance, context,
 			coords, translate, newSize, border;
 
 		// Re-determine tip if not already set
@@ -286,7 +287,7 @@ $.extend(Tip.prototype, {
 			border = this.border = this._parseWidth(corner, corner[corner.precedance]);
 
 			// If border width isn't zero, use border color as fill (1.0 style tips)
-			if(options.border && border > 0) { color[0] = color[1]; }
+			if(options.border && border < 1) { color[0] = color[1]; }
 
 			// Set border width (use detected border width if options.border is true)
 			this.border = border = options.border !== TRUE ? options.border : border;
@@ -299,7 +300,7 @@ $.extend(Tip.prototype, {
 		coords = this._calculateTip(mimic);
 
 		// Determine tip size
-		size = this.size = newSize = this._calculateSize(corner);
+		newSize = this.size = this._calculateSize(corner);
 		tip.css({
 			width: newSize[0],
 			height: newSize[1],
@@ -407,15 +408,15 @@ $.extend(Tip.prototype, {
 			tip = this.element,
 			userOffset = Math.max(0, this.options.offset),
 			isWidget = this.qtip.tooltip.hasClass('ui-widget'),
-			position = { top: '', bottom: '', left: '', right: '' },
-			precedance, dimensions, corners;
+			position = {  },
+			precedance, size, corners;
 
 		// Inherit corner if not provided
 		corner = corner || this.corner;
 		precedance = corner.precedance;
 
 		// Determine which tip dimension to use for adjustment
-		dimensions = this._calculateSize(this.corner);
+		size = this._calculateSize(corner);
 
 		// Setup corners and offset array
 		corners = [ corner.x, corner.y ];
@@ -428,7 +429,7 @@ $.extend(Tip.prototype, {
 			if(side === CENTER) {
 				b = precedance === Y ? LEFT : TOP;
 				position[ b ] = '50%';
-				position[MARGIN+'-' + b] = -Math.round(dimensions[ precedance === Y ? 0 : 1 ] / 2) + userOffset;
+				position[MARGIN+'-' + b] = -Math.round(size[ precedance === Y ? 0 : 1 ] / 2) + userOffset;
 			}
 			else {
 				b = self._parseWidth(corner, side, isWidget ? tooltip : NULL);
@@ -439,16 +440,16 @@ $.extend(Tip.prototype, {
 			}
 		});
 
-		// Adjust for tip dimensions
-		position[ corner[precedance] ] -= dimensions[ precedance === X ? 0 : 1 ];
+		// Adjust for tip size
+		position[ corner[precedance] ] -= size[ precedance === X ? 0 : 1 ];
 
 		// Set and return new position
-		tip.css({ margin: '' }).css(position);
+		tip.css({ margin: '', top: '', bottom: '', left: '', right: '' }).css(position);
 		return position;
 	},
 
 	reposition: function(event, api, pos, viewport) {
-		if(!this.enabled || true) { return; }
+		if(!this.enabled) { return; }
 
 		var cache = api.cache,
 			newCorner = this.corner.clone(),
@@ -485,8 +486,8 @@ $.extend(Tip.prototype, {
 
 		// Setup tip offset properties
 		offset = this.calculate(newCorner, adjust);
-		offset[ newCorner.x ] += parseWidth(newCorner, elements, newCorner.x);
-		offset[ newCorner.y ] += parseWidth(newCorner, elements, newCorner.y);
+		offset[ newCorner.x ] += this._parseWidth(newCorner, newCorner.x);
+		offset[ newCorner.y ] += this._parseWidth(newCorner, newCorner.y);
 
 		// Readjust offset object to make it left/top
 		if(offset.right !== undefined) { offset.left = -offset.right; }
@@ -532,7 +533,7 @@ $.extend(Tip.prototype, {
 		* direction that would cause it to be anywhere but the
 		* outer border, hide it!
 		*/
-		elems.tip.css(css).toggle(
+		this.element.css(css).toggle(
 			!((shift.x && shift.y) || (newCorner.x === CENTER && shift.y) || (newCorner.y === CENTER && shift.x))
 		);
 

@@ -75,11 +75,11 @@ PROTOTYPE._storeMouse = function(event) {
 };
 
 // Bind events
-PROTOTYPE._bind = function(target, events, method, suffix) {
+PROTOTYPE._bind = function(target, events, method, suffix, context) {
 	var ns = '.' + this._id + (suffix || '');
 	events.length && target.bind(
 		(events.split ? events : events.join(ns + ' ')) + ns,
-		$.proxy(method, this)
+		$.proxy(method, context || this)
 	);
 };
 PROTOTYPE._unbind = function(target, suffix) {
