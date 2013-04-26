@@ -2,11 +2,11 @@ PROTOTYPE.disable = function(state) {
 	if(this.destroyed) { return this; }
 
 	if('boolean' !== typeof state) {
-		state = !(this.tooltip.hasClass(disabledClass) || this.disabled);
+		state = !(this.tooltip.hasClass(CLASS_DISABLED) || this.disabled);
 	}
 
 	if(this.rendered) {
-		this.tooltip.toggleClass(disabledClass, state)
+		this.tooltip.toggleClass(CLASS_DISABLED, state)
 			.attr('aria-disabled', state);
 	}
 

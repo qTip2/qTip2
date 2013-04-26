@@ -61,7 +61,7 @@ $.each({
 if(!$.ui) {
 	$['cleanData'+replaceSuffix] = $.cleanData;
 	$.cleanData = function( elems ) {
-		for(var i = 0, elem; (elem = $( elems[i] )).length && elem.attr(HASATTR); i++) {
+		for(var i = 0, elem; (elem = $( elems[i] )).length && elem.attr(ATTR_ID); i++) {
 			try { elem.triggerHandler('removeqtip'); }
 			catch( e ) {}
 		}

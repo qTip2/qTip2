@@ -151,10 +151,8 @@ CHECKS = PROTOTYPE.checks = {
 		},
 
 		// Style checks
-		'^style.classes$': function(obj, o, v) {
-			this.tooltip.attr('class', 
-				[ NAMESPACE, defaultClass, v, NAMESPACE + '-pos-' + this.options.position.my.abbrev() ].join(' ')
-			);
+		'^style.classes$': function(obj, o, v, p) {
+			this.tooltip.removeClass(p).addClass(v);
 		},
 		'^style.width|height': function(obj, o, v) {
 			this.tooltip.css(o, v);
@@ -163,7 +161,7 @@ CHECKS = PROTOTYPE.checks = {
 			this._setWidget();
 		},
 		'^style.def': function(obj, o, v) {
-			this.tooltip.toggleClass(defaultClass, !!v);
+			this.tooltip.toggleClass(CLASS_DEFAULT, !!v);
 		},
 
 		// Events check

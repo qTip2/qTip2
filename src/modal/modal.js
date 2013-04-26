@@ -51,7 +51,7 @@ OVERLAY = function()
 
 		var target = $(event.target),
 			tooltip = current.tooltip,
-			container = target.closest(selector),
+			container = target.closest(SELECTOR),
 			targetOnTop;
 
 		// Determine if input container target is above this
@@ -61,7 +61,7 @@ OVERLAY = function()
 		// If we're showing a modal, but focus has landed on an input below
 		// this modal, divert focus to the first visible input in this modal
 		// or if we can't find one... the tooltip itself
-		if(!targetOnTop && target.closest(selector)[0] !== tooltip[0]) {
+		if(!targetOnTop && target.closest(SELECTOR)[0] !== tooltip[0]) {
 			focusInputs(target);
 		}
 
@@ -216,7 +216,7 @@ $.extend(Modal.prototype, {
 		// Set overlay reference
 		qtip.elements.overlay = OVERLAY.elem;
 
-		// Add unique attribute so we can grab modal tooltips easily via a selector, and set z-index
+		// Add unique attribute so we can grab modal tooltips easily via a SELECTOR, and set z-index
 		tooltip.addClass(MODALCLASS).css('z-index', PLUGINS.modal.zindex + $(MODALSELECTOR).length);
 		
 		// Apply our show/hide/focus modal events
@@ -256,10 +256,10 @@ $.extend(Modal.prototype, {
 			});
 
 			// Fire blur event for focused tooltip
-			qtips.filter('.' + focusClass).qtip('blur', event.originalEvent);
+			qtips.filter('.' + CLASS_FOCUS).qtip('blur', event.originalEvent);
 
 			// Set the new z-index
-			tooltip.addClass(focusClass)[0].style.zIndex = newIndex;
+			tooltip.addClass(CLASS_FOCUS)[0].style.zIndex = newIndex;
 
 			// Set current
 			OVERLAY.update(api);

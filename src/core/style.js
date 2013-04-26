@@ -9,13 +9,13 @@ PROTOTYPE._setWidget = function()
 	var on = this.options.style.widget,
 		elements = this.elements,
 		tooltip = elements.tooltip,
-		disabled = tooltip.hasClass(disabledClass);
+		disabled = tooltip.hasClass(CLASS_DISABLED);
 
-	tooltip.removeClass(disabledClass);
-	disabledClass = on ? 'ui-state-disabled' : 'qtip-disabled';
-	tooltip.toggleClass(disabledClass, disabled);
+	tooltip.removeClass(CLASS_DISABLED);
+	CLASS_DISABLED = on ? 'ui-state-disabled' : 'qtip-disabled';
+	tooltip.toggleClass(CLASS_DISABLED, disabled);
 
-	tooltip.toggleClass('ui-helper-reset '+createWidgetClass(), on).toggleClass(defaultClass, this.options.style.def && !on);
+	tooltip.toggleClass('ui-helper-reset '+createWidgetClass(), on).toggleClass(CLASS_DEFAULT, this.options.style.def && !on);
 	
 	if(elements.content) {
 		elements.content.toggleClass( createWidgetClass('content'), on);

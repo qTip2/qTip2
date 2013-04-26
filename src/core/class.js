@@ -20,7 +20,7 @@ function QTip(target, options, id, attr) {
 		target: $(),
 		disabled: FALSE,
 		attr: attr,
-		onTarget: FALSE,
+		onTooltip: FALSE,
 		lastClass: ''
 	};
 
@@ -50,7 +50,7 @@ PROTOTYPE.render = function(show) {
 	// Create tooltip element
 	this.tooltip = elements.tooltip = tooltip = $('<div/>', {
 		'id': this._id,
-		'class': [ NAMESPACE, defaultClass, options.style.classes, NAMESPACE + '-pos-' + options.position.my.abbrev() ].join(' '),
+		'class': [ NAMESPACE, CLASS_DEFAULT, options.style.classes, NAMESPACE + '-pos-' + options.position.my.abbrev() ].join(' '),
 		'width': options.style.width || '',
 		'height': options.style.height || '',
 		'tracking': posOptions.target === 'mouse' && posOptions.adjust.mouse,
@@ -62,7 +62,8 @@ PROTOTYPE.render = function(show) {
 		'aria-describedby': this._id + '-content',
 		'aria-hidden': TRUE
 	})
-	.toggleClass(disabledClass, this.disabled)
+	.toggleClass(CLASS_DISABLED, this.disabled)
+	.attr(ATTR_ID, this.id)
 	.data(NAMESPACE, this)
 	.appendTo(posOptions.container)
 	.append(
@@ -134,6 +135,9 @@ PROTOTYPE.render = function(show) {
 		self.hiddenDuringWait = FALSE;
 	});
 
+	// Expose API
+	QTIP.api[this.id] = this;
+
 	return this;
 };
 
@@ -165,7 +169,7 @@ PROTOTYPE.destroy = function(immediate) {
 		this._unassignEvents();
 
 		// Remove api object and ARIA attributes
-		target.removeData(NAMESPACE).removeAttr(HASATTR)
+		target.removeData(NAMESPACE).removeAttr(ATTR_ID)
 			.removeAttr('aria-describedby');
 
 		// Reset old title attribute if removed
@@ -179,7 +183,10 @@ PROTOTYPE.destroy = function(immediate) {
 		// Remove ID from used id objects, and delete object references
 		// for better garbage collection and leak protection
 		this.options = this.elements = this.cache = this.timers = 
-			this.plugins = this.mouse = usedIDs[this.id] = NULL;
+			this.plugins = this.mouse = NULL;
+
+		// Delete epoxsed API object
+		delete QTIP.api[this.id];
 	}
 
 	// If an immediate destory is needed

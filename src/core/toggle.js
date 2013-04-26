@@ -74,7 +74,7 @@ PROTOTYPE.toggle = function(state, event) {
 
 		// Hide other tooltips if tooltip is solo
 		if(!!opts.solo) {
-			(typeof opts.solo === 'string' ? $(opts.solo) : $(selector, opts.solo))
+			(typeof opts.solo === 'string' ? $(opts.solo) : $(SELECTOR, opts.solo))
 				.not(tooltip).not(opts.target).qtip('hide', $.Event('tooltipsolo'));
 		}
 	}
@@ -86,7 +86,7 @@ PROTOTYPE.toggle = function(state, event) {
 		delete cache.origin;
 
 		// Remove mouse tracking event if not needed (all tracking qTips are hidden)
-		if(trackingBound && !$(selector+'[tracking="true"]:visible', opts.solo).not(tooltip).length) {
+		if(trackingBound && !$(SELECTOR+'[tracking="true"]:visible', opts.solo).not(tooltip).length) {
 			$(document).unbind('mousemove.'+NAMESPACE);
 			trackingBound = FALSE;
 		}

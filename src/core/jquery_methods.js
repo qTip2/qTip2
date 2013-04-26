@@ -67,7 +67,7 @@ function init(elem, id, opts)
 	}
 
 	// Add has-qtip attribute
-	elem.attr(HASATTR, true);
+	elem.attr(ATTR_HAS, id);
 
 	// Remove title attribute and store it if present
 	if(config.suppress && (title = elem.attr('title'))) {
@@ -150,7 +150,7 @@ QTIP.bind = function(opts, event)
 
 		// Find next available ID, or use custom ID if provided
 		id = $.isArray(opts.id) ? opts.id[i] : opts.id;
-		id = !id || id === FALSE || id.length < 1 || usedIDs[id] ? QTIP.nextid++ : (usedIDs[id] = id);
+		id = !id || id === FALSE || id.length < 1 || QTIP.api[id] ? QTIP.nextid++ : id;
 
 		// Setup events namespace
 		namespace = '.qtip-'+id+'-create';
@@ -158,6 +158,7 @@ QTIP.bind = function(opts, event)
 		// Initialize the qTip and re-grab newly sanitized options
 		api = init($(this), id, opts);
 		if(api === FALSE) { return TRUE; }
+		else { QTIP.api[id] = api; }
 		options = api.options;
 
 		// Initialize plugins
@@ -226,3 +227,6 @@ QTIP.bind = function(opts, event)
 		if(options.show.ready || options.prerender) { hoverIntent(event); }
 	});
 };
+
+// Populated in render method
+QTIP.api = {};
