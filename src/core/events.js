@@ -75,15 +75,15 @@ PROTOTYPE._storeMouse = function(event) {
 };
 
 // Bind events
-PROTOTYPE._bind = function(target, events, method, suffix, context) {
-	var ns = '.' + this._id + (suffix || '');
-	events.length && target.bind(
+PROTOTYPE._bind = function(targets, events, method, suffix, context) {
+	var ns = '.' + this._id + (suffix ? '-'+suffix : '');
+	events.length && $(targets).bind(
 		(events.split ? events : events.join(ns + ' ')) + ns,
 		$.proxy(method, context || this)
 	);
 };
-PROTOTYPE._unbind = function(target, suffix) {
-	events.length && target.unbind('.' + this._id + (suffix || ''));
+PROTOTYPE._unbind = function(targets, suffix) {
+	$(targets).unbind('.' + this._id + (suffix ? '-'+suffix : ''));
 };
 
 // Event trigger
@@ -270,9 +270,9 @@ PROTOTYPE._unassignEvents = function() {
 
 	// Check if tooltip is rendered
 	if(this.rendered) {
-		$([]).pushStack( $.grep(targets, function(i) {
+		this._unbind($([]).pushStack( $.grep(targets, function(i) {
 			return typeof i === 'object';
-		}) ).unbind('.'+this._id);
+		})));
 	}
 
 	// Tooltip isn't yet rendered, remove render event

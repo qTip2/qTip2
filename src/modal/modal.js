@@ -70,8 +70,7 @@ OVERLAY = function()
 	}
 
 	$.extend(self, {
-		init: function()
-		{
+		init: function() {
 			// Create document overlay
 			elem = self.elem = $('<div />', {
 				id: 'qtip-overlay',
@@ -124,8 +123,7 @@ OVERLAY = function()
 			else { focusableElems = []; }
 		},
 
-		toggle: function(api, state, duration)
-		{
+		toggle: function(api, state, duration) {
 			var docBody = $(document.body),
 				tooltip = api.tooltip,
 				options = api.options.show.modal,
@@ -201,118 +199,107 @@ OVERLAY = function()
 };
 OVERLAY = new OVERLAY();
 
-function Modal(api)
-{
-	var self = this,
-		options = api.options.show.modal,
-		elems = api.elements,
-		tooltip = elems.tooltip,
-		namespace = MODALSELECTOR + api.id,
-		overlay;
+function Modal(api, options) {
+	this.options = options;
+	this._ns = '-modal';
 
-	$.extend(self, {
-		init: function()
-		{
-			// If modal is disabled... return
-			if(!options.on) { return self; }
+	this.init( (this.qtip = api) );
+}
 
-			// Set overlay reference
-			overlay = elems.overlay = OVERLAY.elem;
+$.extend(Modal.prototype, {
+	init: function(qtip) {
+		var tooltip = qtip.tooltip;
 
-			// Add unique attribute so we can grab modal tooltips easily via a selector
-			tooltip.addClass(MODALCLASS)
+		// If modal is disabled... return
+		if(!this.options.on) { return this; }
 
-			// Set z-index
-			.css('z-index', PLUGINS.modal.zindex + $(MODALSELECTOR).length)
-			
-			// Apply our show/hide/focus modal events
-			.bind('tooltipshow'+namespace+' tooltiphide'+namespace, function(event, api, duration) {
-				var oEvent = event.originalEvent;
+		// Set overlay reference
+		qtip.elements.overlay = OVERLAY.elem;
 
-				// Make sure mouseout doesn't trigger a hide when showing the modal and mousing onto backdrop
-				if(event.target === tooltip[0]) {
-					if(oEvent && event.type === 'tooltiphide' && /mouse(leave|enter)/.test(oEvent.type) && $(oEvent.relatedTarget).closest(overlay[0]).length) {
-						try { event.preventDefault(); } catch(e) {}
-					}
-					else if(!oEvent || (oEvent && !oEvent.solo)) {
-						self.toggle(event, event.type === 'tooltipshow', duration);
-					}
+		// Add unique attribute so we can grab modal tooltips easily via a selector, and set z-index
+		tooltip.addClass(MODALCLASS).css('z-index', PLUGINS.modal.zindex + $(MODALSELECTOR).length);
+		
+		// Apply our show/hide/focus modal events
+		qtip._bind(tooltip, ['tooltipshow', 'tooltiphide'], function(event, api, duration) {
+			var oEvent = event.originalEvent;
+
+			// Make sure mouseout doesn't trigger a hide when showing the modal and mousing onto backdrop
+			if(event.target === tooltip[0]) {
+				if(oEvent && event.type === 'tooltiphide' && /mouse(leave|enter)/.test(oEvent.type) && $(oEvent.relatedTarget).closest(overlay[0]).length) {
+					try { event.preventDefault(); } catch(e) {}
 				}
-			})
+				else if(!oEvent || (oEvent && !oEvent.solo)) {
+					this.toggle(event, event.type === 'tooltipshow', duration);
+				}
+			}
+		}, this._ns, this);
 
-			// Adjust modal z-index on tooltip focus
-			.bind('tooltipfocus'+namespace, function(event, api) {
-				// If focus was cancelled before it reached us, don't do anything
-				if(event.isDefaultPrevented() || event.target !== tooltip[0]) { return; }
+		// Adjust modal z-index on tooltip focus
+		qtip._bind(tooltip, 'tooltipfocus', function(event, api) {
+			// If focus was cancelled before it reached us, don't do anything
+			if(event.isDefaultPrevented() || event.target !== tooltip[0]) { return; }
 
-				var qtips = $(MODALSELECTOR),
+			var qtips = $(MODALSELECTOR),
 
-				// Keep the modal's lower than other, regular qtips
-				newIndex = PLUGINS.modal.zindex + qtips.length,
-				curIndex = parseInt(tooltip[0].style.zIndex, 10);
+			// Keep the modal's lower than other, regular qtips
+			newIndex = PLUGINS.modal.zindex + qtips.length,
+			curIndex = parseInt(tooltip[0].style.zIndex, 10);
 
-				// Set overlay z-index
-				overlay[0].style.zIndex = newIndex - 1;
+			// Set overlay z-index
+			OVERLAY.elem[0].style.zIndex = newIndex - 1;
 
-				// Reduce modal z-index's and keep them properly ordered
-				qtips.each(function() {
-					if(this.style.zIndex > curIndex) {
-						this.style.zIndex -= 1;
-					}
-				});
-
-				// Fire blur event for focused tooltip
-				qtips.filter('.' + focusClass).qtip('blur', event.originalEvent);
-
-				// Set the new z-index
-				tooltip.addClass(focusClass)[0].style.zIndex = newIndex;
-
-				// Set current
-				OVERLAY.update(api);
-
-				// Prevent default handling
-				try { event.preventDefault(); } catch(e) {}
-			})
-
-			// Focus any other visible modals when this one hides
-			.bind('tooltiphide'+namespace, function(event) {
-				if(event.target === tooltip[0]) {
-					$(MODALSELECTOR).filter(':visible').not(tooltip).last().qtip('focus', event);
+			// Reduce modal z-index's and keep them properly ordered
+			qtips.each(function() {
+				if(this.style.zIndex > curIndex) {
+					this.style.zIndex -= 1;
 				}
 			});
 
-			return self;
-		},
+			// Fire blur event for focused tooltip
+			qtips.filter('.' + focusClass).qtip('blur', event.originalEvent);
 
-		toggle: function(event, state, duration)
-		{
-			// Make sure default event hasn't been prevented
-			if(event && event.isDefaultPrevented()) { return self; }
+			// Set the new z-index
+			tooltip.addClass(focusClass)[0].style.zIndex = newIndex;
 
-			// Toggle it
-			OVERLAY.toggle(api, !!state, duration);
+			// Set current
+			OVERLAY.update(api);
 
-			return self;
-		},
+			// Prevent default handling
+			try { event.preventDefault(); } catch(e) {}
+		}, this._ns, this);
 
-		destroy: function() {
-			// Remove modal class
-			tooltip.removeClass(MODALCLASS);
+		// Focus any other visible modals when this one hides
+		qtip._bind(tooltip, 'tooltiphide', function(event) {
+			if(event.target === tooltip[0]) {
+				$(MODALSELECTOR).filter(':visible').not(tooltip).last().qtip('focus', event);
+			}
+		}, this._ns, this);
+	},
 
-			// Remove bound events
-			tooltip.add(document).unbind(namespace);
+	toggle: function(event, state, duration) {
+		// Make sure default event hasn't been prevented
+		if(event && event.isDefaultPrevented()) { return this; }
 
-			// Delete element reference
-			OVERLAY.toggle(api, FALSE);
-			delete elems.overlay;
-		}
-	});
+		// Toggle it
+		OVERLAY.toggle(this.qtip, !!state, duration);
+	},
 
-	self.init();
-}
+	destroy: function() {
+		// Remove modal class
+		this.qtip.tooltip.removeClass(MODALCLASS);
+
+		// Remove bound events
+		this.qtip._unbind(this.qtip.tooltip, this._ns);
+
+		// Delete element reference
+		OVERLAY.toggle(this.qtip, FALSE);
+		delete this.qtip.elements.overlay;
+	}
+});
+
 
 MODAL = PLUGINS.modal = function(api) {
-	return new Modal(api);
+	return new Modal(api, api.options.show.modal);
 };
 
 // Setup sanitiztion rules

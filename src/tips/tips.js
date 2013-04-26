@@ -59,6 +59,7 @@ if(!HASCANVAS) {
 
 
 function Tip(qtip, options) {
+	this._ns = 'tip';
 	this.options = options;
 	this.offset = options.offset;
 	this.size = [ options.width, options.height ];
@@ -72,7 +73,7 @@ $.extend(Tip.prototype, {
 		var context, tip;
 
 		// Create tip element and prepend to the tooltip
-		tip = this.element = qtip.elements.tip = $('<div />', { 'class': 'qtip-tip' }).prependTo(qtip.tooltip);
+		tip = this.element = qtip.elements.tip = $('<div />', { 'class': NAMESPACE+'-tip' }).prependTo(qtip.tooltip);
 
 		// Create tip drawing element(s)
 		if(HASCANVAS) {
@@ -89,11 +90,11 @@ $.extend(Tip.prototype, {
 			this.element.html(context + context);
 
 			// Prevent mousing down on the tip since it causes problems with .live() handling in IE due to VML
-			qtip._bind( $('*', tip).add(tip), ['click', 'mousedown'], function(event) { event.stopPropagation(); }, '-tip');
+			qtip._bind( $('*', tip).add(tip), ['click', 'mousedown'], function(event) { event.stopPropagation(); }, this._ns);
 		}
 
 		// Bind update events
-		qtip._bind(qtip.tooltip, 'tooltipmove', this.reposition, '-tip', this);
+		qtip._bind(qtip.tooltip, 'tooltipmove', this.reposition, this._ns, this);
 
 		// Create it
 		this.create();
@@ -106,6 +107,13 @@ $.extend(Tip.prototype, {
 	_resetDimensions: function() {
 		this.size[0] = this.options.width;
 		this.size[1] = this.options.height;
+	},
+
+	_useTitle: function(corner) {
+		var titlebar = this.qtip.elements.titlebar;
+		return titlebar && (
+			corner.y === TOP || (corner.y === CENTER && this.element.position().top + (size[1] / 2) + options.offset < titlebar.outerHeight(TRUE))
+		);
 	},
 
 	_parseCorner: function(corner) {
@@ -132,7 +140,7 @@ $.extend(Tip.prototype, {
 
 		return (use ? intCss(use, prop) : (
 			intCss(elements.content, prop) ||
-			intCss(corner.y === TOP && elements.titlebar || elements.content, prop) ||
+			intCss(this._useTitle(corner) && elements.titlebar || elements.content, prop) ||
 			intCss(tooltip, prop)
 		)) || 0;
 	},
@@ -142,24 +150,21 @@ $.extend(Tip.prototype, {
 			prop = BORDER + camel(corner.y) + camel(corner.x) + 'Radius';
 
 		return BROWSER.ie < 9 ? 0 :
-			intCss(corner.y === TOP && elements.titlebar || elements.content, prop) || 
+			intCss(this._useTitle(corner) && elements.titlebar || elements.content, prop) || 
 			intCss(elements.tooltip, prop) || 0;
+	},
+
+	_invalidColour: function(elem, prop, compare) {
+		var val = elem.css(prop);
+		return !val || (compare && val === elem.css(compare)) || INVALID.test(val) ? FALSE : val;
 	},
 
 	_parseColours: function(corner) {
 		var elements = this.qtip.elements,
-			tip = elements.tip.css('cssText', ''),
+			tip = this.element.css('cssText', ''),
 			borderSide = BORDER + camel(corner[ corner.precedance ]) + camel(COLOR),
-			useTitle = elements.titlebar && (
-				corner.y === TOP || (corner.y === CENTER && tip.position().top + (size[1] / 2) + options.offset < elements.titlebar.outerHeight(TRUE))
-			),
-			colorElem = useTitle && elements.titlebar || elements.content,
-			color = [];
-
-		function css(elem, prop, compare) {
-			var val = elem.css(prop);
-			return !val || (compare && val === elem.css(compare)) || INVALID.test(val) ? FALSE : val;
-		}
+			colorElem = this._useTitle(corner) && elements.titlebar || elements.content,
+			css = this._invalidColour, color = [];
 
 		// Attempt to detect the background colour from various elements, left-to-right precedance
 		color[0] = css(tip, BG_COLOR) || css(colorElem, BG_COLOR) || css(elements.content, BG_COLOR) || 
@@ -405,6 +410,7 @@ $.extend(Tip.prototype, {
 		if(!this.enabled) { return FALSE; }
 
 		var self = this,
+			elements = this.qtip.elements,
 			tip = this.element,
 			userOffset = Math.max(0, this.options.offset),
 			isWidget = this.qtip.tooltip.hasClass('ui-widget'),
@@ -432,8 +438,8 @@ $.extend(Tip.prototype, {
 				position[MARGIN+'-' + b] = -Math.round(size[ precedance === Y ? 0 : 1 ] / 2) + userOffset;
 			}
 			else {
-				b = self._parseWidth(corner, side, isWidget ? tooltip : NULL);
-				bc = self._parseWidth(corner, side, isWidget ? NULL : self.qtip.elements.content);
+				b = self._parseWidth(corner, side, elements.tooltip);
+				bc = self._parseWidth(corner, side, elements.content);
 				br = self._parseRadius(corner);
 
 				position[ side ] = Math.max(-self.border, i ? bc : (userOffset + (br > b ? br : -b)));
@@ -486,8 +492,6 @@ $.extend(Tip.prototype, {
 
 		// Setup tip offset properties
 		offset = this.calculate(newCorner, adjust);
-		offset[ newCorner.x ] += this._parseWidth(newCorner, newCorner.x);
-		offset[ newCorner.y ] += this._parseWidth(newCorner, newCorner.y);
 
 		// Readjust offset object to make it left/top
 		if(offset.right !== undefined) { offset.left = -offset.right; }
@@ -548,7 +552,7 @@ $.extend(Tip.prototype, {
 
 	destroy: function() {
 		// Unbind events
-		this._unbind(this.qtip.tooltip, '-tip');
+		this.qtip._unbind(this.qtip.tooltip, this._ns);
 
 		// Remove the tip element(s)
 		if(this.qtip.elements.tip) {
