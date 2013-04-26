@@ -34,7 +34,9 @@ function sanitizeOptions(opts) {
 			delete content.ajax;
 
 			content.text = function(event, api) {
-				var deferred = $.ajax(
+				var loading = text || $(this).attr(api.options.content.attr) || 'Loading...',
+
+				deferred = $.ajax(
 					$.extend({}, ajax, { context: api })
 				)
 				.then(ajax.success, NULL, ajax.error)
@@ -47,9 +49,7 @@ function sanitizeOptions(opts) {
 					api.set('content.text', status + ': ' + error);
 				});
 
-				return !once ? deferred : (
-					text || $(this).attr(api.options.content.attr) || 'Loading...'
-				);
+				return !once ? (api.set('content.text', loading), deferred) : loading;
 			};
 		}
 

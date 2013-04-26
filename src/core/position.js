@@ -239,7 +239,7 @@ C.string = function() {
 
 C.abbrev = function() {
 	var result = this.string().split(' ');
-	return result[0].charAt(0) + result[1].charAt(0);
+	return result[0].charAt(0) + (result[1] && result[1].charAt(0) || '');
 };
 
 C.clone = function() {
