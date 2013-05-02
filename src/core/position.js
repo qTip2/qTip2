@@ -204,13 +204,13 @@ PROTOTYPE.reposition.offset = function(elem, pos, container) {
 			pos.top -= parentOffset.top + (parseFloat($.css(parent, 'marginTop')) || 0);
 
 			// If this is the first parent element with an overflow of "scroll" or "auto", store it
-			if(!scrolled && (overflow = $.css(parent, 'overflow')) !== 'hidden' && overflow !== 'visible') { scrolled = parent; }
+			if(!scrolled && (overflow = $.css(parent, 'overflow')) !== 'hidden' && overflow !== 'visible') { scrolled = $(parent); }
 		}
 	}
 	while((parent = parent.offsetParent));
 
 	// Compensate for containers scroll if it also has an offsetParent (or in IE quirks mode)
-	if(scrolled && scrolled !== ownerDocument[0] || quirks) {
+	if(scrolled && (scrolled[0] !== ownerDocument[0] || quirks)) {
 		scroll(scrolled, 1);
 	}
 
