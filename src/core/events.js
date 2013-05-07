@@ -128,7 +128,7 @@ $(function() {
 	});
 
 	// Define events which reset the 'inactive' event handler
-	delegate('['+ATTR_ID+']', QTIP.inactiveEvents, inactiveMethod);
+	delegate('['+ATTR_ID+']', INACTIVE_EVENTS, inactiveMethod);
 });
 
 // Event trigger

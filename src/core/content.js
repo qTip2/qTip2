@@ -15,9 +15,9 @@ PROTOTYPE._update = function(content, element, reposition) {
 		cache.waiting = TRUE;
 		return content.then(function(c) {
 			cache.waiting = FALSE;
-			return self._updateContent(c, reposition);
-		}, NULL, function(c) {
-			return self._updateContent(c, reposition);
+			return self._update(c, element, reposition);
+		}, NULL, function(e) {
+			return self._update(e, element, reposition);
 		});
 	}
 
@@ -35,12 +35,12 @@ PROTOTYPE._update = function(content, element, reposition) {
 	// Ensure images have loaded...
 	cache.waiting = TRUE;
 	return element.imagesLoaded()
-		.done(function() {
+		.done(function(images) {
 			cache.waiting = FALSE;
 
 			// Reposition if rendered
 			if(reposition !== FALSE && self.rendered && self.tooltip[0].offsetWidth > 0) {
-				self.reposition(cache.event);
+				self.reposition(cache.event, !images.length);
 			}
 		})
 		.promise();

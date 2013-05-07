@@ -5,7 +5,7 @@ QTIP.version = '@@VERSION';
 QTIP.nextid = 0;
 
 // Inactive events array
-QTIP.inactiveEvents = 'click dblclick mousedown mouseup mousemove mouseleave mouseenter'.split(' ');
+QTIP.inactiveEvents = INACTIVE_EVENTS;
 
 // Base z-index for all qTips
 QTIP.zindex = 15000;

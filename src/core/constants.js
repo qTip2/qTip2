@@ -28,6 +28,7 @@ ATTR_HAS = 'data-hasqtip',
 ATTR_ID = 'data-qtip-id',
 WIDGET = ['ui-widget', 'ui-tooltip'],
 SELECTOR = '.'+NAMESPACE,
+INACTIVE_EVENTS = 'click dblclick mousedown mouseup mousemove mouseleave mouseenter'.split(' '),
 
 CLASS_FIXED = NAMESPACE+'-fixed',
 CLASS_DEFAULT = NAMESPACE + '-default',
