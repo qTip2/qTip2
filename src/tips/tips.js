@@ -29,13 +29,12 @@ var cssProps = {}, cssPrefixes = ["Webkit", "O", "Moz", "ms"];
 function vendorCss(elem, prop) {
 	var ucProp = prop.charAt(0).toUpperCase() + prop.slice(1),
 		props = (prop + ' ' + cssPrefixes.join(ucProp + ' ') + ucProp).split(' '),
-		cur, val, i;
+		cur, val, i = 0;
 
 	// If the property has already been mapped...
 	if(cssProps[prop]) { return elem.css(cssProps[prop]); }
 
-	for(i in props) {
-		cur = props[i];
+	while((cur = props[i++])) {
 		if((val = elem.css(cur)) !== undefined) {
 			return cssProps[prop] = cur, val;
 		}
