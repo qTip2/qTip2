@@ -34,8 +34,7 @@ function vendorCss(elem, prop) {
 	// If the property has already been mapped...
 	if(cssProps[prop]) { return elem.css(cssProps[prop]); }
 
-	for(i in props) {
-		cur = props[i];
+	for(cur in props) {
 		if((val = elem.css(cur)) !== undefined) {
 			return cssProps[prop] = cur, val;
 		}
