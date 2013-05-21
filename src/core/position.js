@@ -23,6 +23,7 @@ PROTOTYPE.reposition = function(event, effect) {
 		visible = tooltip[0].offsetWidth > 0,
 		isScroll = event && event.type === 'scroll',
 		win = $(window),
+		doc = container[0].ownerDocument,
 		mouse = this.mouse,
 		pluginCalculations, offset;
 
@@ -39,15 +40,21 @@ PROTOTYPE.reposition = function(event, effect) {
 		at = { x: LEFT, y: TOP };
 
 		// Use cached event if one isn't available for positioning
-		event = mouse && mouse.pageX && (adjust.mouse || !event || !event.pageX) ? { pageX: mouse.pageX, pageY: mouse.pageY } :
+		event = mouse && mouse.pageX && (adjust.mouse || !event || !event.pageX) ? mouse :
 			(event && (event.type === 'resize' || event.type === 'scroll') ? cache.event :
 			event && event.pageX && event.type === 'mousemove' ? event :
 			(!adjust.mouse || this.options.show.distance) && cache.origin && cache.origin.pageX ? cache.origin :
 			event) || event || cache.event || mouse || {};
 
-		// Use event coordinates for position
+		// Calculate body and container offset and take them into account below
 		if(type !== 'static') { position = container.offset(); }
-		position = { left: event.pageX - position.left, top: event.pageY - position.top };
+		if(doc.body.offsetWidth !== (window.innerWidth || doc.documentElement.clientWidth)) { offset = $(doc.body).offset(); }
+
+		// Use event coordinates for position
+		position = {
+			left: event.pageX - position.left + (offset && offset.left || 0),
+			top: event.pageY - position.top + (offset && offset.top || 0)
+		};
 
 		// Scroll events are a pain, some browsers
 		if(adjust.mouse && isScroll) {

@@ -228,9 +228,11 @@ PROTOTYPE._assignEvents = function() {
 		(this.tooltip[0].offsetWidth > 0 ? hideMethod : showMethod).call(this, event);
 	});
 
-	// Check if the tooltip hides when mouse is moved a certain distance
-	if('number' === typeof options.hide.distance) {
-		this._bind(showTarget.add(tooltip), 'mousemove', function(event) {
+
+	// Mouse movement bindings
+	this._bind(showTarget.add(tooltip), 'mousemove', function(event) {
+		// Check if the tooltip hides when mouse is moved a certain distance
+		if('number' === typeof options.hide.distance) {
 			var origin = this.cache.origin || {},
 				limit = this.options.hide.distance,
 				abs = Math.abs;
@@ -239,11 +241,11 @@ PROTOTYPE._assignEvents = function() {
 			if(abs(event.pageX - origin.pageX) >= limit || abs(event.pageY - origin.pageY) >= limit) {
 				this.hide(event);
 			}
+		}
 
-			// Cache mousemove coords on show targets
-			this._storeMouse(event);
-		});
-	}
+		// Cache mousemove coords on show targets
+		this._storeMouse(event);
+	});
 
 	// Mouse positioning events
 	if(posOptions.target === 'mouse') {
@@ -261,7 +263,7 @@ PROTOTYPE._assignEvents = function() {
 			this._bind(documentTarget, 'mousemove', function(event) {
 				// Update the tooltip position only if the tooltip is visible and adjustment is enabled
 				if(this.rendered && this.cache.onTarget && !this.tooltip.hasClass(CLASS_DISABLED) && this.tooltip[0].offsetWidth > 0) {
-					this.reposition(event || this.mouse);
+					this.reposition(event);
 				}
 			});
 		}
