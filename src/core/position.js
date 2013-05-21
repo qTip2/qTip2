@@ -39,7 +39,7 @@ PROTOTYPE.reposition = function(event, effect) {
 		at = { x: LEFT, y: TOP };
 
 		// Use cached event if one isn't available for positioning
-		event = mouse && mouse.pageX && (adjust.mouse || !event || !event.pageX) ? { pageX: mouse.pageX, pageY: mouse.pageY } :
+		event = mouse && mouse.pageX && (adjust.mouse || !event || !event.pageX) ? mouse :
 			(event && (event.type === 'resize' || event.type === 'scroll') ? cache.event :
 			event && event.pageX && event.type === 'mousemove' ? event :
 			(!adjust.mouse || this.options.show.distance) && cache.origin && cache.origin.pageX ? cache.origin :
