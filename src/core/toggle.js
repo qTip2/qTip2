@@ -21,7 +21,7 @@ PROTOTYPE.toggle = function(state, event) {
 
 	// Render the tooltip if showing and it isn't already
 	if(!this.rendered) { return state ? this.render(1) : this; }
-	else if(this.destroyed) { return this; }
+	else if(this.destroyed || this.disabled) { return this; }
 
 	var type = state ? 'show' : 'hide',
 		opts = this.options[type],

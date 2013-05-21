@@ -93,7 +93,7 @@ function delegate(selector, events, method) {
 		(events.split ? events : events.join(ns + ' ')) + ns,
 		function() {
 			var api = QTIP.api[ $.attr(this, ATTR_ID) ];
-			api && method.apply(api, arguments);
+			api && !api.disabled && method.apply(api, arguments);
 		}
 	);
 }
