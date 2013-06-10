@@ -2,4 +2,5 @@
 *.diff
 *.patch
 .DS_Store
-dist/images
+dist/
+node_modules/
