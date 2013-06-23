@@ -155,12 +155,12 @@
 }
 
 	.qtip-tipsy .qtip-titlebar{
-		padding: 6px 35px 0 10;
+		padding: 6px 35px 0 10px;
 		background-color: transparent;
 	}
 
 	.qtip-tipsy .qtip-content{
-		padding: 6px 10;
+		padding: 6px 10px;
 	}
 	
 	.qtip-tipsy .qtip-icon{
