@@ -15,9 +15,9 @@ PROTOTYPE._update = function(content, element, reposition) {
 		cache.waiting = TRUE;
 		return content.then(function(c) {
 			cache.waiting = FALSE;
-			return self._update(c, element, reposition);
+			return self._update(c, element);
 		}, NULL, function(e) {
-			return self._update(e, element, reposition);
+			return self._update(e, element);
 		});
 	}
 
@@ -34,12 +34,13 @@ PROTOTYPE._update = function(content, element, reposition) {
 
 	// If imagesLoaded is included, ensure images have loaded and return promise
 	cache.waiting = TRUE;
-	return ( $.fn.imagesLoaded ? element.imagesLoaded() : $.Deferred().resolve($()).promise() )
+
+	return ( $.fn.imagesLoaded ? element.imagesLoaded() : $.Deferred().resolve($([])) )
 		.done(function(images) {
 			cache.waiting = FALSE;
 
 			// Reposition if rendered
-			if(reposition !== FALSE && self.rendered && self.tooltip[0].offsetWidth > 0) {
+			if(images.length && self.rendered && self.tooltip[0].offsetWidth > 0) {
 				self.reposition(cache.event, !images.length);
 			}
 		})

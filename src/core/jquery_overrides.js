@@ -61,11 +61,13 @@ $.each({
 if(!$.ui) {
 	$['cleanData'+replaceSuffix] = $.cleanData;
 	$.cleanData = function( elems ) {
-		for(var i = 0, elem; (elem = $( elems[i] )).length && elem.attr(ATTR_ID); i++) {
-			try { elem.triggerHandler('removeqtip'); }
-			catch( e ) {}
+		for(var i = 0, elem; (elem = $( elems[i] )).length; i++) {
+			if(elem.attr(ATTR_HAS)) {
+				try { elem.triggerHandler('removeqtip'); } 
+				catch( e ) {}
+			}
 		}
-		$['cleanData'+replaceSuffix]( elems );
+		$['cleanData'+replaceSuffix].apply(this, arguments);
 	};
 }
 
