@@ -8,6 +8,6 @@
 	],
 	"dependencies": {
 		"jquery": ">=1.5.0",
-		"imagesLoaded": ">=3.0.0"
+		"imagesloaded": ">=3.0.0"
 	}
 }
