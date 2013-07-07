@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Craga89/qTip2.png)](https://travis-ci.org/Craga89/qTip2)
+
 [qTip<sup>2</sup>][site] - Pretty powerful tooltips
 ================================
 
