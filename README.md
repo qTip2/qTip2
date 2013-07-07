@@ -20,28 +20,26 @@ More documentation and information is available at the [official site][site].
 ## Getting qTip<sup>2</sup>
 
 ### Stable releases
-You can grab the *latest stable releases* from the [download page][download] of the [official site][site]. This also lets
-you choose what [plugins][plugins] you'd like included in your download, as well as other things.
+Grab the latest releases of qTip<sup>2</sup> from the [cdnjs][cdnjs] [CDN][wikipedia-cdn].
 
-Otherwise, if you prefer to use a [CDN] [wikipedia-cdn], you can now find qTip<sup>2</sup> available on [cdnjs] [cdnjs].
+You can also customize the [plugins][plugins] included using the [download page][download] of the [official site][site].
 
-### Bleeding edge
-You can grab the latest and greatest qTip<sup>2</sup> nightly from the [here][dist] and get started quickly.
-Download the [minified version][min] or the [non-minified version][max].
+### Nightly (and older) releases
+You can checkout the various releases of qTip<sup>2</sup> (including the latest nightly builds) at the [release archive][archive].
 
-### Custom builds
+### Roll your own
 You can also build your own qTip<sup>2</sup> script that includes select [plugins][plugins] and [styles][style] to reduce the overall file size and remove features
 you don't plan on using. Find more information about this [here][build]
 
 ## Documentation
-Take a look at the [Wiki][wiki] for extensive docs and guides.
+Take a look at the [documentation][docs] for extensive docs and guides.
 
 ## Release History
 _(Nothing yet)_
 
 ## Questions or problems?
 If you have any questions, please feel free to post on the [support forums][forums], but before you do make sure to
-check out the [thorough documentation][wiki] both here in the repo and on the [official site][site].
+check out the [thorough documentation][docs] both here in the repo and on the [official site][site].
 
 ## License
 Copyright (c) 2012 Craig Michael Thompson. Licensed under the MIT, GPL licenses. *See [here][license] for more details.*
@@ -49,20 +47,17 @@ Copyright (c) 2012 Craig Michael Thompson. Licensed under the MIT, GPL licenses.
 ## Special thanks
 Big shout-out to ["Cowboy" Ben Alman][cowboy] for providing the [grunt][grunt] build system used by qTip<sup>2</sup>
 
-[min]: http://qtip2.com/v/nightly/jquery.qtip.min.js
-[max]: http://qtip2.com/v/nightly/jquery.qtip.js
-
-[dist]: http://qtip2.com/v/nightly
-[wiki]: http://github.com/Craga89/qTip2/wiki
-[build]: http://github.com/Craga89/qTip2/wiki/custom-build
-[style]: http://github.com/Craga89/qTip2/wiki/style
-[plugins]: http://github.com/Craga89/qTip2/wiki#plugins
-[tips]: http://github.com/Craga89/qTip2/wiki/tips
-[imgmap]: http://github.com/Craga89/qTip2/wiki/imagemap
-
 [site]: http://qtip2.com/
+[archive]: http://qtip2.com/v/
+[docs]: http://qtip2.com/docs/
 [download]: http://qtip2.com/download
-[forums]: http://craigsworks.com/projects/forums
+[build]: http://qtip2.com/guides#custom-build
+[style]: http://qtip2.com/demos#styling
+[plugins]: http://qtip2.com/plugins
+[tips]: http://qtip2.com/plugins#tips
+[imgmap]: http://qtip2.com/plugins#imagemap
+
+[forums]: http://craigsworks.com/projects/forums/forum-qtip2
 [license]: http://jquery.org/license
 
 [cowboy]: http://github.com/cowboy
