@@ -1,0 +1,15 @@
+{
+	"name": "qtip2",
+	"version": "2.1.0",
+	"description": "",
+	"main": "imagesloaded.js",
+	"ignore": [
+		"dist/**/.js"
+	],
+	"dependencies": {
+		"imagesLoaded": ">=3.0.0"
+	},
+	"devDependencies": {
+		"jquery": ">=1.5.0"
+	}
+}
