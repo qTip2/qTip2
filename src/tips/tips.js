@@ -376,8 +376,8 @@ $.extend(Tip.prototype, {
 			inner.css({
 				coordsize: (size[0]+border) + ' ' + (size[1]+border),
 				antialias: ''+(mimic.string().indexOf(CENTER) > -1),
-				left: translate[0],
-				top: translate[1],
+				left: translate[0] - (translate[2] * Number(precedance === X)),
+				top: translate[1] - (translate[2] * Number(precedance === Y)),
 				width: size[0] + border,
 				height: size[1] + border
 			})
