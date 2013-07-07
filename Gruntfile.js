@@ -38,9 +38,6 @@ module.exports = function(grunt) {
 		// Directories (dist changed in init())
 		dirs: { src: 'src', dist: 'dist', libs: 'libs' },
 
-		// Dependancies
-		dependancies: [ 'imagesloaded' ],
-
 		// Core files in order
 		core: {
 			js: [
@@ -107,12 +104,10 @@ module.exports = function(grunt) {
 				},
 				files: {
 					'<%=dirs.dist%>/jquery.qtip.js': [
-						'<%=dirs.dist%>/jquery.qtip.js',
-						'<%=dirs.libs%>/imagesloaded/jquery.imagesloaded.js'
+						'<%=dirs.dist%>/jquery.qtip.js'
 					],
 					'<%=dirs.dist%>/jquery.qtip.min.js': [
-						'<%=dirs.dist%>/jquery.qtip.min.js',
-						'<%=dirs.libs%>/imagesloaded/jquery.imagesloaded.min.js'
+						'<%=dirs.dist%>/jquery.qtip.min.js'
 					]
 				}
 			}
@@ -126,7 +121,8 @@ module.exports = function(grunt) {
 			},
 			dist: {
 				files: {
-					'<%=dirs.dist%>/jquery.qtip.min.js': ['<%=dirs.dist%>/jquery.qtip.js']
+					'<%=dirs.dist%>/jquery.qtip.min.js': ['<%=dirs.dist%>/jquery.qtip.js'],
+					'<%=dirs.dist%>/imagesloaded.min.js': ['<%=dirs.libs%>/imagesloaded/imagesloaded.js']
 				}
 			}
 		},

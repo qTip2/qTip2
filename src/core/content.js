@@ -32,9 +32,9 @@ PROTOTYPE._update = function(content, element, reposition) {
 	// Content is a regular string, insert the new content
 	else { element.html(content); }
 
-	// Ensure images have loaded...
+	// If imagesLoaded is included, ensure images have loaded and return promise
 	cache.waiting = TRUE;
-	return element.imagesLoaded()
+	return ( $.fn.imagesLoaded ? element.imagesLoaded() : $.Deferred().resolve($()).promise() )
 		.done(function(images) {
 			cache.waiting = FALSE;
 

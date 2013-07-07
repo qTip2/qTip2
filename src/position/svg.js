@@ -2,7 +2,7 @@ PLUGINS.svg = function(api, svg, corner, adjustMethod)
 {
 	var doc = $(document),
 		elem = svg[0],
-		result = FALSE,
+		result = {},
 		name, box, position, dimensions;
 
 	// Ascend the parentNode chain until we find an element with getBBox()
@@ -56,8 +56,33 @@ PLUGINS.svg = function(api, svg, corner, adjustMethod)
 			result = PLUGINS.polys.polygon(result, corner);
 		break;
 
-		// Invalid shape
-		default: return FALSE;
+		// Unknown shape... use bounding box as fallback
+		default: 
+			box = elem.getBBox();
+			mtx = elem.getScreenCTM();
+			root = elem.farthestViewportElement || elem;
+
+			// Return if no createSVGPoint method is found
+			if(!root.createSVGPoint) { return FALSE; }
+
+			// Create our point var
+			point = root.createSVGPoint();
+
+			// Adjust top and left
+			point.x = box.x;
+			point.y = box.y;
+			tPoint = point.matrixTransform(mtx);
+			result.position = {
+				left: tPoint.x, top: tPoint.y
+			};
+
+			// Adjust width and height
+			point.x += box.width;
+			point.y += box.height;
+			tPoint = point.matrixTransform(mtx);
+			result.width = tPoint.x - result.position.left;
+			result.height = tPoint.y - result.position.top;
+		break;
 	}
 
 	// Adjust by scroll offset
