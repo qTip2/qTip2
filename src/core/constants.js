@@ -38,7 +38,7 @@ CLASS_DISABLED = NAMESPACE+'-disabled',
 
 replaceSuffix = '_replacedByqTip',
 oldtitle = 'oldtitle',
-trackingBound;
+trackingBound,
 
 // Browser detection
 BROWSER = {
