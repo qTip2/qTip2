@@ -192,7 +192,7 @@ PROTOTYPE.destroy = function(immediate) {
 
 	// If an immediate destory is needed
 	if(immediate !== TRUE && this.rendered) {
-		tooltip.one('tooltiphidden', $.proxy(process, this));
+		this.tooltip.one('tooltiphidden', $.proxy(process, this));
 		!this.triggering && this.hide();
 	}
 

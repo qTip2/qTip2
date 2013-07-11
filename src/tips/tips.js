@@ -571,7 +571,7 @@ TIP.initialize = 'render';
 // Setup plugin sanitization options
 TIP.sanitize = function(options) {
 	if(options.style && 'tip' in options.style) {
-		opts = options.style.tip;
+		var opts = options.style.tip;
 		if(typeof opts !== 'object') { opts = options.style.tip = { corner: opts }; }
 		if(!(/string|boolean/i).test(typeof opts.corner)) { opts.corner = TRUE; }
 	}

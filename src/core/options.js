@@ -166,7 +166,7 @@ CHECKS = PROTOTYPE.checks = {
 
 		// Events check
 		'^events.(render|show|move|hide|focus|blur)$': function(obj, o, v) {
-			tooltip[($.isFunction(v) ? '' : 'un') + 'bind']('tooltip'+o, v);
+			this.tooltip[($.isFunction(v) ? '' : 'un') + 'bind']('tooltip'+o, v);
 		},
 
 		// Properties which require event reassignment
@@ -174,7 +174,7 @@ CHECKS = PROTOTYPE.checks = {
 			var posOptions = this.options.position;
 
 			// Set tracking flag
-			tooltip.attr('tracking', posOptions.target === 'mouse' && posOptions.adjust.mouse);
+			this.tooltip.attr('tracking', posOptions.target === 'mouse' && posOptions.adjust.mouse);
 
 			// Reassign events
 			this._unassignEvents();
