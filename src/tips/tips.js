@@ -411,7 +411,7 @@ $.extend(Tip.prototype, {
 		var self = this,
 			elements = this.qtip.elements,
 			tip = this.element,
-			userOffset = Math.max(0, this.options.offset),
+			userOffset = this.options.offset,
 			isWidget = this.qtip.tooltip.hasClass('ui-widget'),
 			position = {  },
 			precedance, size, corners;
@@ -495,7 +495,7 @@ $.extend(Tip.prototype, {
 		// Readjust offset object to make it left/top
 		if(offset.right !== undefined) { offset.left = -offset.right; }
 		if(offset.bottom !== undefined) { offset.top = -offset.bottom; }
-		offset.user = Math.max(0, this.offset);
+		offset.user = this.offset;
 
 		// Viewport "shift" specific adjustments
 		if(shift.left = (horizontal === SHIFT && !!adjust.left)) {
