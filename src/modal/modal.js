@@ -81,7 +81,7 @@ OVERLAY = function()
 
 			// Update position on window resize or scroll
 			function resize() {
-				var win = $(this);
+				var win = $(window);
 				elem.css({
 					height: win.height(),
 					width: win.width()
