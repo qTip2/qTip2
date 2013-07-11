@@ -32,7 +32,7 @@ PROTOTYPE.toggle = function(state, event) {
 		visible = this.tooltip[0].offsetWidth > 0,
 		animate = state || opts.target.length === 1,
 		sameTarget = !event || opts.target.length < 2 || cache.target[0] === event.target,
-		identicalState, allow, showEvent, delay;
+		identicalState, allow, showEvent, delay, after;
 
 	// Detect state if valid one isn't provided
 	if((typeof state).search('boolean|number')) { state = !visible; }

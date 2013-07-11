@@ -140,7 +140,7 @@ $.extend(Tip.prototype, {
 		return (use ? intCss(use, prop) : (
 			intCss(elements.content, prop) ||
 			intCss(this._useTitle(corner) && elements.titlebar || elements.content, prop) ||
-			intCss(tooltip, prop)
+			intCss(elements.tooltip, prop)
 		)) || 0;
 	},
 
@@ -167,11 +167,11 @@ $.extend(Tip.prototype, {
 
 		// Attempt to detect the background colour from various elements, left-to-right precedance
 		color[0] = css(tip, BG_COLOR) || css(colorElem, BG_COLOR) || css(elements.content, BG_COLOR) || 
-			css(tooltip, BG_COLOR) || tip.css(BG_COLOR);
+			css(elements.tooltip, BG_COLOR) || tip.css(BG_COLOR);
 
 		// Attempt to detect the correct border side colour from various elements, left-to-right precedance
 		color[1] = css(tip, borderSide, COLOR) || css(colorElem, borderSide, COLOR) || 
-			css(elements.content, borderSide, COLOR) || css(tooltip, borderSide, COLOR) || tooltip.css(borderSide);
+			css(elements.content, borderSide, COLOR) || css(elements.tooltip, borderSide, COLOR) || elements.tooltip.css(borderSide);
 
 		// Reset background and border colours
 		$('*', tip).add(tip).css('cssText', BG_COLOR+':'+TRANSPARENT+IMPORTANT+';'+BORDER+':0'+IMPORTANT+';');
@@ -352,7 +352,7 @@ $.extend(Tip.prototype, {
 			if(border) {
 				// Make sure transparent borders are supported by doing a stroke
 				// of the background colour before the stroke colour
-				if(tooltip.css('background-clip') === 'border-box') {
+				if(elements.tooltip.css('background-clip') === 'border-box') {
 					context.strokeStyle = color[0];
 					context.stroke();
 				}
@@ -412,7 +412,7 @@ $.extend(Tip.prototype, {
 			elements = this.qtip.elements,
 			tip = this.element,
 			userOffset = this.options.offset,
-			isWidget = this.qtip.tooltip.hasClass('ui-widget'),
+			isWidget = elements.tooltip.hasClass('ui-widget'),
 			position = {  },
 			precedance, size, corners;
 

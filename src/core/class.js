@@ -6,7 +6,7 @@ function QTip(target, options, id, attr) {
 	this.id = id;
 	this.target = target;
 	this.tooltip = NULL;
-	this.elements = elements = { target: target };
+	this.elements = { target: target };
 
 	// Internal constructs
 	this._id = NAMESPACE + '-' + id;
@@ -15,7 +15,7 @@ function QTip(target, options, id, attr) {
 	this.plugins = {};
 
 	// Cache object
-	this.cache = cache = {
+	this.cache = {
 		event: {},
 		target: $(),
 		disabled: FALSE,
@@ -42,7 +42,8 @@ PROTOTYPE.render = function(show) {
 		button = options.content.button,
 		posOptions = options.position,
 		namespace = '.'+this._id+' ',
-		deferreds = [];
+		deferreds = [],
+		tooltip;
 
 	// Add ARIA attributes to target
 	$.attr(this.target[0], 'aria-describedby', this._id);
