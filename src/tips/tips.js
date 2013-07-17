@@ -181,8 +181,8 @@ $.extend(Tip.prototype, {
 
 	_calculateSize: function(corner) {
 		var y = corner.precedance === Y,
-			width = this.options[ y ? 'height' : 'width' ],
-			height = this.options[ y ? 'width' : 'height' ],
+			width = this.options['width'],
+			height = this.options['height'],
 			isCenter = corner.abbrev() === 'c',
 			base = width * (isCenter ? 0.5 : 1),
 			pow = Math.pow,
