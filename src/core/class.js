@@ -102,14 +102,6 @@ PROTOTYPE.render = function(show) {
 	// Setup widget classes
 	this._setWidget();
 
-	// Assign passed event callbacks (before plugins!)
-	$.each(options.events, function(name, callback) {
-		$.isFunction(callback) && tooltip.bind(
-			(name === 'toggle' ? ['tooltipshow','tooltiphide'] : ['tooltip'+name])
-				.join(namespace)+namespace, callback
-		);
-	});
-
 	// Initialize 'render' plugins
 	$.each(PLUGINS, function(name) {
 		var instance;
