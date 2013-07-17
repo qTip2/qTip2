@@ -145,7 +145,8 @@ PROTOTYPE._trigger = function(type, args, event) {
 
 // Event assignment method
 PROTOTYPE._assignEvents = function() {
-	var options = this.options,
+	var self = this,
+		options = this.options,
 		posOptions = options.position,
 
 		tooltip = this.tooltip,
@@ -160,6 +161,11 @@ PROTOTYPE._assignEvents = function() {
 		showEvents = options.show.event ? $.trim('' + options.show.event).split(' ') : [],
 		hideEvents = options.hide.event ? $.trim('' + options.hide.event).split(' ') : [],
 		toggleEvents = [];
+
+	// Assign passed event callbacks
+	$.each(options.events, function(name, callback) {
+		self._bind(tooltip, name === 'toggle' ? ['tooltipshow','tooltiphide'] : ['tooltip'+name], callback);
+	});
 
 	// Hide tooltips when leaving current window/frame (but not select/option elements)
 	if(/mouse(out|leave)/i.test(options.hide.event) && options.hide.leave === 'window') {
