@@ -70,7 +70,7 @@ PROTOTYPE.reposition = function(event, effect) {
 			cache.target = $(event.target);
 		}
 		else if(target !== 'event'){
-			cache.target = $(target.jquery ? target : elements.target);
+			cache.target = $(target.jquery ? target : this.elements.target);
 		}
 		target = cache.target;
 
