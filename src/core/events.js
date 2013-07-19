@@ -164,7 +164,7 @@ PROTOTYPE._assignEvents = function() {
 
 	// Assign passed event callbacks
 	$.each(options.events, function(name, callback) {
-		self._bind(tooltip, name === 'toggle' ? ['tooltipshow','tooltiphide'] : ['tooltip'+name], callback);
+		self._bind(tooltip, name === 'toggle' ? ['tooltipshow','tooltiphide'] : ['tooltip'+name], callback, null, tooltip);
 	});
 
 	// Hide tooltips when leaving current window/frame (but not select/option elements)
