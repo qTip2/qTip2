@@ -59,7 +59,7 @@ function init(elem, id, opts)
 	// Destroy previous tooltip if overwrite is enabled, or skip element if not
 	if(elem.data(NAMESPACE)) {
 		if(config.overwrite) {
-			elem.qtip('destroy');
+			elem.qtip('destroy', true);
 		}
 		else if(config.overwrite === FALSE) {
 			return FALSE;
