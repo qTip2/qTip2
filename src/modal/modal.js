@@ -217,7 +217,7 @@ $.extend(Modal.prototype, {
 		qtip.elements.overlay = OVERLAY.elem;
 
 		// Add unique attribute so we can grab modal tooltips easily via a SELECTOR, and set z-index
-		tooltip.addClass(MODALCLASS).css('z-index', PLUGINS.modal.zindex + $(MODALSELECTOR).length);
+		tooltip.addClass(MODALCLASS).css('z-index', QTIP.modal_zindex + $(MODALSELECTOR).length);
 		
 		// Apply our show/hide/focus modal events
 		qtip._bind(tooltip, ['tooltipshow', 'tooltiphide'], function(event, api, duration) {
@@ -242,7 +242,7 @@ $.extend(Modal.prototype, {
 			var qtips = $(MODALSELECTOR),
 
 			// Keep the modal's lower than other, regular qtips
-			newIndex = PLUGINS.modal.zindex + qtips.length,
+			newIndex = QTIP.modal_zindex + qtips.length,
 			curIndex = parseInt(tooltip[0].style.zIndex, 10);
 
 			// Set overlay z-index
