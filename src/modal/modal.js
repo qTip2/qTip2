@@ -311,7 +311,7 @@ MODAL.sanitize = function(opts) {
 };
 
 // Base z-index for all modal tooltips (use qTip core z-index as a base)
-MODAL.zindex = QTIP.zindex - 200;
+QTIP.modal_zindex = QTIP.zindex - 200;
 
 // Plugin needs to be initialized on render
 MODAL.initialize = 'render';
