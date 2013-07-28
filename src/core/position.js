@@ -14,8 +14,8 @@ PROTOTYPE.reposition = function(event, effect) {
 		container = posOptions.container,
 		adjust = posOptions.adjust,
 		method = adjust.method.split(' '),
-		elemWidth = tooltip.outerWidth(FALSE),
-		elemHeight = tooltip.outerHeight(FALSE),
+		tooltipWidth = tooltip.outerWidth(FALSE),
+		tooltipHeight = tooltip.outerHeight(FALSE),
 		targetWidth = 0,
 		targetHeight = 0,
 		type = tooltip.css('position'),
@@ -35,20 +35,33 @@ PROTOTYPE.reposition = function(event, effect) {
 	}
 
 	// Check if mouse was the target
-	else if(target === 'mouse' && ((event && event.pageX) || cache.event.pageX)) {
+	else if(target === 'mouse') {
 		// Force left top to allow flipping
 		at = { x: LEFT, y: TOP };
 
-		// Use cached event if one isn't available for positioning
-		event = mouse && mouse.pageX && (adjust.mouse || !event || !event.pageX) ? mouse :
-			(event && (event.type === 'resize' || event.type === 'scroll') ? cache.event :
-			event && event.pageX && event.type === 'mousemove' ? event :
-			(!adjust.mouse || this.options.show.distance) && cache.origin && cache.origin.pageX ? cache.origin :
-			event) || event || cache.event || mouse || {};
+		// Use the cached mouse coordinates if available, or passed event has no coordinates
+		if(mouse && mouse.pageX && (adjust.mouse || !event || !event.pageX) ) {
+			event = mouse;
+		}
+		
+		// If the passed event has no coordinates (such as a scroll event)
+		else if(!event || !event.pageX) {
+			// Use cached event for resize/scroll events
+			if(event && (event.type === 'resize' || event.type === 'scroll')) {
+				event = cache.event;
+			}
+
+			// Use the mouse origin that caused the show event, if distance hiding is enabled
+			else if((!adjust.mouse || this.options.show.distance) && cache.origin && cache.origin.pageX) {
+				event =  cache.origin;
+			}
+		}
 
 		// Calculate body and container offset and take them into account below
 		if(type !== 'static') { position = container.offset(); }
-		if(doc.body.offsetWidth !== (window.innerWidth || doc.documentElement.clientWidth)) { offset = $(doc.body).offset(); }
+		if(doc.body.offsetWidth !== (window.innerWidth || doc.documentElement.clientWidth)) {
+			offset = $(document.body).offset();
+		}
 
 		// Use event coordinates for position
 		position = {
@@ -136,13 +149,13 @@ PROTOTYPE.reposition = function(event, effect) {
 	}
 
 	// Adjust position relative to tooltip
-	position.left += adjust.x + (my.x === RIGHT ? -elemWidth : my.x === CENTER ? -elemWidth / 2 : 0);
-	position.top += adjust.y + (my.y === BOTTOM ? -elemHeight : my.y === CENTER ? -elemHeight / 2 : 0);
+	position.left += adjust.x + (my.x === RIGHT ? -tooltipWidth : my.x === CENTER ? -tooltipWidth / 2 : 0);
+	position.top += adjust.y + (my.y === BOTTOM ? -tooltipHeight : my.y === CENTER ? -tooltipHeight / 2 : 0);
 
 	// Use viewport adjustment plugin if enabled
 	if(PLUGINS.viewport) {
 		position.adjusted = PLUGINS.viewport(
-			this, position, posOptions, targetWidth, targetHeight, elemWidth, elemHeight
+			this, position, posOptions, targetWidth, targetHeight, tooltipWidth, tooltipHeight
 		);
 
 		// Apply offsets supplied by positioning plugin (if used)

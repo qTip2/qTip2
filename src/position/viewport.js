@@ -11,7 +11,6 @@ PLUGINS.viewport = function(api, position, posOptions, targetWidth, targetHeight
 		viewport = posOptions.viewport,
 		container = posOptions.container,
 		cache = api.cache,
-		tip = api.plugins.tip,
 		adjusted = { left: 0, top: 0 },
 		fixed, newMy, newClass;
 
@@ -45,21 +44,18 @@ PLUGINS.viewport = function(api, position, posOptions, targetWidth, targetHeight
 			viewportScroll = -container.offset[side1] + viewport.offset[side1] + viewport['scroll'+side1],
 			myLength = mySide === side1 ? elemLength : mySide === side2 ? -elemLength : -elemLength / 2,
 			atLength = atSide === side1 ? targetLength : atSide === side2 ? -targetLength : -targetLength / 2,
-			tipLength = tip && tip.size ? tip.size[lengthName] || 0 : 0,
-			tipAdjust = tip && tip.corner && tip.corner.precedance === side && !isShift ? tipLength : 0,
-			overflow1 = viewportScroll - initialPos + tipAdjust,
-			overflow2 = initialPos + elemLength - viewport[lengthName] - viewportScroll + tipAdjust,
+			overflow1 = viewportScroll - initialPos,
+			overflow2 = initialPos + elemLength - viewport[lengthName] - viewportScroll,
 			offset = myLength - (my.precedance === side || mySide === my[otherSide] ? atLength : 0) - (atSide === CENTER ? targetLength / 2 : 0);
 
 		// shift
 		if(isShift) {
-			tipAdjust = tip && tip.corner && tip.corner.precedance === otherSide ? tipLength : 0;
-			offset = (mySide === side1 ? 1 : -1) * myLength - tipAdjust;
+			offset = (mySide === side1 ? 1 : -1) * myLength;
 
 			// Adjust position but keep it within viewport dimensions
 			position[side1] += overflow1 > 0 ? overflow1 : overflow2 > 0 ? -overflow2 : 0;
 			position[side1] = Math.max(
-				-container.offset[side1] + viewport.offset[side1] + (tipAdjust && tip.corner[side] === CENTER ? tip.offset : 0),
+				-container.offset[side1] + viewport.offset[side1],
 				initialPos - offset,
 				Math.min(
 					Math.max(-container.offset[side1] + viewport.offset[side1] + viewport[lengthName], initialPos + offset),

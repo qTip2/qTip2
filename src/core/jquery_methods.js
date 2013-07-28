@@ -1,6 +1,5 @@
 // Initialization method
-function init(elem, id, opts)
-{
+function init(elem, id, opts) {
 	var obj, posOptions, attr, config, title,
 
 	// Setup element references
@@ -102,10 +101,8 @@ QTIP = $.fn.qtip = function(options, notation, newValue)
 	}
 
 	// Execute API command if present
-	else if('string' === typeof options)
-	{
-		this.each(function()
-		{
+	else if('string' === typeof options) {
+		this.each(function() {
 			var api = $.data(this, NAMESPACE);
 			if(!api) { return TRUE; }
 
@@ -133,99 +130,35 @@ QTIP = $.fn.qtip = function(options, notation, newValue)
 	}
 
 	// No API commands. validate provided options and setup qTips
-	else if('object' === typeof options || !arguments.length)
-	{
+	else if('object' === typeof options || !arguments.length) {
+		// Sanitize options first
 		opts = sanitizeOptions($.extend(TRUE, {}, options));
 
-		// Bind the qTips
-		return QTIP.bind.call(this, opts, event);
+		return this.each(function(i) {
+			var options, targets, events, namespace, api, id;
+
+			// Find next available ID, or use custom ID if provided
+			id = $.isArray(opts.id) ? opts.id[i] : opts.id;
+			id = !id || id === FALSE || id.length < 1 || QTIP.api[id] ? QTIP.nextid++ : id;
+
+			// Setup events namespace
+			namespace = '.qtip-'+id+'-create';
+
+			// Initialize the qTip and re-grab newly sanitized options
+			api = init($(this), id, opts);
+			if(api === FALSE) { return TRUE; }
+			else { QTIP.api[id] = api; }
+			options = api.options;
+
+			// Initialize plugins
+			$.each(PLUGINS, function() {
+				if(this.initialize === 'initialize') { this(api); }
+			});
+
+			// Assign initial pre-render events
+			api._assignInitialEvents(event);
+		});
 	}
-};
-
-// $.fn.qtip Bind method
-QTIP.bind = function(opts, event)
-{
-	return this.each(function(i) {
-		var options, targets, events, namespace, api, id;
-
-		// Find next available ID, or use custom ID if provided
-		id = $.isArray(opts.id) ? opts.id[i] : opts.id;
-		id = !id || id === FALSE || id.length < 1 || QTIP.api[id] ? QTIP.nextid++ : id;
-
-		// Setup events namespace
-		namespace = '.qtip-'+id+'-create';
-
-		// Initialize the qTip and re-grab newly sanitized options
-		api = init($(this), id, opts);
-		if(api === FALSE) { return TRUE; }
-		else { QTIP.api[id] = api; }
-		options = api.options;
-
-		// Initialize plugins
-		$.each(PLUGINS, function() {
-			if(this.initialize === 'initialize') { this(api); }
-		});
-
-		// Determine hide and show targets
-		targets = { show: options.show.target, hide: options.hide.target };
-		events = {
-			show: $.trim('' + options.show.event).replace(/ /g, namespace+' ') + namespace,
-			hide: $.trim('' + options.hide.event).replace(/ /g, namespace+' ') + namespace
-		};
-
-		/*
-		 * Make sure hoverIntent functions properly by using mouseleave as a hide event if
-		 * mouseenter/mouseout is used for show.event, even if it isn't in the users options.
-		 */
-		if(/mouse(over|enter)/i.test(events.show) && !/mouse(out|leave)/i.test(events.hide)) {
-			events.hide += ' mouseleave' + namespace;
-		}
-
-		/*
-		 * Also make sure initial mouse targetting works correctly by caching mousemove coords
-		 * on show targets before the tooltip has rendered.
-		 *
-		 * Also set onTarget when triggered to keep mouse tracking working
-		 */
-		targets.show.bind('mousemove'+namespace, function(event) {
-			api._storeMouse(event);
-			api.cache.onTarget = TRUE;
-		});
-
-		// Define hoverIntent function
-		function hoverIntent(event) {
-			function render() {
-				// Cache mouse coords,render and render the tooltip
-				api.render(typeof event === 'object' || options.show.ready);
-
-				// Unbind show and hide events
-				targets.show.add(targets.hide).unbind(namespace);
-			}
-
-			// Only continue if tooltip isn't disabled
-			if(api.disabled) { return FALSE; }
-
-			// Cache the event data
-			api.cache.event = $.extend({}, event);
-			api.cache.target = event ? $(event.target) : [undefined];
-
-			// Start the event sequence
-			if(options.show.delay > 0) {
-				clearTimeout(api.timers.show);
-				api.timers.show = setTimeout(render, options.show.delay);
-				if(events.show !== events.hide) {
-					targets.hide.bind(events.hide, function() { clearTimeout(api.timers.show); });
-				}
-			}
-			else { render(); }
-		}
-
-		// Bind show events to target
-		targets.show.bind(events.show, hoverIntent);
-
-		// Prerendering is enabled, create tooltip now
-		if(options.show.ready || options.prerender) { hoverIntent(event); }
-	});
 };
 
 // Populated in render method

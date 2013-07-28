@@ -154,7 +154,7 @@ CHECKS = PROTOTYPE.checks = {
 		'^style.classes$': function(obj, o, v, p) {
 			this.tooltip.removeClass(p).addClass(v);
 		},
-		'^style.width|height': function(obj, o, v) {
+		'^style.(width|height)': function(obj, o, v) {
 			this.tooltip.css(o, v);
 		},
 		'^style.widget|content.title': function() {

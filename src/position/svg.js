@@ -43,6 +43,8 @@ PLUGINS.svg = function(api, svg, corner, adjustMethod)
 		case 'line':
 		case 'polygon':
 		case 'polyline':
+			var len, next,
+
 			points = elem.points || [
 				{ x: elem.x1.baseVal.value, y: elem.y1.baseVal.value },
 				{ x: elem.x2.baseVal.value, y: elem.y2.baseVal.value }

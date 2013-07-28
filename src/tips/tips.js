@@ -81,7 +81,7 @@ $.extend(Tip.prototype, {
 
 			// Setup constant parameters
 			context.lineJoin = 'miter';
-			context.miterLimit = 100;
+			context.miterLimit = 100000;
 			context.save();
 		}
 		else {
@@ -184,7 +184,7 @@ $.extend(Tip.prototype, {
 			width = this.options['width'],
 			height = this.options['height'],
 			isCenter = corner.abbrev() === 'c',
-			base = width * (isCenter ? 0.5 : 1),
+			base = (y ? width: height) * (isCenter ? 0.5 : 1),
 			pow = Math.pow,
 			round = Math.round,
 			bigHyp, ratio, result,
@@ -199,7 +199,6 @@ $.extend(Tip.prototype, {
 		ratio = bigHyp / smallHyp;
 
 		result = [ round(ratio * width), round(ratio * height) ];
-
 		return y ? result : result.reverse();
 	},
 
@@ -225,6 +224,15 @@ $.extend(Tip.prototype, {
 		tips.lb = tips.tr; tips.rb = tips.tl;
 
 		return tips[ corner.abbrev() ];
+	},
+
+	// Tip coordinates drawer (canvas)
+	_drawCoords: function(context, coords) {
+		context.beginPath();
+		context.moveTo(coords[0], coords[1]);
+		context.lineTo(coords[2], coords[3]);
+		context.lineTo(coords[4], coords[5]);
+		context.closePath();
 	},
 
 	create: function() {
@@ -253,11 +261,11 @@ $.extend(Tip.prototype, {
 			tip = this.element,
 			inner = tip.children(),
 			options = this.options,
-			size = this.size,
+			curSize = this.size,
 			mimic = options.mimic,
 			round = Math.round,
 			color, precedance, context,
-			coords, translate, newSize, border;
+			coords, bigCoords, translate, newSize, border;
 
 		// Re-determine tip if not already set
 		if(!corner) { corner = this.qtip.cache.corner || this.corner; }
@@ -311,17 +319,20 @@ $.extend(Tip.prototype, {
 			lineHeight: newSize[1]+'px'
 		});
 
+		// Calculate coordinates
+		HASCANVAS && (bigCoords = this._calculateTip(mimic));
+
 		// Calculate tip translation
 		if(corner.precedance === Y) {
 			translate = [
-				round(mimic.x === LEFT ? border : mimic.x === RIGHT ? newSize[0] - size[0] - border : (newSize[0] - size[0]) / 2),
-				round(mimic.y === TOP ? newSize[1] - size[1] : 0)
+				round(mimic.x === LEFT ? border : mimic.x === RIGHT ? newSize[0] - curSize[0] - border : (newSize[0] - curSize[0]) / 2),
+				round(mimic.y === TOP ? newSize[1] - curSize[1] : 0)
 			];
 		}
 		else {
 			translate = [
-				round(mimic.x === LEFT ? newSize[0] - size[0] : 0),
-				round(mimic.y === TOP ? border : mimic.y === BOTTOM ? newSize[1] - size[1] - border : (newSize[1] - size[1]) / 2)
+				round(mimic.x === LEFT ? newSize[0] - curSize[0] : 0),
+				round(mimic.y === TOP ? border : mimic.y === BOTTOM ? newSize[1] - curSize[1] - border : (newSize[1] - curSize[1]) / 2)
 			];
 		}
 
@@ -333,32 +344,17 @@ $.extend(Tip.prototype, {
 			// Grab canvas context and clear/save it
 			context = inner[0].getContext('2d');
 			context.restore(); context.save();
-			context.clearRect(0,0,3000,3000);
+			context.clearRect(0,0,6000,6000);
 
-			// Set properties
-			context.fillStyle = color[0];
-			context.strokeStyle = color[1];
-			context.lineWidth = border * 2;
+			// Draw the outer-stroke tip
+			this._drawCoords(context, bigCoords);
+			context.fillStyle = color[1];
+			context.fill();
 
-			// Draw the tip
+			// Draw the actual tip
 			context.translate(translate[0], translate[1]);
-			context.beginPath();
-			context.moveTo(coords[0], coords[1]);
-			context.lineTo(coords[2], coords[3]);
-			context.lineTo(coords[4], coords[5]);
-			context.closePath();
-
-			// Apply fill and border
-			if(border) {
-				// Make sure transparent borders are supported by doing a stroke
-				// of the background colour before the stroke colour
-				if(elements.tooltip.css('background-clip') === 'border-box') {
-					context.strokeStyle = color[0];
-					context.stroke();
-				}
-				context.strokeStyle = color[1];
-				context.stroke();
-			}
+			this._drawCoords(context, coords);
+			context.fillStyle = color[0];
 			context.fill();
 		}
 
@@ -374,19 +370,19 @@ $.extend(Tip.prototype, {
 
 			// Set initial CSS
 			inner.css({
-				coordsize: (size[0]+border) + ' ' + (size[1]+border),
+				coordsize: (newSize[0]+border) + ' ' + (newSize[1]+border),
 				antialias: ''+(mimic.string().indexOf(CENTER) > -1),
 				left: translate[0] - (translate[2] * Number(precedance === X)),
 				top: translate[1] - (translate[2] * Number(precedance === Y)),
-				width: size[0] + border,
-				height: size[1] + border
+				width: newSize[0] + border,
+				height: newSize[1] + border
 			})
 			.each(function(i) {
 				var $this = $(this);
 
 				// Set shape specific attributes
 				$this[ $this.prop ? 'prop' : 'attr' ]({
-					coordsize: (size[0]+border) + ' ' + (size[1]+border),
+					coordsize: (newSize[0]+border) + ' ' + (newSize[1]+border),
 					path: coords,
 					fillcolor: color[0],
 					filled: !!i,
@@ -402,10 +398,10 @@ $.extend(Tip.prototype, {
 		}
 
 		// Position if needed
-		if(position !== FALSE) { this.calculate(corner); }
+		if(position !== FALSE) { this.calculate(corner, newSize); }
 	},
 
-	calculate: function(corner) {
+	calculate: function(corner, size) {
 		if(!this.enabled) { return FALSE; }
 
 		var self = this,
@@ -414,14 +410,14 @@ $.extend(Tip.prototype, {
 			userOffset = this.options.offset,
 			isWidget = elements.tooltip.hasClass('ui-widget'),
 			position = {  },
-			precedance, size, corners;
+			precedance, corners;
 
 		// Inherit corner if not provided
 		corner = corner || this.corner;
 		precedance = corner.precedance;
 
 		// Determine which tip dimension to use for adjustment
-		size = this._calculateSize(corner);
+		size = size || this._calculateSize(corner);
 
 		// Setup corners and offset array
 		corners = [ corner.x, corner.y ];
@@ -465,23 +461,39 @@ $.extend(Tip.prototype, {
 			shift = { left: FALSE, top: FALSE, x: 0, y: 0 },
 			offset, css = {}, props;
 
-		// If our tip position isn't fixed e.g. doesn't adjust with viewport...
-		if(this.corner.fixed !== TRUE) {
+		function shiftflip(direction, precedance, popposite, side, opposite) {
 			// Horizontal - Shift or flip method
-			if(horizontal === SHIFT && newCorner.precedance === X && adjust.left && newCorner.y !== CENTER) {
+			if(direction === SHIFT && newCorner.precedance === precedance && adjust[side] && newCorner[popposite] !== CENTER) {
 				newCorner.precedance = newCorner.precedance === X ? Y : X;
 			}
-			else if(horizontal !== SHIFT && adjust.left){
-				newCorner.x = newCorner.x === CENTER ? (adjust.left > 0 ? LEFT : RIGHT) : (newCorner.x === LEFT ? RIGHT : LEFT);
+			else if(direction !== SHIFT && adjust[side]){
+				newCorner[precedance] = newCorner[precedance] === CENTER ? 
+					(adjust[side] > 0 ? side : opposite) : (newCorner[precedance] === side ? opposite : side);
 			}
+		}
 
-			// Vertical - Shift or flip method
-			if(vertical === SHIFT && newCorner.precedance === Y && adjust.top && newCorner.x !== CENTER) {
-				newCorner.precedance = newCorner.precedance === Y ? X : Y;
+		function shiftonly(xy, side, opposite) {
+			if(newCorner[xy] === CENTER) {
+				css[MARGIN+'-'+side] = shift[xy] = offset[MARGIN+'-'+side] - adjust[side];
 			}
-			else if(vertical !== SHIFT && adjust.top) {
-				newCorner.y = newCorner.y === CENTER ? (adjust.top > 0 ? TOP : BOTTOM) : (newCorner.y === TOP ? BOTTOM : TOP);
+			else {
+				props = offset[opposite] !== undefined ?
+					[ adjust[side], -offset[side] ] : [ -adjust[side], offset[side] ];
+
+				if( (shift[xy] = Math.max(props[0], props[1])) > props[0] ) {
+					pos[side] -= adjust[side];
+					shift[side] = FALSE;
+				}
+				
+				css[ offset[opposite] !== undefined ? opposite : side ] = shift[xy];
 			}
+		}
+
+		// If our tip position isn't fixed e.g. doesn't adjust with viewport...
+		if(this.corner.fixed !== TRUE) {
+			// Perform shift/flip adjustments
+			shiftflip(horizontal, X, Y, LEFT, RIGHT);
+			shiftflip(vertical, Y, X, TOP, BOTTOM);
 
 			// Update and redraw the tip if needed (check cached details of last drawn tip)
 			if(newCorner.string() !== cache.corner.string() && (cache.cornerTop !== adjust.top || cache.cornerLeft !== adjust.left)) {
@@ -490,46 +502,16 @@ $.extend(Tip.prototype, {
 		}
 
 		// Setup tip offset properties
-		offset = this.calculate(newCorner, adjust);
+		offset = this.calculate(newCorner);
 
 		// Readjust offset object to make it left/top
 		if(offset.right !== undefined) { offset.left = -offset.right; }
 		if(offset.bottom !== undefined) { offset.top = -offset.bottom; }
 		offset.user = this.offset;
 
-		// Viewport "shift" specific adjustments
-		if(shift.left = (horizontal === SHIFT && !!adjust.left)) {
-			if(newCorner.x === CENTER) {
-				css[MARGIN+'-left'] = shift.x = offset[MARGIN+'-left'] - adjust.left;
-			}
-			else {
-				props = offset.right !== undefined ?
-					[ adjust.left, -offset.left ] : [ -adjust.left, offset.left ];
-
-				if( (shift.x = Math.max(props[0], props[1])) > props[0] ) {
-					pos.left -= adjust.left;
-					shift.left = FALSE;
-				}
-				
-				css[ offset.right !== undefined ? RIGHT : LEFT ] = shift.x;
-			}
-		}
-		if(shift.top = (vertical === SHIFT && !!adjust.top)) {
-			if(newCorner.y === CENTER) {
-				css[MARGIN+'-top'] = shift.y = offset[MARGIN+'-top'] - adjust.top;
-			}
-			else {
-				props = offset.bottom !== undefined ?
-					[ adjust.top, -offset.top ] : [ -adjust.top, offset.top ];
-
-				if( (shift.y = Math.max(props[0], props[1])) > props[0] ) {
-					pos.top -= adjust.top;
-					shift.top = FALSE;
-				}
-
-				css[ offset.bottom !== undefined ? BOTTOM : TOP ] = shift.y;
-			}
-		}
+		// Perform shift adjustments
+		if(shift.left = (horizontal === SHIFT && !!adjust.left)) { shiftonly(X, LEFT, RIGHT); }
+		if(shift.top = (vertical === SHIFT && !!adjust.top)) { shiftonly(Y, TOP, BOTTOM); }
 
 		/*
 		* If the tip is adjusted in both dimensions, or in a
@@ -541,8 +523,10 @@ $.extend(Tip.prototype, {
 		);
 
 		// Adjust position to accomodate tip dimensions
-		pos.left -= offset.left.charAt ? offset.user : horizontal !== SHIFT || shift.top || !shift.left && !shift.top ? offset.left : 0;
-		pos.top -= offset.top.charAt ? offset.user : vertical !== SHIFT || shift.left || !shift.left && !shift.top ? offset.top : 0;
+		pos.left -= offset.left.charAt ? offset.user : 
+			horizontal !== SHIFT || shift.top || !shift.left && !shift.top ? offset.left + this.border : 0;
+		pos.top -= offset.top.charAt ? offset.user : 
+			vertical !== SHIFT || shift.left || !shift.left && !shift.top ? offset.top + this.border : 0;
 
 		// Cache details
 		cache.cornerLeft = adjust.left; cache.cornerTop = adjust.top;
@@ -588,7 +572,7 @@ CHECKS.tip = {
 	},
 	'^style.tip.(height|width)$': function(obj) {
 		// Re-set dimensions and redraw the tip
-		this.size = size = [ obj.width, obj.height ];
+		this.size = [ obj.width, obj.height ];
 		this.update();
 
 		// Reposition the tooltip
