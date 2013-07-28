@@ -100,7 +100,7 @@ PROTOTYPE._unbind = function(targets, suffix) {
 // Apply common event handlers using delegate (avoids excessive .bind calls!)
 var ns = '.'+NAMESPACE;
 function delegate(selector, events, method) {	
-	docBody.delegate(selector,
+	$(document.body).delegate(selector,
 		(events.split ? events : events.join(ns + ' ')) + ns,
 		function() {
 			var api = QTIP.api[ $.attr(this, ATTR_ID) ];

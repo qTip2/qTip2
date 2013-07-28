@@ -14,8 +14,8 @@ PROTOTYPE.reposition = function(event, effect) {
 		container = posOptions.container,
 		adjust = posOptions.adjust,
 		method = adjust.method.split(' '),
-		elemWidth = tooltip.outerWidth(FALSE),
-		elemHeight = tooltip.outerHeight(FALSE),
+		tooltipWidth = tooltip.outerWidth(FALSE),
+		tooltipHeight = tooltip.outerHeight(FALSE),
 		targetWidth = 0,
 		targetHeight = 0,
 		type = tooltip.css('position'),
@@ -48,7 +48,7 @@ PROTOTYPE.reposition = function(event, effect) {
 
 		// Calculate body and container offset and take them into account below
 		if(type !== 'static') { position = container.offset(); }
-		if(doc.body.offsetWidth !== (window.innerWidth || doc.documentElement.clientWidth)) { offset = docBody.offset(); }
+		if(doc.body.offsetWidth !== (window.innerWidth || doc.documentElement.clientWidth)) { offset = $(document.body).offset(); }
 
 		// Use event coordinates for position
 		position = {
@@ -136,13 +136,13 @@ PROTOTYPE.reposition = function(event, effect) {
 	}
 
 	// Adjust position relative to tooltip
-	position.left += adjust.x + (my.x === RIGHT ? -elemWidth : my.x === CENTER ? -elemWidth / 2 : 0);
-	position.top += adjust.y + (my.y === BOTTOM ? -elemHeight : my.y === CENTER ? -elemHeight / 2 : 0);
+	position.left += adjust.x + (my.x === RIGHT ? -tooltipWidth : my.x === CENTER ? -tooltipWidth / 2 : 0);
+	position.top += adjust.y + (my.y === BOTTOM ? -tooltipHeight : my.y === CENTER ? -tooltipHeight / 2 : 0);
 
 	// Use viewport adjustment plugin if enabled
 	if(PLUGINS.viewport) {
 		position.adjusted = PLUGINS.viewport(
-			this, position, posOptions, targetWidth, targetHeight, elemWidth, elemHeight
+			this, position, posOptions, targetWidth, targetHeight, tooltipWidth, tooltipHeight
 		);
 
 		// Apply offsets supplied by positioning plugin (if used)

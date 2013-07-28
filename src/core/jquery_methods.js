@@ -1,9 +1,9 @@
 // Initialization method
 function init(elem, id, opts) {
-	// Setup element references
-	docBody = docBody || $(document.body);
-
 	var obj, posOptions, attr, config, title,
+
+	// Setup element references
+	docBody = $(document.body),
 
 	// Use document body instead of document element if needed
 	newTarget = elem[0] === document ? docBody : elem,
