@@ -161,11 +161,5 @@ QTIP = $.fn.qtip = function(options, notation, newValue)
 	}
 };
 
-// $.fn.qtip Bind method
-QTIP.bind = function(opts, event)
-{
-
-};
-
 // Populated in render method
 QTIP.api = {};
