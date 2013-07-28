@@ -81,7 +81,7 @@ $.extend(Tip.prototype, {
 
 			// Setup constant parameters
 			context.lineJoin = 'miter';
-			context.miterLimit = 100;
+			context.miterLimit = 100000;
 			context.save();
 		}
 		else {
@@ -333,7 +333,7 @@ $.extend(Tip.prototype, {
 			// Grab canvas context and clear/save it
 			context = inner[0].getContext('2d');
 			context.restore(); context.save();
-			context.clearRect(0,0,3000,3000);
+			context.clearRect(0,0,6000,6000);
 
 			// Set properties
 			context.fillStyle = color[0];
@@ -343,6 +343,7 @@ $.extend(Tip.prototype, {
 			// Draw the tip
 			context.translate(translate[0], translate[1]);
 			context.beginPath();
+
 			context.moveTo(coords[0], coords[1]);
 			context.lineTo(coords[2], coords[3]);
 			context.lineTo(coords[4], coords[5]);
@@ -588,7 +589,7 @@ CHECKS.tip = {
 	},
 	'^style.tip.(height|width)$': function(obj) {
 		// Re-set dimensions and redraw the tip
-		this.size = size = [ obj.width, obj.height ];
+		this.size = [ obj.width, obj.height ];
 		this.update();
 
 		// Reposition the tooltip

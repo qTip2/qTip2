@@ -1,3 +1,13 @@
+function delay(callback, duration) {
+	// If tooltip has displayed, start hide timer
+	if(duration > 0) {
+		return setTimeout(
+			$.proxy(callback, this), duration
+		);
+	}
+	else{ callback.call(this); }
+}
+
 function showMethod(event) {
 	if(this.tooltip.hasClass(CLASS_DISABLED)) { return FALSE; }
 
@@ -6,11 +16,10 @@ function showMethod(event) {
 	clearTimeout(this.timers.hide);
 
 	// Start show timer
-	var callback = $.proxy(function(){ this.toggle(TRUE, event); }, this);
-	if(this.options.show.delay > 0) {
-		this.timers.show = setTimeout(callback, this.options.show.delay);
-	}
-	else{ callback(); }
+	this.timers.show = delay.call(this,
+		function() { this.toggle(TRUE, event); },
+		this.options.show.delay
+	);
 }
 
 function hideMethod(event) {
@@ -42,11 +51,11 @@ function hideMethod(event) {
 	}
 
 	// If tooltip has displayed, start hide timer
-	var callback = $.proxy(function(){ this.toggle(FALSE, event); }, this);
-	if(this.options.hide.delay > 0) {
-		this.timers.hide = setTimeout(callback, this.options.hide.delay);
-	}
-	else{ callback(); }
+	this.timers.hide = delay.call(this,
+		function() { this.toggle(FALSE, event); },
+		this.options.hide.delay,
+		this
+	);
 }
 
 function inactiveMethod(event) {
@@ -54,8 +63,10 @@ function inactiveMethod(event) {
 
 	// Clear timer
 	clearTimeout(this.timers.inactive);
-	this.timers.inactive = setTimeout(
-		$.proxy(function(){ this.hide(event); }, this), this.options.hide.inactive
+
+	this.timers.inactive = delay.call(this,
+		function(){ this.hide(event); },
+		this.options.hide.inactive
 	);
 }
 
@@ -89,7 +100,7 @@ PROTOTYPE._unbind = function(targets, suffix) {
 // Apply common event handlers using delegate (avoids excessive .bind calls!)
 var ns = '.'+NAMESPACE;
 function delegate(selector, events, method) {	
-	$(document.body).delegate(selector,
+	docBody.delegate(selector,
 		(events.split ? events : events.join(ns + ' ')) + ns,
 		function() {
 			var api = QTIP.api[ $.attr(this, ATTR_ID) ];
@@ -142,6 +153,59 @@ PROTOTYPE._trigger = function(type, args, event) {
 
 	return !callback.isDefaultPrevented();
 };
+
+PROTOTYPE._assignInitialEvents = function(event) {
+	var options = this.options,
+		showTarget = options.show.target,
+		hideTarget = options.hide.target,
+		showEvents = options.show.event ? $.trim('' + options.show.event).split(' ') : [],
+		hideEvents = options.hide.event ? $.trim('' + options.hide.event).split(' ') : [];
+
+	/*
+	 * Make sure hoverIntent functions properly by using mouseleave as a hide event if
+	 * mouseenter/mouseout is used for show.event, even if it isn't in the users options.
+	 */
+	if(/mouse(over|enter)/i.test(options.show.event) && !/mouse(out|leave)/i.test(options.hide.event)) {
+		hideEvents.push('mouseleave');
+	}
+
+	/*
+	 * Also make sure initial mouse targetting works correctly by caching mousemove coords
+	 * on show targets before the tooltip has rendered. Also set onTarget when triggered to
+	 * keep mouse tracking working.
+	 */
+	this._bind(showTarget, 'mousemove', function(event) {
+		this._storeMouse(event);
+		this.cache.onTarget = TRUE;
+	});
+
+	// Define hoverIntent function
+	function hoverIntent(event) {
+		// Only continue if tooltip isn't disabled
+		if(this.disabled) { return FALSE; }
+
+		// Cache the event data
+		this.cache.event = $.extend({}, event);
+		this.cache.target = event ? $(event.target) : [undefined];
+
+		// Start the event sequence
+		clearTimeout(this.timers.show);
+		this.timers.show = delay.call(this,
+			function() { this.render(typeof event === 'object' || options.show.ready); },
+			options.show.delay
+		);
+	}
+
+	// Bind events to target
+	this._bind(showTarget, showEvents, hoverIntent);
+	if(options.show.event !== options.hide.event) {
+		this._bind(hideTarget, hideEvents, function() { clearTimeout(this.timers.show); });
+	}
+
+	// Prerendering is enabled, create tooltip now
+	if(options.show.ready || options.prerender) { hoverIntent.call(this, event); }
+};
+
 
 // Event assignment method
 PROTOTYPE._assignEvents = function() {
@@ -299,14 +363,8 @@ PROTOTYPE._unassignEvents = function() {
 		document
 	];
 
-	// Check if tooltip is rendered
-	if(this.rendered) {
-		this._unbind($([]).pushStack( $.grep(targets, function(i) {
-			return typeof i === 'object';
-		})));
-	}
-
-	// Tooltip isn't yet rendered, remove render event
-	else { $(targets[0]).unbind('.'+this._id+'-create'); }
+	this._unbind($([]).pushStack( $.grep(targets, function(i) {
+		return typeof i === 'object';
+	})));
 };
 

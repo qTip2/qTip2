@@ -40,6 +40,8 @@ replaceSuffix = '_replacedByqTip',
 oldtitle = 'oldtitle',
 trackingBound,
 
+docBody, // set in jquery_methods.init
+
 // Browser detection
 BROWSER = {
 	/*

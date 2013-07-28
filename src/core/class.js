@@ -110,7 +110,8 @@ PROTOTYPE.render = function(show) {
 		}
 	});
 
-	// Assign events
+	// Unassign initial events and assign proper events
+	this._unassignEvents();
 	this._assignEvents();
 
 	// When deferreds have completed

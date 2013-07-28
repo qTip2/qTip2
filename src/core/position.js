@@ -48,7 +48,7 @@ PROTOTYPE.reposition = function(event, effect) {
 
 		// Calculate body and container offset and take them into account below
 		if(type !== 'static') { position = container.offset(); }
-		if(doc.body.offsetWidth !== (window.innerWidth || doc.documentElement.clientWidth)) { offset = $(doc.body).offset(); }
+		if(doc.body.offsetWidth !== (window.innerWidth || doc.documentElement.clientWidth)) { offset = docBody.offset(); }
 
 		// Use event coordinates for position
 		position = {
