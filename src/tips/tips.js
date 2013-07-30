@@ -397,6 +397,15 @@ $.extend(Tip.prototype, {
 			});
 		}
 
+		// Opera bug #357 - Incorrect tip position
+		// https://github.com/Craga89/qTip2/issues/367
+		window.opera && setTimeout(function() {
+			elems.tip.css({
+				display: 'inline-block',
+				visibility: 'visible'
+			});
+		}, 1);
+
 		// Position if needed
 		if(position !== FALSE) { this.calculate(corner, newSize); }
 	},
