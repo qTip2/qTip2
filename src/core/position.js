@@ -70,7 +70,7 @@ PROTOTYPE.reposition = function(event, effect) {
 		};
 
 		// Scroll events are a pain, some browsers
-		if(adjust.mouse && isScroll) {
+		if(adjust.mouse && isScroll && (typeof mouse != 'undefined') && (typeof mouse.scrollX != 'undefined')) {
 			position.left -= mouse.scrollX - win.scrollLeft();
 			position.top -= mouse.scrollY - win.scrollTop();
 		}
