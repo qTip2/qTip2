@@ -79,17 +79,6 @@ OVERLAY = function()
 			})
 			.hide();
 
-			// Update position on window resize or scroll
-			function resize() {
-				var win = $(window);
-				elem.css({
-					height: win.height(),
-					width: win.width()
-				});
-			}
-			$(window).bind('resize'+MODALSELECTOR, resize);
-			resize(); // Fire it initially too
-
 			// Make sure we can't focus anything outside the tooltip
 			$(document.body).bind('focusin'+MODALSELECTOR, stealFocus);
 
@@ -145,10 +134,9 @@ OVERLAY = function()
 			// Toggle backdrop cursor style on show
 			elem.toggleClass('blurs', options.blur);
 
-			// Set position and append to body on show
+			// Append to body on show
 			if(state) {
-				elem.css({ left: 0, top: 0 })
-					.appendTo(document.body);
+				elem.appendTo(document.body);
 			}
 
 			// Prevent modal from conflicting with show.solo, and don't hide backdrop is other modals are visible
