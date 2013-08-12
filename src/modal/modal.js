@@ -225,7 +225,7 @@ $.extend(Modal.prototype, {
 
 			// Make sure mouseout doesn't trigger a hide when showing the modal and mousing onto backdrop
 			if(event.target === tooltip[0]) {
-				if(oEvent && event.type === 'tooltiphide' && /mouse(leave|enter)/.test(oEvent.type) && $(oEvent.relatedTarget).closest(overlay[0]).length) {
+				if(oEvent && event.type === 'tooltiphide' && /mouse(leave|enter)/.test(oEvent.type) && $(oEvent.relatedTarget).closest(OVERLAY.elem[0]).length) {
 					try { event.preventDefault(); } catch(e) {}
 				}
 				else if(!oEvent || (oEvent && !oEvent.solo)) {
