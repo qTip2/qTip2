@@ -43,7 +43,7 @@ function vendorCss(elem, prop) {
 
 // Parse a given elements CSS property into an int
 function intCss(elem, prop) {
-	return parseInt(vendorCss(elem, prop), 10);
+	return Math.ceil(parseFloat(vendorCss(elem, prop)));
 }
 
 
