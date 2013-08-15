@@ -13,7 +13,7 @@ PROTOTYPE.toggle = function(state, event) {
 		}
 
 		// Cache event
-		cache.event = $.extend({}, event);
+		cache.event = cloneEvent(event);
 	}
 		
 	// If we're currently waiting and we've just hidden... stop it
@@ -55,7 +55,7 @@ PROTOTYPE.toggle = function(state, event) {
 	// Execute state specific properties
 	if(state) {
 		// Store show origin coordinates
-		cache.origin = $.extend({}, this.mouse);
+		cache.origin = cloneEvent(this.mouse);
 
 		// Update tooltip content & title if it's a dynamic function
 		if($.isFunction(contentOptions.text)) { this._updateContent(contentOptions.text, FALSE); }
