@@ -80,7 +80,7 @@ function init(elem, id, opts) {
 
 	// Catch remove/removeqtip events on target element to destroy redundant tooltip
 	elem.one('remove.qtip-'+id+' removeqtip.qtip-'+id, function() { 
-		var api; if((api = $(this).data(NAMESPACE))) { api.destroy(); }
+		var api; if((api = $(this).data(NAMESPACE))) { api.destroy(true); }
 	});
 
 	return obj;
@@ -135,20 +135,16 @@ QTIP = $.fn.qtip = function(options, notation, newValue)
 		opts = sanitizeOptions($.extend(TRUE, {}, options));
 
 		return this.each(function(i) {
-			var options, targets, events, namespace, api, id;
+			var api, id;
 
 			// Find next available ID, or use custom ID if provided
 			id = $.isArray(opts.id) ? opts.id[i] : opts.id;
 			id = !id || id === FALSE || id.length < 1 || QTIP.api[id] ? QTIP.nextid++ : id;
 
-			// Setup events namespace
-			namespace = '.qtip-'+id+'-create';
-
 			// Initialize the qTip and re-grab newly sanitized options
 			api = init($(this), id, opts);
 			if(api === FALSE) { return TRUE; }
 			else { QTIP.api[id] = api; }
-			options = api.options;
 
 			// Initialize plugins
 			$.each(PLUGINS, function() {
