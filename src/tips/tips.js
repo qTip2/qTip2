@@ -14,6 +14,9 @@ IMPORTANT = ' !important',
 // Check if the browser supports <canvas/> elements
 HASCANVAS = !!document.createElement('canvas').getContext,
 
+// Fetch device pixel ratio
+PIXEL_RATIO = window.devicePixelRatio || 1,
+
 // Invalid colour values used in parseColours()
 INVALID = /rgba?\(0, 0, 0(, 0)?\)|transparent|#123456/i;
 
@@ -203,8 +206,12 @@ $.extend(Tip.prototype, {
 	},
 
 	// Tip coordinates calculator
-	_calculateTip: function(corner) {	
-		var width = this.size[0], height = this.size[1],
+	_calculateTip: function(corner, size, scale) {
+		scale = scale || 1;
+		size = size || this.size;
+
+		var width = size[0] * scale,
+			height = size[1] * scale,
 			width2 = Math.ceil(width / 2), height2 = Math.ceil(height / 2),
 
 		// Define tip coordinates in terms of height and width values
@@ -264,7 +271,7 @@ $.extend(Tip.prototype, {
 			curSize = this.size,
 			mimic = options.mimic,
 			round = Math.round,
-			color, precedance, context,
+			color, precedance, context, scale, scaledSize,
 			coords, bigCoords, translate, newSize, border;
 
 		// Re-determine tip if not already set
@@ -308,9 +315,6 @@ $.extend(Tip.prototype, {
 		// Border colour was invalid, set border to zero
 		else { this.border = border = 0; }
 
-		// Calculate coordinates
-		coords = this._calculateTip(mimic);
-
 		// Determine tip size
 		newSize = this.size = this._calculateSize(corner);
 		tip.css({
@@ -318,9 +322,6 @@ $.extend(Tip.prototype, {
 			height: newSize[1],
 			lineHeight: newSize[1]+'px'
 		});
-
-		// Calculate coordinates
-		HASCANVAS && (bigCoords = this._calculateTip(mimic));
 
 		// Calculate tip translation
 		if(corner.precedance === Y) {
@@ -338,13 +339,20 @@ $.extend(Tip.prototype, {
 
 		// Canvas drawing implementation
 		if(HASCANVAS) {
-			// Set the canvas size using calculated size
-			inner.attr(WIDTH, newSize[0]).attr(HEIGHT, newSize[1]);
-
 			// Grab canvas context and clear/save it
 			context = inner[0].getContext('2d');
 			context.restore(); context.save();
 			context.clearRect(0,0,6000,6000);
+
+			scale = PIXEL_RATIO / context.webkitBackingStorePixelRatio;
+
+			// Calculate coordinates
+			coords = this._calculateTip(mimic, curSize, scale);
+			bigCoords = this._calculateTip(mimic, this.size, scale);
+
+			// Set the canvas size using calculated size
+			inner.attr(WIDTH, newSize[0] * scale).attr(HEIGHT, newSize[1] * scale);
+			inner.css(WIDTH, newSize[0]).css(HEIGHT, newSize[1]);
 
 			// Draw the outer-stroke tip
 			this._drawCoords(context, bigCoords);
@@ -352,7 +360,7 @@ $.extend(Tip.prototype, {
 			context.fill();
 
 			// Draw the actual tip
-			context.translate(translate[0], translate[1]);
+			context.translate(translate[0] * scale, translate[1] * scale);
 			this._drawCoords(context, coords);
 			context.fillStyle = color[0];
 			context.fill();
@@ -360,12 +368,15 @@ $.extend(Tip.prototype, {
 
 		// VML (IE Proprietary implementation)
 		else {
+			// Calculate coordinates
+			coords = this._calculateTip(mimic);
+
 			// Setup coordinates string
 			coords = 'm' + coords[0] + ',' + coords[1] + ' l' + coords[2] +
 				',' + coords[3] + ' ' + coords[4] + ',' + coords[5] + ' xe';
 
 			// Setup VML-specific offset for pixel-perfection
-			translate[2] = border && /^(r|b)/i.test(corner.string()) ? 
+			translate[2] = border && /^(r|b)/i.test(corner.string()) ?
 				BROWSER.ie === 8 ? 2 : 1 : 0;
 
 			// Set initial CSS
