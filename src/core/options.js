@@ -245,7 +245,7 @@ PROTOTYPE.set = function(option, value) {
 
 	// Set all of the defined options to their new values
 	$.each(option, function(notation, value) {
-		if(!rendered && !rrender.test(notation)) {
+		if(rendered && rrender.test(notation)) {
 			delete option[notation]; return;
 		}
 
