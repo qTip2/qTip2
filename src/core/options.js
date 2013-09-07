@@ -142,7 +142,7 @@ CHECKS = PROTOTYPE.checks = {
 			'string' === typeof v && (obj[o] = new CORNER(v, o === 'at'));
 		},
 		'^position.container$': function(obj, o, v){
-			this.tooltip.appendTo(v);
+			this.rendered && this.tooltip.appendTo(v);
 		},
 
 		// Show checks
@@ -152,28 +152,29 @@ CHECKS = PROTOTYPE.checks = {
 
 		// Style checks
 		'^style.classes$': function(obj, o, v, p) {
-			this.tooltip.removeClass(p).addClass(v);
+			this.rendered && this.tooltip.removeClass(p).addClass(v);
 		},
 		'^style.(width|height)': function(obj, o, v) {
-			this.tooltip.css(o, v);
+			this.rendered && this.tooltip.css(o, v);
 		},
 		'^style.widget|content.title': function() {
-			this._setWidget();
+			this.rendered && this._setWidget();
 		},
 		'^style.def': function(obj, o, v) {
-			this.tooltip.toggleClass(CLASS_DEFAULT, !!v);
+			this.rendered && this.tooltip.toggleClass(CLASS_DEFAULT, !!v);
 		},
 
 		// Events check
 		'^events.(render|show|move|hide|focus|blur)$': function(obj, o, v) {
-			this.tooltip[($.isFunction(v) ? '' : 'un') + 'bind']('tooltip'+o, v);
+			this.rendered && this.tooltip[($.isFunction(v) ? '' : 'un') + 'bind']('tooltip'+o, v);
 		},
 
 		// Properties which require event reassignment
 		'^(show|hide|position).(event|target|fixed|inactive|leave|distance|viewport|adjust)': function() {
-			var posOptions = this.options.position;
+			if(!this.rendered) { return; }
 
 			// Set tracking flag
+			var posOptions = this.options.position;
 			this.tooltip.attr('tracking', posOptions.target === 'mouse' && posOptions.adjust.mouse);
 
 			// Reassign events
@@ -245,7 +246,7 @@ PROTOTYPE.set = function(option, value) {
 
 	// Set all of the defined options to their new values
 	$.each(option, function(notation, value) {
-		if(!rendered && !rrender.test(notation)) {
+		if(!rendered && rrender.test(notation)) {
 			delete option[notation]; return;
 		}
 
