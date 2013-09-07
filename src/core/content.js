@@ -26,7 +26,7 @@ PROTOTYPE._update = function(content, element, reposition) {
 
 	// Append new content if its a DOM array and show it if hidden
 	if(content.jquery && content.length > 0) {
-		element.children().detach().end().append( content.css({ display: 'block' }) );
+		element.children().detach().end().append( content.css({ display: 'block', visibility: 'visible' }) );
 	}
 
 	// Content is a regular string, insert the new content

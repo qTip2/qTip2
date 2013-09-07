@@ -272,7 +272,7 @@ $.extend(Tip.prototype, {
 			mimic = options.mimic,
 			round = Math.round,
 			color, precedance, context, scale, scaledSize,
-			coords, bigCoords, translate, newSize, border;
+			coords, bigCoords, translate, newSize, border, backingStoreRatio;
 
 		// Re-determine tip if not already set
 		if(!corner) { corner = this.qtip.cache.corner || this.corner; }
@@ -343,8 +343,9 @@ $.extend(Tip.prototype, {
 			context = inner[0].getContext('2d');
 			context.restore(); context.save();
 			context.clearRect(0,0,6000,6000);
-
-			scale = PIXEL_RATIO / context.webkitBackingStorePixelRatio;
+			
+			backingStoreRatio = context.webkitBackingStorePixelRatio || context.mozBackingStorePixelRatio || context.msBackingStorePixelRatio || context.oBackingStorePixelRatio || context.backingStorePixelRatio || 1;
+			scale = PIXEL_RATIO / backingStoreRatio;
 
 			// Calculate coordinates
 			coords = this._calculateTip(mimic, curSize, scale);
