@@ -2,8 +2,8 @@ PLUGINS.svg = function(api, svg, corner, adjustMethod)
 {
 	var doc = $(document),
 		elem = svg[0],
-		result = {},
-		name, box, position, dimensions;
+		result, position, dimensions,
+		len, next, i, points; // line/polygon/polyline
 
 	// Ascend the parentNode chain until we find an element with getBBox()
 	while(!elem.getBBox) { elem = elem.parentNode; }
@@ -12,7 +12,8 @@ PLUGINS.svg = function(api, svg, corner, adjustMethod)
 	// Determine which shape calculation to use
 	switch(elem.nodeName) {
 		case 'rect':
-			position = PLUGINS.svg.toPixel(elem, elem.x.baseVal.value, elem.y.baseVal.value);
+			position = PLUGINS.svg.toPixel(elem, elem.x, elem.y);
+
 			dimensions = PLUGINS.svg.toPixel(elem,
 				elem.x.baseVal.value + elem.width.baseVal.value,
 				elem.y.baseVal.value + elem.height.baseVal.value
@@ -27,15 +28,16 @@ PLUGINS.svg = function(api, svg, corner, adjustMethod)
 
 		case 'ellipse':
 		case 'circle':
-			position = PLUGINS.svg.toPixel(elem,
-				elem.cx.baseVal.value,
-				elem.cy.baseVal.value
+			position = PLUGINS.svg.toPixel(elem, elem.cx, elem.cy);
+
+			dimensions = PLUGINS.svg.toPixel(elem,
+				(elem.rx || elem.r).baseVal.value, 
+				(elem.ry || elem.r).baseVal.value
 			);
 
 			result = PLUGINS.polys.ellipse(
 				position[0], position[1],
-				(elem.rx || elem.r).baseVal.value, 
-				(elem.ry || elem.r).baseVal.value,
+				dimensions[0], dimensions[1],
 				corner
 			);
 		break;
@@ -43,12 +45,7 @@ PLUGINS.svg = function(api, svg, corner, adjustMethod)
 		case 'line':
 		case 'polygon':
 		case 'polyline':
-			var len, next, i,
-
-			points = elem.points || [
-				{ x: elem.x1.baseVal.value, y: elem.y1.baseVal.value },
-				{ x: elem.x2.baseVal.value, y: elem.y2.baseVal.value }
-			];
+			points = elem.points || [ { x: elem.x1, y: elem.y1 }, { x: elem.x2, y: elem.y2 } ];
 
 			for(result = [], i = -1, len = points.numberOfItems || points.length; ++i < len;) {
 				next = points.getItem ? points.getItem(i) : points[i];
@@ -58,32 +55,21 @@ PLUGINS.svg = function(api, svg, corner, adjustMethod)
 			result = PLUGINS.polys.polygon(result, corner);
 		break;
 
-		// Unknown shape... use bounding box as fallback
+		// Unknown shape... use bounding box
 		default: 
-			box = elem.getBBox();
-			mtx = elem.getScreenCTM();
-			root = elem.farthestViewportElement || elem;
+			result = elem.getBBox();
 
-			// Return if no createSVGPoint method is found
-			if(!root.createSVGPoint) { return FALSE; }
+			position = PLUGINS.svg.toPixel(elem, result.x, result.y);
+			dimensions = PLUGINS.svg.toPixel(elem,
+				result.x + result.width,
+				result.y + result.height
+			);
 
-			// Create our point var
-			point = root.createSVGPoint();
-
-			// Adjust top and left
-			point.x = box.x;
-			point.y = box.y;
-			tPoint = point.matrixTransform(mtx);
-			result.position = {
-				left: tPoint.x, top: tPoint.y
-			};
-
-			// Adjust width and height
-			point.x += box.width;
-			point.y += box.height;
-			tPoint = point.matrixTransform(mtx);
-			result.width = tPoint.x - result.position.left;
-			result.height = tPoint.y - result.position.top;
+			result = PLUGINS.polys.rect(
+				position[0], position[1],
+				dimensions[0], dimensions[1],
+				corner
+			);
 		break;
 	}
 
@@ -103,7 +89,8 @@ PLUGINS.svg.toPixel = function(elem, x, y) {
 	if(!root.createSVGPoint) { return FALSE; }
 	point = root.createSVGPoint();
 
-	point.x = x; point.y = y;
+	point.x = x.baseVal ? x.baseVal.value : x;
+	point.y = y.baseVal ? y.baseVal.value : y;
 	result = point.matrixTransform(mtx);
 	return [ result.x, result.y ];
 };

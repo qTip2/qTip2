@@ -96,7 +96,7 @@ PLUGINS.polys = {
 	},
 	ellipse: function(cx, cy, rx, ry, corner) {
 		var c = PLUGINS.polys._angles[ corner.abbrev() ],
-			rxc = rx * Math.cos( c * Math.PI ),
+			rxc = c === 0 ? 0 : rx * Math.cos( c * Math.PI ),
 			rys = ry * Math.sin( c * Math.PI );
 
 		return {
