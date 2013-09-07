@@ -32,10 +32,20 @@ PLUGINS.svg = function(api, svg, corner, adjustMethod)
 				elem.cy.baseVal.value
 			);
 
+			var root = elem.farthestViewportElement || elem,
+				viewBoxAdjustment = (root.viewBox ?
+					{
+						x: (root.viewBox ? root.width.baseVal.value / root.viewBox.baseVal.width : 1),
+						y: (root.viewBox ? root.height.baseVal.value / root.viewBox.baseVal.height : 1)
+					}
+					:
+					{ x: 1, y: 1 }
+				);
+
 			result = PLUGINS.polys.ellipse(
 				position[0], position[1],
-				(elem.rx || elem.r).baseVal.value, 
-				(elem.ry || elem.r).baseVal.value,
+				(elem.rx || elem.r).baseVal.value * viewBoxAdjustment.x,
+				(elem.ry || elem.r).baseVal.value * viewBoxAdjustment.y,
 				corner
 			);
 		break;
