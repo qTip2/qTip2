@@ -85,7 +85,6 @@ PLUGINS.svg = function(api, svg, corner)
 			transformed = points.matrixTransform( mtx );
 			position.left = transformed.x;
 			position.top = transformed.y;
-			console.log(position);
 		}
 
 		// Calculate viewBox characteristics
