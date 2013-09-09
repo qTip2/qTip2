@@ -117,7 +117,17 @@ module.exports = function(grunt) {
 		uglify: {
 			options: {
 				preserveComments: 'some',
-				banner: '<%=meta.banners.uglify%>'
+				banner: '<%=meta.banners.uglify%>',
+				sourceMap: function(file) {
+					return file.indexOf('imagesloaded') < 0 ? file.replace('.js', '.map') : null;
+				},
+				sourceMappingURL: function(file) {
+					file = file.replace('dist/', '').replace('.js', '.map');
+
+					return grunt.config('pkg.type') === 'stable' ? 
+						grunt.config.process('http://cdnjs.cloudflare.com/ajax/libs/qtip2/<%=pkg.version%>/') + file : 
+						'http://qtip2.com/v/nightly/' + file;
+				}
 			},
 			dist: {
 				files: {
@@ -243,25 +253,36 @@ module.exports = function(grunt) {
 
 		// Setup in-file text replacements (version, date etc)
 		grunt.util.spawn({ cmd: 'git', args: ['describe'] }, function(err, data) {
-			// Ensyure it succeed
+			// Ensure it succeed
 			if(data.code > 1) {
 				grunt.log.write('Uhoh... couldn\'t grab Git repository description. Somethings up!');
 				return done();
 			}
 
-			var version = stable ? grunt.config('pkg.version') : data.stdout.substr(0,10),
-				strStyles = styles.length ? styles.join(' ') : '',
+			// Determine version
+			var version = stable ?
+				grunt.config('pkg.version') :
+				grunt.config('pkg.version', data.stdout.substr(0,10) );
+
+			// Set version type config
+			grunt.config('pkg.type', stable ? 'stable' : 'nightly');
+			
+			// Setup styles and plugins replacements arrays
+			var strStyles = styles.length ? styles.join(' ') : '';
 				strPlugins = plugins.length ? plugins.join(' ') : '';
 
+			// Setup build properties
 			var buildprops = (plugins.length ? ' * Plugins: '+strPlugins+'\n' : '') +
 				(styles.length ? ' * Styles: '+strStyles+'\n' : '');
 
+			// Setup minification build properties
 			var minbuildprops = plugins[0] !== 'None' || styles[0] !== 'None' ? 
 				'(includes: ' + 
 					(plugins[0] !== 'None' ? strPlugins : '') + 
 					(styles[0] !== 'None' ? ' / ' + strStyles : '') + ') '
 				: '';
 
+			// Set replacement variables
 			grunt.config('replace.dist.options.variables', {
 				'BUILDPROPS': buildprops,
 				'MINBUILDPROPS': minbuildprops,
@@ -278,6 +299,7 @@ module.exports = function(grunt) {
 				"styles "  +styles.join(' ').green + "\n"
 			);
 
+			// Async task done
 			done(version);
 		});
 	});
