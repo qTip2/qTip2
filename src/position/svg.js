@@ -1,43 +1,33 @@
-PLUGINS.svg = function(api, svg, corner, adjustMethod)
+PLUGINS.svg = function(api, svg, corner)
 {
 	var doc = $(document),
 		elem = svg[0],
-		result, position, dimensions,
-		len, next, i, points; // line/polygon/polyline
+		root = elem.ownerSVGElement || elem,
+		xScale = 1, yScale = 1, mtx, transformed, viewBox, // viewBox
+		complex = true, // See default case
+		len, next, i, points, // line/polygon/polyline
+		result, position, dimensions;
 
 	// Ascend the parentNode chain until we find an element with getBBox()
 	while(!elem.getBBox) { elem = elem.parentNode; }
 	if(!elem.getBBox || !elem.parentNode) { return FALSE; }
 
+	// Add stroke characteristics to scaling
+	var strokeWidth2 = (parseInt(svg.css('stroke-width'), 10) || 0) / 2;
+	if(strokeWidth2) {
+		xScale += strokeWidth2 / root.width.baseVal.value;
+		yScale += strokeWidth2 / root.height.baseVal.value;
+	}
+
 	// Determine which shape calculation to use
 	switch(elem.nodeName) {
-		case 'rect':
-			position = PLUGINS.svg.toPixel(elem, elem.x, elem.y);
-
-			dimensions = PLUGINS.svg.toPixel(elem,
-				elem.x.baseVal.value + elem.width.baseVal.value,
-				elem.y.baseVal.value + elem.height.baseVal.value
-			);
-
-			result = PLUGINS.polys.rect(
-				position[0], position[1],
-				dimensions[0], dimensions[1],
-				corner
-			);
-		break;
-
 		case 'ellipse':
 		case 'circle':
-			position = PLUGINS.svg.toPixel(elem, elem.cx, elem.cy);
-
-			dimensions = PLUGINS.svg.toPixel(elem,
-				(elem.rx || elem.r).baseVal.value, 
-				(elem.ry || elem.r).baseVal.value
-			);
-
 			result = PLUGINS.polys.ellipse(
-				position[0], position[1],
-				dimensions[0], dimensions[1],
+				elem.cx.baseVal.value,
+				elem.cy.baseVal.value,
+				(elem.rx || elem.r).baseVal.value + strokeWidth2,
+				(elem.ry || elem.r).baseVal.value + strokeWidth2,
 				corner
 			);
 		break;
@@ -45,52 +35,59 @@ PLUGINS.svg = function(api, svg, corner, adjustMethod)
 		case 'line':
 		case 'polygon':
 		case 'polyline':
-			points = elem.points || [ { x: elem.x1, y: elem.y1 }, { x: elem.x2, y: elem.y2 } ];
+			// Determine points object (line has none, so mimic using array)
+			points = elem.points || [ 
+				{ x: elem.x1.baseVal.value, y: elem.y1.baseVal.value },
+				{ x: elem.x2.baseVal.value, y: elem.y2.baseVal.value }
+			];
 
 			for(result = [], i = -1, len = points.numberOfItems || points.length; ++i < len;) {
 				next = points.getItem ? points.getItem(i) : points[i];
-				result.push.apply(result, PLUGINS.svg.toPixel(elem, next.x, next.y));
+				result.push.apply(result, [next.x, next.y]);
 			}
 
 			result = PLUGINS.polys.polygon(result, corner);
 		break;
 
-		// Unknown shape... use bounding box
-		default: 
-			result = elem.getBBox();
-
-			position = PLUGINS.svg.toPixel(elem, result.x, result.y);
-			dimensions = PLUGINS.svg.toPixel(elem,
-				result.x + result.width,
-				result.y + result.height
-			);
-
-			result = PLUGINS.polys.rect(
-				position[0], position[1],
-				dimensions[0], dimensions[1],
-				corner
-			);
+		// Unknown shape or rectangle? Use bounding box
+		default:
+			result = elem.getBoundingClientRect();
+			result = {
+				width: result.width, height: result.height,
+				position: {
+					left: result.left,
+					top: result.top
+				}
+			};
+			complex = false;
 		break;
+	}
+	position = result.position;
+
+	// If the shape was complex (i.e. not using bounding box calculations)
+	if(complex) {
+		// Convert position into a pixel value
+		if(root.createSVGPoint) {
+			mtx = elem.getScreenCTM();
+			points = root.createSVGPoint();
+
+			points.x = position.left;
+			points.y = position.top;
+			transformed = points.matrixTransform( mtx );
+			position.left = transformed.x;
+			position.top = transformed.y;
+		}
+
+		// Calculate viewBox characteristics
+		if(root.viewBox && (viewBox = root.viewBox.baseVal) && viewBox.width && viewBox.height) {
+			xScale *= root.width.baseVal.value / viewBox.width;
+			yScale *= root.height.baseVal.value / viewBox.height;
+		}
 	}
 
 	// Adjust by scroll offset
-	result.position.left += doc.scrollLeft();
-	result.position.top += doc.scrollTop();
+	position.left += doc.scrollLeft();
+	position.top += doc.scrollTop();
 
 	return result;
-};
-
-PLUGINS.svg.toPixel = function(elem, x, y) {
-	var mtx = elem.getScreenCTM(),
-		root = elem.farthestViewportElement || elem,
-		result, point;
-
-	// Create SVG point
-	if(!root.createSVGPoint) { return FALSE; }
-	point = root.createSVGPoint();
-
-	point.x = x.baseVal ? x.baseVal.value : x;
-	point.y = y.baseVal ? y.baseVal.value : y;
-	result = point.matrixTransform(mtx);
-	return [ result.x, result.y ];
 };

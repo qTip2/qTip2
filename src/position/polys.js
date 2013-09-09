@@ -78,7 +78,7 @@ PLUGINS.polys = {
 		return result;
 	},
 
-	rect: function(ax, ay, bx, by, corner) {
+	rect: function(ax, ay, bx, by) {
 		return {
 			width: Math.abs(bx - ax),
 			height: Math.abs(by - ay),
