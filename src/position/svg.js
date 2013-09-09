@@ -2,21 +2,27 @@ PLUGINS.svg = function(api, svg, corner)
 {
 	var doc = $(document),
 		elem = svg[0],
-		root = elem.ownerSVGElement || elem,
-		xScale = 1, yScale = 1, mtx, transformed, viewBox, // viewBox
-		complex = true, // See default case
-		len, next, i, points, // line/polygon/polyline
+		root = $(elem.ownerSVGElement),
+		xScale = 1, yScale = 1,
+		complex = true,
+		rootWidth, rootHeight,
+		mtx, transformed, viewBox,
+		len, next, i, points,
 		result, position, dimensions;
 
 	// Ascend the parentNode chain until we find an element with getBBox()
 	while(!elem.getBBox) { elem = elem.parentNode; }
 	if(!elem.getBBox || !elem.parentNode) { return FALSE; }
 
+	// Determine dimensions where possible
+	rootWidth = root.attr('width') || root.width() || parseInt(root.css('width'), 10);
+	rootHeight = root.attr('height') || root.height() || parseInt(root.css('height'), 10);
+
 	// Add stroke characteristics to scaling
 	var strokeWidth2 = (parseInt(svg.css('stroke-width'), 10) || 0) / 2;
 	if(strokeWidth2) {
-		xScale += strokeWidth2 / root.width.baseVal.value;
-		yScale += strokeWidth2 / root.height.baseVal.value;
+		xScale += strokeWidth2 / rootWidth;
+		yScale += strokeWidth2 / rootHeight;
 	}
 
 	// Determine which shape calculation to use
@@ -62,7 +68,10 @@ PLUGINS.svg = function(api, svg, corner)
 			complex = false;
 		break;
 	}
+
+	// Shortcut assignments
 	position = result.position;
+	root = root[0];
 
 	// If the shape was complex (i.e. not using bounding box calculations)
 	if(complex) {
@@ -80,8 +89,8 @@ PLUGINS.svg = function(api, svg, corner)
 
 		// Calculate viewBox characteristics
 		if(root.viewBox && (viewBox = root.viewBox.baseVal) && viewBox.width && viewBox.height) {
-			xScale *= root.width.baseVal.value / viewBox.width;
-			yScale *= root.height.baseVal.value / viewBox.height;
+			xScale *= rootWidth / viewBox.width;
+			yScale *= rootHeight / viewBox.height;
 		}
 	}
 
