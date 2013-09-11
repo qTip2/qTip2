@@ -1,4 +1,4 @@
-var TIP, createVML, 
+var TIP, 
 
 // .bind()/.on() namespace
 TIPNS = '.qtip-tip',
@@ -13,9 +13,6 @@ IMPORTANT = ' !important',
 
 // Check if the browser supports <canvas/> elements
 HASCANVAS = !!document.createElement('canvas').getContext,
-
-// Fetch device pixel ratio
-PIXEL_RATIO = window.devicePixelRatio || 1,
 
 // Invalid colour values used in parseColours()
 INVALID = /rgba?\(0, 0, 0(, 0)?\)|transparent|#123456/i;
@@ -52,12 +49,22 @@ function intCss(elem, prop) {
 
 // VML creation (for IE only)
 if(!HASCANVAS) {
-	createVML = function(tag, props, style) {
+	var createVML = function(tag, props, style) {
 		return '<qtipvml:'+tag+' xmlns="urn:schemas-microsoft.com:vml" class="qtip-vml" '+(props||'')+
 			' style="behavior: url(#default#VML); '+(style||'')+ '" />';
 	};
 }
 
+// Canvas only definitions
+else {
+	var PIXEL_RATIO = window.devicePixelRatio || 1,
+		BACKING_STORE_RATIO = (function() {
+			var context = document.createElement('canvas').getContext('2d');
+			return context.backingStorePixelRatio || context.webkitBackingStorePixelRatio || context.mozBackingStorePixelRatio || 
+					context.msBackingStorePixelRatio || context.oBackingStorePixelRatio || 1;
+		}()),
+		SCALE = PIXEL_RATIO / BACKING_STORE_RATIO;
+}
 
 
 function Tip(qtip, options) {
@@ -271,8 +278,8 @@ $.extend(Tip.prototype, {
 			curSize = this.size,
 			mimic = options.mimic,
 			round = Math.round,
-			color, precedance, context, scale, scaledSize,
-			coords, bigCoords, translate, newSize, border, backingStoreRatio;
+			color, precedance, context,
+			coords, bigCoords, translate, newSize, border, BACKING_STORE_RATIO;
 
 		// Re-determine tip if not already set
 		if(!corner) { corner = this.qtip.cache.corner || this.corner; }
@@ -305,8 +312,8 @@ $.extend(Tip.prototype, {
 			// Grab border width
 			border = this.border = this._parseWidth(corner, corner[corner.precedance]);
 
-			// If border width isn't zero, use border color as fill (1.0 style tips)
-			if(options.border && border < 1) { color[0] = color[1]; }
+			// If border width isn't zero, use border color as fill if it's not invalid (1.0 style tips)
+			if(options.border && border < 1 && !INVALID.test(color[1])) { color[0] = color[1]; }
 
 			// Set border width (use detected border width if options.border is true)
 			this.border = border = options.border !== TRUE ? options.border : border;
@@ -344,15 +351,12 @@ $.extend(Tip.prototype, {
 			context.restore(); context.save();
 			context.clearRect(0,0,6000,6000);
 			
-			backingStoreRatio = context.webkitBackingStorePixelRatio || context.mozBackingStorePixelRatio || context.msBackingStorePixelRatio || context.oBackingStorePixelRatio || context.backingStorePixelRatio || 1;
-			scale = PIXEL_RATIO / backingStoreRatio;
-
 			// Calculate coordinates
-			coords = this._calculateTip(mimic, curSize, scale);
-			bigCoords = this._calculateTip(mimic, this.size, scale);
+			coords = this._calculateTip(mimic, curSize, SCALE);
+			bigCoords = this._calculateTip(mimic, this.size, SCALE);
 
 			// Set the canvas size using calculated size
-			inner.attr(WIDTH, newSize[0] * scale).attr(HEIGHT, newSize[1] * scale);
+			inner.attr(WIDTH, newSize[0] * SCALE).attr(HEIGHT, newSize[1] * SCALE);
 			inner.css(WIDTH, newSize[0]).css(HEIGHT, newSize[1]);
 
 			// Draw the outer-stroke tip
@@ -360,8 +364,10 @@ $.extend(Tip.prototype, {
 			context.fillStyle = color[1];
 			context.fill();
 
+			console.log(bigCoords, coords);
+
 			// Draw the actual tip
-			context.translate(translate[0] * scale, translate[1] * scale);
+			context.translate(translate[0] * SCALE, translate[1] * SCALE);
 			this._drawCoords(context, coords);
 			context.fillStyle = color[0];
 			context.fill();
