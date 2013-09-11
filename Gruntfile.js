@@ -78,7 +78,7 @@ module.exports = function(grunt) {
 		},
 
 		// Clean dist/ folder
-		clean: ['<%=dirs.dist%>/**/*'],
+		clean: ['<%=dirs.dist%>/*.*', '<%=dirs.dist%>/basic/*.*'],
 
 		// Concatenation
 		concat: {
@@ -183,13 +183,13 @@ module.exports = function(grunt) {
 				undef: true,
 				expr: true,
 				globals: {
-					jQuery: true, '$': true, QTip: true, TRUE: true, FALSE: true, NULL: true, X: true, Y: true,
-					WIDTH: true, HEIGHT: true, TOP: true, LEFT: true, BOTTOM: true, RIGHT: true, 
+					console: true, jQuery: true, '$': true, QTip: true, TRUE: true, FALSE: true, NULL: true, 
+					WIDTH: true, HEIGHT: true, TOP: true, LEFT: true, BOTTOM: true, RIGHT: true, X: true, Y: true,
 					CENTER: true, FLIP: true, FLIPINVERT: true, SHIFT: true, QTIP: true,  PROTOTYPE: true, 
 					CORNER: true,  CHECKS: true, PLUGINS: true, NAMESPACE: true, ATTR_HAS: true, ATTR_ID: true, 
 					WIDGET: true, SELECTOR: true, INACTIVE_EVENTS: true, CLASS_FIXED: true, CLASS_DEFAULT: true, 
 					CLASS_FOCUS: true, CLASS_HOVER: true, CLASS_DISABLED: true, replaceSuffix: true, oldtitle: true, 
-					trackingBound: true, BROWSER: true, createWidgetClass: true, sanitizeOptions: true, cloneEvent: true
+					trackingBound: true, BROWSER: true, createWidgetClass: true, sanitizeOptions: true, cloneEvent: true,
 
 				}
 			},
