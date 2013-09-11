@@ -71,7 +71,7 @@ $.extend(Ie6.prototype, {
 
 	// Max/min width simulator function
 	redraw: function() {
-		if(this.qtip.rendered < 1 || this.drawing) { return self; }
+		if(this.qtip.rendered < 1 || this.drawing) { return this; }
 
 		var tooltip = this.qtip.tooltip,
 			style = this.qtip.options.style,
@@ -100,7 +100,7 @@ $.extend(Ie6.prototype, {
 
 			// Parse into proper pixel values
 			perc = (max + min).indexOf('%') > -1 ? container.width() / 100 : 0;
-			max = ((max.indexOf('%') > -1 ? perc : 1) * parseInt(max, 10)) || width;
+		max = ((max.indexOf('%') > -1 ? perc : 1) * parseInt(max, 10)) || width;
 			min = ((min.indexOf('%') > -1 ? perc : 1) * parseInt(min, 10)) || 0;
 
 			// Determine new dimension size based on max/min/current values
@@ -113,7 +113,7 @@ $.extend(Ie6.prototype, {
 		// Set drawing flag
 		this.drawing = 0;
 
-		return self;
+		return this;
 	},
 
 	destroy: function() {
