@@ -1,4 +1,4 @@
-var TIP,
+var TIP, createVML, 
 
 // .bind()/.on() namespace
 TIPNS = '.qtip-tip',
@@ -412,7 +412,7 @@ $.extend(Tip.prototype, {
 		// Opera bug #357 - Incorrect tip position
 		// https://github.com/Craga89/qTip2/issues/367
 		window.opera && setTimeout(function() {
-			elems.tip.css({
+			elements.tip.css({
 				display: 'inline-block',
 				visibility: 'visible'
 			});
