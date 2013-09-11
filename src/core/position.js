@@ -79,8 +79,13 @@ PROTOTYPE.reposition = function(event, effect) {
 	// Target wasn't mouse or absolute...
 	else {
 		// Check if event targetting is being used
-		if(target === 'event' && event && event.target && event.type !== 'scroll' && event.type !== 'resize') {
-			cache.target = $(event.target);
+		if(target === 'event') {
+			if(event && event.target && event.type !== 'scroll' && event.type !== 'resize') {
+				cache.target = $(event.target);
+			}
+			else if(!event.target) {
+				cache.target = this.elements.target;
+			}
 		}
 		else if(target !== 'event'){
 			cache.target = $(target.jquery ? target : this.elements.target);
@@ -110,7 +115,7 @@ PROTOTYPE.reposition = function(event, effect) {
 		}
 
 		// Check if the target is an SVG element
-		else if(PLUGINS.svg && target[0].ownerSVGElement) {
+		else if(PLUGINS.svg && target && target[0].ownerSVGElement) {
 			pluginCalculations = PLUGINS.svg(this, target, at, PLUGINS.viewport ? method : FALSE);
 		}
 
