@@ -364,8 +364,6 @@ $.extend(Tip.prototype, {
 			context.fillStyle = color[1];
 			context.fill();
 
-			console.log(bigCoords, coords);
-
 			// Draw the actual tip
 			context.translate(translate[0] * SCALE, translate[1] * SCALE);
 			this._drawCoords(context, coords);
