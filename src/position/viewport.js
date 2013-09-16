@@ -12,41 +12,39 @@ PLUGINS.viewport = function(api, position, posOptions, targetWidth, targetHeight
 		container = posOptions.container,
 		cache = api.cache,
 		adjusted = { left: 0, top: 0 },
-		fixed, newMy, newClass;
+		fixed, newMy, newClass, containerOffset, containerStatic,
+		viewportWidth, viewportHeight, viewportScroll, viewportOffset;
 
-	// If viewport is not a jQuery element, or it's the window/document or no adjustment method is used... return
+	// If viewport is not a jQuery element, or it's the window/document, or no adjustment method is used... return
 	if(!viewport.jquery || target[0] === window || target[0] === document.body || adjust.method === 'none') {
 		return adjusted;
 	}
 
+	// Cach container details
+	containerOffset = container.offset() || adjusted;
+	containerStatic = container.css('position') === 'static';
+
 	// Cache our viewport details
 	fixed = tooltip.css('position') === 'fixed';
-	viewport = {
-		elem: viewport,
-		width: viewport[0] === window ? viewport.width() : viewport.outerWidth(FALSE),
-		height: viewport[0] === window ? viewport.height() : viewport.outerHeight(FALSE),
-		scrollleft: fixed ? 0 : viewport.scrollLeft(),
-		scrolltop: fixed ? 0 : viewport.scrollTop(),
-		offset: viewport.offset() || { left: 0, top: 0 }
-	};
-	container = {
-		elem: container,
-		scrollLeft: container.scrollLeft(),
-		scrollTop: container.scrollTop(),
-		offset: container.offset() || { left: 0, top: 0 }
-	};
+	viewportWidth = viewport[0] === window ? viewport.width() : viewport.outerWidth(FALSE);
+	viewportHeight = viewport[0] === window ? viewport.height() : viewport.outerHeight(FALSE);
+	viewportScroll = { left: fixed ? 0 : viewport.scrollLeft(), top: fixed ? 0 : viewport.scrollTop() };
+	viewportOffset = viewport.offset() || adjusted;
 
 	// Generic calculation method
 	function calculate(side, otherSide, type, adjust, side1, side2, lengthName, targetLength, elemLength) {
 		var initialPos = position[side1],
-			mySide = my[side], atSide = at[side],
+			mySide = my[side],
+			atSide = at[side],
 			isShift = type === SHIFT,
-			viewportScroll = -container.offset[side1] + viewport.offset[side1] + viewport['scroll'+side1],
 			myLength = mySide === side1 ? elemLength : mySide === side2 ? -elemLength : -elemLength / 2,
 			atLength = atSide === side1 ? targetLength : atSide === side2 ? -targetLength : -targetLength / 2,
-			overflow1 = viewportScroll - initialPos,
-			overflow2 = initialPos + elemLength - viewport[lengthName] - viewportScroll,
+			sideOffset = viewportScroll[side1] + viewportOffset[side1] - (containerStatic ? 0 : containerOffset[side1]),
+			overflow1 = sideOffset - initialPos,
+			overflow2 = initialPos + elemLength - (lengthName === WIDTH ? viewportWidth : viewportHeight) - sideOffset,
 			offset = myLength - (my.precedance === side || mySide === my[otherSide] ? atLength : 0) - (atSide === CENTER ? targetLength / 2 : 0);
+
+		console.log(initialPos, mySide, atSide, isShift, myLength, atLength, sideOffset, overflow1, overflow2, offset);
 
 		// shift
 		if(isShift) {
@@ -55,10 +53,13 @@ PLUGINS.viewport = function(api, position, posOptions, targetWidth, targetHeight
 			// Adjust position but keep it within viewport dimensions
 			position[side1] += overflow1 > 0 ? overflow1 : overflow2 > 0 ? -overflow2 : 0;
 			position[side1] = Math.max(
-				-container.offset[side1] + viewport.offset[side1],
+				-containerOffset[side1] + viewportOffset[side1],
 				initialPos - offset,
 				Math.min(
-					Math.max(-container.offset[side1] + viewport.offset[side1] + viewport[lengthName], initialPos + offset),
+					Math.max(
+						-containerOffset[side1] + viewportOffset[side1] + (lengthName === WIDTH ? viewportWidth : viewportHeight),
+						initialPos + offset
+					),
 					position[side1]
 				)
 			);
