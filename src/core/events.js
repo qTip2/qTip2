@@ -160,6 +160,37 @@ PROTOTYPE._trigger = function(type, args, event) {
 	return !callback.isDefaultPrevented();
 };
 
+PROTOTYPE._bindEvents = function(showEvents, hideEvents, showTarget, hideTarget, showMethod, hideMethod) {
+	// If hide and show targets are the same...
+	if(hideTarget.add(showTarget).length === hideTarget.length) {
+		var toggleEvents = [];
+
+		// Filter identical show/hide events
+		hideEvents = $.map(hideEvents, function(type) {
+			var showIndex = $.inArray(type, showEvents);
+
+			// Both events are identical, remove from both hide and show events
+			// and append to toggleEvents
+			if(showIndex > -1) {
+				toggleEvents.push( showEvents.splice( showIndex, 1 )[0] );
+				return;
+			}
+
+			return type;
+		});
+
+		// Toggle events are special case of identical show/hide events, which happen in sequence
+		toggleEvents.length && this._bind(showTarget, toggleEvents, function(event) {
+			var state = this.rendered ? this.tooltip[0].offsetWidth > 0 : false;
+			(state ? hideMethod : showMethod).call(this, event);
+		});
+	}
+
+	// Apply show/hide/toggle events
+	this._bind(showTarget, showEvents, showMethod);
+	this._bind(hideTarget, hideEvents, hideMethod);
+};
+
 PROTOTYPE._assignInitialEvents = function(event) {
 	var options = this.options,
 		showTarget = options.show.target,
@@ -202,16 +233,14 @@ PROTOTYPE._assignInitialEvents = function(event) {
 		);
 	}
 
-	// Bind events to target
-	this._bind(showTarget, showEvents, hoverIntent);
-	if(options.show.event !== options.hide.event) {
-		this._bind(hideTarget, hideEvents, function() { clearTimeout(this.timers.show); });
-	}
+	// Filter and bind events
+	this._bindEvents(showEvents, hideEvents, showTarget, hideTarget, hoverIntent, function() {
+		clearTimeout(this.timers.show);
+	});
 
 	// Prerendering is enabled, create tooltip now
 	if(options.show.ready || options.prerender) { hoverIntent.call(this, event); }
 };
-
 
 // Event assignment method
 PROTOTYPE._assignEvents = function() {
@@ -229,8 +258,8 @@ PROTOTYPE._assignEvents = function() {
 		windowTarget = $(window),
 
 		showEvents = options.show.event ? $.trim('' + options.show.event).split(' ') : [],
-		hideEvents = options.hide.event ? $.trim('' + options.hide.event).split(' ') : [],
-		toggleEvents = [];
+		hideEvents = options.hide.event ? $.trim('' + options.hide.event).split(' ') : [];
+
 
 	// Assign passed event callbacks
 	$.each(options.events, function(name, callback) {
@@ -285,25 +314,8 @@ PROTOTYPE._assignEvents = function() {
 		this._bind(hideTarget.add(tooltip), QTIP.inactiveEvents, inactiveMethod, '-inactive');
 	}
 
-	// Apply hide events (and filter identical show events)
-	hideEvents = $.map(hideEvents, function(type) {
-		var showIndex = $.inArray(type, showEvents);
-
-		// Both events and targets are identical, apply events using a toggle
-		if((showIndex > -1 && hideTarget.add(showTarget).length === hideTarget.length)) {
-			toggleEvents.push( showEvents.splice( showIndex, 1 )[0] ); return;
-		}
-
-		return type;
-	});
-
-	// Apply show/hide/toggle events
-	this._bind(showTarget, showEvents, showMethod);
-	this._bind(hideTarget, hideEvents, hideMethod);
-	this._bind(showTarget, toggleEvents, function(event) {
-		(this.tooltip[0].offsetWidth > 0 ? hideMethod : showMethod).call(this, event);
-	});
-
+	// Filter and bind events
+	this._bindEvents(showEvents, hideEvents, showTarget, hideTarget, showMethod, hideMethod);
 
 	// Mouse movement bindings
 	this._bind(showTarget.add(tooltip), 'mousemove', function(event) {
