@@ -216,7 +216,7 @@ $.extend(Modal.prototype, {
 				if(oEvent && event.type === 'tooltiphide' && /mouse(leave|enter)/.test(oEvent.type) && $(oEvent.relatedTarget).closest(OVERLAY.elem[0]).length) {
 					try { event.preventDefault(); } catch(e) {}
 				}
-				else if(!oEvent || (oEvent && !oEvent.solo)) {
+				else if(!oEvent || (oEvent && oEvent.type !== 'tooltipsolo')) {
 					this.toggle(event, event.type === 'tooltipshow', duration);
 				}
 			}
