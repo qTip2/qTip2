@@ -4,8 +4,8 @@ PLUGINS.imagemap = function(api, area, corner, adjustMethod)
 
 	var shape = area.attr('shape').toLowerCase().replace('poly', 'polygon'),
 		image = $('img[usemap="#'+area.parent('map').attr('name')+'"]'),
-		coordsString = area.attr('coords'),
-		coordsArray = coordsString.split(','),
+		coordsString = $.trim(area.attr('coords')),
+		coordsArray = coordsString.replace(/,$/, '').split(','),
 		imageOffset, coords, i, next, result, len;
 
 	// If we can't find the image using the map...
