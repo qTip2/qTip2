@@ -44,8 +44,6 @@ PLUGINS.viewport = function(api, position, posOptions, targetWidth, targetHeight
 			overflow2 = initialPos + elemLength - (lengthName === WIDTH ? viewportWidth : viewportHeight) - sideOffset,
 			offset = myLength - (my.precedance === side || mySide === my[otherSide] ? atLength : 0) - (atSide === CENTER ? targetLength / 2 : 0);
 
-		console.log(initialPos, mySide, atSide, isShift, myLength, atLength, sideOffset, overflow1, overflow2, offset);
-
 		// shift
 		if(isShift) {
 			offset = (mySide === side1 ? 1 : -1) * myLength;
