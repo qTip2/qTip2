@@ -46,14 +46,14 @@ PROTOTYPE.reposition = function(event, effect) {
 		
 		// If the passed event has no coordinates (such as a scroll event)
 		else if(!event || !event.pageX) {
-			// Use cached event for resize/scroll events
-			if(event && (event.type === 'resize' || event.type === 'scroll')) {
-				event = cache.event;
+			// Use the mouse origin that caused the show event, if distance hiding is enabled
+			if((!adjust.mouse || this.options.show.distance) && cache.origin && cache.origin.pageX) {
+				event =  cache.origin;
 			}
 
-			// Use the mouse origin that caused the show event, if distance hiding is enabled
-			else if((!adjust.mouse || this.options.show.distance) && cache.origin && cache.origin.pageX) {
-				event =  cache.origin;
+			// Use cached event for resize/scroll events
+			else if(!event || (event && (event.type === 'resize' || event.type === 'scroll'))) {
+				event = cache.event;
 			}
 		}
 
