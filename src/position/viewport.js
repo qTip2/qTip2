@@ -58,9 +58,13 @@ PLUGINS.viewport = function(api, position, posOptions, targetWidth, targetHeight
 						-containerOffset[side1] + viewportOffset[side1] + (lengthName === WIDTH ? viewportWidth : viewportHeight),
 						initialPos + offset
 					),
-					position[side1]
+					position[side1],
+
+					// Make sure we don't adjust complete off the element when using 'center'
+					mySide === 'center' ? initialPos - myLength : 1E9
 				)
 			);
+
 		}
 
 		// flip/flipinvert
