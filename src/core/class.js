@@ -30,6 +30,10 @@ function QTip(target, options, id, attr) {
 }
 PROTOTYPE = QTip.prototype;
 
+PROTOTYPE._when = function(deferreds) {
+	return $.when.apply($, deferreds);
+};
+
 PROTOTYPE.render = function(show) {
 	if(this.rendered || this.destroyed) { return this; } // If tooltip has already been rendered, exit
 
@@ -115,7 +119,7 @@ PROTOTYPE.render = function(show) {
 	this._assignEvents();
 
 	// When deferreds have completed
-	$.when.apply($, deferreds).then(function() {
+	this._when(deferreds).then(function() {
 		// tooltiprender event
 		self._trigger('render');
 
