@@ -157,5 +157,8 @@ QTIP = $.fn.qtip = function(options, notation, newValue)
 	}
 };
 
+// Expose class
+$.qtip = QTip;
+
 // Populated in render method
 QTIP.api = {};
