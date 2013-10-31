@@ -1,8 +1,14 @@
 PROTOTYPE.disable = function(state) {
 	if(this.destroyed) { return this; }
 
-	if('boolean' !== typeof state) {
+	// If 'toggle' is passed, toggle the current state
+	if(state === 'toggle') {
 		state = !(this.rendered ? this.tooltip.hasClass(CLASS_DISABLED) : this.disabled);
+	}
+
+	// Disable if no state passed
+	else if('boolean' !== typeof state) {
+		state = TRUE;
 	}
 
 	if(this.rendered) {
