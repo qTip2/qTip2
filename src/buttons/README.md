@@ -124,3 +124,4 @@ Classes are added to all buttons. Deafult: `btn`
     	modal.show()
     </script>
 
+![](http://s16.postimg.org/49dyzduw5/2013_11_06_151846.png)
