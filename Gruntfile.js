@@ -74,7 +74,8 @@ module.exports = function(grunt) {
 			viewport: { js: '<%=dirs.src%>/position/viewport.js' },
 			svg: { js: [ '<%=dirs.src%>/position/polys.js', '<%=dirs.src%>/position/svg.js' ] },
 			imagemap: { js: [ '<%=dirs.src%>/position/polys.js', '<%=dirs.src%>/position/imagemap.js' ] },
-			ie6: { js: '<%=dirs.src%>/ie6/ie6.js', css: '<%=dirs.src%>/ie6/ie6.css' }
+			ie6: { js: '<%=dirs.src%>/ie6/ie6.js', css: '<%=dirs.src%>/ie6/ie6.css' },
+			buttons: { js: '<%=dirs.src%>/buttons/buttons.js', css: '<%=dirs.src%>/buttons/buttons.css' }
 		},
 
 		// Clean dist/ folder
