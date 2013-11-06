@@ -42,7 +42,7 @@
 ## Button Proprietes ##
 `text`: `(string)` Button text
 
-`action`: `(function|string)`. Function called with 2 arguments `[event, qTipApi]`. Or action behavors:
+`action`: `(function|string)`. Function called with 2 arguments `[event, qTipApi]`. Or action behaviors:
 
 - `close|hide` - hide tooltip
 - `cancel|destroy` - destroy tooltip
