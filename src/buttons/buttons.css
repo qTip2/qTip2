@@ -1,0 +1,8 @@
+.qtip-buttonbar {
+  text-align: right;
+  padding: 5px 9px;
+}
+
+.qtip-buttonbar button {
+  margin-left: 9px;
+}
