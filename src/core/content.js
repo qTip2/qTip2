@@ -36,7 +36,7 @@ PROTOTYPE._update = function(content, element, reposition) {
 
 	// Wait for content to be loaded, and reposition
 	return this._waitForContent(element).then(function(images) {
-		if(images.length && self.rendered && self.tooltip[0].offsetWidth > 0) {
+		if(images.images && images.images.length && self.rendered && self.tooltip[0].offsetWidth > 0) {
 			self.reposition(cache.event, !images.length);
 		}
 	});
