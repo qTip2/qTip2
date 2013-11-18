@@ -103,7 +103,7 @@ module.exports = function(grunt) {
 					banner: ''
 				},
 				files: {
-					'<%=dirs.dist%>/imagesloaded.pkg.js': [
+					'<%=dirs.libs%>/imagesloaded/imagesloaded.pkg.js': [
 						'<%=dirs.libs%>/imagesloaded/components/eventEmitter/EventEmitter.js',
 						'<%=dirs.libs%>/imagesloaded/components/eventie/eventie.js',
 						'<%=dirs.libs%>/imagesloaded/imagesloaded.js'
@@ -131,7 +131,7 @@ module.exports = function(grunt) {
 			dist: {
 				files: {
 					'<%=dirs.dist%>/jquery.qtip.min.js': ['<%=dirs.dist%>/jquery.qtip.js'],
-					'<%=dirs.dist%>/imagesloaded.pkg.min.js': ['<%=dirs.dist%>/imagesloaded.pkg.js']
+					'<%=dirs.dist%>/imagesloaded.pkg.min.js': ['<%=dirs.libs%>/imagesloaded/imagesloaded.pkg.js']
 				}
 			}
 		},
