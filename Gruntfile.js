@@ -104,8 +104,8 @@ module.exports = function(grunt) {
 				},
 				files: {
 					'<%=dirs.libs%>/imagesloaded/imagesloaded.pkg.js': [
-						'<%=dirs.libs%>/imagesloaded/components/eventEmitter/EventEmitter.js',
-						'<%=dirs.libs%>/imagesloaded/components/eventie/eventie.js',
+						'<%=dirs.libs%>/imagesloaded/bower_components/eventEmitter/EventEmitter.js',
+						'<%=dirs.libs%>/imagesloaded/bower_components/eventie/eventie.js',
 						'<%=dirs.libs%>/imagesloaded/imagesloaded.js'
 					]
 				}
