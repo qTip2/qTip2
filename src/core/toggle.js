@@ -29,7 +29,7 @@ PROTOTYPE.toggle = function(state, event) {
 		posOptions = this.options.position,
 		contentOptions = this.options.content,
 		width = this.tooltip.css('width'),
-		visible = this.tooltip[0].offsetWidth > 0,
+		visible = this.tooltip.is(':visible'),
 		animate = state || opts.target.length === 1,
 		sameTarget = !event || opts.target.length < 2 || cache.target[0] === event.target,
 		identicalState, allow, showEvent, delay, after;
