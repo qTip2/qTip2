@@ -3,9 +3,10 @@ PLUGINS.svg = function(api, svg, corner)
 	var doc = $(document),
 		elem = svg[0],
 		root = $(elem.ownerSVGElement),
+		ownerDocument = elem.ownerDocument,
 		xScale = 1, yScale = 1,
 		complex = true,
-		rootWidth, rootHeight,
+		frameOffset, rootWidth, rootHeight,
 		mtx, transformed, viewBox,
 		len, next, i, points,
 		result, position, dimensions;
@@ -94,9 +95,17 @@ PLUGINS.svg = function(api, svg, corner)
 		}
 	}
 
-	// Adjust by scroll offset
-	position.left += doc.scrollLeft();
-	position.top += doc.scrollTop();
+	// Check the element is not in a child document, and if so, adjust for frame elements offset
+	if(ownerDocument !== document) {
+		var frameOffset = $((ownerDocument.defaultView || ownerDocument.parentWindow).frameElement).offset();
+		position.left += frameOffset.left;
+		position.top += frameOffset.top;
+	}
+
+	// Adjust by scroll offset of owner document
+	ownerDocument = $(ownerDocument);
+	position.left += ownerDocument.scrollLeft();
+	position.top += ownerDocument.scrollTop();
 
 	return result;
 };
