@@ -4,27 +4,15 @@ PLUGINS.svg = function(api, svg, corner)
 		elem = svg[0],
 		root = $(elem.ownerSVGElement),
 		ownerDocument = elem.ownerDocument,
-		xScale = 1, yScale = 1,
+		strokeWidth2 = (parseInt(svg.css('stroke-width'), 10) || 0) / 2,
 		complex = true,
-		frameOffset, rootWidth, rootHeight,
-		mtx, transformed, viewBox,
+		frameOffset, mtx, transformed, viewBox,
 		len, next, i, points,
 		result, position, dimensions;
 
 	// Ascend the parentNode chain until we find an element with getBBox()
 	while(!elem.getBBox) { elem = elem.parentNode; }
 	if(!elem.getBBox || !elem.parentNode) { return FALSE; }
-
-	// Determine dimensions where possible
-	rootWidth = root.attr('width') || root.width() || parseInt(root.css('width'), 10);
-	rootHeight = root.attr('height') || root.height() || parseInt(root.css('height'), 10);
-
-	// Add stroke characteristics to scaling
-	var strokeWidth2 = (parseInt(svg.css('stroke-width'), 10) || 0) / 2;
-	if(strokeWidth2) {
-		xScale += strokeWidth2 / rootWidth;
-		yScale += strokeWidth2 / rootHeight;
-	}
 
 	// Determine which shape calculation to use
 	switch(elem.nodeName) {
@@ -86,12 +74,6 @@ PLUGINS.svg = function(api, svg, corner)
 			transformed = points.matrixTransform( mtx );
 			position.left = transformed.x;
 			position.top = transformed.y;
-		}
-
-		// Calculate viewBox characteristics
-		if(root.viewBox && (viewBox = root.viewBox.baseVal) && viewBox.width && viewBox.height) {
-			xScale *= rootWidth / viewBox.width;
-			yScale *= rootHeight / viewBox.height;
 		}
 	}
 
