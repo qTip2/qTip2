@@ -79,7 +79,7 @@ PLUGINS.svg = function(api, svg, corner)
 
 	// Check the element is not in a child document, and if so, adjust for frame elements offset
 	if(ownerDocument !== document) {
-		var frameOffset = $((ownerDocument.defaultView || ownerDocument.parentWindow).frameElement).offset();
+		frameOffset = $((ownerDocument.defaultView || ownerDocument.parentWindow).frameElement).offset();
 		if(frameOffset) {
 			position.left += frameOffset.left;
 			position.top += frameOffset.top;
