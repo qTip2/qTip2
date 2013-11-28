@@ -9,15 +9,15 @@
 		"email": "craig@craigsworks.com",
 		"url": "http://craigsworks.com/"
 	},
-	"bugs": "http://github.com/Craga89/qTip2/issues",
+	"bugs": "http://github.com/qTip2/qTip2/issues",
 	"licenses": [
 		{
 			"type": "MIT",
-			"url": "http://github.com/Craga89/qTip2/blob/master/LICENSE-MIT"
+			"url": "http://github.com/qTip2/qTip2/blob/master/LICENSE-MIT"
 		},
 		{
 			"type": "GPL",
-			"url": "http://github.com/Craga89/qTip2/blob/master/LICENSE-GPL"
+			"url": "http://github.com/qTip2/qTip2/blob/master/LICENSE-GPL"
 		}
 	],
 	"dependencies": {

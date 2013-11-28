@@ -18,10 +18,10 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "git://github.com/Craga89/qTip2.git"
+		"url": "git://github.com/qTip2/qTip2.git"
 	},
 	"bugs": {
-		"url": "http://github.com/Craga89/qTip2/issues"
+		"url": "http://github.com/qTip2/qTip2/issues"
 	},
 	"scripts": {
 		"build": "./node_modules/.bin/grunt"
@@ -29,11 +29,11 @@
 	"licenses": [
 		{
 			"type": "MIT",
-			"url": "http://github.com/Craga89/qTip2/blob/master/LICENSE-MIT"
+			"url": "http://github.com/qTip2/qTip2/blob/master/LICENSE-MIT"
 		},
 		{
 			"type": "GPL",
-			"url": "http://github.com/Craga89/qTip2/blob/master/LICENSE-GPL"
+			"url": "http://github.com/qTip2/qTip2/blob/master/LICENSE-GPL"
 		}
 	],
 	"dependencies": {
