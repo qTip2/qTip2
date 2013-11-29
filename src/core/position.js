@@ -1,3 +1,7 @@
+PROTOTYPE._createPosClass = function(my) {
+	return NAMESPACE + '-pos-' + (my || this.options.position.my).abbrev();
+};
+
 PROTOTYPE.reposition = function(event, effect) {
 	if(!this.rendered || this.positioning || this.destroyed) { return this; }
 

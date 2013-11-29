@@ -52,8 +52,8 @@ PROTOTYPE.render = function(show) {
 	// Add ARIA attributes to target
 	$.attr(this.target[0], 'aria-describedby', this._id);
 
-	// Determine position class and cache it
-	cache.posClass = NAMESPACE + '-pos-' + options.position.my.abbrev();
+	// Create position class and cache it
+	cache.posClass = this._createPosClass();
 
 	// Create tooltip element
 	this.tooltip = elements.tooltip = tooltip = $('<div/>', {
