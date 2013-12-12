@@ -1,15 +1,3 @@
-function cloneEvent(event) {
-	return event && {
-		type: event.type,
-		pageX: event.pageX,
-		pageY: event.pageY,
-		target: event.target,
-		relatedTarget: event.relatedTarget,
-		scrollX: event.scrollX || window.pageXOffset || document.body.scrollLeft || document.documentElement.scrollLeft,
-		scrollY: event.scrollY || window.pageYOffset || document.body.scrollTop || document.documentElement.scrollTop
-	} || {};
-}
-
 function delay(callback, duration) {
 	// If tooltip has displayed, start hide timer
 	if(duration > 0) {
@@ -88,7 +76,7 @@ function repositionMethod(event) {
 
 // Store mouse coordinates
 PROTOTYPE._storeMouse = function(event) {
-	(this.mouse = cloneEvent(event)).type = 'mousemove';
+	(this.mouse = $.event.fix(event)).type = 'mousemove';
 };
 
 // Bind events
@@ -222,7 +210,7 @@ PROTOTYPE._assignInitialEvents = function(event) {
 		if(this.disabled || this.destroyed) { return FALSE; }
 
 		// Cache the event data
-		this.cache.event = cloneEvent(event);
+		this.cache.event = $.event.fix(event);
 		this.cache.target = event ? $(event.target) : [undefined];
 
 		// Start the event sequence
