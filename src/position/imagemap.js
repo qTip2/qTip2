@@ -2,7 +2,7 @@ PLUGINS.imagemap = function(api, area, corner, adjustMethod)
 {
 	if(!area.jquery) { area = $(area); }
 
-	var shape = area.attr('shape').toLowerCase().replace('poly', 'polygon'),
+	var shape = (area.attr('shape') || 'rect').toLowerCase().replace('poly', 'polygon'),
 		image = $('img[usemap="#'+area.parent('map').attr('name')+'"]'),
 		coordsString = $.trim(area.attr('coords')),
 		coordsArray = coordsString.replace(/,$/, '').split(','),

@@ -26,24 +26,31 @@ PROTOTYPE._update = function(content, element, reposition) {
 
 	// Append new content if its a DOM array and show it if hidden
 	if(content.jquery && content.length > 0) {
-		element.children().detach().end().append( content.css({ display: 'block', visibility: 'visible' }) );
+		element.empty().append(
+			content.css({ display: 'block', visibility: 'visible' })
+		);
 	}
 
 	// Content is a regular string, insert the new content
 	else { element.html(content); }
 
-	// If imagesLoaded is included, ensure images have loaded and return promise
+	// Wait for content to be loaded, and reposition
+	return this._waitForContent(element).then(function(images) {
+		if(images.images && images.images.length && self.rendered && self.tooltip[0].offsetWidth > 0) {
+			self.reposition(cache.event, !images.length);
+		}
+	});
+};
+
+PROTOTYPE._waitForContent = function(element) {
+	var cache = this.cache;
+	
+	// Set flag
 	cache.waiting = TRUE;
 
-	return ( $.fn.imagesLoaded ? element.imagesLoaded() : $.Deferred().resolve($([])) )
-		.done(function(images) {
-			cache.waiting = FALSE;
-
-			// Reposition if rendered
-			if(images.length && self.rendered && self.tooltip[0].offsetWidth > 0) {
-				self.reposition(cache.event, !images.length);
-			}
-		})
+	// If imagesLoaded is included, ensure images have loaded and return promise
+	return ( $.fn.imagesLoaded ? element.imagesLoaded() : $.Deferred().resolve([]) )
+		.done(function() { cache.waiting = FALSE; })
 		.promise();
 };
 

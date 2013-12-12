@@ -139,7 +139,13 @@ CHECKS = PROTOTYPE.checks = {
 
 		// Position checks
 		'^position.(my|at)$': function(obj, o, v){
+			// Create new corner object
 			'string' === typeof v && (obj[o] = new CORNER(v, o === 'at'));
+
+			// Set -pos- class
+			this.tooltip.removeClass(this.cache.posClass).addClass(
+				(this.cache.posClass = this._createPosClass())
+			);
 		},
 		'^position.container$': function(obj, o, v){
 			this.rendered && this.tooltip.appendTo(v);

@@ -29,7 +29,7 @@ PROTOTYPE.toggle = function(state, event) {
 		posOptions = this.options.position,
 		contentOptions = this.options.content,
 		width = this.tooltip.css('width'),
-		visible = this.tooltip[0].offsetWidth > 0,
+		visible = this.tooltip.is(':visible'),
 		animate = state || opts.target.length === 1,
 		sameTarget = !event || opts.target.length < 2 || cache.target[0] === event.target,
 		identicalState, allow, showEvent, delay, after;
@@ -42,6 +42,9 @@ PROTOTYPE.toggle = function(state, event) {
 
 	// Fire tooltip(show/hide) event and check if destroyed
 	allow = !identicalState ? !!this._trigger(type, [90]) : NULL;
+
+	// Check to make sure the tooltip wasn't destroyed in the callback
+	if(this.destroyed) { return this; }
 
 	// If the user didn't stop the method prematurely and we're showing the tooltip, focus it
 	if(allow !== FALSE && state) { this.focus(event); }

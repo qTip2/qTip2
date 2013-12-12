@@ -44,8 +44,6 @@ PLUGINS.viewport = function(api, position, posOptions, targetWidth, targetHeight
 			overflow2 = initialPos + elemLength - (lengthName === WIDTH ? viewportWidth : viewportHeight) - sideOffset,
 			offset = myLength - (my.precedance === side || mySide === my[otherSide] ? atLength : 0) - (atSide === CENTER ? targetLength / 2 : 0);
 
-		console.log(initialPos, mySide, atSide, isShift, myLength, atLength, sideOffset, overflow1, overflow2, offset);
-
 		// shift
 		if(isShift) {
 			offset = (mySide === side1 ? 1 : -1) * myLength;
@@ -60,9 +58,13 @@ PLUGINS.viewport = function(api, position, posOptions, targetWidth, targetHeight
 						-containerOffset[side1] + viewportOffset[side1] + (lengthName === WIDTH ? viewportWidth : viewportHeight),
 						initialPos + offset
 					),
-					position[side1]
+					position[side1],
+
+					// Make sure we don't adjust complete off the element when using 'center'
+					mySide === 'center' ? initialPos - myLength : 1E9
 				)
 			);
+
 		}
 
 		// flip/flipinvert
@@ -101,8 +103,8 @@ PLUGINS.viewport = function(api, position, posOptions, targetWidth, targetHeight
 	};
 
 	// Set tooltip position class if it's changed
-	if(newMy && cache.lastClass !== (newClass = NAMESPACE + '-pos-' + newMy.abbrev())) {
-		tooltip.removeClass(api.cache.lastClass).addClass( (api.cache.lastClass = newClass) );
+	if(newMy && cache.posClass !== (newClass = api._createPosClass(newMy))) {
+		tooltip.removeClass(cache.posClass).addClass( (cache.posClass = newClass) );
 	}
 
 	return adjusted;

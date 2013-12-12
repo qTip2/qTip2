@@ -3,27 +3,16 @@ PLUGINS.svg = function(api, svg, corner)
 	var doc = $(document),
 		elem = svg[0],
 		root = $(elem.ownerSVGElement),
-		xScale = 1, yScale = 1,
+		ownerDocument = elem.ownerDocument,
+		strokeWidth2 = (parseInt(svg.css('stroke-width'), 10) || 0) / 2,
 		complex = true,
-		rootWidth, rootHeight,
-		mtx, transformed, viewBox,
+		frameOffset, mtx, transformed, viewBox,
 		len, next, i, points,
 		result, position, dimensions;
 
 	// Ascend the parentNode chain until we find an element with getBBox()
 	while(!elem.getBBox) { elem = elem.parentNode; }
 	if(!elem.getBBox || !elem.parentNode) { return FALSE; }
-
-	// Determine dimensions where possible
-	rootWidth = root.attr('width') || root.width() || parseInt(root.css('width'), 10);
-	rootHeight = root.attr('height') || root.height() || parseInt(root.css('height'), 10);
-
-	// Add stroke characteristics to scaling
-	var strokeWidth2 = (parseInt(svg.css('stroke-width'), 10) || 0) / 2;
-	if(strokeWidth2) {
-		xScale += strokeWidth2 / rootWidth;
-		yScale += strokeWidth2 / rootHeight;
-	}
 
 	// Determine which shape calculation to use
 	switch(elem.nodeName) {
@@ -86,17 +75,21 @@ PLUGINS.svg = function(api, svg, corner)
 			position.left = transformed.x;
 			position.top = transformed.y;
 		}
+	}
 
-		// Calculate viewBox characteristics
-		if(root.viewBox && (viewBox = root.viewBox.baseVal) && viewBox.width && viewBox.height) {
-			xScale *= rootWidth / viewBox.width;
-			yScale *= rootHeight / viewBox.height;
+	// Check the element is not in a child document, and if so, adjust for frame elements offset
+	if(ownerDocument !== document) {
+		frameOffset = $((ownerDocument.defaultView || ownerDocument.parentWindow).frameElement).offset();
+		if(frameOffset) {
+			position.left += frameOffset.left;
+			position.top += frameOffset.top;
 		}
 	}
 
-	// Adjust by scroll offset
-	position.left += doc.scrollLeft();
-	position.top += doc.scrollTop();
+	// Adjust by scroll offset of owner document
+	ownerDocument = $(ownerDocument);
+	position.left += ownerDocument.scrollLeft();
+	position.top += ownerDocument.scrollTop();
 
 	return result;
 };

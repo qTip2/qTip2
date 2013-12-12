@@ -103,11 +103,10 @@ module.exports = function(grunt) {
 					banner: ''
 				},
 				files: {
-					'<%=dirs.dist%>/jquery.qtip.js': [
-						'<%=dirs.dist%>/jquery.qtip.js'
-					],
-					'<%=dirs.dist%>/jquery.qtip.min.js': [
-						'<%=dirs.dist%>/jquery.qtip.min.js'
+					'<%=dirs.libs%>/imagesloaded/imagesloaded.pkg.js': [
+						'<%=dirs.libs%>/imagesloaded/bower_components/eventEmitter/EventEmitter.js',
+						'<%=dirs.libs%>/imagesloaded/bower_components/eventie/eventie.js',
+						'<%=dirs.libs%>/imagesloaded/imagesloaded.js'
 					]
 				}
 			}
@@ -132,7 +131,7 @@ module.exports = function(grunt) {
 			dist: {
 				files: {
 					'<%=dirs.dist%>/jquery.qtip.min.js': ['<%=dirs.dist%>/jquery.qtip.js'],
-					'<%=dirs.dist%>/imagesloaded.min.js': ['<%=dirs.libs%>/imagesloaded/imagesloaded.js']
+					'<%=dirs.dist%>/imagesloaded.pkg.min.js': ['<%=dirs.libs%>/imagesloaded/imagesloaded.pkg.js']
 				}
 			}
 		},
@@ -310,7 +309,7 @@ module.exports = function(grunt) {
 		});
 	});
 
-	var defaultTasks = ['concat:dist', 'concat:css', 'uglify', 'cssmin', 'concat:libs', 'replace'];
+	var defaultTasks = ['concat', 'uglify', 'cssmin', 'replace'];
 
 	// Setup tasks
 	grunt.registerTask('basic', ['init:basic', 'clean'].concat(defaultTasks));

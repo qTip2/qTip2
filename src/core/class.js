@@ -30,6 +30,10 @@ function QTip(target, options, id, attr) {
 }
 PROTOTYPE = QTip.prototype;
 
+PROTOTYPE._when = function(deferreds) {
+	return $.when.apply($, deferreds);
+};
+
 PROTOTYPE.render = function(show) {
 	if(this.rendered || this.destroyed) { return this; } // If tooltip has already been rendered, exit
 
@@ -48,10 +52,13 @@ PROTOTYPE.render = function(show) {
 	// Add ARIA attributes to target
 	$.attr(this.target[0], 'aria-describedby', this._id);
 
+	// Create position class and cache it
+	cache.posClass = this._createPosClass();
+
 	// Create tooltip element
 	this.tooltip = elements.tooltip = tooltip = $('<div/>', {
 		'id': this._id,
-		'class': [ NAMESPACE, CLASS_DEFAULT, options.style.classes, NAMESPACE + '-pos-' + options.position.my.abbrev() ].join(' '),
+		'class': [ NAMESPACE, CLASS_DEFAULT, options.style.classes, cache.posClass ].join(' '),
 		'width': options.style.width || '',
 		'height': options.style.height || '',
 		'tracking': posOptions.target === 'mouse' && posOptions.adjust.mouse,
@@ -115,7 +122,7 @@ PROTOTYPE.render = function(show) {
 	this._assignEvents();
 
 	// When deferreds have completed
-	$.when.apply($, deferreds).then(function() {
+	this._when(deferreds).then(function() {
 		// tooltiprender event
 		self._trigger('render');
 
@@ -163,7 +170,9 @@ PROTOTYPE.destroy = function(immediate) {
 		this._unassignEvents();
 
 		// Remove api object and ARIA attributes
-		target.removeData(NAMESPACE).removeAttr(ATTR_ID)
+		target.removeData(NAMESPACE)
+			.removeAttr(ATTR_ID)
+			.removeAttr(ATTR_HAS)
 			.removeAttr('aria-describedby');
 
 		// Reset old title attribute if removed
@@ -184,7 +193,7 @@ PROTOTYPE.destroy = function(immediate) {
 	}
 
 	// If an immediate destory is needed
-	if(immediate !== TRUE && this.rendered) {
+	if((immediate !== TRUE || this.triggering === 'hide') && this.rendered) {
 		this.tooltip.one('tooltiphidden', $.proxy(process, this));
 		!this.triggering && this.hide();
 	}
