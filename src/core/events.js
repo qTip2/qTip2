@@ -148,9 +148,9 @@ PROTOTYPE._trigger = function(type, args, event) {
 	return !callback.isDefaultPrevented();
 };
 
-PROTOTYPE._bindEvents = function(showEvents, hideEvents, showTarget, hideTarget, showMethod, hideMethod) {
+PROTOTYPE._bindEvents = function(showEvents, hideEvents, showTargets, hideTargets, showMethod, hideMethod) {
 	// Get tasrgets that lye within both
-	var similarTargets = showTarget.filter( hideTarget ),
+	var similarTargets = showTargets.filter( hideTargets ).add( hideTargets.filter(showTargets) ),
 		toggleEvents = [];
 
 	// If hide and show targets are the same...
@@ -166,15 +166,22 @@ PROTOTYPE._bindEvents = function(showEvents, hideEvents, showTarget, hideTarget,
 		});
 
 		// Toggle events are special case of identical show/hide events, which happen in sequence
-		toggleEvents.length && this._bind(similarTargets, toggleEvents, function(event) {
-			var state = this.rendered ? this.tooltip[0].offsetWidth > 0 : false;
-			(state ? hideMethod : showMethod).call(this, event);
-		});
+		if(toggleEvents.length) {
+			// Bind toggle events to the similar targets
+			this._bind(similarTargets, toggleEvents, function(event) {
+				var state = this.rendered ? this.tooltip[0].offsetWidth > 0 : false;
+				(state ? hideMethod : showMethod).call(this, event);
+			});
+
+			// Remove the similar targets from the regular show/hide bindings
+			showTargets = showTargets.not(similarTargets);
+			hideTargets = hideTargets.not(similarTargets);
+		}
 	}
 
 	// Apply show/hide/toggle events
-	this._bind(showTarget.not(similarTargets), showEvents, showMethod);
-	this._bind(hideTarget.not(similarTargets), hideEvents, hideMethod);
+	this._bind(showTargets, showEvents, showMethod);
+	this._bind(hideTargets, hideEvents, hideMethod);
 };
 
 PROTOTYPE._assignInitialEvents = function(event) {
