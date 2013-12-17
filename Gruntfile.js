@@ -124,8 +124,8 @@ module.exports = function(grunt) {
 					file = file.replace('dist/', '').replace('.js', '.map');
 
 					return grunt.config('pkg.type') === 'stable' ? 
-						grunt.config.process('http://cdnjs.cloudflare.com/ajax/libs/qtip2/<%=pkg.version%>/') + file : 
-						'http://qtip2.com/v/nightly/' + file;
+						grunt.config.process('//cdn.jsdelivr.net/qtip2/<%=pkg.version%>/') + file : 
+						'//qtip2.com/v/nightly/' + file;
 				}
 			},
 			dist: {
@@ -257,7 +257,7 @@ module.exports = function(grunt) {
 		grunt.config('concat.css.src', css);
 
 		// Setup in-file text replacements (version, date etc)
-		grunt.util.spawn({ cmd: 'git', args: ['describe'] }, function(err, data) {
+		grunt.util.spawn({ cmd: 'git', args: ['describe', '--tags'] }, function(err, data) {
 			// Ensure it succeed
 			if(data.code > 1) {
 				grunt.log.write('Uhoh... couldn\'t grab Git repository description. Somethings up!');
