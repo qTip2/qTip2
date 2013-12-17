@@ -37,7 +37,7 @@ you don't plan on using. Find more information about this [here][build]
 Take a look at the [documentation][docs] for extensive docs and guides.
 
 ## Release History
-_(Nothing yet)_
+See the official [Changelog][changelog]
 
 ## Questions or problems?
 If you have any questions, please feel free to post on the [support forums][forums], but before you do make sure to
@@ -53,6 +53,7 @@ Big shout-out to ["Cowboy" Ben Alman][cowboy] for providing the [grunt][grunt] b
 [archive]: http://qtip2.com/v/
 [docs]: http://qtip2.com/docs/
 [download]: http://qtip2.com/download
+[changelog]: http://qtip2.com/changelog
 [build]: http://qtip2.com/guides#custom-build
 [style]: http://qtip2.com/demos#styling
 [plugins]: http://qtip2.com/plugins
