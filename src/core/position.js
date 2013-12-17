@@ -43,22 +43,19 @@ PROTOTYPE.reposition = function(event, effect) {
 		// Force left top to allow flipping
 		at = { x: LEFT, y: TOP };
 
-		// Use the cached mouse coordinates if available, or passed event has no coordinates
-		if(mouse && mouse.pageX && (adjust.mouse || !event || !event.pageX) ) {
-			event = mouse;
+		// Use the mouse origin that caused the show event, if distance hiding is enabled
+		if((!adjust.mouse || this.options.hide.distance) && cache.origin && cache.origin.pageX) {
+			event =  cache.origin;
 		}
-		
-		// If the passed event has no coordinates (such as a scroll event)
-		else if(!event || !event.pageX) {
-			// Use the mouse origin that caused the show event, if distance hiding is enabled
-			if((!adjust.mouse || this.options.show.distance) && cache.origin && cache.origin.pageX) {
-				event =  cache.origin;
-			}
 
-			// Use cached event for resize/scroll events
-			else if(!event || (event && (event.type === 'resize' || event.type === 'scroll'))) {
-				event = cache.event;
-			}
+		// Use cached event for resize/scroll events
+		else if(!event || (event && (event.type === 'resize' || event.type === 'scroll'))) {
+			event = cache.event;
+		}
+
+		// Otherwise, use the cached mouse coordinates if available
+		else if(mouse && mouse.pageX) {
+			event = mouse;
 		}
 
 		// Calculate body and container offset and take them into account below
