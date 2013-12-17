@@ -22,7 +22,7 @@ More documentation and information is available at the [official site][site].
 ## Getting qTip<sup>2</sup>
 
 ### Stable releases
-Grab the latest releases of qTip<sup>2</sup> from the [cdnjs][cdnjs] [CDN][wikipedia-cdn].
+Grab the latest releases of qTip<sup>2</sup> from the [cdnjs][cdnjs] or [jsDelivr][jsdelivr] [CDN][wikipedia-cdn]s.
 
 You can also customize the [plugins][plugins] included using the [download page][download] of the [official site][site].
 
@@ -66,4 +66,5 @@ Big shout-out to ["Cowboy" Ben Alman][cowboy] for providing the [grunt][grunt] b
 [grunt]: http://github.com/gruntjs/grunt
 
 [wikipedia-cdn]: http://en.wikipedia.org/wiki/Content_delivery_network "Content Delivery Network"
-[cdnjs]: http://cdnjs.com/
+[cdnjs]: http://cdnjs.com/libraries/qtip2/
+[jsdelivr]: http://www.jsdelivr.com/#!qtip2
