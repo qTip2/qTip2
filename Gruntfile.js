@@ -27,11 +27,8 @@ module.exports = function(grunt) {
 					' * Date: <%= grunt.template.today("ddd mmm d yyyy hh:MM Zo", true) %>\n' + 
 					'@@BUILDPROPS */\n',
 
-				uglify:'/* <%= pkg.name %> @@vVERSION @@PLUGINS | <%= pkg.homepage.replace("http://","") %> | '+
-					'Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> | <%=grunt.template.today() %> */\n',
-
-				cssmin:'/* <%= pkg.name %> @@vVERSION @@STYLES | <%= pkg.homepage.replace("http://","") %> | '+
-					'Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> | <%=grunt.template.today() %> */'
+				minified:'/* <%= pkg.name %> @@vVERSION | Plugins: @@PLUGINS | Styles: @@STYLES | <%= pkg.homepage.replace("http://","") %> | '+
+					'Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> | <%=grunt.template.today() %> */\n'
 			}
 		},
 
@@ -116,7 +113,7 @@ module.exports = function(grunt) {
 		uglify: {
 			options: {
 				preserveComments: 'some',
-				banner: '<%=meta.banners.uglify%>',
+				banner: '<%=meta.banners.minified%>',
 				sourceMap: function(file) {
 					return file.indexOf('imagesloaded') < 0 ? file.replace('.js', '.map') : null;
 				},
@@ -138,7 +135,7 @@ module.exports = function(grunt) {
 		cssmin: {
 			options: {
 				keepSpecialComments: 0,
-				banner: '<%=meta.banners.cssmin%>'
+				banner: '<%=meta.banners.minified%>'
 			},
 			dist: {
 				files: {
@@ -234,8 +231,9 @@ module.exports = function(grunt) {
 				}
 				else { styles[i] = style+('*'.red); }
 			});
+			styles.unshift('core');
 		}
-		else { styles = ['None']; }
+		else { styles = ['core']; }
 
 		// Parse 'plugins' option (decides which plugins are included)
 		if(!basic && grunt.option('plugins') !== 0) {
