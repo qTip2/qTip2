@@ -79,7 +79,7 @@ function init(elem, id, opts) {
 	elem.data(NAMESPACE, obj);
 
 	// Catch remove/removeqtip events on target element to destroy redundant tooltip
-	elem.one('remove.qtip-'+id+' removeqtip.qtip-'+id, function() { 
+	elem.one('remove.qtip-'+id+' removeqtip.qtip-'+id, function() {
 		var api; if((api = $(this).data(NAMESPACE))) { api.destroy(true); }
 	});
 

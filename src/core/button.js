@@ -45,4 +45,3 @@ PROTOTYPE._updateButton = function(button)
 	if(button) { this._createButton(); }
 	else { elem.remove(); }
 };
-

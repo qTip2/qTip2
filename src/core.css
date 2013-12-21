@@ -6,7 +6,7 @@
 
 	max-width: 280px;
 	min-width: 50px;
-	
+
 	font-size: 10.5px;
 	line-height: 12px;
 
@@ -53,7 +53,7 @@
 			right: 4px; top: 50%;
 			margin-top: -9px;
 		}
-	
+
 		* html .qtip-titlebar .qtip-close{ top: 16px; } /* IE fix */
 
 		.qtip-titlebar .ui-icon,
@@ -108,9 +108,8 @@
 		background: #F1F1F1;
 		color: #777;
 	}
-	
+
 	.qtip-default .qtip-titlebar .qtip-close{
 		border-color: #AAA;
 		color: #111;
 	}
-

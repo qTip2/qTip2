@@ -43,4 +43,3 @@ PROTOTYPE.blur = function(event) {
 
 	return this;
 };
-

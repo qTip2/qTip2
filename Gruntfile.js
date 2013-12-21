@@ -19,12 +19,12 @@ module.exports = function(grunt) {
 			banners: {
 				full: '/*\n * <%= pkg.title || pkg.name %> - @@vVERSION\n' +
 					' * <%=pkg.homepage%>\n' +
-					' *\n' + 
+					' *\n' +
 					' * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>\n' +
-					' * Released under the <%= _.pluck(pkg.licenses, "type").join(", ") %> licenses\n' + 
-					' * http://jquery.org/license\n' + 
-					' *\n' + 
-					' * Date: <%= grunt.template.today("ddd mmm d yyyy hh:MM Zo", true) %>\n' + 
+					' * Released under the <%= _.pluck(pkg.licenses, "type").join(", ") %> licenses\n' +
+					' * http://jquery.org/license\n' +
+					' *\n' +
+					' * Date: <%= grunt.template.today("ddd mmm d yyyy hh:MM Zo", true) %>\n' +
 					'@@BUILDPROPS */\n',
 
 				minified:'/* <%= pkg.name %> @@vVERSION | Plugins: @@PLUGINS | Styles: @@STYLES | <%= pkg.homepage.replace("http://","") %> | '+
@@ -120,8 +120,8 @@ module.exports = function(grunt) {
 				sourceMappingURL: function(file) {
 					file = file.replace('dist/', '').replace('.js', '.map');
 
-					return grunt.config('pkg.type') === 'stable' ? 
-						grunt.config.process('//cdn.jsdelivr.net/qtip2/<%=pkg.version%>/') + file : 
+					return grunt.config('pkg.type') === 'stable' ?
+						grunt.config.process('//cdn.jsdelivr.net/qtip2/<%=pkg.version%>/') + file :
 						'//qtip2.com/v/nightly/' + file;
 				}
 			},
@@ -179,12 +179,12 @@ module.exports = function(grunt) {
 				undef: true,
 				expr: true,
 				globals: {
-					console: true, jQuery: true, '$': true, QTip: true, TRUE: true, FALSE: true, NULL: true, 
+					console: true, jQuery: true, '$': true, QTip: true, TRUE: true, FALSE: true, NULL: true,
 					WIDTH: true, HEIGHT: true, TOP: true, LEFT: true, BOTTOM: true, RIGHT: true, X: true, Y: true,
-					CENTER: true, FLIP: true, FLIPINVERT: true, SHIFT: true, QTIP: true,  PROTOTYPE: true, 
-					CORNER: true,  CHECKS: true, PLUGINS: true, NAMESPACE: true, ATTR_HAS: true, ATTR_ID: true, 
-					WIDGET: true, SELECTOR: true, INACTIVE_EVENTS: true, CLASS_FIXED: true, CLASS_DEFAULT: true, 
-					CLASS_FOCUS: true, CLASS_HOVER: true, CLASS_DISABLED: true, replaceSuffix: true, oldtitle: true, 
+					CENTER: true, FLIP: true, FLIPINVERT: true, SHIFT: true, QTIP: true,  PROTOTYPE: true,
+					CORNER: true,  CHECKS: true, PLUGINS: true, NAMESPACE: true, ATTR_HAS: true, ATTR_ID: true,
+					WIDGET: true, SELECTOR: true, INACTIVE_EVENTS: true, CLASS_FIXED: true, CLASS_DEFAULT: true,
+					CLASS_FOCUS: true, CLASS_HOVER: true, CLASS_DISABLED: true, replaceSuffix: true, oldtitle: true,
 					trackingBound: true, BROWSER: true, createWidgetClass: true, sanitizeOptions: true, cloneEvent: true,
 
 				}
@@ -269,7 +269,7 @@ module.exports = function(grunt) {
 
 			// Set version type config
 			grunt.config('pkg.type', stable ? 'stable' : 'nightly');
-			
+
 			// Setup styles and plugins replacements arrays
 			var strStyles = styles.length ? styles.join(' ') : '';
 				strPlugins = plugins.length ? plugins.join(' ') : '';
@@ -279,9 +279,9 @@ module.exports = function(grunt) {
 				(styles.length ? ' * Styles: '+strStyles+'\n' : '');
 
 			// Setup minification build properties
-			var minbuildprops = plugins[0] !== 'None' || styles[0] !== 'None' ? 
-				'(includes: ' + 
-					(plugins[0] !== 'None' ? strPlugins : '') + 
+			var minbuildprops = plugins[0] !== 'None' || styles[0] !== 'None' ?
+				'(includes: ' +
+					(plugins[0] !== 'None' ? strPlugins : '') +
 					(styles[0] !== 'None' ? ' / ' + strStyles : '') + ') '
 				: '';
 

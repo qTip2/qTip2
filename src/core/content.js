@@ -44,7 +44,7 @@ PROTOTYPE._update = function(content, element, reposition) {
 
 PROTOTYPE._waitForContent = function(element) {
 	var cache = this.cache;
-	
+
 	// Set flag
 	cache.waiting = TRUE;
 
@@ -109,4 +109,3 @@ PROTOTYPE._removeTitle = function(reposition)
 		if(reposition !== FALSE) { this.reposition(); }
 	}
 };
-

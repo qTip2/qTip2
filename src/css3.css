@@ -25,7 +25,7 @@
 	-moz-border-radius: 2px;
 	-webkit-border-radius: 2px;
 	border-radius: 2px;
-	
+
 	-webkit-box-shadow: 0 0 3px #333;
 	-moz-box-shadow: 0 0 3px #333;
 	box-shadow: 0 0 3px #333;
@@ -45,11 +45,11 @@
 		background-color: #4A4A4A;
 		background-color: rgba(0,0,0,0);
 	}
-	
+
 	.qtip-youtube .qtip-content{
 		padding: .75em;
 		font: 12px arial,sans-serif;
-		
+
 		filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr=#4a4a4a,EndColorStr=#000000);
 		-ms-filter: "progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr=#4a4a4a,EndColorStr=#000000);";
 	}
@@ -128,11 +128,11 @@
 		color: white;
 		border: 0 dashed transparent;
 	}
-	
+
 	.qtip-cluetip .qtip-icon{
 		border-color: #808064;
 	}
-	
+
 	.qtip-cluetip .qtip-titlebar .ui-state-hover{
 		border-color: #696952;
 		color: #696952;
@@ -162,7 +162,7 @@
 	.qtip-tipsy .qtip-content{
 		padding: 6px 10px;
 	}
-	
+
 	.qtip-tipsy .qtip-icon{
 		border-color: #222;
 		text-shadow: none;
@@ -326,4 +326,3 @@
 	filter: none;
 	-ms-filter: none;
 }
-

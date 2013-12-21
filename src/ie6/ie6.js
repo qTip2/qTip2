@@ -1,6 +1,6 @@
 var IE6,
 
-/* 
+/*
  * BGIFrame adaption (http://plugins.jquery.com/project/bgiframe)
  * Special thanks to Brandon Aaron
  */
@@ -133,7 +133,7 @@ IE6 = PLUGINS.ie6 = function(api) {
 IE6.initialize = 'render';
 
 CHECKS.ie6 = {
-	'^content|style$': function() { 
+	'^content|style$': function() {
 		this.redraw();
 	}
 };
