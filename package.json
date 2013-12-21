@@ -13,7 +13,8 @@
 		"url": "https://github.com/qTip2/qTip2/issues"
 	},
 	"scripts": {
-		"build": "grunt"
+		"build": "grunt",
+		"test": "grunt dev"
 	},
 	"licenses": [
 		{
