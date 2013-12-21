@@ -113,6 +113,7 @@ module.exports = function(grunt) {
 		uglify: {
 			options: {
 				preserveComments: 'some',
+				report: 'min',
 				banner: '<%=meta.banners.minified%>',
 				sourceMap: function(file) {
 					return file.indexOf('imagesloaded') < 0 ? file.replace('.js', '.map') : null;
@@ -135,7 +136,8 @@ module.exports = function(grunt) {
 		cssmin: {
 			options: {
 				keepSpecialComments: 0,
-				banner: '<%=meta.banners.minified%>'
+				banner: '<%=meta.banners.minified%>',
+				report: 'min'
 			},
 			dist: {
 				files: {
