@@ -63,11 +63,10 @@ if(!$.ui) {
 	$.cleanData = function( elems ) {
 		for(var i = 0, elem; (elem = $( elems[i] )).length; i++) {
 			if(elem.attr(ATTR_HAS)) {
-				try { elem.triggerHandler('removeqtip'); } 
+				try { elem.triggerHandler('removeqtip'); }
 				catch( e ) {}
 			}
 		}
 		$['cleanData'+replaceSuffix].apply(this, arguments);
 	};
 }
-

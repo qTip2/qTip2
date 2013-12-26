@@ -6,7 +6,7 @@
 
 	max-width: 280px;
 	min-width: 50px;
-	
+
 	font-size: 10.5px;
 	line-height: 12px;
 
@@ -44,16 +44,14 @@
 		cursor: pointer;
 		outline: medium none;
 
-		border-width: 1px;
-		border-style: solid;
-		border-color: transparent;
+		border: 1px solid transparent;
 	}
 
 		.qtip-titlebar .qtip-close{
 			right: 4px; top: 50%;
 			margin-top: -9px;
 		}
-	
+
 		* html .qtip-titlebar .qtip-close{ top: 16px; } /* IE fix */
 
 		.qtip-titlebar .ui-icon,
@@ -91,9 +89,7 @@
 
 /* Default tooltip style */
 .qtip-default{
-	border-width: 1px;
-	border-style: solid;
-	border-color: #F1D031;
+	border: 1px solid #F1D031;
 
 	background-color: #FFFFA3;
 	color: #555;
@@ -108,9 +104,8 @@
 		background: #F1F1F1;
 		color: #777;
 	}
-	
+
 	.qtip-default .qtip-titlebar .qtip-close{
 		border-color: #AAA;
 		color: #111;
 	}
-

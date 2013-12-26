@@ -25,7 +25,7 @@ function QTip(target, options, id, attr) {
 	};
 
 	// Set the initial flags
-	this.rendered = this.destroyed = this.disabled = this.waiting = 
+	this.rendered = this.destroyed = this.disabled = this.waiting =
 		this.hiddenDuringWait = this.positioning = this.triggering = FALSE;
 }
 PROTOTYPE = QTip.prototype;
@@ -150,7 +150,7 @@ PROTOTYPE.destroy = function(immediate) {
 	function process() {
 		if(this.destroyed) { return; }
 		this.destroyed = TRUE;
-		
+
 		var target = this.target,
 			title = target.attr(oldtitle);
 
@@ -185,7 +185,7 @@ PROTOTYPE.destroy = function(immediate) {
 
 		// Remove ID from used id objects, and delete object references
 		// for better garbage collection and leak protection
-		this.options = this.elements = this.cache = this.timers = 
+		this.options = this.elements = this.cache = this.timers =
 			this.plugins = this.mouse = NULL;
 
 		// Delete epoxsed API object
@@ -203,4 +203,3 @@ PROTOTYPE.destroy = function(immediate) {
 
 	return this.target;
 };
-

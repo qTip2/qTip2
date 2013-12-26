@@ -15,7 +15,7 @@ PROTOTYPE.toggle = function(state, event) {
 		// Cache event
 		cache.event = $.event.fix(event);
 	}
-		
+
 	// If we're currently waiting and we've just hidden... stop it
 	this.waiting && !state && (this.hiddenDuringWait = TRUE);
 
@@ -157,4 +157,3 @@ PROTOTYPE.toggle = function(state, event) {
 PROTOTYPE.show = function(event) { return this.toggle(TRUE, event); };
 
 PROTOTYPE.hide = function(event) { return this.toggle(FALSE, event); };
-

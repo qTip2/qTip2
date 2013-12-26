@@ -139,8 +139,8 @@ PROTOTYPE.reposition = function(event, effect) {
 		position = this.reposition.offset(target, position, container);
 
 		// Adjust for position.fixed tooltips (and also iOS scroll bug in v3.2-4.0 & v4.3-4.3.2)
-		if((BROWSER.iOS > 3.1 && BROWSER.iOS < 4.1) || 
-			(BROWSER.iOS >= 4.3 && BROWSER.iOS < 4.33) || 
+		if((BROWSER.iOS > 3.1 && BROWSER.iOS < 4.1) ||
+			(BROWSER.iOS >= 4.3 && BROWSER.iOS < 4.33) ||
 			(!BROWSER.iOS && type === 'fixed')
 		){
 			position.left -= win.scrollLeft();
@@ -255,7 +255,7 @@ var C = (CORNER = PROTOTYPE.reposition.Corner = function(corner, forceY) {
 }).prototype;
 
 C.invert = function(z, center) {
-	this[z] = this[z] === LEFT ? RIGHT : this[z] === RIGHT ? LEFT : center || this[z];	
+	this[z] = this[z] === LEFT ? RIGHT : this[z] === RIGHT ? LEFT : center || this[z];
 };
 
 C.string = function() {

@@ -70,7 +70,7 @@ function sanitizeOptions(opts) {
 	}
 
 	if('show' in opts && invalidOpt(opts.show)) {
-		opts.show = opts.show.jquery ? { target: opts.show } : 
+		opts.show = opts.show.jquery ? { target: opts.show } :
 			opts.show === TRUE ? { ready: TRUE } : { event: opts.show };
 	}
 
@@ -135,7 +135,7 @@ CHECKS = PROTOTYPE.checks = {
 		},
 		'^content.title.(text|button)$': function(obj, o, v) {
 			this.set('content.'+o, v); // Backwards title.text/button compat
-		}, 
+		},
 
 		// Position checks
 		'^position.(my|at)$': function(obj, o, v){
@@ -286,4 +286,3 @@ PROTOTYPE.set = function(option, value) {
 
 	return this;
 };
-

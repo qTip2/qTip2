@@ -22,4 +22,3 @@ PROTOTYPE.disable = function(state) {
 };
 
 PROTOTYPE.enable = function() { return this.disable(FALSE); };
-

@@ -30,8 +30,8 @@ OVERLAY = function()
 		}
 		return (/input|select|textarea|button|object/.test( nodeName ) ?
 				!element.disabled :
-				'a' === nodeName ? 
-					element.href || isTabIndexNotNaN : 
+				'a' === nodeName ?
+					element.href || isTabIndexNotNaN :
 					isTabIndexNotNaN
 			);
 	}
@@ -181,7 +181,7 @@ OVERLAY = function()
 
 			return self;
 		}
-	});	
+	});
 
 	self.init();
 };
@@ -206,7 +206,7 @@ $.extend(Modal.prototype, {
 
 		// Add unique attribute so we can grab modal tooltips easily via a SELECTOR, and set z-index
 		tooltip.addClass(MODALCLASS).css('z-index', QTIP.modal_zindex + $(MODALSELECTOR).length);
-		
+
 		// Apply our show/hide/focus modal events
 		qtip._bind(tooltip, ['tooltipshow', 'tooltiphide'], function(event, api, duration) {
 			var oEvent = event.originalEvent;
@@ -292,7 +292,7 @@ MODAL = PLUGINS.modal = function(api) {
 
 // Setup sanitiztion rules
 MODAL.sanitize = function(opts) {
-	if(opts.show) { 
+	if(opts.show) {
 		if(typeof opts.show.modal !== 'object') { opts.show.modal = { on: !!opts.show.modal }; }
 		else if(typeof opts.show.modal.on === 'undefined') { opts.show.modal.on = TRUE; }
 	}
@@ -310,7 +310,7 @@ CHECKS.modal = {
 		// Initialise
 		this.destroy();
 		this.init();
-		
+
 		// Show the modal if not visible already and tooltip is visible
 		this.qtip.elems.overlay.toggle(
 			this.qtip.tooltip[0].offsetWidth > 0

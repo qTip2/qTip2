@@ -90,8 +90,8 @@ PLUGINS.polys = {
 	},
 
 	_angles: {
-		tc: 3 / 2, tr: 7 / 4, tl: 5 / 4, 
-		bc: 1 / 2, br: 1 / 4, bl: 3 / 4, 
+		tc: 3 / 2, tr: 7 / 4, tl: 5 / 4,
+		bc: 1 / 2, br: 1 / 4, bl: 3 / 4,
 		rc: 2, lc: 1, c: 0
 	},
 	ellipse: function(cx, cy, rx, ry, corner) {

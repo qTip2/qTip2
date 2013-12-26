@@ -31,7 +31,7 @@ PLUGINS.svg = function(api, svg, corner)
 		case 'polygon':
 		case 'polyline':
 			// Determine points object (line has none, so mimic using array)
-			points = elem.points || [ 
+			points = elem.points || [
 				{ x: elem.x1.baseVal.value, y: elem.y1.baseVal.value },
 				{ x: elem.x2.baseVal.value, y: elem.y2.baseVal.value }
 			];

@@ -1,4 +1,4 @@
-var TIP, 
+var TIP,
 
 // .bind()/.on() namespace
 TIPNS = '.qtip-tip',
@@ -60,7 +60,7 @@ else {
 	var PIXEL_RATIO = window.devicePixelRatio || 1,
 		BACKING_STORE_RATIO = (function() {
 			var context = document.createElement('canvas').getContext('2d');
-			return context.backingStorePixelRatio || context.webkitBackingStorePixelRatio || context.mozBackingStorePixelRatio || 
+			return context.backingStorePixelRatio || context.webkitBackingStorePixelRatio || context.mozBackingStorePixelRatio ||
 					context.msBackingStorePixelRatio || context.oBackingStorePixelRatio || 1;
 		}()),
 		SCALE = PIXEL_RATIO / BACKING_STORE_RATIO;
@@ -159,7 +159,7 @@ $.extend(Tip.prototype, {
 			prop = BORDER + camel(corner.y) + camel(corner.x) + 'Radius';
 
 		return BROWSER.ie < 9 ? 0 :
-			intCss(this._useTitle(corner) && elements.titlebar || elements.content, prop) || 
+			intCss(this._useTitle(corner) && elements.titlebar || elements.content, prop) ||
 			intCss(elements.tooltip, prop) || 0;
 	},
 
@@ -176,11 +176,11 @@ $.extend(Tip.prototype, {
 			css = this._invalidColour, color = [];
 
 		// Attempt to detect the background colour from various elements, left-to-right precedance
-		color[0] = css(tip, BG_COLOR) || css(colorElem, BG_COLOR) || css(elements.content, BG_COLOR) || 
+		color[0] = css(tip, BG_COLOR) || css(colorElem, BG_COLOR) || css(elements.content, BG_COLOR) ||
 			css(elements.tooltip, BG_COLOR) || tip.css(BG_COLOR);
 
 		// Attempt to detect the correct border side colour from various elements, left-to-right precedance
-		color[1] = css(tip, borderSide, COLOR) || css(colorElem, borderSide, COLOR) || 
+		color[1] = css(tip, borderSide, COLOR) || css(colorElem, borderSide, COLOR) ||
 			css(elements.content, borderSide, COLOR) || css(elements.tooltip, borderSide, COLOR) || elements.tooltip.css(borderSide);
 
 		// Reset background and border colours
@@ -252,7 +252,7 @@ $.extend(Tip.prototype, {
 	create: function() {
 		// Determine tip corner
 		var c = this.corner = (HASCANVAS || BROWSER.ie) && this._parseCorner(this.options.corner);
-		
+
 		// If we have a tip corner...
 		if( (this.enabled = !!this.corner && this.corner.abbrev() !== 'c') ) {
 			// Cache it
@@ -350,7 +350,7 @@ $.extend(Tip.prototype, {
 			context = inner[0].getContext('2d');
 			context.restore(); context.save();
 			context.clearRect(0,0,6000,6000);
-			
+
 			// Calculate coordinates
 			coords = this._calculateTip(mimic, curSize, SCALE);
 			bigCoords = this._calculateTip(mimic, this.size, SCALE);
@@ -492,7 +492,7 @@ $.extend(Tip.prototype, {
 				newCorner.precedance = newCorner.precedance === X ? Y : X;
 			}
 			else if(direction !== SHIFT && adjust[side]){
-				newCorner[precedance] = newCorner[precedance] === CENTER ? 
+				newCorner[precedance] = newCorner[precedance] === CENTER ?
 					(adjust[side] > 0 ? side : opposite) : (newCorner[precedance] === side ? opposite : side);
 			}
 		}
@@ -509,7 +509,7 @@ $.extend(Tip.prototype, {
 					pos[side] -= adjust[side];
 					shift[side] = FALSE;
 				}
-				
+
 				css[ offset[opposite] !== undefined ? opposite : side ] = shift[xy];
 			}
 		}
@@ -548,9 +548,9 @@ $.extend(Tip.prototype, {
 		);
 
 		// Adjust position to accomodate tip dimensions
-		pos.left -= offset.left.charAt ? offset.user : 
+		pos.left -= offset.left.charAt ? offset.user :
 			horizontal !== SHIFT || shift.top || !shift.left && !shift.top ? offset.left + this.border : 0;
-		pos.top -= offset.top.charAt ? offset.user : 
+		pos.top -= offset.top.charAt ? offset.user :
 			vertical !== SHIFT || shift.left || !shift.left && !shift.top ? offset.top + this.border : 0;
 
 		// Cache details
@@ -591,7 +591,7 @@ CHECKS.tip = {
 	'^position.my|style.tip.(corner|mimic|border)$': function() {
 		// Make sure a tip can be drawn
 		this.create();
-		
+
 		// Reposition the tooltip
 		this.qtip.reposition();
 	},
@@ -621,4 +621,3 @@ $.extend(TRUE, QTIP.defaults, {
 		}
 	}
 });
-

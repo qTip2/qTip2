@@ -16,7 +16,7 @@ PROTOTYPE._setWidget = function()
 	tooltip.toggleClass(CLASS_DISABLED, disabled);
 
 	tooltip.toggleClass('ui-helper-reset '+createWidgetClass(), on).toggleClass(CLASS_DEFAULT, this.options.style.def && !on);
-	
+
 	if(elements.content) {
 		elements.content.toggleClass( createWidgetClass('content'), on);
 	}

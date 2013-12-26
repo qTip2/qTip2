@@ -1,6 +1,7 @@
-*~
 *.diff
 *.patch
+*~
 .DS_Store
+/npm-debug.log
 dist/
 node_modules/

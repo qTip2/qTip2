@@ -80,4 +80,3 @@ QTIP.defaults = {
 		blur: NULL
 	}
 };
-
