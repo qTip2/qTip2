@@ -52,7 +52,7 @@ Big shout-out to ["Cowboy" Ben Alman][cowboy] for providing the [grunt][grunt] b
 
 [site]: http://qtip2.com/
 [archive]: http://qtip2.com/v/
-[docs]: http://qtip2.com/docs/
+[docs]: http://qtip2.com/guides/
 [download]: http://qtip2.com/download
 [changelog]: http://qtip2.com/changelog
 [build]: http://qtip2.com/guides#custom-build
