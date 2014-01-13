@@ -58,7 +58,7 @@ PROTOTYPE.toggle = function(state, event) {
 	// Execute state specific properties
 	if(state) {
 		// Store show origin coordinates
-		event && (cache.origin = $.event.fix(this.mouse));
+		this.mouse && (cache.origin = $.event.fix(this.mouse));
 
 		// Update tooltip content & title if it's a dynamic function
 		if($.isFunction(contentOptions.text)) { this._updateContent(contentOptions.text, FALSE); }
