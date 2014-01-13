@@ -81,14 +81,15 @@ PROTOTYPE._storeMouse = function(event) {
 
 // Bind events
 PROTOTYPE._bind = function(targets, events, method, suffix, context) {
+	if(!targets || !method || !events.length) { return; }
 	var ns = '.' + this._id + (suffix ? '-'+suffix : '');
-	events.length && $(targets).bind(
+	$(targets).bind(
 		(events.split ? events : events.join(ns + ' ')) + ns,
 		$.proxy(method, context || this)
 	);
 };
 PROTOTYPE._unbind = function(targets, suffix) {
-	$(targets).unbind('.' + this._id + (suffix ? '-'+suffix : ''));
+	targets && $(targets).unbind('.' + this._id + (suffix ? '-'+suffix : ''));
 };
 
 // Apply common event handlers using delegate (avoids excessive .bind calls!)
@@ -191,6 +192,11 @@ PROTOTYPE._assignInitialEvents = function(event) {
 		showEvents = options.show.event ? $.trim('' + options.show.event).split(' ') : [],
 		hideEvents = options.hide.event ? $.trim('' + options.hide.event).split(' ') : [];
 
+	// Catch remove/removeqtip events on target element to destroy redundant tooltips
+	this._bind(this.elements.target, ['remove', 'removeqtip'], function(event) {
+		this.destroy(true);
+	}, 'destroy');
+
 	/*
 	 * Make sure hoverIntent functions properly by using mouseleave as a hide event if
 	 * mouseenter/mouseout is used for show.event, even if it isn't in the users options.
@@ -215,8 +221,8 @@ PROTOTYPE._assignInitialEvents = function(event) {
 		if(this.disabled || this.destroyed) { return FALSE; }
 
 		// Cache the event data
-		this.cache.event = $.event.fix(event);
-		this.cache.target = event ? $(event.target) : [undefined];
+		this.cache.event = event && $.event.fix(event);
+		this.cache.target = event && $(event.target);
 
 		// Start the event sequence
 		clearTimeout(this.timers.show);

@@ -182,6 +182,7 @@ PROTOTYPE.destroy = function(immediate) {
 
 		// Remove qTip events associated with this API
 		this._unbind(target);
+		this._unbind(target, 'destroy');
 
 		// Remove ID from used id objects, and delete object references
 		// for better garbage collection and leak protection
