@@ -23,7 +23,7 @@ function showMethod(event) {
 }
 
 function hideMethod(event) {
-	if(this.tooltip.hasClass(CLASS_DISABLED)) { return FALSE; }
+	if(this.tooltip.hasClass(CLASS_DISABLED) || this.destroyed) { return FALSE; }
 
 	// Check if new target was actually the tooltip element
 	var relatedTarget = $(event.relatedTarget),
@@ -228,6 +228,7 @@ PROTOTYPE._assignInitialEvents = function(event) {
 
 	// Filter and bind events
 	this._bindEvents(showEvents, hideEvents, showTarget, hideTarget, hoverIntent, function() {
+		if(!this.timers) { return FALSE; }
 		clearTimeout(this.timers.show);
 	});
 
@@ -336,6 +337,7 @@ PROTOTYPE._assignEvents = function() {
 			if(options.hide.event) {
 				// Track if we're on the target or not
 				this._bind(showTarget, ['mouseenter', 'mouseleave'], function(event) {
+					if(!this.cache) {return FALSE; }
 					this.cache.onTarget = event.type === 'mouseenter';
 				});
 			}
