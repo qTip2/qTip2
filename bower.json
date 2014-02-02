@@ -7,7 +7,7 @@
 		"dist/**/.js"
 	],
 	"dependencies": {
-		"jquery": ">=1.5.0",
+		"jquery": ">=1.6.0",
 		"imagesloaded": ">=3.0.0"
 	}
 }
