@@ -29,7 +29,7 @@ PROTOTYPE.reposition = function(event, effect) {
 		win = $(window),
 		doc = container[0].ownerDocument,
 		mouse = this.mouse,
-		pluginCalculations, offset;
+		pluginCalculations, offset, adjusted, newClass;
 
 	// Check if absolute position was passed
 	if($.isArray(target) && target.length === 2) {
@@ -160,17 +160,25 @@ PROTOTYPE.reposition = function(event, effect) {
 
 	// Use viewport adjustment plugin if enabled
 	if(PLUGINS.viewport) {
-		position.adjusted = PLUGINS.viewport(
+		adjusted = position.adjusted = PLUGINS.viewport(
 			this, position, posOptions, targetWidth, targetHeight, tooltipWidth, tooltipHeight
 		);
 
 		// Apply offsets supplied by positioning plugin (if used)
-		if(offset && position.adjusted.left) { position.left += offset.left; }
-		if(offset && position.adjusted.top) {  position.top += offset.top; }
+		if(offset && adjusted.left) { position.left += offset.left; }
+		if(offset && adjusted.top) {  position.top += offset.top; }
+
+		// Apply any new 'my' position
+		if(adjusted.my) { this.position.my = adjusted.my; }
 	}
 
 	// Viewport adjustment is disabled, set values to zero
 	else { position.adjusted = { left: 0, top: 0 }; }
+
+	// Set tooltip position class if it's changed
+	if(cache.posClass !== (newClass = this._createPosClass(this.position.my))) {
+		tooltip.removeClass(cache.posClass).addClass( (cache.posClass = newClass) );
+	}
 
 	// tooltipmove event
 	if(!this._trigger('move', [position, viewport.elem || viewport], event)) { return this; }

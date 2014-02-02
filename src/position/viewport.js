@@ -12,7 +12,7 @@ PLUGINS.viewport = function(api, position, posOptions, targetWidth, targetHeight
 		container = posOptions.container,
 		cache = api.cache,
 		adjusted = { left: 0, top: 0 },
-		fixed, newMy, newClass, containerOffset, containerStatic,
+		fixed, newMy, containerOffset, containerStatic,
 		viewportWidth, viewportHeight, viewportScroll, viewportOffset;
 
 	// If viewport is not a jQuery element, or it's the window/document, or no adjustment method is used... return
@@ -99,13 +99,9 @@ PLUGINS.viewport = function(api, position, posOptions, targetWidth, targetHeight
 	// Adjust position based onviewport and adjustment options
 	adjusted = {
 		left: methodX !== 'none' ? calculate( X, Y, methodX, adjust.x, LEFT, RIGHT, WIDTH, targetWidth, elemWidth ) : 0,
-		top: methodY !== 'none' ? calculate( Y, X, methodY, adjust.y, TOP, BOTTOM, HEIGHT, targetHeight, elemHeight ) : 0
+		top: methodY !== 'none' ? calculate( Y, X, methodY, adjust.y, TOP, BOTTOM, HEIGHT, targetHeight, elemHeight ) : 0,
+		my: newMy
 	};
-
-	// Set tooltip position class if it's changed
-	if(newMy && cache.posClass !== (newClass = api._createPosClass(newMy))) {
-		tooltip.removeClass(cache.posClass).addClass( (cache.posClass = newClass) );
-	}
 
 	return adjusted;
 };
