@@ -77,6 +77,7 @@ function repositionMethod(event) {
 // Store mouse coordinates
 PROTOTYPE._storeMouse = function(event) {
 	(this.mouse = $.event.fix(event)).type = 'mousemove';
+	return this;
 };
 
 // Bind events
@@ -87,56 +88,23 @@ PROTOTYPE._bind = function(targets, events, method, suffix, context) {
 		(events.split ? events : events.join(ns + ' ')) + ns,
 		$.proxy(method, context || this)
 	);
+	return this;
 };
 PROTOTYPE._unbind = function(targets, suffix) {
 	targets && $(targets).unbind('.' + this._id + (suffix ? '-'+suffix : ''));
+	return this;
 };
 
-// Apply common event handlers using delegate (avoids excessive .bind calls!)
-var ns = '.'+NAMESPACE;
+// Global delegation helper
 function delegate(selector, events, method) {
 	$(document.body).delegate(selector,
-		(events.split ? events : events.join(ns + ' ')) + ns,
+		(events.split ? events : events.join('.'+NAMESPACE + ' ')) + '.'+NAMESPACE,
 		function() {
 			var api = QTIP.api[ $.attr(this, ATTR_ID) ];
 			api && !api.disabled && method.apply(api, arguments);
 		}
 	);
 }
-
-$(function() {
-	delegate(SELECTOR, ['mouseenter', 'mouseleave'], function(event) {
-		var state = event.type === 'mouseenter',
-			tooltip = $(event.currentTarget),
-			target = $(event.relatedTarget || event.target),
-			options = this.options;
-
-		// On mouseenter...
-		if(state) {
-			// Focus the tooltip on mouseenter (z-index stacking)
-			this.focus(event);
-
-			// Clear hide timer on tooltip hover to prevent it from closing
-			tooltip.hasClass(CLASS_FIXED) && !tooltip.hasClass(CLASS_DISABLED) && clearTimeout(this.timers.hide);
-		}
-
-		// On mouseleave...
-		else {
-			// Hide when we leave the tooltip and not onto the show target (if a hide event is set)
-			if(options.position.target === 'mouse' && options.hide.event &&
-				options.show.target && !target.closest(options.show.target[0]).length) {
-				this.hide(event);
-			}
-		}
-
-		// Add hover class
-		tooltip.toggleClass(CLASS_HOVER, state);
-	});
-
-	// Define events which reset the 'inactive' event handler
-	delegate('['+ATTR_ID+']', INACTIVE_EVENTS, inactiveMethod);
-});
-
 // Event trigger
 PROTOTYPE._trigger = function(type, args, event) {
 	var callback = $.Event('tooltip'+type);
@@ -308,10 +276,10 @@ PROTOTYPE._assignEvents = function() {
 	// Check if the tooltip hides when inactive
 	if('number' === typeof options.hide.inactive) {
 		// Bind inactive method to show target(s) as a custom event
-		this._bind(showTarget, 'qtip-'+this.id+'-inactive', inactiveMethod);
+		this._bind(showTarget, 'qtip-'+this.id+'-inactive', inactiveMethod, 'inactive');
 
 		// Define events which reset the 'inactive' event handler
-		this._bind(hideTarget.add(tooltip), QTIP.inactiveEvents, inactiveMethod, '-inactive');
+		this._bind(hideTarget.add(tooltip), QTIP.inactiveEvents, inactiveMethod);
 	}
 
 	// Filter and bind events
@@ -371,18 +339,56 @@ PROTOTYPE._assignEvents = function() {
 
 // Un-assignment method
 PROTOTYPE._unassignEvents = function() {
-	var targets = [
-		this.options.show.target[0],
-		this.options.hide.target[0],
-		this.rendered && this.tooltip[0],
-		this.options.position.container[0],
-		this.options.position.viewport[0],
-		this.options.position.container.closest('html')[0], // unfocus
-		window,
-		document
-	];
+	var options = this.options,
+		targets = $( $.grep([
+			this.elements.target[0],
+			options.show.target[0],
+			options.hide.target[0],
+			this.rendered && this.tooltip[0],
+			options.position.container[0],
+			options.position.viewport[0],
+			options.position.container.closest('html')[0], // unfocus
+			window,
+			document
+		], function(i) {
+			return typeof i === 'object';
+		}));
 
-	this._unbind($([]).pushStack( $.grep(targets, function(i) {
-		return typeof i === 'object';
-	})));
+	this._unbind(targets)
+		._unbind(targets, 'destroy')
+		._unbind(targets, 'inactive');
 };
+
+// Apply common event handlers using delegate (avoids excessive .bind calls!)
+$(function() {
+	delegate(SELECTOR, ['mouseenter', 'mouseleave'], function(event) {
+		var state = event.type === 'mouseenter',
+			tooltip = $(event.currentTarget),
+			target = $(event.relatedTarget || event.target),
+			options = this.options;
+
+		// On mouseenter...
+		if(state) {
+			// Focus the tooltip on mouseenter (z-index stacking)
+			this.focus(event);
+
+			// Clear hide timer on tooltip hover to prevent it from closing
+			tooltip.hasClass(CLASS_FIXED) && !tooltip.hasClass(CLASS_DISABLED) && clearTimeout(this.timers.hide);
+		}
+
+		// On mouseleave...
+		else {
+			// Hide when we leave the tooltip and not onto the show target (if a hide event is set)
+			if(options.position.target === 'mouse' && options.hide.event &&
+				options.show.target && !target.closest(options.show.target[0]).length) {
+				this.hide(event);
+			}
+		}
+
+		// Add hover class
+		tooltip.toggleClass(CLASS_HOVER, state);
+	});
+
+	// Define events which reset the 'inactive' event handler
+	delegate('['+ATTR_ID+']', INACTIVE_EVENTS, inactiveMethod);
+});

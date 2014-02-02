@@ -152,7 +152,8 @@ PROTOTYPE.destroy = function(immediate) {
 		this.destroyed = TRUE;
 
 		var target = this.target,
-			title = target.attr(oldtitle);
+			title = target.attr(oldtitle),
+			timer;
 
 		// Destroy tooltip if rendered
 		if(this.rendered) {
@@ -164,10 +165,10 @@ PROTOTYPE.destroy = function(immediate) {
 			this.destroy && this.destroy();
 		});
 
-		// Clear timers and remove bound events
-		clearTimeout(this.timers.show);
-		clearTimeout(this.timers.hide);
-		this._unassignEvents();
+		// Clear timers
+		for(timer in this.timers) {
+			clearTimeout(this.timers[timer]);
+		}
 
 		// Remove api object and ARIA attributes
 		target.removeData(NAMESPACE)
@@ -181,8 +182,7 @@ PROTOTYPE.destroy = function(immediate) {
 		}
 
 		// Remove qTip events associated with this API
-		this._unbind(target);
-		this._unbind(target, 'destroy');
+		this._unassignEvents();
 
 		// Remove ID from used id objects, and delete object references
 		// for better garbage collection and leak protection
