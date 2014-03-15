@@ -266,16 +266,24 @@ C.invert = function(z, center) {
 	this[z] = this[z] === LEFT ? RIGHT : this[z] === RIGHT ? LEFT : center || this[z];
 };
 
-C.string = function() {
+C.string = function(join) {
 	var x = this.x, y = this.y;
-	return x === y ? x : this.precedance === Y || (this.forceY && y !== 'center') ? y+' '+x : x+' '+y;
+
+	var result = x !== y ?
+		(x === 'center' || y !== 'center' && (this.precedance === Y || this.forceY) ? 
+			[y,x] : [x,y]
+		) :
+	[x];
+
+	return join !== false ? result.join(' ') : result;
 };
 
 C.abbrev = function() {
-	var result = this.string().split(' ');
+	var result = this.string(false);
 	return result[0].charAt(0) + (result[1] && result[1].charAt(0) || '');
 };
 
 C.clone = function() {
 	return new CORNER( this.string(), this.forceY );
 };
+
