@@ -35,7 +35,7 @@
       "url": "https://github.com/qTip2/qTip2/blob/master/LICENSE-GPL"
     }
   ],
-  "dependancies": {},
+  "dependencies": {},
   "devDependencies": {
     "grunt": "~0.4.2",
     "grunt-cli": "~0.1.13",
