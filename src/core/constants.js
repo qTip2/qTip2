@@ -49,10 +49,12 @@ BROWSER = {
 	 * Credit to James Padolsey for the original implemntation!
 	 */
 	ie: (function(){
-		var v = 3, div = document.createElement('div');
-		while ((div.innerHTML = '<!--[if gt IE '+(++v)+']><i></i><![endif]-->')) {
-			if(!div.getElementsByTagName('i')[0]) { break; }
-		}
+		for (
+			var v = 4, i = document.createElement("div");
+			(i.innerHTML = "<!--[if gt IE " + v + "]><i></i><![endif]-->") && i.getElementsByTagName("i")[0];
+			v+=1
+		);
+		console.log(v);
 		return v > 4 ? v : NaN;
 	}()),
 
