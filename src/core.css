@@ -40,6 +40,7 @@
 	.qtip-close{
 		position: absolute;
 		right: -9px; top: -9px;
+		z-index: 11; /* Overlap .qtip-tip */
 
 		cursor: pointer;
 		outline: medium none;
