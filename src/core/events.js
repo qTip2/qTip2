@@ -9,7 +9,7 @@ function delay(callback, duration) {
 }
 
 function showMethod(event) {
-	if(this.tooltip.hasClass(CLASS_DISABLED)) { return FALSE; }
+	if(this.tooltip.hasClass(CLASS_DISABLED)) { return; }
 
 	// Clear hide timers
 	clearTimeout(this.timers.show);
@@ -23,7 +23,7 @@ function showMethod(event) {
 }
 
 function hideMethod(event) {
-	if(this.tooltip.hasClass(CLASS_DISABLED) || this.destroyed) { return FALSE; }
+	if(this.tooltip.hasClass(CLASS_DISABLED) || this.destroyed) { return; }
 
 	// Check if new target was actually the tooltip element
 	var relatedTarget = $(event.relatedTarget),
@@ -59,7 +59,7 @@ function hideMethod(event) {
 }
 
 function inactiveMethod(event) {
-	if(this.tooltip.hasClass(CLASS_DISABLED) || !this.options.hide.inactive) { return FALSE; }
+	if(this.tooltip.hasClass(CLASS_DISABLED) || !this.options.hide.inactive) { return; }
 
 	// Clear timer
 	clearTimeout(this.timers.inactive);
