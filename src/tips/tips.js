@@ -521,7 +521,7 @@ $.extend(Tip.prototype, {
 			shiftflip(vertical, Y, X, TOP, BOTTOM);
 
 			// Update and redraw the tip if needed (check cached details of last drawn tip)
-			if(newCorner.string() !== cache.corner.string() && (cache.cornerTop !== adjust.top || cache.cornerLeft !== adjust.left)) {
+			if(newCorner.string() !== cache.corner.string() || cache.cornerTop !== adjust.top || cache.cornerLeft !== adjust.left) {
 				this.update(newCorner, FALSE);
 			}
 		}
