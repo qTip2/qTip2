@@ -378,9 +378,9 @@ $(function() {
 
 		// On mouseleave...
 		else {
-			// Hide when we leave the tooltip and not onto the show target (if a hide event is set)
-			if(options.position.target === 'mouse' && options.hide.event &&
-				options.show.target && !target.closest(options.show.target[0]).length) {
+			// When mouse tracking is enabled, hide when we leave the tooltip and not onto the show target (if a hide event is set)
+			if(options.position.target === 'mouse' && options.position.adjust.mouse && 
+				options.hide.event && options.show.target && !target.closest(options.show.target[0]).length) {
 				this.hide(event);
 			}
 		}
