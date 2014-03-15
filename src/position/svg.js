@@ -5,7 +5,6 @@ PLUGINS.svg = function(api, svg, corner)
 		root = $(elem.ownerSVGElement),
 		ownerDocument = elem.ownerDocument,
 		strokeWidth2 = (parseInt(svg.css('stroke-width'), 10) || 0) / 2,
-		complex = true,
 		frameOffset, mtx, transformed, viewBox,
 		len, next, i, points,
 		result, position, dimensions;
@@ -46,15 +45,15 @@ PLUGINS.svg = function(api, svg, corner)
 
 		// Unknown shape or rectangle? Use bounding box
 		default:
-			result = elem.getBoundingClientRect();
+			result = elem.getBBox();
 			result = {
-				width: result.width, height: result.height,
+				width: result.width,
+				height: result.height,
 				position: {
-					left: result.left,
-					top: result.top
+					left: result.x,
+					top: result.y
 				}
 			};
-			complex = false;
 		break;
 	}
 
@@ -62,19 +61,16 @@ PLUGINS.svg = function(api, svg, corner)
 	position = result.position;
 	root = root[0];
 
-	// If the shape was complex (i.e. not using bounding box calculations)
-	if(complex) {
-		// Convert position into a pixel value
-		if(root.createSVGPoint) {
-			mtx = elem.getScreenCTM();
-			points = root.createSVGPoint();
+	// Convert position into a pixel value
+	if(root.createSVGPoint) {
+		mtx = elem.getScreenCTM();
+		points = root.createSVGPoint();
 
-			points.x = position.left;
-			points.y = position.top;
-			transformed = points.matrixTransform( mtx );
-			position.left = transformed.x;
-			position.top = transformed.y;
-		}
+		points.x = position.left;
+		points.y = position.top;
+		transformed = points.matrixTransform( mtx );
+		position.left = transformed.x;
+		position.top = transformed.y;
 	}
 
 	// Check the element is not in a child document, and if so, adjust for frame elements offset
