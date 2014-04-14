@@ -53,7 +53,7 @@ BROWSER = {
 			var v = 4, i = document.createElement("div");
 			(i.innerHTML = "<!--[if gt IE " + v + "]><i></i><![endif]-->") && i.getElementsByTagName("i")[0];
 			v+=1
-		);
+		) {}
 		return v > 4 ? v : NaN;
 	}()),
 
