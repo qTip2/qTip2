@@ -31,7 +31,7 @@
 	box-shadow: 0 0 3px #333;
 
 	color: white;
-	border-width: 0;
+	border: 0 solid transparent;
 
 	background: #4A4A4A;
 	background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0,#4A4A4A),color-stop(100%,black));
