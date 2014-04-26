@@ -1,13 +1,22 @@
 var defaultTasks = ['concat', 'uglify', 'cssmin', 'replace'];
-function alias() {
-	return Array.prototype.slice.call(arguments, 0).concat(defaultTasks)
+function alias(basic) {
+	var start = (basic = basic === true) ? 1 : 0;
+
+	return [basic ? 'init:basic' : 'init'].concat( 
+		Array.prototype.slice.call(arguments, 0)
+	).concat(
+		defaultTasks
+	);
 }
 
 // Task aliases
 module.exports =  {
-	basic: alias('init:basic', 'clean'),
-	default: alias('init', 'clean'),
-	dev: alias('init', 'clean', 'jshint', 'csslint'),
-	css: alias('init', 'clean', 'csslint', 'concat:css', 'cssmin', 'replace'),
-	all: alias('init', 'clean').concat( alias('init:basic') )
+	default: alias('clean'),
+	basic: alias(true, 'clean'),
+	dev: alias('clean', 'jshint', 'csslint'),
+	all: alias('clean').concat( alias(true) ),
+	css: alias('clean', 'csslint', 'concat:css', 'cssmin', 'replace'),
+
+	watch_js: [ 'init', 'concat', 'uglify', 'replace' ],
+	watch_css: [ 'init', 'concat', 'cssmin', 'replace' ]
 }
