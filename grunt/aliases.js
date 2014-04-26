@@ -1,9 +1,11 @@
+'use strict';
+
 var defaultTasks = ['concat', 'uglify', 'cssmin', 'replace'];
 function alias(basic) {
 	var start = (basic = basic === true) ? 1 : 0;
-
+	console.log(basic, arguments);
 	return [basic ? 'init:basic' : 'init'].concat( 
-		Array.prototype.slice.call(arguments, 0)
+		Array.prototype.slice.call(arguments, start)
 	).concat(
 		defaultTasks
 	);
@@ -19,4 +21,4 @@ module.exports =  {
 
 	watch_js: [ 'init', 'concat', 'uglify', 'replace' ],
 	watch_css: [ 'init', 'concat', 'cssmin', 'replace' ]
-}
+};
