@@ -54,7 +54,7 @@ function sanitizeOptions(opts) {
 		}
 
 		if('title' in content) {
-			if(!invalidOpt(content.title)) {
+			if($.isPlainObject(content.title)) {
 				content.button = content.title.button;
 				content.title = content.title.text;
 			}
