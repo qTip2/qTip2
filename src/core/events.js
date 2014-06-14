@@ -340,10 +340,10 @@ PROTOTYPE._assignEvents = function() {
 // Un-assignment method
 PROTOTYPE._unassignEvents = function() {
 	var options = this.options,
-		targets = $( $.grep([
+		showTargets = options.show.target,
+		hideTargets = options.hide.target,
+		targets = $.grep([
 			this.elements.target[0],
-			options.show.target[0],
-			options.hide.target[0],
 			this.rendered && this.tooltip[0],
 			options.position.container[0],
 			options.position.viewport[0],
@@ -352,8 +352,17 @@ PROTOTYPE._unassignEvents = function() {
 			document
 		], function(i) {
 			return typeof i === 'object';
-		}));
+		});
 
+	// Add show and hide targets if they're valid
+	if(showTargets && showTargets.toArray) {
+		targets = targets.concat(showTargets.toArray());
+	}
+	if(hideTargets && hideTargets.toArray) {
+		targets = targets.concat(hideTargets.toArray());
+	}
+
+	// Unbind the events
 	this._unbind(targets)
 		._unbind(targets, 'destroy')
 		._unbind(targets, 'inactive');
@@ -379,7 +388,7 @@ $(function() {
 		// On mouseleave...
 		else {
 			// When mouse tracking is enabled, hide when we leave the tooltip and not onto the show target (if a hide event is set)
-			if(options.position.target === 'mouse' && options.position.adjust.mouse && 
+			if(options.position.target === 'mouse' && options.position.adjust.mouse &&
 				options.hide.event && options.show.target && !target.closest(options.show.target[0]).length) {
 				this.hide(event);
 			}
