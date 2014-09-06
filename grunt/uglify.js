@@ -6,15 +6,9 @@ module.exports = function(grunt) {
 			preserveComments: 'some',
 			report: 'min',
 			banner: '<%=meta.banners.minified%>',
-			sourceMap: function(file) {
-				return file.indexOf('imagesloaded') < 0 ? file.replace('.js', '.map') : null;
-			},
-			sourceMappingURL: function(file) {
-				file = file.replace('dist/', '').replace('.js', '.map');
-
-				return grunt.config('pkg.type') === 'stable' ?
-					grunt.config.process('//cdn.jsdelivr.net/qtip2/<%=pkg.version%>/') + file :
-					'//qtip2.com/v/nightly/' + file;
+			sourceMap: true,
+			sourceMapName: function(name) {
+				return name.replace('.js', '.map');
 			}
 		},
 		dist: {
