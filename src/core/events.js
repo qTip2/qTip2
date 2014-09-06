@@ -196,7 +196,7 @@ PROTOTYPE._assignInitialEvents = function(event) {
 		clearTimeout(this.timers.show);
 		this.timers.show = delay.call(this,
 			function() { this.render(typeof event === 'object' || options.show.ready); },
-			options.show.delay
+			options.prerender ? 0 : options.show.delay
 		);
 	}
 
