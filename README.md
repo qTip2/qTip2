@@ -7,7 +7,7 @@
 Introducing&hellip; qTip<sup>2</sup>. The second generation of the advanced qTip plugin for the ever popular jQuery framework.
 
 Building on 1.0's user friendly, yet feature rich base, qTip<sup>2</sup> provides you with tonnes of features like
-[speech bubble tips][tips] and [imagemap support][imgmap], and best of all... **it's completely free under the MIT/GPLv2 licenses!**
+[speech bubble tips][tips] and [imagemap support][imgmap], and best of all... **it's completely free under the MIT license!**
 
 More documentation and information is available at the [official site][site].
 
@@ -45,7 +45,7 @@ If you have any questions, please feel free to post on the [support forums][foru
 check out the [thorough documentation][docs] both here in the repo and on the [official site][site].
 
 ## License
-Copyright (c) 2011-2014 Craig Michael Thompson. Licensed under the MIT, GPL licenses. *See [here][license] for more details.*
+Copyright (c) 2011-2014 Craig Michael Thompson. Licensed under the MIT license. *See [here][license] for more details.*
 
 ## Special thanks
 Big shout-out to ["Cowboy" Ben Alman][cowboy] for providing the [grunt][grunt] build system used by qTip<sup>2</sup>
