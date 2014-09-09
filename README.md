@@ -45,7 +45,7 @@ If you have any questions, please feel free to post on the [support forums][foru
 check out the [thorough documentation][docs] both here in the repo and on the [official site][site].
 
 ## License
-Copyright (c) 2012 Craig Michael Thompson. Licensed under the MIT, GPL licenses. *See [here][license] for more details.*
+Copyright (c) 2011-2014 Craig Michael Thompson. Licensed under the MIT, GPL licenses. *See [here][license] for more details.*
 
 ## Special thanks
 Big shout-out to ["Cowboy" Ben Alman][cowboy] for providing the [grunt][grunt] build system used by qTip<sup>2</sup>
