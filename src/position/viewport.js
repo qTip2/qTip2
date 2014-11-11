@@ -85,7 +85,7 @@ PLUGINS.viewport = function(api, position, posOptions, targetWidth, targetHeight
 			}
 
 			// Make sure we haven't made things worse with the adjustment and reset if so
-			if(position[side1] < viewportScroll && -position[side1] > overflow2) {
+			if(position[side1] < viewportScroll[side1] && -position[side1] > overflow2) {
 				position[side1] = initialPos; newMy = my.clone();
 			}
 		}
