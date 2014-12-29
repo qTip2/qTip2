@@ -71,6 +71,15 @@ PLUGINS.svg = function(api, svg, corner)
 		transformed = points.matrixTransform( mtx );
 		position.left = transformed.x;
 		position.top = transformed.y;
+	
+    if (result.width && result.height) {
+      var p2 = root.createSVGPoint();
+      p2.x = points.x + result.width;
+      p2.y = points.y + result.height;
+      var tr = p2.matrixTransform( mtx );
+      result.width = tr.x - transformed.x;
+      result.height = tr.y - transformed.y;
+    }
 	}
 
 	// Check the element is not in a child document, and if so, adjust for frame elements offset
