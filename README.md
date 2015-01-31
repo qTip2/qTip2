@@ -1,10 +1,9 @@
 [![Build Status](https://travis-ci.org/qTip2/qTip2.png)](https://travis-ci.org/qTip2/qTip2)
 [![devDependency Status](https://david-dm.org/qTip2/qTip2/dev-status.png?theme=shields.io)](https://david-dm.org/qTip2/qTip2#info=devDependencies)
+[![Join the chat at https://gitter.im/qTip2/qTip2](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/qTip2/qTip2?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 [qTip<sup>2</sup>][site] - Pretty powerful tooltips
 ================================
-
-[![Join the chat at https://gitter.im/qTip2/qTip2](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/qTip2/qTip2?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Introducing&hellip; qTip<sup>2</sup>. The second generation of the advanced qTip plugin for the ever popular jQuery framework.
 
