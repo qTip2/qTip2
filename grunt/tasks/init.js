@@ -88,15 +88,17 @@ module.exports = function(grunt) {
 				: '';
 
 			// Set replacement variables
-			grunt.config('replace.dist.options.variables', {
-				'BUILDPROPS': buildprops,
-				'MINBUILDPROPS': minbuildprops,
-				'VERSION': stable ? version : version.substr(1),
-				'vVERSION': stable ? 'v'+version : version,
-				'DATE': grunt.template.today("dd-mm-yyyy"),
-				'STYLES': strStyles,
-				'PLUGINS': strPlugins
-			});
+			grunt.config('replace.dist.options.patterns', [{
+				json: {
+					'BUILDPROPS': buildprops,
+					'MINBUILDPROPS': minbuildprops,
+					'VERSION': stable ? version : version.substr(1),
+					'vVERSION': stable ? 'v'+version : version,
+					'DATE': grunt.template.today("dd-mm-yyyy"),
+					'STYLES': strStyles,
+					'PLUGINS': strPlugins
+				}
+			}]);
 
 			// Output current build properties
 			grunt.log.write("\nBuilding " + "qTip2".green + " "+version+" with " +
