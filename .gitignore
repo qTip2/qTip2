@@ -5,3 +5,14 @@
 /npm-debug.log
 dist/
 node_modules/
+bower/
+converter/
+bin/
+bower/
+converter/
+dist/
+grunt/
+libs/
+qtest/
+tests/
+wiki/
