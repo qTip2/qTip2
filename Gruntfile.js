@@ -30,10 +30,17 @@ module.exports = function(grunt) {
 			// Directories (dist changed in init())
 			dirs: { src: 'src', dist: 'dist', libs: 'libs' },
 
+			// Wrapper over compound js
+			wrapper: {
+				js: [
+					'<%=dirs.src%>/core/intro.js',
+					'<%=dirs.src%>/core/outro.js'
+				]
+			},
+
 			// Core files in order
 			core: {
 				js: [
-					'<%=dirs.src%>/core/intro.js',
 					'<%=dirs.src%>/core/constants.js',
 					'<%=dirs.src%>/core/class.js',
 
@@ -67,7 +74,7 @@ module.exports = function(grunt) {
 				svg: { js: [ '<%=dirs.src%>/position/polys.js', '<%=dirs.src%>/position/svg.js' ] },
 				imagemap: { js: [ '<%=dirs.src%>/position/polys.js', '<%=dirs.src%>/position/imagemap.js' ] },
 				ie6: { js: '<%=dirs.src%>/ie6/ie6.js', css: '<%=dirs.src%>/ie6/ie6.css' }
-			},
+			}
 		}
 	});
 };

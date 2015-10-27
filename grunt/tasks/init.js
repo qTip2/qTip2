@@ -19,6 +19,10 @@ module.exports = function(grunt) {
 			css = grunt.config('core.css'),
 			dist = grunt.option('dist') || 'dist';
 
+		if (grunt.config('wrapper.js') && grunt.config('wrapper.js')[0]) {
+			js.unshift(grunt.config('wrapper.js')[0]);
+		}
+
 		// If basic... go into dist/basic
 		if(basic) { dist += '/basic'; }
 
@@ -50,7 +54,9 @@ module.exports = function(grunt) {
 		else { plugins = ['None']; }
 
 		// Add outro
-		js.push('<%=dirs.src%>/core/outro.js');
+		if (grunt.config('wrapper.js') && grunt.config('wrapper.js')[1]) {
+			js.push(grunt.config('wrapper.js')[1]);
+		}
 
 		// Update concatenation config
 		grunt.config('concat.dist.src', js);
