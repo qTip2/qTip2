@@ -15,7 +15,7 @@ function alias(basic) {
 module.exports =  {
 	default: alias('clean'),
 	basic: alias(true, 'clean'),
-	dev: alias('clean', 'jshint', 'csslint'),
+	dev: alias('clean', 'eslint', 'csslint'),
 	all: alias('clean').concat( alias(true) ),
 	css: alias('clean', 'csslint', 'concat:css', 'cssmin', 'replace'),
 
