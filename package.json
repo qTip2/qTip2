@@ -16,7 +16,7 @@
     "preversion": "npm test",
     "version": "npm run build:stable && npm run version:add",
     "version:add": "git add dist bower.json",
-    "postversion": "git push"
+    "postversion": "git push --follow-tags"
   },
   "repository": {
     "type": "git",
