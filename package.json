@@ -17,7 +17,7 @@
     "version": "npm run build:stable && npm run version:add",
     "version:add": "git add dist bower.json",
     "postversion": "git push --follow-tags",
-    "recompile": "npm run build:all && git commit -am \"Recompile distributable files\"; git push"
+    "recompile": "npm run build:all && git commit dist -m \"Recompile distributable files\"; git push"
   },
   "repository": {
     "type": "git",
