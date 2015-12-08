@@ -35,7 +35,7 @@ QTIP.defaults = {
 			resize: TRUE,
 			method: 'flipinvert flipinvert'
 		},
-		effect: function(api, pos, viewport) {
+		effect: function(api, pos) {
 			$(this).animate(pos, {
 				duration: 200,
 				queue: FALSE

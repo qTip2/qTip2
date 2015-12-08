@@ -30,10 +30,8 @@ $.each({
 
 	/* Allow clone to correctly retrieve cached title attributes */
 	clone: function(keepData) {
-		var titles = $([]), title = 'title',
-
 		// Clone our element using the real clone method
-		elems = $.fn['clone'+replaceSuffix].apply(this, arguments);
+		var elems = $.fn['clone'+replaceSuffix].apply(this, arguments);
 
 		// Grab all elements with an oldtitle set, and change it to regular title attribute, if keepData is false
 		if(!keepData) {
@@ -63,8 +61,10 @@ if(!$.ui) {
 	$.cleanData = function( elems ) {
 		for(var i = 0, elem; (elem = $( elems[i] )).length; i++) {
 			if(elem.attr(ATTR_HAS)) {
+				/* eslint-disable no-empty */
 				try { elem.triggerHandler('removeqtip'); }
 				catch( e ) {}
+				/* eslint-enable no-empty */
 			}
 		}
 		$['cleanData'+replaceSuffix].apply(this, arguments);

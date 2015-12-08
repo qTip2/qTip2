@@ -49,7 +49,7 @@ PROTOTYPE.reposition = function(event, effect) {
 		}
 
 		// Use cached event for resize/scroll events
-		else if(!event || (event && (event.type === 'resize' || event.type === 'scroll'))) {
+		else if(!event || event && (event.type === 'resize' || event.type === 'scroll')) {
 			event = cache.event;
 		}
 
@@ -139,16 +139,16 @@ PROTOTYPE.reposition = function(event, effect) {
 		position = this.reposition.offset(target, position, container);
 
 		// Adjust for position.fixed tooltips (and also iOS scroll bug in v3.2-4.0 & v4.3-4.3.2)
-		if((BROWSER.iOS > 3.1 && BROWSER.iOS < 4.1) ||
-			(BROWSER.iOS >= 4.3 && BROWSER.iOS < 4.33) ||
-			(!BROWSER.iOS && type === 'fixed')
+		if(BROWSER.iOS > 3.1 && BROWSER.iOS < 4.1 ||
+			BROWSER.iOS >= 4.3 && BROWSER.iOS < 4.33 ||
+			!BROWSER.iOS && type === 'fixed'
 		){
 			position.left -= win.scrollLeft();
 			position.top -= win.scrollTop();
 		}
 
 		// Adjust position relative to target
-		if(!pluginCalculations || (pluginCalculations && pluginCalculations.adjustable !== FALSE)) {
+		if(!pluginCalculations || pluginCalculations && pluginCalculations.adjustable !== FALSE) {
 			position.left += at.x === RIGHT ? targetWidth : at.x === CENTER ? targetWidth / 2 : 0;
 			position.top += at.y === BOTTOM ? targetHeight : at.y === CENTER ? targetHeight / 2 : 0;
 		}
@@ -177,7 +177,8 @@ PROTOTYPE.reposition = function(event, effect) {
 
 	// Set tooltip position class if it's changed
 	if(cache.posClass !== (newClass = this._createPosClass(this.position.my))) {
-		tooltip.removeClass(cache.posClass).addClass( (cache.posClass = newClass) );
+		cache.posClass = newClass;
+		tooltip.removeClass(cache.posClass).addClass(newClass);
 	}
 
 	// tooltipmove event
@@ -230,8 +231,8 @@ PROTOTYPE.reposition.offset = function(elem, pos, container) {
 			}
 			else {
 				parentOffset = $(parent).position();
-				parentOffset.left += (parseFloat($.css(parent, 'borderLeftWidth')) || 0);
-				parentOffset.top += (parseFloat($.css(parent, 'borderTopWidth')) || 0);
+				parentOffset.left += parseFloat($.css(parent, 'borderLeftWidth')) || 0;
+				parentOffset.top += parseFloat($.css(parent, 'borderTopWidth')) || 0;
 			}
 
 			pos.left -= parentOffset.left + (parseFloat($.css(parent, 'marginLeft')) || 0);
@@ -241,7 +242,7 @@ PROTOTYPE.reposition.offset = function(elem, pos, container) {
 			if(!scrolled && (overflow = $.css(parent, 'overflow')) !== 'hidden' && overflow !== 'visible') { scrolled = $(parent); }
 		}
 	}
-	while((parent = parent.offsetParent));
+	while(parent = parent.offsetParent);
 
 	// Compensate for containers scroll if it also has an offsetParent (or in IE quirks mode)
 	if(scrolled && (scrolled[0] !== ownerDocument[0] || quirks)) {
@@ -259,7 +260,7 @@ var C = (CORNER = PROTOTYPE.reposition.Corner = function(corner, forceY) {
 	this.forceY = !!forceY;
 
 	var f = corner.charAt(0);
-	this.precedance = (f === 't' || f === 'b' ? Y : X);
+	this.precedance = f === 't' || f === 'b' ? Y : X;
 }).prototype;
 
 C.invert = function(z, center) {
@@ -270,10 +271,10 @@ C.string = function(join) {
 	var x = this.x, y = this.y;
 
 	var result = x !== y ?
-		(x === 'center' || y !== 'center' && (this.precedance === Y || this.forceY) ? 
-			[y,x] : [x,y]
-		) :
-	[x];
+		x === 'center' || y !== 'center' && (this.precedance === Y || this.forceY) ? 
+			[y,x] : 
+			[x,y] :
+		[x];
 
 	return join !== false ? result.join(' ') : result;
 };

@@ -1,12 +1,12 @@
 /*
- * qTip2 - Pretty powerful tooltips - v2.2.1-32-
+ * qTip2 - Pretty powerful tooltips - v2.2.1-33-
  * http://qtip2.com
  *
  * Copyright (c) 2015 
  * Released under the MIT licenses
  * http://jquery.org/license
  *
- * Date: Tue Dec 8 2015 05:12 GMT+0000
+ * Date: Tue Dec 8 2015 06:01 GMT+0000
  * Plugins: None
  * Styles: core
  */
@@ -944,10 +944,8 @@ PROTOTYPE.reposition.offset = function(elem, pos, container) {
 			// If this is the first parent element with an overflow of "scroll" or "auto", store it
 			if(!scrolled && (overflow = $.css(parent, 'overflow')) !== 'hidden' && overflow !== 'visible') { scrolled = $(parent); }
 		}
-
-		parent = parent.offsetParent;
 	}
-	while(parent);
+	while(parent = parent.offsetParent);
 
 	// Compensate for containers scroll if it also has an offsetParent (or in IE quirks mode)
 	if(scrolled && (scrolled[0] !== ownerDocument[0] || quirks)) {
@@ -1489,7 +1487,7 @@ PROTOTYPE._assignInitialEvents = function(event) {
 
 		// Cache the event data
 		this.cache.event = hoverEvent && $.event.fix(hoverEvent);
-		this.cache.target = hoverEvent && $(event.target);
+		this.cache.target = hoverEvent && $(hoverEvent.target);
 
 		// Start the event sequence
 		clearTimeout(this.timers.show);
@@ -1930,7 +1928,7 @@ if(!$.ui) {
 	};
 }
 ;// qTip version
-QTIP.version = '2.2.1-32-';
+QTIP.version = '2.2.1-33-';
 
 // Base ID for all qTips
 QTIP.nextid = 0;

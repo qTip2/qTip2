@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 // Munge the primitives - Paul Irish tip
 var TRUE = true,
 FALSE = false,
@@ -48,14 +50,17 @@ BROWSER = {
 	 * Adapted from: http://ajaxian.com/archives/attack-of-the-ie-conditional-comment
 	 * Credit to James Padolsey for the original implemntation!
 	 */
-	ie: (function(){
+	ie: (function() {
+		/* eslint-disable no-empty */
+		var v, i;
 		for (
-			var v = 4, i = document.createElement("div");
-			(i.innerHTML = "<!--[if gt IE " + v + "]><i></i><![endif]-->") && i.getElementsByTagName("i")[0];
+			v = 4, i = document.createElement('div');
+			(i.innerHTML = '<!--[if gt IE ' + v + ']><i></i><![endif]-->') && i.getElementsByTagName('i')[0];
 			v+=1
 		) {}
 		return v > 4 ? v : NaN;
-	}()),
+		/* eslint-enable no-empty */
+	})(),
 
 	/*
 	 * iOS version detection

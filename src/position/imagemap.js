@@ -1,4 +1,4 @@
-PLUGINS.imagemap = function(api, area, corner, adjustMethod)
+PLUGINS.imagemap = function(api, area, corner)
 {
 	if(!area.jquery) { area = $(area); }
 
@@ -6,7 +6,7 @@ PLUGINS.imagemap = function(api, area, corner, adjustMethod)
 		image = $('img[usemap="#'+area.parent('map').attr('name')+'"]'),
 		coordsString = $.trim(area.attr('coords')),
 		coordsArray = coordsString.replace(/,$/, '').split(','),
-		imageOffset, coords, i, next, result, len;
+		imageOffset, coords, i, result, len;
 
 	// If we can't find the image using the map...
 	if(!image.length) { return FALSE; }

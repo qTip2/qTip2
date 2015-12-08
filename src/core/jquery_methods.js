@@ -9,7 +9,7 @@ function init(elem, id, opts) {
 	newTarget = elem[0] === document ? docBody : elem,
 
 	// Grab metadata from element if plugin is present
-	metadata = (elem.metadata) ? elem.metadata(opts.metadata) : NULL,
+	metadata = elem.metadata ? elem.metadata(opts.metadata) : NULL,
 
 	// If metadata type if HTML5, grab 'name' from the object instead, or use the regular data object otherwise
 	metadata5 = opts.metadata.type === 'html5' && metadata ? metadata[opts.metadata.name] : NULL,
@@ -18,7 +18,10 @@ function init(elem, id, opts) {
 	html5 = elem.data(opts.metadata.name || 'qtipopts');
 
 	// If we don't get an object returned attempt to parse it manualyl without parseJSON
-	try { html5 = typeof html5 === 'string' ? $.parseJSON(html5) : html5; } catch(e) {}
+	/* eslint-disable no-empty */
+	try { html5 = typeof html5 === 'string' ? $.parseJSON(html5) : html5; }
+	catch(e) {}
+	/* eslint-enable no-empty */
 
 	// Merge in and sanitize metadata
 	config = $.extend(TRUE, {}, QTIP.defaults, opts,
@@ -91,7 +94,7 @@ QTIP = $.fn.qtip = function(options, notation, newValue)
 		opts = this[0] ? $.data(this[0], NAMESPACE) : NULL;
 
 	// Check for API request
-	if((!arguments.length && opts) || command === 'api') {
+	if(!arguments.length && opts || command === 'api') {
 		return opts;
 	}
 

@@ -45,9 +45,7 @@ PROTOTYPE.render = function(show) {
 		title = options.content.title,
 		button = options.content.button,
 		posOptions = options.position,
-		namespace = '.'+this._id+' ',
-		deferreds = [],
-		tooltip;
+		deferreds = [];
 
 	// Add ARIA attributes to target
 	$.attr(this.target[0], 'aria-describedby', this._id);
@@ -58,7 +56,7 @@ PROTOTYPE.render = function(show) {
 	);
 
 	// Create tooltip element
-	this.tooltip = elements.tooltip = tooltip = $('<div/>', {
+	this.tooltip = elements.tooltip = $('<div/>', {
 		'id': this._id,
 		'class': [ NAMESPACE, CLASS_DEFAULT, options.style.classes, cache.posClass ].join(' '),
 		'width': options.style.width || '',
@@ -163,13 +161,15 @@ PROTOTYPE.destroy = function(immediate) {
 		}
 
 		// Destroy all plugins
-		$.each(this.plugins, function(name) {
+		$.each(this.plugins, function() {
 			this.destroy && this.destroy();
 		});
 
 		// Clear timers
-		for(timer in this.timers) {
-			clearTimeout(this.timers[timer]);
+		for (timer in this.timers) {
+			if (this.timers.hasOwnProperty(timer)) {
+				clearTimeout(this.timers[timer]);
+			}
 		}
 
 		// Remove api object and ARIA attributes

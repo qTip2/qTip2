@@ -3,7 +3,7 @@ function invalidOpt(a) {
 }
 
 function invalidContent(c) {
-	return !( $.isFunction(c) || (c && c.attr) || c.length || ($.type(c) === 'object' && (c.jquery || c.then) ));
+	return !($.isFunction(c) || c && c.attr) || c.length || $.type(c) === 'object' && (c.jquery || c.then);
 }
 
 // Option object sanitizer
@@ -20,8 +20,9 @@ function sanitizeOptions(opts) {
 		content = opts.content;
 
 		if(invalidOpt(content) || content.jquery || content.done) {
+			text = invalidContent(content) ? FALSE : content;
 			content = opts.content = {
-				text: (text = invalidContent(content) ? FALSE : content)
+				text: text
 			};
 		}
 		else { text = content.text; }
@@ -40,9 +41,9 @@ function sanitizeOptions(opts) {
 					$.extend({}, ajax, { context: api })
 				)
 				.then(ajax.success, NULL, ajax.error)
-				.then(function(content) {
-					if(content && once) { api.set('content.text', content); }
-					return content;
+				.then(function(newContent) {
+					if(newContent && once) { api.set('content.text', newContent); }
+					return newContent;
 				},
 				function(xhr, status, error) {
 					if(api.destroyed || xhr.status === 0) { return; }
@@ -96,10 +97,10 @@ CHECKS = PROTOTYPE.checks = {
 		// Core checks
 		'^id$': function(obj, o, v, prev) {
 			var id = v === TRUE ? QTIP.nextid : v,
-				new_id = NAMESPACE + '-' + id;
+				newId = NAMESPACE + '-' + id;
 
-			if(id !== FALSE && id.length > 0 && !$('#'+new_id).length) {
-				this._id = new_id;
+			if(id !== FALSE && id.length > 0 && !$('#'+newId).length) {
+				this._id = newId;
 
 				if(this.rendered) {
 					this.tooltip[0].id = this._id;
@@ -194,7 +195,7 @@ function convertNotation(options, notation) {
 	levels = notation.split('.');
 
 	// Loop through
-	while( option = option[ levels[i++] ] ) {
+	while(option = option[ levels[i++] ]) {
 		if(i < levels.length) { obj = option; }
 	}
 
@@ -214,7 +215,11 @@ function setCallback(notation, args) {
 	var category, rule, match;
 
 	for(category in this.checks) {
+		if (!this.checks.hasOwnProperty(category)) { continue; }
+
 		for(rule in this.checks[category]) {
+			if (!this.checks[category].hasOwnProperty(rule)) { continue; }
+
 			if(match = (new RegExp(rule, 'i')).exec(notation)) {
 				args.push(match);
 
@@ -237,7 +242,6 @@ PROTOTYPE.set = function(option, value) {
 	var rendered = this.rendered,
 		reposition = FALSE,
 		options = this.options,
-		checks = this.checks,
 		name;
 
 	// Convert singular option/value pair into object form
@@ -247,7 +251,7 @@ PROTOTYPE.set = function(option, value) {
 	else { option = $.extend({}, option); }
 
 	// Set all of the defined options to their new values
-	$.each(option, function(notation, value) {
+	$.each(option, function(notation, val) {
 		if(rendered && rrender.test(notation)) {
 			delete option[notation]; return;
 		}
@@ -255,13 +259,13 @@ PROTOTYPE.set = function(option, value) {
 		// Set new obj value
 		var obj = convertNotation(options, notation.toLowerCase()), previous;
 		previous = obj[0][ obj[1] ];
-		obj[0][ obj[1] ] = value && value.nodeType ? $(value) : value;
+		obj[0][ obj[1] ] = val && val.nodeType ? $(val) : val;
 
 		// Also check if we need to reposition
 		reposition = rmove.test(notation) || reposition;
 
 		// Set the new params for the callback
-		option[notation] = [obj[0], obj[1], value, previous];
+		option[notation] = [obj[0], obj[1], val, previous];
 	});
 
 	// Re-sanitize options

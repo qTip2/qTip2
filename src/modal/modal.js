@@ -6,8 +6,9 @@ OVERLAY = function()
 {
 	var self = this,
 		focusableElems = {},
-		current, onLast,
-		prevState, elem;
+		current,
+		prevState,
+		elem;
 
 	// Modified code from jQuery UI 1.10.0 source
 	// http://code.jquery.com/ui/1.10.0/jquery-ui.js
@@ -28,12 +29,13 @@ OVERLAY = function()
 			img = $('img[usemap=#' + mapName + ']')[0];
 			return !!img && img.is(':visible');
 		}
-		return (/input|select|textarea|button|object/.test( nodeName ) ?
-				!element.disabled :
-				'a' === nodeName ?
-					element.href || isTabIndexNotNaN :
-					isTabIndexNotNaN
-			);
+
+		return /input|select|textarea|button|object/.test( nodeName ) ?
+			!element.disabled :
+			'a' === nodeName ?
+				element.href || isTabIndexNotNaN :
+				isTabIndexNotNaN
+		;
 	}
 
 	// Focus inputs using cached focusable elements (see update())
@@ -56,7 +58,7 @@ OVERLAY = function()
 
 		// Determine if input container target is above this
 		targetOnTop = container.length < 1 ? FALSE :
-			(parseInt(container[0].style.zIndex, 10) > parseInt(tooltip[0].style.zIndex, 10));
+			parseInt(container[0].style.zIndex, 10) > parseInt(tooltip[0].style.zIndex, 10);
 
 		// If we're showing a modal, but focus has landed on an input below
 		// this modal, divert focus to the first visible input in this modal
@@ -64,9 +66,6 @@ OVERLAY = function()
 		if(!targetOnTop && target.closest(SELECTOR)[0] !== tooltip[0]) {
 			focusInputs(target);
 		}
-
-		// Detect when we leave the last focusable element...
-		onLast = event.target === focusableElems[focusableElems.length - 1];
 	}
 
 	$.extend(self, {
@@ -113,14 +112,12 @@ OVERLAY = function()
 		},
 
 		toggle: function(api, state, duration) {
-			var docBody = $(document.body),
-				tooltip = api.tooltip,
+			var tooltip = api.tooltip,
 				options = api.options.show.modal,
 				effect = options.effect,
 				type = state ? 'show': 'hide',
 				visible = elem.is(':visible'),
-				visibleModals = $(MODALSELECTOR).filter(':visible:not(:animated)').not(tooltip),
-				zindex;
+				visibleModals = $(MODALSELECTOR).filter(':visible:not(:animated)').not(tooltip);
 
 			// Set active tooltip API reference
 			self.update(api);
@@ -140,7 +137,7 @@ OVERLAY = function()
 			}
 
 			// Prevent modal from conflicting with show.solo, and don't hide backdrop is other modals are visible
-			if((elem.is(':animated') && visible === state && prevState !== FALSE) || (!state && visibleModals.length)) {
+			if(elem.is(':animated') && visible === state && prevState !== FALSE || !state && visibleModals.length) {
 				return self;
 			}
 
@@ -191,7 +188,8 @@ function Modal(api, options) {
 	this.options = options;
 	this._ns = '-modal';
 
-	this.init( (this.qtip = api) );
+	this.qtip = api;
+	this.init(api);
 }
 
 $.extend(Modal.prototype, {
@@ -214,9 +212,12 @@ $.extend(Modal.prototype, {
 			// Make sure mouseout doesn't trigger a hide when showing the modal and mousing onto backdrop
 			if(event.target === tooltip[0]) {
 				if(oEvent && event.type === 'tooltiphide' && /mouse(leave|enter)/.test(oEvent.type) && $(oEvent.relatedTarget).closest(OVERLAY.elem[0]).length) {
-					try { event.preventDefault(); } catch(e) {}
+					/* eslint-disable no-empty */
+					try { event.preventDefault(); }
+					catch(e) {}
+					/* eslint-enable no-empty */
 				}
-				else if(!oEvent || (oEvent && oEvent.type !== 'tooltipsolo')) {
+				else if(!oEvent || oEvent && oEvent.type !== 'tooltipsolo') {
 					this.toggle(event, event.type === 'tooltipshow', duration);
 				}
 			}
@@ -253,7 +254,10 @@ $.extend(Modal.prototype, {
 			OVERLAY.update(api);
 
 			// Prevent default handling
-			try { event.preventDefault(); } catch(e) {}
+			/* eslint-disable no-empty */
+			try { event.preventDefault(); }
+			catch(e) {}
+			/* eslint-enable no-empty */
 		}, this._ns, this);
 
 		// Focus any other visible modals when this one hides
@@ -299,7 +303,9 @@ MODAL.sanitize = function(opts) {
 };
 
 // Base z-index for all modal tooltips (use qTip core z-index as a base)
+/* eslint-disable camelcase */
 QTIP.modal_zindex = QTIP.zindex - 200;
+/* eslint-enable camelcase */
 
 // Plugin needs to be initialized on render
 MODAL.initialize = 'render';

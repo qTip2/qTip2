@@ -1,4 +1,4 @@
-PROTOTYPE._update = function(content, element, reposition) {
+PROTOTYPE._update = function(content, element) {
 	var self = this,
 		cache = this.cache;
 
@@ -22,7 +22,7 @@ PROTOTYPE._update = function(content, element, reposition) {
 	}
 
 	// If content is null... return false
-	if(content === FALSE || (!content && content !== '')) { return FALSE; }
+	if(content === FALSE || !content && content !== '') { return FALSE; }
 
 	// Append new content if its a DOM array and show it if hidden
 	if(content.jquery && content.length > 0) {
@@ -49,7 +49,7 @@ PROTOTYPE._waitForContent = function(element) {
 	cache.waiting = TRUE;
 
 	// If imagesLoaded is included, ensure images have loaded and return promise
-	return ( $.fn.imagesLoaded ? element.imagesLoaded() : $.Deferred().resolve([]) )
+	return ( $.fn.imagesLoaded ? element.imagesLoaded() : new $.Deferred().resolve([]) )
 		.done(function() { cache.waiting = FALSE; })
 		.promise();
 };

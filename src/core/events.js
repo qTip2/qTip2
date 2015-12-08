@@ -38,14 +38,16 @@ function hideMethod(event) {
 	// Or if mouse positioning is enabled and cursor momentarily overlaps
 	if(this !== relatedTarget[0] &&
 		(this.options.position.target === 'mouse' && ontoTooltip) ||
-		(this.options.hide.fixed && (
+		this.options.hide.fixed && (
 			(/mouse(out|leave|move)/).test(event.type) && (ontoTooltip || ontoTarget))
-		))
+		)
 	{
+		/* eslint-disable no-empty */
 		try {
 			event.preventDefault();
 			event.stopImmediatePropagation();
 		} catch(e) {}
+		/* eslint-enable no-empty */
 
 		return;
 	}
@@ -107,8 +109,8 @@ function delegate(selector, events, method) {
 }
 // Event trigger
 PROTOTYPE._trigger = function(type, args, event) {
-	var callback = $.Event('tooltip'+type);
-	callback.originalEvent = (event && $.extend({}, event)) || this.cache.event || NULL;
+	var callback = new $.Event('tooltip'+type);
+	callback.originalEvent = event && $.extend({}, event) || this.cache.event || NULL;
 
 	this.triggering = type;
 	this.tooltip.trigger(callback, [this].concat(args || []));
@@ -117,7 +119,7 @@ PROTOTYPE._trigger = function(type, args, event) {
 	return !callback.isDefaultPrevented();
 };
 
-PROTOTYPE._bindEvents = function(showEvents, hideEvents, showTargets, hideTargets, showMethod, hideMethod) {
+PROTOTYPE._bindEvents = function(showEvents, hideEvents, showTargets, hideTargets, showCallback, hideCallback) {
 	// Get tasrgets that lye within both
 	var similarTargets = showTargets.filter( hideTargets ).add( hideTargets.filter(showTargets) ),
 		toggleEvents = [];
@@ -139,7 +141,7 @@ PROTOTYPE._bindEvents = function(showEvents, hideEvents, showTargets, hideTarget
 			// Bind toggle events to the similar targets
 			this._bind(similarTargets, toggleEvents, function(event) {
 				var state = this.rendered ? this.tooltip[0].offsetWidth > 0 : false;
-				(state ? hideMethod : showMethod).call(this, event);
+				(state ? hideCallback : showCallback).call(this, event);
 			});
 
 			// Remove the similar targets from the regular show/hide bindings
@@ -149,8 +151,8 @@ PROTOTYPE._bindEvents = function(showEvents, hideEvents, showTargets, hideTarget
 	}
 
 	// Apply show/hide/toggle events
-	this._bind(showTargets, showEvents, showMethod);
-	this._bind(hideTargets, hideEvents, hideMethod);
+	this._bind(showTargets, showEvents, showCallback);
+	this._bind(hideTargets, hideEvents, hideCallback);
 };
 
 PROTOTYPE._assignInitialEvents = function(event) {
@@ -161,7 +163,7 @@ PROTOTYPE._assignInitialEvents = function(event) {
 		hideEvents = options.hide.event ? $.trim('' + options.hide.event).split(' ') : [];
 
 	// Catch remove/removeqtip events on target element to destroy redundant tooltips
-	this._bind(this.elements.target, ['remove', 'removeqtip'], function(event) {
+	this._bind(this.elements.target, ['remove', 'removeqtip'], function() {
 		this.destroy(true);
 	}, 'destroy');
 
@@ -178,24 +180,24 @@ PROTOTYPE._assignInitialEvents = function(event) {
 	 * on show targets before the tooltip has rendered. Also set onTarget when triggered to
 	 * keep mouse tracking working.
 	 */
-	this._bind(showTarget, 'mousemove', function(event) {
-		this._storeMouse(event);
+	this._bind(showTarget, 'mousemove', function(moveEvent) {
+		this._storeMouse(moveEvent);
 		this.cache.onTarget = TRUE;
 	});
 
 	// Define hoverIntent function
-	function hoverIntent(event) {
+	function hoverIntent(hoverEvent) {
 		// Only continue if tooltip isn't disabled
 		if(this.disabled || this.destroyed) { return FALSE; }
 
 		// Cache the event data
-		this.cache.event = event && $.event.fix(event);
-		this.cache.target = event && $(event.target);
+		this.cache.event = hoverEvent && $.event.fix(hoverEvent);
+		this.cache.target = hoverEvent && $(hoverEvent.target);
 
 		// Start the event sequence
 		clearTimeout(this.timers.show);
 		this.timers.show = delay.call(this,
-			function() { this.render(typeof event === 'object' || options.show.ready); },
+			function() { this.render(typeof hoverEvent === 'object' || options.show.ready); },
 			options.prerender ? 0 : options.show.delay
 		);
 	}
@@ -222,7 +224,6 @@ PROTOTYPE._assignEvents = function() {
 		containerTarget = posOptions.container,
 		viewportTarget = posOptions.viewport,
 		documentTarget = $(document),
-		bodyTarget = $(document.body),
 		windowTarget = $(window),
 
 		showEvents = options.show.event ? $.trim('' + options.show.event).split(' ') : [],

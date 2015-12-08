@@ -8,9 +8,11 @@ BGIFRAME = '<iframe class="qtip-bgiframe" frameborder="0" tabindex="-1" src="jav
 	' style="display:block; position:absolute; z-index:-1; filter:alpha(opacity=0); ' +
 		'-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";"></iframe>';
 
-function Ie6(api, qtip) {
+function Ie6(api) {
 	this._ns = 'ie6';
-	this.init( (this.qtip = api) );
+
+	this.qtip = api;
+	this.init(api);
 }
 
 $.extend(Ie6.prototype, {
@@ -20,8 +22,7 @@ $.extend(Ie6.prototype, {
 	},
 
 	init: function(qtip) {
-		var tooltip = qtip.tooltip,
-			scroll;
+		var tooltip = qtip.tooltip;
 
 		// Create the BGIFrame element if needed
 		if($('select, object').length < 1) {
@@ -61,7 +62,7 @@ $.extend(Ie6.prototype, {
 
 		// Adjust for tips plugin
 		if(plugin && tip) {
-			tipAdjust = (plugin.corner.precedance === 'x') ? [WIDTH, LEFT] : [HEIGHT, TOP];
+			tipAdjust = plugin.corner.precedance === 'x' ? [WIDTH, LEFT] : [HEIGHT, TOP];
 			offset[ tipAdjust[1] ] -= tip[ tipAdjust[0] ]();
 		}
 
@@ -100,8 +101,8 @@ $.extend(Ie6.prototype, {
 
 			// Parse into proper pixel values
 			perc = (max + min).indexOf('%') > -1 ? container.width() / 100 : 0;
-		max = ((max.indexOf('%') > -1 ? perc : 1) * parseInt(max, 10)) || width;
-			min = ((min.indexOf('%') > -1 ? perc : 1) * parseInt(min, 10)) || 0;
+			max = (max.indexOf('%') > -1 ? perc : 1 * parseInt(max, 10)) || width;
+			min = (min.indexOf('%') > -1 ? perc : 1 * parseInt(min, 10)) || 0;
 
 			// Determine new dimension size based on max/min/current values
 			width = max + min ? Math.min(Math.max(width, min), max) : width;

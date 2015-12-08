@@ -1,13 +1,12 @@
 PLUGINS.svg = function(api, svg, corner)
 {
-	var doc = $(document),
-		elem = svg[0],
+	var elem = svg[0],
 		root = $(elem.ownerSVGElement),
 		ownerDocument = elem.ownerDocument,
 		strokeWidth2 = (parseInt(svg.css('stroke-width'), 10) || 0) / 2,
-		frameOffset, mtx, transformed, viewBox,
+		frameOffset, mtx, transformed,
 		len, next, i, points,
-		result, position, dimensions;
+		result, position;
 
 	// Ascend the parentNode chain until we find an element with getBBox()
 	while(!elem.getBBox) { elem = elem.parentNode; }

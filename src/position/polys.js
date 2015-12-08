@@ -18,7 +18,8 @@ PLUGINS.polys = {
 		newWidth, newHeight;
 
 		// First pass, sanitize coords and determine outer edges
-		i = baseCoords.length; while(i--) {
+		i = baseCoords.length; 
+		while(i--) {
 			next = [ parseInt(baseCoords[--i], 10), parseInt(baseCoords[i+1], 10) ];
 
 			if(next[0] > result.position.right){ result.position.right = next[0]; }
@@ -36,8 +37,8 @@ PLUGINS.polys = {
 		// If it's the center corner...
 		if(corner.abbrev() === 'c') {
 			result.position = {
-				left: result.position.left + (result.width / 2),
-				top: result.position.top + (result.height / 2)
+				left: result.position.left + result.width / 2,
+				top: result.position.top + result.height / 2
 			};
 		}
 		else {
@@ -55,19 +56,21 @@ PLUGINS.polys = {
 				else if(corner.y === BOTTOM){ compareY = result.height - newHeight; }
 				else{ compareY += Math.floor(newHeight / 2); }
 
-				i = coords.length; while(i--)
+				i = coords.length;
+				while(i--)
 				{
 					if(coords.length < 2){ break; }
 
 					realX = coords[i][0] - result.position.left;
 					realY = coords[i][1] - result.position.top;
 
-					if((corner.x === LEFT && realX >= compareX) ||
-					(corner.x === RIGHT && realX <= compareX) ||
-					(corner.x === CENTER && (realX < compareX || realX > (result.width - compareX))) ||
-					(corner.y === TOP && realY >= compareY) ||
-					(corner.y === BOTTOM && realY <= compareY) ||
-					(corner.y === CENTER && (realY < compareY || realY > (result.height - compareY)))) {
+					if(
+						corner.x === LEFT && realX >= compareX ||
+						corner.x === RIGHT && realX <= compareX ||
+						corner.x === CENTER && (realX < compareX || realX > result.width - compareX) ||
+						corner.y === TOP && realY >= compareY ||
+						corner.y === BOTTOM && realY <= compareY ||
+						corner.y === CENTER && (realY < compareY || realY > result.height - compareY)) {
 						coords.splice(i, 1);
 					}
 				}
@@ -100,8 +103,8 @@ PLUGINS.polys = {
 			rys = ry * Math.sin( c * Math.PI );
 
 		return {
-			width: (rx * 2) - Math.abs(rxc),
-			height: (ry * 2) - Math.abs(rys),
+			width: rx * 2 - Math.abs(rxc),
+			height: ry * 2 - Math.abs(rys),
 			position: {
 				left: cx + rxc,
 				top: cy + rys

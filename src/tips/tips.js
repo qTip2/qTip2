@@ -1,7 +1,8 @@
 var TIP,
-
-// .bind()/.on() namespace
-TIPNS = '.qtip-tip',
+createVML,
+SCALE,
+PIXEL_RATIO,
+BACKING_STORE_RATIO,
 
 // Common CSS strings
 MARGIN = 'margin',
@@ -25,7 +26,7 @@ function camel(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
  * Modified from Modernizr's testPropsAll()
  * http://modernizr.com/downloads/modernizr-latest.js
  */
-var cssProps = {}, cssPrefixes = ["Webkit", "O", "Moz", "ms"];
+var cssProps = {}, cssPrefixes = ['Webkit', 'O', 'Moz', 'ms'];
 function vendorCss(elem, prop) {
 	var ucProp = prop.charAt(0).toUpperCase() + prop.slice(1),
 		props = (prop + ' ' + cssPrefixes.join(ucProp + ' ') + ucProp).split(' '),
@@ -34,9 +35,10 @@ function vendorCss(elem, prop) {
 	// If the property has already been mapped...
 	if(cssProps[prop]) { return elem.css(cssProps[prop]); }
 
-	while((cur = props[i++])) {
+	while(cur = props[i++]) {
 		if((val = elem.css(cur)) !== undefined) {
-			return cssProps[prop] = cur, val;
+			cssProps[prop] = cur;
+			return val;
 		}
 	}
 }
@@ -49,7 +51,7 @@ function intCss(elem, prop) {
 
 // VML creation (for IE only)
 if(!HASCANVAS) {
-	var createVML = function(tag, props, style) {
+	createVML = function(tag, props, style) {
 		return '<qtipvml:'+tag+' xmlns="urn:schemas-microsoft.com:vml" class="qtip-vml" '+(props||'')+
 			' style="behavior: url(#default#VML); '+(style||'')+ '" />';
 	};
@@ -57,13 +59,13 @@ if(!HASCANVAS) {
 
 // Canvas only definitions
 else {
-	var PIXEL_RATIO = window.devicePixelRatio || 1,
-		BACKING_STORE_RATIO = (function() {
-			var context = document.createElement('canvas').getContext('2d');
-			return context.backingStorePixelRatio || context.webkitBackingStorePixelRatio || context.mozBackingStorePixelRatio ||
-					context.msBackingStorePixelRatio || context.oBackingStorePixelRatio || 1;
-		}()),
-		SCALE = PIXEL_RATIO / BACKING_STORE_RATIO;
+	PIXEL_RATIO = window.devicePixelRatio || 1;
+	BACKING_STORE_RATIO = (function() {
+		var context = document.createElement('canvas').getContext('2d');
+		return context.backingStorePixelRatio || context.webkitBackingStorePixelRatio || context.mozBackingStorePixelRatio ||
+				context.msBackingStorePixelRatio || context.oBackingStorePixelRatio || 1;
+	})();
+	SCALE = PIXEL_RATIO / BACKING_STORE_RATIO;
 }
 
 
@@ -74,7 +76,8 @@ function Tip(qtip, options) {
 	this.size = [ options.width, options.height ];
 
 	// Initialize
-	this.init( (this.qtip = qtip) );
+	this.qtip = qtip;
+	this.init(qtip);
 }
 
 $.extend(Tip.prototype, {
@@ -121,7 +124,7 @@ $.extend(Tip.prototype, {
 	_useTitle: function(corner) {
 		var titlebar = this.qtip.elements.titlebar;
 		return titlebar && (
-			corner.y === TOP || (corner.y === CENTER && this.element.position().top + (this.size[1] / 2) + this.options.offset < titlebar.outerHeight(TRUE))
+			corner.y === TOP || corner.y === CENTER && this.element.position().top + this.size[1] / 2 + this.options.offset < titlebar.outerHeight(TRUE)
 		);
 	},
 
@@ -147,11 +150,11 @@ $.extend(Tip.prototype, {
 		var elements = this.qtip.elements,
 			prop = BORDER + camel(side) + 'Width';
 
-		return (use ? intCss(use, prop) : (
+		return (use ? intCss(use, prop) : 
 			intCss(elements.content, prop) ||
 			intCss(this._useTitle(corner) && elements.titlebar || elements.content, prop) ||
 			intCss(elements.tooltip, prop)
-		)) || 0;
+		) || 0;
 	},
 
 	_parseRadius: function(corner) {
@@ -165,7 +168,7 @@ $.extend(Tip.prototype, {
 
 	_invalidColour: function(elem, prop, compare) {
 		var val = elem.css(prop);
-		return !val || (compare && val === elem.css(compare)) || INVALID.test(val) ? FALSE : val;
+		return !val || compare && val === elem.css(compare) || INVALID.test(val) ? FALSE : val;
 	},
 
 	_parseColours: function(corner) {
@@ -191,8 +194,8 @@ $.extend(Tip.prototype, {
 
 	_calculateSize: function(corner) {
 		var y = corner.precedance === Y,
-			width = this.options['width'],
-			height = this.options['height'],
+			width = this.options.width,
+			height = this.options.height,
 			isCenter = corner.abbrev() === 'c',
 			base = (y ? width: height) * (isCenter ? 0.5 : 1),
 			pow = Math.pow,
@@ -200,7 +203,10 @@ $.extend(Tip.prototype, {
 			bigHyp, ratio, result,
 
 		smallHyp = Math.sqrt( pow(base, 2) + pow(height, 2) ),
-		hyp = [ (this.border / base) * smallHyp, (this.border / height) * smallHyp ];
+		hyp = [
+			this.border / base * smallHyp,
+			this.border / height * smallHyp
+		];
 
 		hyp[2] = Math.sqrt( pow(hyp[0], 2) - pow(this.border, 2) );
 		hyp[3] = Math.sqrt( pow(hyp[1], 2) - pow(this.border, 2) );
@@ -254,7 +260,8 @@ $.extend(Tip.prototype, {
 		var c = this.corner = (HASCANVAS || BROWSER.ie) && this._parseCorner(this.options.corner);
 
 		// If we have a tip corner...
-		if( (this.enabled = !!this.corner && this.corner.abbrev() !== 'c') ) {
+		this.enabled = !!this.corner && this.corner.abbrev() !== 'c';
+		if(this.enabled) {
 			// Cache it
 			this.qtip.cache.corner = c.clone();
 
@@ -279,7 +286,7 @@ $.extend(Tip.prototype, {
 			mimic = options.mimic,
 			round = Math.round,
 			color, precedance, context,
-			coords, bigCoords, translate, newSize, border, BACKING_STORE_RATIO;
+			coords, bigCoords, translate, newSize, border;
 
 		// Re-determine tip if not already set
 		if(!corner) { corner = this.qtip.cache.corner || this.corner; }
@@ -386,10 +393,10 @@ $.extend(Tip.prototype, {
 
 			// Set initial CSS
 			inner.css({
-				coordsize: (newSize[0]+border) + ' ' + (newSize[1]+border),
+				coordsize: newSize[0]+border + ' ' + newSize[1]+border,
 				antialias: ''+(mimic.string().indexOf(CENTER) > -1),
-				left: translate[0] - (translate[2] * Number(precedance === X)),
-				top: translate[1] - (translate[2] * Number(precedance === Y)),
+				left: translate[0] - translate[2] * Number(precedance === X),
+				top: translate[1] - translate[2] * Number(precedance === Y),
 				width: newSize[0] + border,
 				height: newSize[1] + border
 			})
@@ -398,7 +405,7 @@ $.extend(Tip.prototype, {
 
 				// Set shape specific attributes
 				$this[ $this.prop ? 'prop' : 'attr' ]({
-					coordsize: (newSize[0]+border) + ' ' + (newSize[1]+border),
+					coordsize: newSize[0]+border + ' ' + newSize[1]+border,
 					path: coords,
 					fillcolor: color[0],
 					filled: !!i,
@@ -408,7 +415,7 @@ $.extend(Tip.prototype, {
 
 				// Check if border is enabled and add stroke element
 				!i && $this.html( createVML(
-					'stroke', 'weight="'+(border*2)+'px" color="'+color[1]+'" miterlimit="1000" joinstyle="miter"'
+					'stroke', 'weight="'+border*2+'px" color="'+color[1]+'" miterlimit="1000" joinstyle="miter"'
 				) );
 			});
 		}
@@ -433,8 +440,7 @@ $.extend(Tip.prototype, {
 			elements = this.qtip.elements,
 			tip = this.element,
 			userOffset = this.options.offset,
-			isWidget = elements.tooltip.hasClass('ui-widget'),
-			position = {  },
+			position = {},
 			precedance, corners;
 
 		// Inherit corner if not provided
@@ -462,7 +468,7 @@ $.extend(Tip.prototype, {
 				bc = self._parseWidth(corner, side, elements.content);
 				br = self._parseRadius(corner);
 
-				position[ side ] = Math.max(-self.border, i ? bc : (userOffset + (br > b ? br : -b)));
+				position[ side ] = Math.max(-self.border, i ? bc : userOffset + (br > b ? br : -b));
 			}
 		});
 
@@ -474,7 +480,7 @@ $.extend(Tip.prototype, {
 		return position;
 	},
 
-	reposition: function(event, api, pos, viewport) {
+	reposition: function(event, api, pos) {
 		if(!this.enabled) { return; }
 
 		var cache = api.cache,
@@ -493,7 +499,8 @@ $.extend(Tip.prototype, {
 			}
 			else if(direction !== SHIFT && adjust[side]){
 				newCorner[precedance] = newCorner[precedance] === CENTER ?
-					(adjust[side] > 0 ? side : opposite) : (newCorner[precedance] === side ? opposite : side);
+					adjust[side] > 0 ? side : opposite :
+					newCorner[precedance] === side ? opposite : side;
 			}
 		}
 
@@ -535,8 +542,14 @@ $.extend(Tip.prototype, {
 		offset.user = this.offset;
 
 		// Perform shift adjustments
-		if(shift.left = (horizontal === SHIFT && !!adjust.left)) { shiftonly(X, LEFT, RIGHT); }
-		if(shift.top = (vertical === SHIFT && !!adjust.top)) { shiftonly(Y, TOP, BOTTOM); }
+		shift.left = horizontal === SHIFT && !!adjust.left;
+		if(shift.left) {
+			shiftonly(X, LEFT, RIGHT);
+		}
+		shift.top = vertical === SHIFT && !!adjust.top;
+		if(shift.top) {
+			shiftonly(Y, TOP, BOTTOM);
+		}
 
 		/*
 		* If the tip is adjusted in both dimensions, or in a
@@ -544,7 +557,7 @@ $.extend(Tip.prototype, {
 		* outer border, hide it!
 		*/
 		this.element.css(css).toggle(
-			!((shift.x && shift.y) || (newCorner.x === CENTER && shift.y) || (newCorner.y === CENTER && shift.x))
+			!(shift.x && shift.y || newCorner.x === CENTER && shift.y || newCorner.y === CENTER && shift.x)
 		);
 
 		// Adjust position to accomodate tip dimensions

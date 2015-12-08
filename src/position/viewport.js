@@ -10,7 +10,6 @@ PLUGINS.viewport = function(api, position, posOptions, targetWidth, targetHeight
 		methodY = method[1] || method[0],
 		viewport = posOptions.viewport,
 		container = posOptions.container,
-		cache = api.cache,
 		adjusted = { left: 0, top: 0 },
 		fixed, newMy, containerOffset, containerStatic,
 		viewportWidth, viewportHeight, viewportScroll, viewportOffset;
@@ -32,7 +31,7 @@ PLUGINS.viewport = function(api, position, posOptions, targetWidth, targetHeight
 	viewportOffset = viewport.offset() || adjusted;
 
 	// Generic calculation method
-	function calculate(side, otherSide, type, adjust, side1, side2, lengthName, targetLength, elemLength) {
+	function calculate(side, otherSide, type, adjustment, side1, side2, lengthName, targetLength, elemLength) {
 		var initialPos = position[side1],
 			mySide = my[side],
 			atSide = at[side],
@@ -70,17 +69,17 @@ PLUGINS.viewport = function(api, position, posOptions, targetWidth, targetHeight
 		// flip/flipinvert
 		else {
 			// Update adjustment amount depending on if using flipinvert or flip
-			adjust *= (type === FLIPINVERT ? 2 : 0);
+			adjustment *= type === FLIPINVERT ? 2 : 0;
 
 			// Check for overflow on the left/top
 			if(overflow1 > 0 && (mySide !== side1 || overflow2 > 0)) {
-				position[side1] -= offset + adjust;
+				position[side1] -= offset + adjustment;
 				newMy.invert(side, side1);
 			}
 
 			// Check for overflow on the bottom/right
 			else if(overflow2 > 0 && (mySide !== side2 || overflow1 > 0)  ) {
-				position[side1] -= (mySide === CENTER ? -offset : offset) + adjust;
+				position[side1] -= (mySide === CENTER ? -offset : offset) + adjustment;
 				newMy.invert(side, side2);
 			}
 

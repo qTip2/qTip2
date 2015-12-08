@@ -4,8 +4,7 @@ PROTOTYPE.focus = function(event) {
 	var qtips = $(SELECTOR),
 		tooltip = this.tooltip,
 		curIndex = parseInt(tooltip[0].style.zIndex, 10),
-		newIndex = QTIP.zindex + qtips.length,
-		focusedElem;
+		newIndex = QTIP.zindex + qtips.length;
 
 	// Only update the z-index if it has changed and tooltip is not already focused
 	if(!tooltip.hasClass(CLASS_FOCUS)) {

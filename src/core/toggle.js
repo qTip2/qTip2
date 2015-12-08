@@ -25,14 +25,13 @@ PROTOTYPE.toggle = function(state, event) {
 
 	var type = state ? 'show' : 'hide',
 		opts = this.options[type],
-		otherOpts = this.options[ !state ? 'show' : 'hide' ],
 		posOptions = this.options.position,
 		contentOptions = this.options.content,
 		width = this.tooltip.css('width'),
 		visible = this.tooltip.is(':visible'),
 		animate = state || opts.target.length === 1,
 		sameTarget = !event || opts.target.length < 2 || cache.target[0] === event.target,
-		identicalState, allow, showEvent, delay, after;
+		identicalState, allow, after;
 
 	// Detect state if valid one isn't provided
 	if((typeof state).search('boolean|number')) { state = !visible; }
@@ -78,7 +77,7 @@ PROTOTYPE.toggle = function(state, event) {
 		// Hide other tooltips if tooltip is solo
 		if(!!opts.solo) {
 			(typeof opts.solo === 'string' ? $(opts.solo) : $(SELECTOR, opts.solo))
-				.not(tooltip).not(opts.target).qtip('hide', $.Event('tooltipsolo'));
+				.not(tooltip).not(opts.target).qtip('hide', new $.Event('tooltipsolo'));
 		}
 	}
 	else {
