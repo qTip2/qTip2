@@ -1,12 +1,12 @@
 /*
- * qTip2 - Pretty powerful tooltips - v3.0.1
+ * qTip2 - Pretty powerful tooltips - v3.0.1-3-g
  * http://qtip2.com
  *
  * Copyright (c) 2015 
  * Released under the MIT licenses
  * http://jquery.org/license
  *
- * Date: Tue Dec 8 2015 07:10 GMT+0000
+ * Date: Tue Dec 8 2015 07:15 GMT+0000
  * Plugins: tips modal viewport svg imagemap ie6
  * Styles: core basic css3
  */
@@ -1928,7 +1928,7 @@ if(!$.ui) {
 	};
 }
 ;// qTip version
-QTIP.version = '3.0.1';
+QTIP.version = '3.0.1-3-g';
 
 // Base ID for all qTips
 QTIP.nextid = 0;
@@ -3069,7 +3069,7 @@ $.extend(TRUE, QTIP.defaults, {
 			}
 
 			// Make sure we haven't made things worse with the adjustment and reset if so
-			if(position[side1] < viewportScroll && -position[side1] > overflow2) {
+			if(position[side1] < viewportScroll[side1] && -position[side1] > overflow2) {
 				position[side1] = initialPos; newMy = my.clone();
 			}
 		}
