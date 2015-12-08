@@ -35,12 +35,12 @@ module.exports = function(grunt) {
 				modules: 'node_modules'
 			},
 
-			// Wrapper over compound js
-			wrapper: {
-				js: [
-					'<%=dirs.src%>/core/intro.js',
-					'<%=dirs.src%>/core/outro.js'
-				]
+			// Wrapper files for final built dist files
+			wrappers: {
+				js: {
+					intro: '<%=dirs.src%>/core/intro.js',
+					outro: '<%=dirs.src%>/core/outro.js'
+				}
 			},
 
 			// Core files in order
