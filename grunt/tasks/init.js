@@ -7,13 +7,6 @@ module.exports = function(grunt) {
 			styles = (grunt.option('styles') || Object.keys( grunt.config('styles')).join(' ')).replace(/ /g, ' ').split(' '),
 			valid, lib;
 
-		// Ensure all git modules are checked out
-		String(grunt.file.read('.gitmodules')).match(/\[submodule "libs\/[^\"]+"\]/g).forEach(function(lib) {
-			if(!grunt.file.exists( lib.replace(/\[submodule "([^\"]+)"\]/g, '$1') ) ) {
-				throw new Error('Can\'t locate all libs/ dependancies... please run "git module init" then "git module update"');
-			}
-		});
-
 		// Setup JS/CSS arrays
 		var js = grunt.config('core.js'),
 			css = grunt.config('core.css'),

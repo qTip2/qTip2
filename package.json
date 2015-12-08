@@ -32,6 +32,9 @@
       "url": "https://github.com/qTip2/qTip2/blob/master/LICENSE-MIT"
     }
   ],
+  "dependencies": {
+    "imagesloaded": "^3.2.0"
+  },
   "devDependencies": {
     "grunt": "~0.4.5",
     "grunt-cli": "~0.1.13",

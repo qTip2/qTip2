@@ -14,19 +14,5 @@ module.exports = {
 		// See "init" task for src
 		options: { separator: '\n\n' },
 		dest: '<%=dirs.dist%>/jquery.qtip.css'
-	},
-	libs: {
-		options: {
-			stripBanners: false,
-			separator: '\n\n',
-			banner: ''
-		},
-		files: {
-			'<%=dirs.libs%>/imagesloaded/imagesloaded.pkg.js': [
-				'<%=dirs.libs%>/imagesloaded/bower_components/eventEmitter/EventEmitter.js',
-				'<%=dirs.libs%>/imagesloaded/bower_components/eventie/eventie.js',
-				'<%=dirs.libs%>/imagesloaded/imagesloaded.js'
-			]
-		}
 	}
 };

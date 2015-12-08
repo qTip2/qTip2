@@ -13,8 +13,7 @@ module.exports = function(grunt) {
 		},
 		dist: {
 			files: {
-				'<%=dirs.dist%>/jquery.qtip.min.js': ['<%=dirs.dist%>/jquery.qtip.js'],
-				'<%=dirs.dist%>/imagesloaded.pkg.min.js': ['<%=dirs.libs%>/imagesloaded/imagesloaded.pkg.js']
+				'<%=dirs.dist%>/jquery.qtip.min.js': ['<%=dirs.dist%>/jquery.qtip.js']
 			}
 		}
 	}

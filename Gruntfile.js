@@ -28,7 +28,12 @@ module.exports = function(grunt) {
 			},
 
 			// Directories (dist changed in init())
-			dirs: { src: 'src', dist: 'dist', libs: 'libs' },
+			dirs: {
+				src: 'src',
+				dist: 'dist',
+				libs: 'libs',
+				modules: 'node_modules'
+			},
 
 			// Core files in order
 			core: {
