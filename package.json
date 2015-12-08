@@ -14,7 +14,8 @@
     "start": "grunt",
     "test": "grunt lint",
     "preversion": "npm test",
-    "version": "npm run build:stable && git add dist",
+    "version": "npm run build:stable && npm run version:add",
+    "version:add": "git add dist bower.json",
     "postversion": "git push"
   },
   "repository": {
