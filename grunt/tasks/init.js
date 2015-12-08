@@ -46,7 +46,7 @@ module.exports = function(grunt) {
 		js.push('<%=dirs.src%>/core/outro.js');
 
 		// Update concatenation config
-		grunt.config('concat.dist.src', js);
+		grunt.config('concat.js.src', js);
 		grunt.config('concat.css.src', css);
 
 		// Setup in-file text replacements (version, date etc)
@@ -81,7 +81,7 @@ module.exports = function(grunt) {
 				: '';
 
 			// Set replacement variables
-			grunt.config('replace.dist.options.patterns', [{
+			grunt.config('replace.js.options.patterns', [{
 				json: {
 					'BUILDPROPS': buildprops,
 					'MINBUILDPROPS': minbuildprops,

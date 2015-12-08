@@ -4,13 +4,4 @@
 .DS_Store
 /npm-debug.log
 node_modules/
-bower/
-converter/
-bin/
-bower/
-converter/
-grunt/
-libs/
-qtest/
-tests/
-wiki/
+**/*.nfs*

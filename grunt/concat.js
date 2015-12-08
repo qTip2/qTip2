@@ -1,12 +1,10 @@
-'use strict';
-
 module.exports = {
 	options: {
 		stripBanners: true,
 		separator: ';',
 		banner: '<%=meta.banners.full%>'
 	},
-	dist: {
+	js: {
 		// See "init" task for src
 		dest: '<%=dirs.dist%>/jquery.qtip.js'
 	},

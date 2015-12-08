@@ -1,8 +1,12 @@
-'use strict';
-
 module.exports = {
-	beforeconcat: [
-		'grunt.js', '<%=dirs.src%>/*/*.js',
-		'!<%=dirs.src%>/*/intro.js', '!<%=dirs.src%>/*/outro.js' // Ignore intro/outro files
-	]
+	js: {
+		src: [
+			'Gruntfile.js',
+			'<%=dirs.src%>/*/*.js',
+
+			// Ignore intro/outro files
+			'!<%=dirs.src%>/core/intro.js', 
+			'!<%=dirs.src%>/core/outro.js' 
+		]
+	}
 };
