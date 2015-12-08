@@ -14,7 +14,7 @@
     "start": "grunt",
     "test": "grunt lint",
     "preversion": "npm test",
-    "version": "npm run build:stable",
+    "version": "npm run build:stable && git add dist",
     "postversion": "git push"
   },
   "repository": {
