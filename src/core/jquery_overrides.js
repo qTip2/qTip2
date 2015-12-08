@@ -10,7 +10,7 @@ $.each({
 				title = 'title',
 				api = $.data(self, 'qtip');
 
-			if(attr === title && api && 'object' === typeof api && api.options.suppress) {
+			if(attr === title && api && api.options && 'object' === typeof api && 'object' === typeof api.options && api.options.suppress) {
 				if(arguments.length < 2) {
 					return $.attr(self, oldtitle);
 				}
