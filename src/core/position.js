@@ -224,7 +224,7 @@ PROTOTYPE.reposition.offset = function(elem, pos, container) {
 
 	// Compensate for non-static containers offset
 	do {
-		if((position = $.css(parent, 'position')) !== 'static') {
+		if((!$(parent).is('body')) && ((position = $.css(parent, 'position')) !== 'static')) {
 			if(position === 'fixed') {
 				parentOffset = parent.getBoundingClientRect();
 				scroll(ownerDocument, -1);
