@@ -3,7 +3,10 @@ function invalidOpt(a) {
 }
 
 function invalidContent(c) {
-	return !($.isFunction(c) || c && c.attr) || c.length || $.type(c) === 'object' && (c.jquery || c.then);
+	return !($.isFunction(c) || 
+            c && c.attr || 
+            c.length || 
+            $.type(c) === 'object' && (c.jquery || c.then));
 }
 
 // Option object sanitizer
