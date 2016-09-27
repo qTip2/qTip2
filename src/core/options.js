@@ -144,7 +144,7 @@ CHECKS = PROTOTYPE.checks = {
 		// Position checks
 		'^position.(my|at)$': function(obj, o, v){
 			if('string' === typeof v) {
-				this.position[o] = obj[o] = new CORNER(v, o === 'at');
+				this.options.position[o] = obj[o] = new CORNER(v, o === 'at');
 			}
 		},
 		'^position.container$': function(obj, o, v){
