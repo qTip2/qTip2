@@ -405,7 +405,7 @@ $.extend(Tip.prototype, {
 
 				// Set shape specific attributes
 				$this[ $this.prop ? 'prop' : 'attr' ]({
-					coordsize: (newSize[0]+border) + ' ' + (newSize[1]+border),
+					coordsize: (newSize[0]+border).toString() + ' ' + (newSize[1]+border).toString(),
 					path: coords,
 					fillcolor: color[0],
 					filled: !!i,
