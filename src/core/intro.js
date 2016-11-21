@@ -4,14 +4,17 @@
 /* Cache window, document, undefined */
 (function( window, document, undefined ) {
 
-// Uses AMD or browser globals to create a jQuery plugin.
+// Uses CommonJS, AMD, or browser globals to create a jQuery plugin.
 (function( factory ) {
 	"use strict";
-	if(typeof define === 'function' && define.amd) {
-		define(['jquery'], factory);
-	}
-	else if(jQuery && !jQuery.fn.qtip) {
+	if(typeof jQuery !== 'undefined' && !jQuery.fn.qtip) {
 		factory(jQuery);
+	}
+	else if(typeof module !== 'undefined' && module.exports) {
+		module.exports = factory;
+	}
+	else if(typeof define === 'function' && define.amd) {
+		define(['jquery'], factory);
 	}
 }
 (function($) {
