@@ -45,7 +45,7 @@
       "url": "https://github.com/qTip2/qTip2/blob/master/LICENSE-MIT"
     }
   ],
-  "dependencies": {
+  "peerDependencies": {
     "jquery": ">=1.6.0",
     "imagesloaded": ">=3.0.0"
   },
