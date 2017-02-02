@@ -46,7 +46,7 @@
     }
   ],
   "dependencies": {
-    "jquery": ">=1.6.0",
+    "jquery": ">=1.7.0",
     "imagesloaded": ">=3.0.0"
   },
   "devDependencies": {
