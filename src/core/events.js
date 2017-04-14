@@ -93,7 +93,7 @@ PROTOTYPE._bind = function(targets, events, method, suffix, context) {
 	return this;
 };
 PROTOTYPE._unbind = function(targets, suffix) {
-	targets && $(targets).unbind('.' + this._id + (suffix ? '-'+suffix : ''));
+	targets && $(targets).off('.' + this._id + (suffix ? '-'+suffix : ''));
 	return this;
 };
 
