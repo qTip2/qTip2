@@ -86,7 +86,7 @@ PROTOTYPE._storeMouse = function(event) {
 PROTOTYPE._bind = function(targets, events, method, suffix, context) {
 	if(!targets || !method || !events.length) { return; }
 	var ns = '.' + this._id + (suffix ? '-'+suffix : '');
-	$(targets).bind(
+	$(targets).on(
 		(events.split ? events : events.join(ns + ' ')) + ns,
 		$.proxy(method, context || this)
 	);

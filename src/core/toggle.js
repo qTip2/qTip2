@@ -65,7 +65,7 @@ PROTOTYPE.toggle = function(state, event) {
 
 		// Cache mousemove events for positioning purposes (if not already tracking)
 		if(!trackingBound && posOptions.target === 'mouse' && posOptions.adjust.mouse) {
-			$(document).bind('mousemove.'+NAMESPACE, this._storeMouse);
+			$(document).on('mousemove.'+NAMESPACE, this._storeMouse);
 			trackingBound = TRUE;
 		}
 
