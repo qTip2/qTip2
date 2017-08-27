@@ -19,6 +19,7 @@
     "postversion": "git push --follow-tags && npm publish",
     "recompile": "npm run build:all && git commit dist -m \"Recompile distributable files\"; git push"
   },
+  "style": "dist/jquery.qtip.css",
   "repository": {
     "type": "git",
     "url": "git://github.com/qTip2/qTip2.git"
