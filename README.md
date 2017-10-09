@@ -15,11 +15,11 @@ More documentation and information is available at the [official site][site].
 
 ## Browser support
 <div style="text-transform: sub; text-align: center;">
-  <img src="http://media1.juggledesign.com/qtip2/images/browsers/64-chrome.png" title="Chrome 8+" /> 8+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="http://media1.juggledesign.com/qtip2/images/browsers/64-firefox.png" title="Firefox 3+" /> 3+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="http://media1.juggledesign.com/qtip2/images/browsers/64-ie.png" title="Internet Explorer 6+" /> 6+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="http://media1.juggledesign.com/qtip2/images/browsers/64-opera.png" title="Opera 9+" /> 9+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="http://media1.juggledesign.com/qtip2/images/browsers/64-safari.png" title="Safari 2+, iOS 4+" /> 2+, iOS 4+
+  <img src="https://media1.juggledesign.com/qtip2/images/browsers/64-chrome.png?v=2" title="Chrome 8+" /> 8+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="https://media1.juggledesign.com/qtip2/images/browsers/64-firefox.png?v=2" title="Firefox 3+" /> 3+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="https://media1.juggledesign.com/qtip2/images/browsers/64-ie.png?v=2" title="Internet Explorer 6+" /> 6+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="https://media1.juggledesign.com/qtip2/images/browsers/64-opera.png?v=2" title="Opera 9+" /> 9+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="https://media1.juggledesign.com/qtip2/images/browsers/64-safari.png?v=2" title="Safari 2+, iOS 4+" /> 2+, iOS 4+
 </div>
 
 ## Getting qTip<sup>2</sup>
