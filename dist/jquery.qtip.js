@@ -1,12 +1,12 @@
 /*
- * qTip2 - Pretty powerful tooltips - v3.0.3
+ * qTip2 - Pretty powerful tooltips - v3.0.3-7-g
  * http://qtip2.com
  *
- * Copyright (c) 2016 
+ * Copyright (c) 2020 
  * Released under the MIT licenses
  * http://jquery.org/license
  *
- * Date: Wed May 11 2016 10:31 GMT+0100+0100
+ * Date: Wed Mar 4 2020 11:44 GMT+0000+0000
  * Plugins: tips modal viewport svg imagemap ie6
  * Styles: core basic css3
  */
@@ -1775,7 +1775,7 @@ function init(elem, id, opts) {
 
 	// Remove title attribute and store it if present
 	if(config.suppress && (title = elem.attr('title'))) {
-		// Final attr call fixes event delegatiom and IE default tooltip showing problem
+		// Final attr call fixes event delegation and IE default tooltip showing problem
 		elem.removeAttr('title').attr(oldtitle, title).attr('title', '');
 	}
 
@@ -1910,28 +1910,8 @@ QTIP.api = {};
 	$.fn[name] = function() {
 		return func.apply(this, arguments) || old.apply(this, arguments);
 	};
-});
-
-/* Fire off 'removeqtip' handler in $.cleanData if jQuery UI not present (it already does similar).
- * This snippet is taken directly from jQuery UI source code found here:
- *     http://code.jquery.com/ui/jquery-ui-git.js
- */
-if(!$.ui) {
-	$['cleanData'+replaceSuffix] = $.cleanData;
-	$.cleanData = function( elems ) {
-		for(var i = 0, elem; (elem = $( elems[i] )).length; i++) {
-			if(elem.attr(ATTR_HAS)) {
-				/* eslint-disable no-empty */
-				try { elem.triggerHandler('removeqtip'); }
-				catch( e ) {}
-				/* eslint-enable no-empty */
-			}
-		}
-		$['cleanData'+replaceSuffix].apply(this, arguments);
-	};
-}
-;// qTip version
-QTIP.version = '3.0.3';
+});;// qTip version
+QTIP.version = '3.0.3-7-g';
 
 // Base ID for all qTips
 QTIP.nextid = 0;
