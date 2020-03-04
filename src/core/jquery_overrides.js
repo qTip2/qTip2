@@ -51,22 +51,3 @@ $.each({
 		return func.apply(this, arguments) || old.apply(this, arguments);
 	};
 });
-
-/* Fire off 'removeqtip' handler in $.cleanData if jQuery UI not present (it already does similar).
- * This snippet is taken directly from jQuery UI source code found here:
- *     http://code.jquery.com/ui/jquery-ui-git.js
- */
-if(!$.ui) {
-	$['cleanData'+replaceSuffix] = $.cleanData;
-	$.cleanData = function( elems ) {
-		for(var i = 0, elem; (elem = $( elems[i] )).length; i++) {
-			if(elem.attr(ATTR_HAS)) {
-				/* eslint-disable no-empty */
-				try { elem.triggerHandler('removeqtip'); }
-				catch( e ) {}
-				/* eslint-enable no-empty */
-			}
-		}
-		$['cleanData'+replaceSuffix].apply(this, arguments);
-	};
-}
