@@ -24,13 +24,7 @@ More documentation and information is available at the [official site][site].
 
 ## Getting qTip<sup>2</sup>
 
-### Stable releases
 Grab the latest releases of qTip<sup>2</sup> from the [cdnjs][cdnjs] or [jsDelivr][jsdelivr] [CDN][wikipedia-cdn]s.
-
-You can also customize the [plugins][plugins] included using the [download page][download] of the [official site][site].
-
-### Nightly (and older) releases
-You can checkout the various releases of qTip<sup>2</sup> (including the latest nightly builds) at the [release archive][archive].
 
 ## Documentation
 Take a look at the [documentation][docs] for extensive docs and guides.
