@@ -1,3 +1,5 @@
+## qTip2 is no longer maintained. Consider moving to a newer library if you need support or new features!
+
 [![Build Status](https://travis-ci.org/qTip2/qTip2.svg)](https://travis-ci.org/qTip2/qTip2)
 [![devDependency Status](https://david-dm.org/qTip2/qTip2/dev-status.svg?theme=shields.io)](https://david-dm.org/qTip2/qTip2#info=devDependencies)
 [![jsDelivr Hits](https://data.jsdelivr.com/v1/package/npm/qtip2/badge?style=rounded)](https://www.jsdelivr.com/package/npm/qtip2)
