@@ -52,18 +52,13 @@ Copyright (c) 2011-2018 Craig Michael Thompson. Licensed under the MIT license. 
 ## Special thanks
 Big shout-out to ["Cowboy" Ben Alman][cowboy] for providing the [grunt][grunt] build system used by qTip<sup>2</sup>
 
-[site]: http://qtip2.com/
-[archive]: http://qtip2.com/v/
-[docs]: http://qtip2.com/guides/
-[download]: http://qtip2.com/download
-[changelog]: http://qtip2.com/changelog
-[build]: http://qtip2.com/guides#custom-build
-[style]: http://qtip2.com/demos#styling
-[plugins]: http://qtip2.com/plugins
-[tips]: http://qtip2.com/plugins#tips
-[imgmap]: http://qtip2.com/plugins#imagemap
+[site]: https://github.com/qTip2/qTip2/
+[docs]: https://github.com/qTip2/qTip2/wiki
+[changelog]: https://github.com/qTip2/qTip2/wiki/Changelog
+[plugins]: https://github.com/qTip2/qTip2/wiki
+[tips]: https://github.com/qTip2/qTip2/wiki/Tips
+[imgmap]: hhttps://github.com/qTip2/qTip2/wiki/image-map
 
-[forums]: http://craigsworks.com/projects/forums/forum-qtip2
 [license]: http://jquery.org/license
 
 [cowboy]: http://github.com/cowboy
