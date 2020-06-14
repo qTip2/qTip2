@@ -32,10 +32,6 @@ You can also customize the [plugins][plugins] included using the [download page]
 ### Nightly (and older) releases
 You can checkout the various releases of qTip<sup>2</sup> (including the latest nightly builds) at the [release archive][archive].
 
-### Roll your own
-You can also build your own qTip<sup>2</sup> script that includes select [plugins][plugins] and [styles][style] to reduce the overall file size and remove features
-you don't plan on using. Find more information about this [here][build]
-
 ## Documentation
 Take a look at the [documentation][docs] for extensive docs and guides.
 
@@ -53,6 +49,7 @@ Copyright (c) 2011-2018 Craig Michael Thompson. Licensed under the MIT license. 
 Big shout-out to ["Cowboy" Ben Alman][cowboy] for providing the [grunt][grunt] build system used by qTip<sup>2</sup>
 
 [site]: https://github.com/qTip2/qTip2/
+[styles]: https://github.com/qTip2/qTip2/wiki/Style-Guide
 [docs]: https://github.com/qTip2/qTip2/wiki
 [changelog]: https://github.com/qTip2/qTip2/wiki/Changelog
 [plugins]: https://github.com/qTip2/qTip2/wiki
