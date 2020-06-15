@@ -14,6 +14,9 @@ PROTOTYPE.toggle = function(state, event) {
 
 		// Cache event
 		cache.event = $.event.fix(event);
+	} else {
+		// Clear cache when there's no original event
+		cache.event = NULL;
 	}
 
 	// If we're currently waiting and we've just hidden... stop it
