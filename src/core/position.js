@@ -215,19 +215,25 @@ PROTOTYPE.reposition.offset = function(elem, pos, container) {
 	var ownerDocument = $(elem[0].ownerDocument),
 		quirks = !!BROWSER.ie && document.compatMode !== 'CSS1Compat',
 		parent = container[0],
-		scrolled, position, parentOffset, overflow;
+		position, parentOffset,
+		scrolledX, scrolledY,
+		overflowX, overflowY;
 
-	function scroll(e, i) {
+	function scrollX(e, i) {
 		pos.left += i * e.scrollLeft();
+	}
+	function scrollY(e, i) {
 		pos.top += i * e.scrollTop();
 	}
 
 	// Compensate for non-static containers offset
 	do {
 		if((position = $.css(parent, 'position')) !== 'static') {
+
 			if(position === 'fixed') {
 				parentOffset = parent.getBoundingClientRect();
-				scroll(ownerDocument, -1);
+				scrollX(ownerDocument, -1);
+				scrollY(ownerDocument, -1);
 			}
 			else {
 				parentOffset = $(parent).position();
@@ -238,15 +244,22 @@ PROTOTYPE.reposition.offset = function(elem, pos, container) {
 			pos.left -= parentOffset.left + (parseFloat($.css(parent, 'marginLeft')) || 0);
 			pos.top -= parentOffset.top + (parseFloat($.css(parent, 'marginTop')) || 0);
 
+			if (parent.tagName.toLowerCase() === 'BODY') { break; }
+
 			// If this is the first parent element with an overflow of "scroll" or "auto", store it
-			if(!scrolled && (overflow = $.css(parent, 'overflow')) !== 'hidden' && overflow !== 'visible') { scrolled = $(parent); }
+			if(!scrolledX && (overflowX = $.css(parent, 'overflow-x')) !== 'hidden' && overflowX !== 'visible') { scrolledX = $(parent); }
+			if(!scrolledY && (overflowY = $.css(parent, 'overflow-y')) !== 'hidden' && overflowY !== 'visible') { scrolledY = $(parent); }
+
 		}
 	}
 	while(parent = parent.offsetParent);
 
 	// Compensate for containers scroll if it also has an offsetParent (or in IE quirks mode)
-	if(scrolled && (scrolled[0] !== ownerDocument[0] || quirks)) {
-		scroll(scrolled, 1);
+	if(scrolledX && (scrolledX[0] !== ownerDocument[0] || quirks)) {
+		scrollX(scrolledX, 1);
+	}
+	if(scrolledY && (scrolledY[0] !== ownerDocument[0] || quirks)) {
+		scrollY(scrolledY, 1);
 	}
 
 	return pos;
@@ -271,8 +284,8 @@ C.string = function(join) {
 	var x = this.x, y = this.y;
 
 	var result = x !== y ?
-		x === 'center' || y !== 'center' && (this.precedance === Y || this.forceY) ? 
-			[y,x] : 
+		x === 'center' || y !== 'center' && (this.precedance === Y || this.forceY) ?
+			[y,x] :
 			[x,y] :
 		[x];
 
