@@ -10,6 +10,7 @@ function delay(callback, duration) {
 
 function showMethod(event) {
 	if(this.tooltip.hasClass(CLASS_DISABLED)) { return; }
+	if(!this.timers) { return; }
 
 	// Clear hide timers
 	clearTimeout(this.timers.show);
