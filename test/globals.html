@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+    <title>globals test page</title>
+    <script src="../node_modules/jquery/dist/jquery.js"></script>
+    <script src="../dist/jquery.qtip.js"></script>
+
+    <link rel="stylesheet" href="../dist/jquery.qtip.css" />
+  </head>
+
+  <body>
+    <button id="test-button">Click me for a qtip</button>
+
+    <script>
+      $('#test-button').qtip({
+        content: 'Hello, world!',
+        show: {
+          event: 'click'
+        },
+        hide: {
+          event: 'unfocus'
+        }
+      });
+    </script>
+  </body>
+
+</html>
