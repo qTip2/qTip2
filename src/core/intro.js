@@ -10,6 +10,9 @@
 	if(typeof define === 'function' && define.amd) {
 		define(['jquery'], factory);
 	}
+	else if(typeof module === 'object' && typeof module.exports === 'object') {
+		module.exports = factory(require('jquery'));
+	}
 	else if(jQuery && !jQuery.fn.qtip) {
 		factory(jQuery);
 	}
