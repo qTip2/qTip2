@@ -239,7 +239,7 @@ PROTOTYPE.reposition.offset = function(elem, pos, container) {
 			pos.top -= parentOffset.top + (parseFloat($.css(parent, 'marginTop')) || 0);
 
 			// If this is the first parent element with an overflow of "scroll" or "auto", store it
-			if(!scrolled && (overflow = $.css(parent, 'overflow')) !== 'hidden' && overflow !== 'visible') { scrolled = $(parent); }
+			if(!scrolled && (overflow = $.css(parent, 'overflow')) !== 'hidden' && overflow !== 'visible' && $.prop(parent, 'tagName') !== 'BODY') { scrolled = $(parent); }
 		}
 	}
 	while(parent = parent.offsetParent);
